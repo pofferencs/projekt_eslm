@@ -1,0 +1,10 @@
+Téma:
+    Trefort E-sport szervezői, adminisztrációs és eseménykövető app, reszponzív weboldal
+
+Brainstorming:
+    - Regisztáció:
+        - Hülyebiztos regisztráció: menjünk biztosra, hogy a résztvevő nem gépeli el a regisztációs adatait (Adatellenörző oldal >> Beadás gomb cooldown 15 mp)
+        - Vissza gomb
+        Adatok:
+        - Teljes név, szül. dátum, e-mail, Discord f.név, iskola, osztály, csapatnév, játékosnév + ID, rank dropdown 
+        - ???? Smurf ellen mit lehet tenni (nem az igazi rankját választja ki, hogy gyengébb játékosok ellen nyerhessen) ????
