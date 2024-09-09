@@ -3,8 +3,12 @@ Téma:
 
 Brainstorming:
     - Regisztáció:
+        Funkciók:
         - Hülyebiztos regisztráció: menjünk biztosra, hogy a résztvevő nem gépeli el a regisztációs adatait (Adatellenörző oldal >> Beadás gomb cooldown 15 mp)
-        - Vissza gomb
+        - "Vissza gomb" a regisztrációs adatokat összesítő oldalon
+        - Regisztrációs idő intervallum (kezdete-vége) beállítása a szervezői felületen
+        - Biztonság (adatok integritása, iletéktelen hozzáférés/szerkesztés megelőzése)
+        - Külön bejelentkezés a szervezőknek, egyedi f.név és jelszó
         Adatok:
         - Teljes név, szül. dátum, e-mail, Discord f.név, iskola, osztály, csapatnév, játékosnév + ID, rank dropdown 
         - ???? Smurf ellen mit lehet tenni (nem az igazi rankját választja ki, hogy gyengébb játékosok ellen nyerhessen) ????
