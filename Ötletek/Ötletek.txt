@@ -15,10 +15,19 @@ Brainstorming:
         - ???? Smurf ellen mit lehet tenni (nem az igazi rankját választja ki, hogy gyengébb játékosok ellen nyerhessen) ????
     - Web:
         Oldalak:
-        - Fő oldal:
+        - Minden oldal:
+                - Fenti menü (hamburger menü telón)
+                - Header (kép vagy logó), Footer (Kapcsolat, cím)
                 - 
-        - Jelentkezés
-        - Kapcsolat, cím
+        - Fő oldal:
+                - Idővonal (regisztráció kezdete/vége, mérkőzések időpontjai)
+                - Díjak/Nyeremények
+                - Hírek (röviden) (jelenleg opcionális)
+                - Rövid ismertetők    ?
+                - Partnerek
+        - Jelentkezés:
+                - * Regisztráció
+                - * Adatok
         - Galéria, twitch beágyazás/link
         - Etikett, versenyinformáció, játékszabályzat
         
