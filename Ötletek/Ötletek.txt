@@ -1,5 +1,5 @@
 Téma:
-    Trefort E-sport szervezői, adminisztrációs és eseménykövető app, reszponzív weboldal
+    Trefort E-sport szervezői, adminisztrációs és eseménykövető app, reszponzív weboldal (Valorant)
 
 Brainstorming:
     - Regisztáció:
@@ -9,7 +9,8 @@ Brainstorming:
         - Regisztrációs idő intervallum (kezdete-vége) beállítása a szervezői felületen
         - Biztonság (adatok integritása, iletéktelen hozzáférés/szerkesztés megelőzése)
         - Külön bejelentkezés a szervezőknek, egyedi f.név és jelszó
-        - ???? 2 féle opció >>> "Regisztráció csapatban (5 fő)" /vagy\ "Regisztráció egyedül" ????
+        - ( FELTÉTEL ---- CSAK 5 FŐS CSAPATTAL LEHET JELENTKEZNI )
+        - 
         Adatok:
         - Teljes név, szül. dátum, e-mail, Discord f.név, iskola, osztály, csapatnév, játékosnév + ID, rank dropdown 
         - ???? Smurf ellen mit lehet tenni (nem az igazi rankját választja ki, hogy gyengébb játékosok ellen nyerhessen) ????
