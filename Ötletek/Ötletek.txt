@@ -10,7 +10,20 @@ Brainstorming:
         - Biztonság (adatok integritása, iletéktelen hozzáférés/szerkesztés megelőzése)
         - Külön bejelentkezés a szervezőknek, egyedi f.név és jelszó
         - ( FELTÉTEL ---- CSAK 5 FŐS CSAPATTAL LEHET JELENTKEZNI )
-        - 
         Adatok:
-        - Teljes név, szül. dátum, e-mail, Discord f.név, iskola, osztály, csapatnév, játékosnév + ID, rank dropdown 
+        - Teljes név, szül. dátum, e-mail, OM azonosító, Discord f.név, iskola, osztály, csapatnév, játékosnév + ID, rank dropdown 
         - ???? Smurf ellen mit lehet tenni (nem az igazi rankját választja ki, hogy gyengébb játékosok ellen nyerhessen) ????
+    - Web:
+        Oldalak:
+        - Fő oldal:
+                - 
+        - Jelentkezés
+        - Kapcsolat, cím
+        - Galéria, twitch beágyazás/link
+        - Etikett, versenyinformáció, játékszabályzat
+        
+    - Mobil:
+
+
+    - Szervezői asztali app:
+
