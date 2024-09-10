@@ -18,21 +18,29 @@ Brainstorming:
         - Minden oldal:
                 - Fenti menü (hamburger menü telón)
                 - Header (kép vagy logó), Footer (Kapcsolat, cím)
-                - 
         - Fő oldal:
                 - Idővonal (regisztráció kezdete/vége, mérkőzések időpontjai)
                 - Díjak/Nyeremények
                 - Hírek (röviden) (jelenleg opcionális)
-                - Rövid ismertetők    ?
+                - Rövid ismertetők (rendezvényről infók, általános tudnivalók + játékok)
                 - Partnerek
         - Jelentkezés:
                 - * Regisztráció
                 - * Adatok
         - Galéria, twitch beágyazás/link
-        - Etikett, versenyinformáció, játékszabályzat
+        - Etikett, versenyinformáció, játékszabályzat:
+                - Paywall szerű kiírás, halványodik az alján egy pontig, a teljes leírás
         
-    - Mobil:
+    (- Mobil:)
+        (- Web reszponzív változat )
 
 
     - Szervezői asztali app:
+        Funkciók:
+            - Az asztali alkalmazással felügyelhetjük, menedzselhetjük a rendezvénnyel kapcsolatos információkat, amelyekhez a szervezők férnek csak hozzá
+            - Játékosok kilistázása rang, csapat, név, játék alapján (résztvevők/jelentkezők nyilvántartása)
+            - A játékmeccsek és a rendezvénnyel kapcsolatos információk lekérése (pl. ágrajz, játék szerint a meccsek)
+            - Innen lehet irányítani az időzítőket, a határidőket szerkeszteni, regisztráció indítása/megállítása
+            - (Galériába kép-, videófeltöltés innen)
 
+(Adatbázis + API-ról később...)
