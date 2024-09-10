@@ -9,6 +9,7 @@ Brainstorming:
         - Regisztrációs idő intervallum (kezdete-vége) beállítása a szervezői felületen
         - Biztonság (adatok integritása, iletéktelen hozzáférés/szerkesztés megelőzése)
         - Külön bejelentkezés a szervezőknek, egyedi f.név és jelszó
+        - ???? 2 féle opció >>> "Regisztráció csapatban (5 fő)" /vagy\ "Regisztráció egyedül" ????
         Adatok:
         - Teljes név, szül. dátum, e-mail, Discord f.név, iskola, osztály, csapatnév, játékosnév + ID, rank dropdown 
         - ???? Smurf ellen mit lehet tenni (nem az igazi rankját választja ki, hogy gyengébb játékosok ellen nyerhessen) ????
