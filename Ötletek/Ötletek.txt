@@ -44,3 +44,4 @@ Brainstorming:
             - (Galériába kép-, videófeltöltés innen)
 
 (Adatbázis + API-ról később...)
+FASZKIVAN
