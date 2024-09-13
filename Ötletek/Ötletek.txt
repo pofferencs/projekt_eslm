@@ -4,7 +4,7 @@ Téma:
 Brainstorming:
     - Regisztáció:
         Funkciók:
-        - Hülyebiztos regisztráció: menjünk biztosra, hogy a résztvevő nem gépeli el a regisztációs adatait (Adatellenörző oldal >> Beadás gomb cooldown 15 mp)
+        - Hülyebiztos regisztráció: menjünk biztosra, hogy a résztvevő nem gépeli el a regisztációs adatait (Adatellenörző oldal >> Beadás gomb cooldown 8 mp)
         - "Vissza gomb" a regisztrációs adatokat összesítő oldalon
         - Regisztrációs idő intervallum (kezdete-vége) beállítása a szervezői felületen
         - Biztonság (adatok integritása, iletéktelen hozzáférés/szerkesztés megelőzése)
@@ -39,7 +39,7 @@ Brainstorming:
         Funkciók:
             - Az asztali alkalmazással felügyelhetjük, menedzselhetjük a rendezvénnyel kapcsolatos információkat, amelyekhez a szervezők férnek csak hozzá
             - Játékosok kilistázása rang, csapat, név, játék alapján (résztvevők/jelentkezők nyilvántartása)
-            - A játékmeccsek és a rendezvénnyel kapcsolatos információk lekérése (pl. ágrajz, játék szerint a meccsek)
+            - A játékmeccsek és a rendezvénnyel kapcsolatos információk lekérése, szerkesztése (pl. ágrajz, játék szerint a meccsek)
             - Innen lehet irányítani az időzítőket, a határidőket szerkeszteni, regisztráció indítása/megállítása
             - (Galériába kép-, videófeltöltés innen)
 
