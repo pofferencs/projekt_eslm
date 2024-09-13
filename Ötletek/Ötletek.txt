@@ -46,4 +46,4 @@ Brainstorming:
 (Adatbázis + API-ról később...)
 
     - Adatbázis egyedek:
-            - egyedek felvázolása >>> Ötletek\Draw.io\(EgyedDiagramm)
+            - egyedek felvázolása >>> Ötletek\egyeddiagram_projekt.drawio
