@@ -44,3 +44,6 @@ Brainstorming:
             - (Galériába kép-, videófeltöltés innen)
 
 (Adatbázis + API-ról később...)
+
+    - Adatbázis egyedek:
+            - egyedek felvázolása >>> Ötletek\Draw.io\(EgyedDiagramm)
