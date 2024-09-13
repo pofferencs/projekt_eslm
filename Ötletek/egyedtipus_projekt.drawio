@@ -133,12 +133,12 @@
         <mxCell id="ZF7m3kdxwYv-S7awkqeJ-21" value="* Discord név" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
           <mxGeometry x="120" y="760" width="120" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="3fVjTDC_Ix2yoGVS6PYl-5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.75;entryDx=0;entryDy=0;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="p-ESY0j-FrVyrDC03gxG-28" target="3fVjTDC_Ix2yoGVS6PYl-4">
+        <mxCell id="3fVjTDC_Ix2yoGVS6PYl-5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.75;entryDx=0;entryDy=0;endArrow=ERmany;endFill=0;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" target="3fVjTDC_Ix2yoGVS6PYl-4">
           <mxGeometry relative="1" as="geometry">
             <Array as="points">
-              <mxPoint x="260" y="535" />
               <mxPoint x="260" y="663" />
             </Array>
+            <mxPoint x="260" y="600" as="sourcePoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="p-ESY0j-FrVyrDC03gxG-28" value="# Játékos ID" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
@@ -147,7 +147,7 @@
         <mxCell id="ZF7m3kdxwYv-S7awkqeJ-22" value="#* Játék ID" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
           <mxGeometry x="710" y="520" width="120" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="p-ESY0j-FrVyrDC03gxG-31" value="" style="endArrow=ERmany;dashed=1;html=1;rounded=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;endFill=0;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" target="ZF7m3kdxwYv-S7awkqeJ-22">
+        <mxCell id="p-ESY0j-FrVyrDC03gxG-31" value="" style="endArrow=classicThin;dashed=1;html=1;rounded=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;endFill=1;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" target="ZF7m3kdxwYv-S7awkqeJ-22">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
             <mxPoint x="600" y="570" as="sourcePoint" />
             <mxPoint x="450" y="600" as="targetPoint" />
@@ -159,7 +159,7 @@
         <mxCell id="p-ESY0j-FrVyrDC03gxG-32" value="* Játék név" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
           <mxGeometry x="710" y="550" width="120" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="ZF7m3kdxwYv-S7awkqeJ-25" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="p-ESY0j-FrVyrDC03gxG-33" target="p-ESY0j-FrVyrDC03gxG-27">
+        <mxCell id="ZF7m3kdxwYv-S7awkqeJ-25" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;startArrow=ERmany;startFill=0;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="p-ESY0j-FrVyrDC03gxG-33" target="p-ESY0j-FrVyrDC03gxG-27">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="p-ESY0j-FrVyrDC03gxG-33" value="* Csapat ID" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
@@ -302,6 +302,33 @@
         </mxCell>
         <mxCell id="3fVjTDC_Ix2yoGVS6PYl-7" value="Lakatos Ármándó a CSK (ID: 123460)" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
           <mxGeometry x="1240" y="220" width="255" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="3fVjTDC_Ix2yoGVS6PYl-8" value="tagja" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="230" y="800" width="70" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="3fVjTDC_Ix2yoGVS6PYl-9" value="résztvevője" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=7;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="280" y="530" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="3fVjTDC_Ix2yoGVS6PYl-10" value="részt vesz" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="530" y="620" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="3fVjTDC_Ix2yoGVS6PYl-11" value="játszva van" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="640" y="510" width="70" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="3fVjTDC_Ix2yoGVS6PYl-12" value="felelős" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=9;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="230" y="505" width="60" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="3fVjTDC_Ix2yoGVS6PYl-13" value="vezetve van" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="290" y="670" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="p-ESY0j-FrVyrDC03gxG-42" value="" style="endArrow=none;dashed=1;html=1;rounded=0;endFill=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="p-ESY0j-FrVyrDC03gxG-28">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="550" y="525" as="sourcePoint" />
+            <mxPoint x="260" y="600" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="260" y="535" />
+            </Array>
+          </mxGeometry>
         </mxCell>
       </root>
     </mxGraphModel>
