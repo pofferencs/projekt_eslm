@@ -1,0 +1,17 @@
+- Egy játékos egy játékra (Valorant, Lol...stb.) csak egyszer (1 csapatban) jelentkezhet;
+- Annak a játékosnak aki megpróbál egy játékból több csapatba belépni, annak hibaüzenetet adunk, hogy már regisztrált az adott játékra
+- A csapatot létrehozó játékos lesz a CSK, ezt a posztot átruházhatja a csapattársai közül bárkire (minden játékos csak egyszer ruházható fel a CSK poszttal, ebből egyértelműen az jön, hogy az eredeti CSK ha már odaadta másnak ezt a posztot, akkor már nem kaphatja vissza);
+- Egy csapat akkor vehet részt a versenyen, ha "Full Stack" - "Ki Van" (nincs üres hely a csapatban);
+
+- Csapat nem létezhet CSK nélkül;
+- Csapat nem jöhet létre játékos és kiválasztott játék nélkül;
+- Egy nyílt jelentkezéses csapatba egy játékos csak akkor léphet be, ha a jelentkezését a CSK jóváhagyta;
+- A csapatot zárttá lehet tenni és csak meghívóval lehet meghívni más játékost. Ha az elfogadja a meghívót és nem jelentkezett már a játékra, akkor bekerül a csapatba
+- Páratlan számú csapat esetén:
+		-
+		- 
+		- 
+		- ;
+
+
+
