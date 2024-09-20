@@ -21,11 +21,10 @@ Főoldal:
 		- Regisztráció ---------------------------------------- [Új oldalon]
 		- Régebbi versenyek ----------------------------------- [Új oldalon]
 		- Verseny infók (tabella, csapatok, eredmények) ------- [Új oldalon]
-		- Események (regisztráció és verseny kezdete, vége)
+		- Események (regisztráció és verseny kezdete, vége) --- [Új oldalon] (lap tetején 3 box - 3 játék, amelyiet kiválasztjuk, annak tartalmát jelenítjük meg az oldalon)
 		- Iskola ált. információ
 		- Elérhetőség
 		- Versenyszabályzat
-		-
 
 	Tartalom:
 		- Események (regisztráció és verseny kezdete, vége)
