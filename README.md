@@ -5,3 +5,4 @@ Szervezési Felület.
 Jelenlegi teendők:
 
 - ötletelés
+- tervezés (web, db, app)
