@@ -13,4 +13,16 @@ Main Colors:
 
 Főoldal:
 	Header:
-		
+		- Iskola logó
+		- Iskola esport logó
+		- ??? Sötét/ világos téma ???
+		- Kep/videó/slapszín mint háttér
+	Menü:
+		- Regisztráció
+		- Események (regisztráció és verseny kezdete, vége)
+		- Verseny infók (tabella, csapatok, eredmények)
+		- Iskola ált. információ
+		- Régebbi versenyek
+		- Elérhetőség
+		- Versenyszabályzat
+		- 
