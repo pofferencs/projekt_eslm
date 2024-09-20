@@ -19,10 +19,10 @@ Főoldal:
 		- Kep/videó/slapszín mint háttér
 	Menü:
 		- Regisztráció ---------------------------------------- [Új oldalon]
-		- Események (regisztráció és verseny kezdete, vége)
-		- Verseny infók (tabella, csapatok, eredmények) ------- [Új oldalon]
-		- Iskola ált. információ
 		- Régebbi versenyek ----------------------------------- [Új oldalon]
+		- Verseny infók (tabella, csapatok, eredmények) ------- [Új oldalon]
+		- Események (regisztráció és verseny kezdete, vége)
+		- Iskola ált. információ
 		- Elérhetőség
 		- Versenyszabályzat
 		-
