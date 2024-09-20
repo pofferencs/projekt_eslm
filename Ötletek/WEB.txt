@@ -18,11 +18,17 @@ Főoldal:
 		- ??? Sötét/ világos téma ???
 		- Kep/videó/slapszín mint háttér
 	Menü:
-		- Regisztráció
+		- Regisztráció ---------------------------------------- [Új oldalon]
 		- Események (regisztráció és verseny kezdete, vége)
-		- Verseny infók (tabella, csapatok, eredmények)
+		- Verseny infók (tabella, csapatok, eredmények) ------- [Új oldalon]
 		- Iskola ált. információ
-		- Régebbi versenyek
+		- Régebbi versenyek ----------------------------------- [Új oldalon]
 		- Elérhetőség
 		- Versenyszabályzat
-		- 
+		-
+
+	Tartalom:
+		- Események (regisztráció és verseny kezdete, vége)
+		- Iskola ált. információ
+		- Versenyszabályzat
+		- Elérhetőség
