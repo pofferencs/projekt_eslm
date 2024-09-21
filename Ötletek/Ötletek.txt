@@ -1,5 +1,5 @@
 Téma:
-    Trefort E-sport szervezői, adminisztrációs és eseménykövető app, reszponzív weboldal (Valorant)
+    Iskolai E-sport szervezői, adminisztrációs és eseménykövető app, reszponzív weboldal (Valorant)
 
 Brainstorming:
     - Regisztáció:
