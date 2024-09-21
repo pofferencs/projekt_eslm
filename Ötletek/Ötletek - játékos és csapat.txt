@@ -1,0 +1,6 @@
+Ötletelés csapat készítés és belépés gyanánt
+
+
+- A játékos készíthet csapatokat, abban az esetben ő lesz a csapatkapitány
+- Ha át akarja adni a csapatkapitány posztját, akkor a csapatban az adott személy megkapja, és akkor újra nem lehet az a személy a csapatkapitány --> CSAPATFELÁLLÁS egyed (ha módosul a CSK ID, akkor mindenkinél módosuljon)
+- Lehessen csapatot törölni, valamint csapatfelállásból játékost törölni

@@ -1,0 +1,23 @@
+Kérdéses dolgok az adatbázissal kapcsán
+
+
+
+1. A CSAPAT, a CSAPATFELÁLLÁS, a MECCS illetve a JELENTKEZÉS egyedeknél fel kell tüntetni az ID-kat?
+
+2. CSAPATFELÁLLÁS és JELENTKEZÉS metszetegyedekkel kapcsolatos kérdések:
+	- JELENTKEZÉS: alapból jó-e ez így (kapcsolat téren, hogy a CSAPAT és a JÁTÉK egyeddel ápolhat-e kapcsolatot)
+
+3. MECCS metszetegyed: mi alapján kapja az ID-t?
+
+4. BAJNOKSÁG egyed felvétele --> JELENTKEZÉS metszetegyeddel ápolhat egy másik egyeddel kapcsolatot?
+
+5. A metszetegyed lehet szupertípus?
+
+6. A MECCS milyen kapcsolatban áll a JÁTÉK-kal?
+
+7. Különböző játékok (valorant, lol, stb.) lehetnek-e egyenként külön egyedek/altípusok? 
+   És ha igen, akkor milyen attribútumaik lehetnek? 
+   Ha lehetnek altípusok vagy szupertípusok, akkor a JÁTÉK és a MECCS között lehet-e szupertípus-altípusi kapcsolat?
+
+
+8. (Olimpiai példa) -> Olimpia, Versenyszám, Jelentkező -> lehet-e ehhez hasonlóan felépíteni az egyedeket?
