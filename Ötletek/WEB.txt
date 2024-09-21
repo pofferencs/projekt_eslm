@@ -1,4 +1,4 @@
-Trefort E-sport regisztrációs és verseny nyomonkövető reszponzív weboldal
+Iskolai E-sport regisztrációs és verseny nyomonkövető reszponzív weboldal
 
 Main Colors: 
 			(Iskola logó domináns színei)
