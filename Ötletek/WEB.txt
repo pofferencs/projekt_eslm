@@ -31,3 +31,7 @@ Főoldal:
 		- Iskola ált. információ
 		- Versenyszabályzat
 		- Elérhetőség
+
+
+ÚJ Színpaletta:
+https://coolors.co/palette/007a7a-004040-000000-3d0000-7a0000
