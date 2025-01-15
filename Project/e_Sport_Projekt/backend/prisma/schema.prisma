@@ -102,7 +102,7 @@ model Team_Memberships {
 }
 
 model Matches {
-  id         Int         @id @default(autoincrement())
+  id         Int         @default(autoincrement())
   status     String      @db.VarChar(12)
   place      String?     @db.VarChar(255)
   dte        DateTime?
@@ -115,6 +115,8 @@ model Matches {
   team1      Teams       @relation("Team1Matches", fields: [tem1_id], references: [id], onDelete: Restrict)
   team2      Teams       @relation("Team2Matches", fields: [tem2_id], references: [id], onDelete: Restrict)
   tournament Tournaments @relation(fields: [tnt_id], references: [id])
+
+  @@id([id,tem1_id,tem2_id,tnt_id])
 }
 
 model Applications {
@@ -127,6 +129,8 @@ model Applications {
   user       Users?      @relation(fields: [uer_id], references: [id], onDelete: Restrict)
   team       Teams?      @relation(fields: [tem_id], references: [id], onDelete: Restrict)
   tournament Tournaments @relation(fields: [tnt_id], references: [id], onDelete: Cascade)
+
+  @@id([id,tnt_id])
 }
 
 model Picture_Links {
@@ -141,4 +145,6 @@ model Picture_Links {
   tournament Tournaments? @relation(fields: [tnt_id], references: [id], onDelete: Cascade)
   event      Events?      @relation(fields: [evt_id], references: [id], onDelete: Cascade)
   picture    Pictures     @relation(fields: [pte_id], references: [id])
+
+  @@id([id,pte_id])
 }
