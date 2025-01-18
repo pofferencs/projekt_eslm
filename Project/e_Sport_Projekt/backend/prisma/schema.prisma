@@ -20,7 +20,7 @@ model Users {
   usr_name            String             @db.VarChar(16)
   usna_last_mod_date  DateTime
   usna_mod_num_remain Int
-  paswrd              String             @db.VarChar(72)
+  paswrd              String             @db.VarChar(32)
   date_of_birth       DateTime           @db.Date
   school              String             @db.VarChar(100)
   clss                String             @db.VarChar(10)
@@ -40,7 +40,7 @@ model Teams {
   short_name   String             @db.VarChar(4)
   full_name    String             @db.VarChar(16)
   creator_id   Int
-  teamMembers  Team_Memberships[]
+  members      Team_Memberships[]
   matches1     Matches[]          @relation("Team1Matches")
   matches2     Matches[]          @relation("Team2Matches")
   applications Applications[]
@@ -116,11 +116,11 @@ model Matches {
   team2      Teams       @relation("Team2Matches", fields: [tem2_id], references: [id], onDelete: Restrict)
   tournament Tournaments @relation(fields: [tnt_id], references: [id])
 
-  @@id([id,tem1_id,tem2_id,tnt_id])
+  @@id([id, tem1_id, tem2_id, tnt_id])
 }
 
 model Applications {
-  id         Int         @id @default(autoincrement())
+  id         Int         @default(autoincrement())
   dte        DateTime
   status     String      @db.VarChar(12)
   uer_id     Int?
@@ -130,11 +130,11 @@ model Applications {
   team       Teams?      @relation(fields: [tem_id], references: [id], onDelete: Restrict)
   tournament Tournaments @relation(fields: [tnt_id], references: [id], onDelete: Cascade)
 
-  @@id([id,tnt_id])
+  @@id([id, tnt_id])
 }
 
 model Picture_Links {
-  id         Int          @id @default(autoincrement())
+  id         Int          @default(autoincrement())
   uer_id     Int?
   tem_id     Int?
   tnt_id     Int?
@@ -146,5 +146,5 @@ model Picture_Links {
   event      Events?      @relation(fields: [evt_id], references: [id], onDelete: Cascade)
   picture    Pictures     @relation(fields: [pte_id], references: [id])
 
-  @@id([id,pte_id])
+  @@id([id, pte_id])
 }

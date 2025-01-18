@@ -99,7 +99,7 @@ CREATE TABLE `Matches` (
     `tem2_id` INTEGER NOT NULL,
     `tnt_id` INTEGER NOT NULL,
 
-    PRIMARY KEY (`id`)
+    PRIMARY KEY (`id`, `tem1_id`, `tem2_id`, `tnt_id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
@@ -111,7 +111,7 @@ CREATE TABLE `Applications` (
     `tem_id` INTEGER NULL,
     `tnt_id` INTEGER NOT NULL,
 
-    PRIMARY KEY (`id`)
+    PRIMARY KEY (`id`, `tnt_id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
@@ -123,7 +123,7 @@ CREATE TABLE `Picture_Links` (
     `evt_id` INTEGER NULL,
     `pte_id` INTEGER NOT NULL,
 
-    PRIMARY KEY (`id`)
+    PRIMARY KEY (`id`, `pte_id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- AddForeignKey
