@@ -4,7 +4,7 @@ COLLATE utf8mb4_hungarian_ci;
 
 USE db_esport;
 
-CREATE TABLE Players(
+CREATE TABLE Users(
 	id int PRIMARY KEY NOT NULL AUTO_INCREMENT,
 	inviteable tinyint(1) NOT NULL,
 	full_name varchar(64) NOT NULL,
@@ -71,11 +71,11 @@ CREATE TABLE Pictures(
 
 CREATE TABLE Team_Memberships(
 	status varchar(12) NOT NULL,
-	per_id int NOT NULL,
+	uer_id int NOT NULL,
 	tem_id int NOT NULL,
-	CONSTRAINT FK_Per_Tmp FOREIGN KEY (per_id) REFERENCES Players(id) ON DELETE RESTRICT,
+	CONSTRAINT FK_Uer_Tmp FOREIGN KEY (uer_id) REFERENCES Users(id) ON DELETE RESTRICT,
 	CONSTRAINT FK_Tem_Tmp FOREIGN KEY (tem_id) REFERENCES Teams(id) ON DELETE RESTRICT,
-	CONSTRAINT PK_Tmp PRIMARY KEY (per_id, tem_id)
+	CONSTRAINT PK_Tmp PRIMARY KEY (uer_id, tem_id)
 );
 
 CREATE TABLE Matches(
@@ -99,10 +99,10 @@ CREATE TABLE Applications(
 	id int NOT NULL AUTO_INCREMENT,
 	dte datetime NOT NULL,
 	status varchar(12) NOT NULL,
-	per_id int,
+	uer_id int,
 	tem_id int,
 	tnt_id int NOT NULL,
-	CONSTRAINT FK_Per_Apn FOREIGN KEY (per_id) REFERENCES Players(id) ON DELETE RESTRICT,
+	CONSTRAINT FK_Uer_Apn FOREIGN KEY (uer_id) REFERENCES Users(id) ON DELETE RESTRICT,
 	CONSTRAINT FK_Tem_Apn FOREIGN KEY (tem_id) REFERENCES Teams(id) ON DELETE RESTRICT,
 	CONSTRAINT FK_Tnt_Apn FOREIGN KEY (tnt_id) REFERENCES Tournaments(id) ON DELETE CASCADE,
 	CONSTRAINT PK_Apn PRIMARY KEY (id, tnt_id)
@@ -110,12 +110,12 @@ CREATE TABLE Applications(
 
 CREATE TABLE Picture_Links(
 	id int NOT NULL AUTO_INCREMENT,
-	per_id int,
+	uer_id int,
 	tem_id int,
 	tnt_id int,
 	evt_id int,
 	pte_id int NOT NULL,
-	CONSTRAINT FK_Per_Plk FOREIGN KEY (per_id) REFERENCES Players(id) ON DELETE RESTRICT,
+	CONSTRAINT FK_Uer_Plk FOREIGN KEY (uer_id) REFERENCES Users(id) ON DELETE RESTRICT,
 	CONSTRAINT FK_Tem_Plk FOREIGN KEY (tem_id) REFERENCES Teams(id) ON DELETE RESTRICT,
 	CONSTRAINT FK_Tnt_Plk FOREIGN KEY (tnt_id) REFERENCES Tournaments(id) ON DELETE CASCADE,
 	CONSTRAINT FK_Evt_Plk FOREIGN KEY (evt_id) REFERENCES Events(id) ON DELETE CASCADE,
