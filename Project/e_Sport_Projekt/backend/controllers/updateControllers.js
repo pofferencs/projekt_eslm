@@ -36,23 +36,25 @@ const applicationsUpdate = async (req,res)=>{
     const {id, dte, status, uer_id, tem_id, tnt_id} = req.body;
 
     try{
-        const application = await prisma.applications.update({
+        const applications = await prisma.applications.update({
             where:{
-                id : id
+                id_tnt_id:{
+                    id: id,
+                    tnt_id: tnt_id
+                }
             },
             data:{
                 dte: dte,
                 status : status,
                 uer_id : uer_id,
-                tem_id : tem_id,
-                tnt_id : tnt_id
+                tem_id : tem_id
             }
         });
         res.status(200).json({message: "Sikeres adatfrissítés!"});
     }
-    catch(error){
+    catch (error) {
         console.log(error);
-        res.status(500).json({message: "Hiba a fetch során!"})
+        res.status(500).json({message: "Hiba a fetch során!"});
     }
 }
 
@@ -122,7 +124,7 @@ const pictureUpdate = async (req,res)=>{
 
 // A picture_links update kérdéses, mert egy kép egyszerre csak 1 dologhoz tartozhat, emiatt a példa sorban rosszul van a képhozzá rendelés
 // Legalábbis ez kérdéses nekem, de a mostani példa sorokra ez egy  működőképes változat
-const picture_linksUpdate = async (req,res)=>{
+const probaPicture_linksUpdate = async (req,res)=>{
     const {id,uer_id, tem_id, tnt_id, evt_id, pte_id} = req.body;
 
     try{
@@ -158,7 +160,7 @@ module.exports = {
     eventUpdate,
     gameUpdate,
     pictureUpdate,
-    picture_linksUpdate
+    probaPicture_linksUpdate
     // matchUpdate
     // real_picture_linkUpdate
     // teamUpdate
