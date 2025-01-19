@@ -8,6 +8,7 @@ app.use(express.urlencoded({extended:true}));
 app.use(cors());
 
 app.use('/list',require('./routes/listsRoutes'));
+app.use('/update',require('./routes/updateRoutes'));
 
 app.listen(8000,()=>{console.log("Fut a szerver")});
 

@@ -91,7 +91,7 @@ const teamList = async (req,res) =>{
 
 const teamMembershipList = async (req,res) =>{
     try {
-        const teamMemberships = await prisma.Team_Memberships.findMany();
+        const teamMemberships = await prisma.team_Memberships.findMany();
         res.status(200).json(teamMemberships);
     }
     catch(error){
