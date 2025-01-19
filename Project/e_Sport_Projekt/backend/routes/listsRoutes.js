@@ -2,15 +2,15 @@ const express = require('express');
 const router = express.Router();
 const {userList, applicationList, eventList, gameList, matchList, pictureList, teamList, tournamentList, teamMembershipList} = require('../controllers/listsControllers');
 
-router.get('/users',userList);
-router.get('/applications',applicationList);
-router.get('/events',eventList);
-router.get('/games',gameList);
-router.get('/matches',matchList);
-router.get('/pictures',pictureList);
-router.get('/picturelinks',pictureList);
-router.get('/teams',teamList);
-router.get('/teamMemberships',teamMembershipList);
-router.get('/tournaments',tournamentList)
+router.get('/user',userList);
+router.get('/application',applicationList);
+router.get('/event',eventList);
+router.get('/game',gameList);
+router.get('/matche',matchList);
+router.get('/picture',pictureList);
+router.get('/picturelink',pictureList);
+router.get('/team',teamList);
+router.get('/teamMembership',teamMembershipList);
+router.get('/tournament',tournamentList)
 
 module.exports = router;
