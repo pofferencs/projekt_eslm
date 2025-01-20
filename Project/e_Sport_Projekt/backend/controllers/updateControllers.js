@@ -122,30 +122,90 @@ const pictureUpdate = async (req,res)=>{
     }
 }
 
-// A picture_links update kérdéses, mert egy kép egyszerre csak 1 dologhoz tartozhat, emiatt a példa sorban rosszul van a képhozzá rendelés
-// Legalábbis ez kérdéses nekem, de a mostani példa sorokra ez egy  működőképes változat
-const probaPicture_linkUpdate = async (req,res)=>{
-    const {id,uer_id, tem_id, tnt_id, evt_id, pte_id_get, pte_id_set} = req.body;
+// HA ROSSZUL ADJUK ÁT A BODY-N KERESZTÜL AZ ADATOKAT, AKKOR KICRASHEL!!!!
+const picture_linkUpdate = async (req, res) => {
+    const { id, uer_id, tem_id, tnt_id, evt_id, pte_id_get, pte_id_set } = req.body;
 
-    try{
-        const picture_Link = await prisma.picture_Links.update({
-            where :{
-                id_pte_id:{
-                    id: id,
-                    pte_id : pte_id_get
+    try {
+        if (uer_id != null) {
+            const picture_Link = await prisma.picture_Links.update({
+                where: {
+                    id_pte_id: {
+                        id: id,
+                        pte_id: pte_id_get
+                    },
+                    AND: {
+                        uer_id: uer_id
+                    }
+                },
+                data: {
+                    pte_id: pte_id_set
                 }
-            },
-            data: {
-                pte_id : pte_id_set
-            }
-        });
-        res.status(200).json({message: "Sikeres adatfrissítés!"});
-    }
-    catch(err){
+            });
+            return res.status(200).json({ message: "Sikeres adatfrissítés, felahsználó kép!" });
+        }
+
+        if (tem_id != null) {
+            const picture_Link = await prisma.picture_Links.update({
+                where: {
+                    id_pte_id: {
+                        id: id,
+                        pte_id: pte_id_get
+                    },
+                    AND: {
+                        tem_id: tem_id
+                    }
+                },
+                data: {
+                    pte_id: pte_id_set
+                }
+            });
+            return res.status(200).json({ message: "Sikeres adatfrissítés, csapat kép!" });
+        }
+
+        if (tnt_id != null) {
+            const picture_Link = await prisma.picture_Links.update({
+                where: {
+                    id_pte_id: {
+                        id: id,
+                        pte_id: pte_id_get
+                    },
+                    AND: {
+                        tnt_id: tnt_id
+                    }
+                },
+                data: {
+                    pte_id: pte_id_set
+                }
+            });
+            return res.status(200).json({ message: "Sikeres adatfrissítés, tournament kép!" });
+        }
+
+        if (evt_id != null) {
+            const picture_Link = await prisma.picture_Links.update({
+                where: {
+                    id_pte_id: {
+                        id: id,
+                        pte_id: pte_id_get
+                    },
+                    AND: {
+                        evt_id: evt_id
+                    }
+                },
+                data: {
+                    pte_id: pte_id_set
+                }
+            });
+            return res.status(200).json({ message: "Sikeres adatfrissítés, event kép!" });
+        }
+
+        return res.status(200).json({ message: "Nincs beállítva kép az adott entitáshoz!" });
+    } catch (err) {
         console.log(err);
-        res.status(500).json({message: "Hiba a fetch során!"})
+        return res.status(500).json({ message: "Hiba a fetch során!" });
     }
-}
+};
+
 
 // const matchUpdate
 // const picture_linkUpdate
@@ -159,9 +219,8 @@ module.exports = {
     eventUpdate,
     gameUpdate,
     pictureUpdate,
-    probaPicture_linkUpdate
+    picture_linkUpdate
     // matchUpdate
-    // real_picture_linkUpdate
     // teamUpdate
     //team_membershipUpdate
     //tournamentUpdate
