@@ -3,7 +3,7 @@
 Szervezési Felület.
 
 Jelenlegi teendők:
-    - Backend/prisma(-sql) utasítások megírása minden felhaszbnáló számára
+    - Backend/prisma(-sql) utasítások megírása minden felhasználó számára
     - regisztráció, belépés, kijelentkezés, token/cookie megvalósítás
 
 Kész dolgok:
