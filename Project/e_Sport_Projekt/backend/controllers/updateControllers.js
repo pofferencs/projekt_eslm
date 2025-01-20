@@ -122,7 +122,7 @@ const pictureUpdate = async (req,res)=>{
     }
 }
 
-// HA ROSSZUL ADJUK ÁT A BODY-N KERESZTÜL AZ ADATOKAT, AKKOR KICRASHEL!!!!
+// HA ROSSZUL ADJUK ÁT A BODY-N KERESZTÜL AZ ADATOKAT, AKKOR 500 Internal Server Error-t kapunk!!!!
 const picture_linkUpdate = async (req, res) => {
     const { id, uer_id, tem_id, tnt_id, evt_id, pte_id_get, pte_id_set } = req.body;
 
