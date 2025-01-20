@@ -3,6 +3,17 @@
 Szervezési Felület.
 
 Jelenlegi teendők:
+    - Backend/prisma(-sql) utasítások megírása minden felhaszbnáló számára
+    - regisztráció, belépés, kijelentkezés, token/cookie megvalósítás
 
-- ötletelés
-- tervezés (web, db, app)
+Kész dolgok:
+    ✔ ötletelés
+    ✔ adatbázis tervezés
+    ✔ adatbázis - ERD
+    ✔ adatbázis - Fizikai modell
+    ✔ CRUD
+    ✔ Üzleti szabályok
+    ✔ Adatbázist létrehozó sql script
+    ✔ Adatbázis feltöltése példasorokkal, példasorok scriptje
+    ✔ Prisma importálása, táblák megvalósítása a "schema.prisma" fájlban
+    ✔ Backend - Táblák adatainak lekérdezése
