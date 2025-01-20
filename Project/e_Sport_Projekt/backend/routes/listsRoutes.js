@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const {userList, applicationList, eventList, gameList, matchList, pictureList, teamList, tournamentList, teamMembershipList} = require('../controllers/listsControllers');
+const {userList, applicationList, eventList, gameList, matchList, pictureList, teamList, tournamentList, teamMembershipList, picture_linkList} = require('../controllers/listsControllers');
 
 router.get('/user',userList);
 router.get('/application',applicationList);
@@ -8,7 +8,7 @@ router.get('/event',eventList);
 router.get('/game',gameList);
 router.get('/matche',matchList);
 router.get('/picture',pictureList);
-router.get('/picturelink',pictureList);
+router.get('/picturelink',picture_linkList);
 router.get('/team',teamList);
 router.get('/teamMembership',teamMembershipList);
 router.get('/tournament',tournamentList)
