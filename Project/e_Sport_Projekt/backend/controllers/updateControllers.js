@@ -149,7 +149,7 @@ const probaPicture_linksUpdate = async (req,res)=>{
 }
 
 // const matchUpdate
-// const real_picture_linkUpdate
+// const picture_linkUpdate
 // const teamUpdate
 // const team_membershipUpdate
 // const tournamentUpdate
