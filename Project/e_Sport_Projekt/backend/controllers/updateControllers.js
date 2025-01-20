@@ -32,7 +32,7 @@ const userUpdate = async (req,res) =>{
     }
 }
 
-const applicationsUpdate = async (req,res)=>{
+const applicationUpdate = async (req,res)=>{
     const {id, dte, status, uer_id, tem_id, tnt_id} = req.body;
 
     try{
@@ -124,26 +124,25 @@ const pictureUpdate = async (req,res)=>{
 
 // A picture_links update kérdéses, mert egy kép egyszerre csak 1 dologhoz tartozhat, emiatt a példa sorban rosszul van a képhozzá rendelés
 // Legalábbis ez kérdéses nekem, de a mostani példa sorokra ez egy  működőképes változat
-const probaPicture_linksUpdate = async (req,res)=>{
-    const {id,uer_id, tem_id, tnt_id, evt_id, pte_id} = req.body;
+const probaPicture_linkUpdate = async (req,res)=>{
+    const {id,uer_id, tem_id, tnt_id, evt_id, pte_id_get, pte_id_set} = req.body;
 
     try{
         const picture_Link = await prisma.picture_Links.update({
             where :{
-                id : id
+                id_pte_id:{
+                    id: id,
+                    pte_id : pte_id_get
+                }
             },
             data: {
-                uer_id : uer_id,
-                tem_id : tem_id,
-                tnt_id : tnt_id,
-                evt_id : evt_id,
-                pte_id : pte_id
+                pte_id : pte_id_set
             }
         });
         res.status(200).json({message: "Sikeres adatfrissítés!"});
     }
     catch(err){
-        console.log(error);
+        console.log(err);
         res.status(500).json({message: "Hiba a fetch során!"})
     }
 }
@@ -156,11 +155,11 @@ const probaPicture_linksUpdate = async (req,res)=>{
 
 module.exports = {
     userUpdate,
-    applicationsUpdate,
+    applicationUpdate,
     eventUpdate,
     gameUpdate,
     pictureUpdate,
-    probaPicture_linksUpdate
+    probaPicture_linkUpdate
     // matchUpdate
     // real_picture_linkUpdate
     // teamUpdate
