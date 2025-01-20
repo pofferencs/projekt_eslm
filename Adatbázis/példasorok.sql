@@ -62,8 +62,8 @@ INSERT INTO `applications` (`id`, `dte`, `status`, `uer_id`, `tem_id`, `tnt_id`)
 (5, '2024-09-01 20:00:00', 'approved', 5, 5, 5);
 
 INSERT INTO `picture_links` (`id`, `uer_id`, `tem_id`, `tnt_id`, `evt_id`, `pte_id`) VALUES
-(1, 1, 1, 1, 1, 1),
-(2, 2, 2, 2, 2, 2),
-(3, 3, 3, 3, 3, 3),
-(4, 4, 4, 4, 4, 4),
-(5, 5, 5, 5, 5, 5);
+(1, 1, NULL, NULL, NULL, 1),
+(2, NULL, 2, NULL, NULL, 2),
+(3, NULL, NULL, 3, NULL, 3),
+(4, NULL, NULL, NULL, 4, 4),
+(5, NULL, NULL, 5, 5, 5);
