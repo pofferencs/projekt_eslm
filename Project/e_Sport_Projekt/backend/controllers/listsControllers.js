@@ -69,7 +69,7 @@ const pictureList = async (req,res) =>{
 
 const picture_linkList = async (req,res) =>{
     try {
-        const picture_links = await prisma.picture_links.findMany();
+        const picture_links = await prisma.picture_Links.findMany();
         res.status(200).json(picture_links);
     }
     catch(error){
