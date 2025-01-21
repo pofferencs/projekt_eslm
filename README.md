@@ -4,6 +4,7 @@ Szervezési Felület.
 
 Jelenlegi teendők:
     - OPTIMALIZÁLNI BACKENDEN A CONTROLLEREKET
+    - ERROROK ÁTÍRÁSA MEGFELELŐ SZÁMÚ STÁTUSZRA
     - Backend/prisma(-sql) utasítások megírása minden felhasználó számára
     - regisztráció, belépés, kijelentkezés, token/cookie megvalósítás
 
