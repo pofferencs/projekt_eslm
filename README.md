@@ -7,13 +7,13 @@ Jelenlegi teendők:
     - regisztráció, belépés, kijelentkezés, token/cookie megvalósítás
 
 Kész dolgok:
-    ✔ ötletelés
-    ✔ adatbázis tervezés
-    ✔ adatbázis - ERD
-    ✔ adatbázis - Fizikai modell
-    ✔ CRUD
-    ✔ Üzleti szabályok
-    ✔ Adatbázist létrehozó sql script
-    ✔ Adatbázis feltöltése példasorokkal, példasorok scriptje
-    ✔ Prisma importálása, táblák megvalósítása a "schema.prisma" fájlban
-    ✔ Backend - Táblák adatainak lekérdezése
+    - ✔ ötletelés
+    - ✔ adatbázis tervezés
+    - ✔ adatbázis - ERD
+    - ✔ adatbázis - Fizikai modell
+    - ✔ CRUD
+    - ✔ Üzleti szabályok
+    - ✔ Adatbázist létrehozó sql script
+    - ✔ Adatbázis feltöltése példasorokkal, példasorok scriptje
+    - ✔ Prisma importálása, táblák megvalósítása a "schema.prisma" fájlban
+    - ✔ Backend - Táblák adatainak lekérdezése
