@@ -12,6 +12,18 @@ const teamList = async (req,res) =>{
     }
 }
 
+const teamUpdate = async (req,res)=>{
+    const {id, short_name, full_name, creator_id} = req.body
+    try{
+        
+    }
+    catch(error){
+        console.log(error);
+        res.status(500).json({message: "Hiba a fetch során!"})
+    }
+}
+
 module.exports={
-    teamList
+    teamList,
+    teamUpdate
 }
