@@ -37,7 +37,8 @@ const tournamentUpdate = async (req, res) =>{
                 apn_end: apn_end,
                 details: details
             }
-        })
+        });
+        res.status(200).json({ message: "Sikeres adatfrissítés, felahsználó kép!" });
     }
     catch (error) {
         console.log(error);
