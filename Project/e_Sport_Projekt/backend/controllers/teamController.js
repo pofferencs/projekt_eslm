@@ -15,5 +15,5 @@ const teamList = async (req, res) => {
 
 
 module.exports = {
-    teamList,
+    teamList
 }
