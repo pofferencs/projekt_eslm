@@ -31,7 +31,7 @@ const eventUpdate = async (req,res)=>{
         res.status(200).json({message: "Sikeres adatfrissítés!"});
     }
     catch(err){
-        console.log(error);
+        console.log(err);
         res.status(500).json({message: "Hiba a fetch során!"})
     }
 }
