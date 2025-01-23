@@ -45,8 +45,6 @@ const userUpdate = async (req, res) => {
     }
 }
 
-
-
 module.exports = {
     userList,
     userUpdate
