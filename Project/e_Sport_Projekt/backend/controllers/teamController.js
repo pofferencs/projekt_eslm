@@ -15,7 +15,17 @@ const teamList = async (req, res) => {
 const teamUpdate = async (req,res)=>{
     const {id, short_name, full_name, creator_id} = req.body
     try{
-        
+        const team = await prisma.teams.update({
+            where:{
+                id: id
+            },
+            data:{
+                short_name: short_name,
+                full_name : full_name,
+                creator_id :creator_id
+            }
+        });
+        res.status(200).json({ message: "Sikeres adatfrissítés!" });
     }
     catch(error){
         console.log(error);
