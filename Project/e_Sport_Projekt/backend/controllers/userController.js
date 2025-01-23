@@ -4,6 +4,17 @@ const prisma = new PrismaClient();
 
 
 
+const userList = async (req,res) =>{
+    try {
+        const users = await prisma.users.findMany();
+        res.status(200).json(users);
+
+    }
+    catch(error){
+        console.log(error);
+        res.status(500).json({message: "Hiba a fetch során!"})
+    }
+}
 
 
 const userUpdate = async (req,res) =>{
@@ -28,16 +39,20 @@ const userUpdate = async (req,res) =>{
                 status : status,
                 discord_name : discord_name
             }
+            
         });
         res.status(200).json({message: "Sikeres adatfrissítés!"});
     }
-    catch(error){
-        console.log(error);
-        res.status(500).json({message: "Hiba a fetch során!"})
+        catch(error){
+            console.log(error);
+            res.status(500).json({message: "Hiba a fetch során!"})
+        }
     }
-}
 
 
-module.exports = {
+
+module.exports={
+    userList,
     userUpdate
+
 }
