@@ -1,12 +1,22 @@
 const express = require('express');
 const router = express.Router();
-const {userList, applicationList, eventList, gameList, matchList, pictureList, teamList, tournamentList, teamMembershipList, picture_linkList} = require('../controllers/listsControllers');
+
+const {applicationList} = require('../controllers/applicationController');
+const {userList} = require('../controllers/userController');
+const {eventList} = require('../controllers/eventController');
+const {gameList} = require('../controllers/gameController');
+const {matchList} = require('../controllers/matchController');
+const { pictureList } = require('../controllers/pictureController');
+const { picture_linkList } = require('../controllers/pictureLinkController');
+const { teamList } = require('../controllers/teamController');
+const { teamMembershipList } = require('../controllers/teamMembershipController');
+const {tournamentList} = require('../controllers/tournamentController');
 
 router.get('/user',userList);
 router.get('/application',applicationList);
 router.get('/event',eventList);
 router.get('/game',gameList);
-router.get('/matche',matchList);
+router.get('/match',matchList);
 router.get('/picture',pictureList);
 router.get('/picturelink',picture_linkList);
 router.get('/team',teamList);
