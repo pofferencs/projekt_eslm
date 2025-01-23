@@ -43,7 +43,6 @@ Brainstorming:
             - Innen lehet irányítani az időzítőket, a határidőket szerkeszteni, regisztráció indítása/megállítása
             - (Galériába kép-, videófeltöltés innen)
 
-    -Jabuka és kolbászlé
 (Adatbázis + API-ról később...)
 
     - Adatbázis egyedek:
