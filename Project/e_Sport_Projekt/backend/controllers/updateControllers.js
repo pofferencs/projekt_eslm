@@ -242,9 +242,6 @@ const matchUpdate = async (req,res) =>{
 // const team_membershipUpdate
 // const tournamentUpdate
 
-// git proba
-// git proba 2
-
 module.exports = {
     userUpdate,
     applicationUpdate,
