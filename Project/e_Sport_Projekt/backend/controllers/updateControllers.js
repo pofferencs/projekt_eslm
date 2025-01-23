@@ -4,6 +4,7 @@ const prisma = new PrismaClient();
 const userUpdate = async (req,res) =>{
     const {id, inviteable, full_name, usr_name, usna_last_mod_date, usna_mod_num_remain, paswrd, school, clss, email_address, email_last_mod_date, phone_num, status, discord_name}= req.body;
     try {
+
         const user = await prisma.users.update({
             where :{
                 id:id
