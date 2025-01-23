@@ -1,14 +1,14 @@
-const {PrismaClient} = require('@prisma/client');
+const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
-const picture_linkList = async (req,res) =>{
+const picture_linkList = async (req, res) => {
     try {
         const picture_links = await prisma.picture_Links.findMany();
         res.status(200).json(picture_links);
     }
-    catch(error){
+    catch (error) {
         console.log(error);
-        res.status(500).json({message: "Hiba a fetch során!"})
+        res.status(500).json({ message: "Hiba a fetch során!" })
     }
 }
 
@@ -95,7 +95,7 @@ const picture_linkUpdate = async (req, res) => {
     }
 };
 
-module.exports={
+module.exports = {
     picture_linkList,
     picture_linkUpdate
 }

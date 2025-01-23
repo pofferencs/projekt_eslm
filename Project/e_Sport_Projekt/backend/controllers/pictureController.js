@@ -1,38 +1,38 @@
-const {PrismaClient} = require('@prisma/client');
+const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
-const pictureUpdate = async (req,res)=>{
-    const {id,img_path} = req.body;
+const pictureUpdate = async (req, res) => {
+    const { id, img_path } = req.body;
 
-    try{
+    try {
         const picture = await prisma.pictures.update({
-            where :{
-                id : id
+            where: {
+                id: id
             },
             data: {
-                img_path : img_path
+                img_path: img_path
             }
         });
-        res.status(200).json({message: "Sikeres adatfrissítés!"});
+        res.status(200).json({ message: "Sikeres adatfrissítés!" });
     }
-    catch(err){
+    catch (err) {
         console.log(err);
-        res.status(500).json({message: "Hiba a fetch során!"})
+        res.status(500).json({ message: "Hiba a fetch során!" })
     }
 }
 
-const pictureList = async (req,res) =>{
+const pictureList = async (req, res) => {
     try {
         const pictures = await prisma.pictures.findMany();
         res.status(200).json(pictures);
     }
-    catch(error){
+    catch (error) {
         console.log(error);
-        res.status(500).json({message: "Hiba a fetch során!"})
+        res.status(500).json({ message: "Hiba a fetch során!" })
     }
 }
 
-module.exports={
+module.exports = {
     pictureList,
     pictureUpdate
 }
