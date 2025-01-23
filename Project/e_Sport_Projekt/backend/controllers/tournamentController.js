@@ -12,6 +12,6 @@ const tournamentList = async (req,res) =>{
     }
 };
 
-MediaSourceHandle.exports={
+module.exports={
     tournamentList
 }
