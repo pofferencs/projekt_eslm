@@ -9,7 +9,7 @@ const {matchUpdate} = require('../controllers/matchController');
 const { pictureUpdate } = require('../controllers/pictureController');
 const { picture_linkUpdate } = require('../controllers/pictureLinkController');
 const { teamUpdate } = require('../controllers/teamController');
-// const { teamMembershipUpdate } = require('../controllers/teamMembershipController');
+const { teamMembershipUpdate } = require('../controllers/teamMembershipController');
 // const {tournamentUpdate} = require('../controllers/tournamentController');
 
 router.patch('/user',userUpdate);
@@ -20,7 +20,7 @@ router.patch('/match',matchUpdate);
 router.patch('/picture',pictureUpdate);
 router.patch('/picturelink',picture_linkUpdate);
 router.patch('/team',teamUpdate);
-// router.patch('/teamMembership',teamMembershipUpdate);
+router.patch('/teamMembership',teamMembershipUpdate);
 // router.patch('/tournament',tournamentUpdate)
 
 module.exports = router;
