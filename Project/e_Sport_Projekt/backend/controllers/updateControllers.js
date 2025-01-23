@@ -1,37 +1,6 @@
 const {PrismaClient} = require('@prisma/client');
 const prisma = new PrismaClient();
 
-const userUpdate = async (req,res) =>{
-    const {id, inviteable, full_name, usr_name, usna_last_mod_date, usna_mod_num_remain, paswrd, school, clss, email_address, email_last_mod_date, phone_num, status, discord_name}= req.body;
-    try {
-        const user = await prisma.users.update({
-            where :{
-                id:id
-            },
-            data:{
-                inviteable : inviteable,
-                full_name : full_name,
-                usr_name : usr_name,
-                usna_last_mod_date: usna_last_mod_date,
-                usna_mod_num_remain: usna_mod_num_remain,
-                paswrd : paswrd,
-                school : school,
-                clss : clss,
-                email_address : email_address,
-                email_last_mod_date : email_last_mod_date,
-                phone_num : phone_num,
-                status : status,
-                discord_name : discord_name
-            }
-        });
-        res.status(200).json({message: "Sikeres adatfrissítés!"});
-    }
-    catch(error){
-        console.log(error);
-        res.status(500).json({message: "Hiba a fetch során!"})
-    }
-}
-
 const applicationUpdate = async (req,res)=>{
     const {id, dte, status, uer_id, tem_id, tnt_id} = req.body;
 
@@ -238,19 +207,11 @@ const matchUpdate = async (req,res) =>{
     
 }
 
-// const teamUpdate
-// const team_membershipUpdate
-// const tournamentUpdate
-
 module.exports = {
-    userUpdate,
-    applicationUpdate,
-    eventUpdate,
-    gameUpdate,
-    pictureUpdate,
-    picture_linkUpdate,
-    matchUpdate
-    // teamUpdate
-    //team_membershipUpdate
-    //tournamentUpdate
+    /* Kész */ applicationUpdate,
+    /* Kész */ eventUpdate,
+    /* Kész */ gameUpdate,
+    /* Kész */ pictureUpdate,
+    /* Kész */ picture_linkUpdate,
+    /* Kész */ matchUpdate
 };

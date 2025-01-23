@@ -97,22 +97,17 @@ const tournamentList = async (req,res) =>{
     }
     catch(error){
         console.log(error);
-        console.log('Error:', error.message);
-        console.log('Stack:', error.stack);
-
         res.status(500).json({message: "Hiba a fetch során!"})
     }
 }
 
 module.exports = {
-    
-    applicationList,
-    eventList,
-    gameList,
-    matchList,
-    pictureList,
-    picture_linkList,
-    teamList,
-    teamMembershipList,
-    tournamentList
+    /* Kész */ applicationList,
+    /* Kész */ gameList,
+    /* Kész */ matchList,
+    /* Kész */ pictureList,
+    /* Kész */ picture_linkList,
+    /* Kész */ teamList,
+    /* Kész */ teamMembershipList,
+    /* Kész */ tournamentList
 };
