@@ -12,6 +12,8 @@ const matchList = async (req, res) => {
     }
 }
 
+// ??? - Meccs státusz update külön vagy egybe a matchUpdate-hez
+
 const matchUpdate = async (req, res) => {
     const { id, tem1_id, tem2_id, tnt_id, status, place, dte, details, winner, rslt } = req.body;
 
@@ -22,18 +24,79 @@ const matchUpdate = async (req, res) => {
             // unstarted, suspended
             // dte, place, details
 
+            const match = await prisma.matches.update({
+                where: {
+                    id_tem1_id_tem2_id_tnt_id:{
+                        id: id,
+                        tem1_id: tem1_id,
+                        tem2_id: tem2_id,
+                        tnt_id: tnt_id
+                    },
+                    AND: {
+                        status: status
+                    }
+                    
+                },
+                data: {
+                    dte: dte,
+                    place: place,
+                    details: details
+                }
+            })
 
-
+            return res.status(200).json({ message: "Sikeres adatfrissítés!" });
 
         }
-        else if (status == "ended") {
+        if (status == "ended") {
             // ended
             // winner, rslt, details
 
+            const match = await prisma.matches.update({
+                where: {
+                    id_tem1_id_tem2_id_tnt_id:{
+                        id: id,
+                        tem1_id: tem1_id,
+                        tem2_id: tem2_id,
+                        tnt_id: tnt_id
+                    },
+                    AND: {
+                        status: status
+                    }
+                    
+                },
+                data: {
+                    winner: winner,
+                    rslt: rslt,
+                    details: details
+                }
+            })
+
+            return res.status(200).json({ message: "Sikeres adatfrissítés!" });
+
         }
-        else {
+        if(status == "started") {
             // started
             // details
+
+            const match = await prisma.matches.update({
+                where: {
+                    id_tem1_id_tem2_id_tnt_id:{
+                        id: id,
+                        tem1_id: tem1_id,
+                        tem2_id: tem2_id,
+                        tnt_id: tnt_id
+                    },
+                    AND: {
+                        status: status
+                    }
+                    
+                },
+                data: {
+                    details: details
+                }
+            })
+
+            return res.status(200).json({ message: "Sikeres adatfrissítés!" });
         }
 
     }
