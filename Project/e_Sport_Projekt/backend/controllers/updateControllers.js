@@ -251,6 +251,6 @@ module.exports = {
     picture_linkUpdate,
     matchUpdate
     // teamUpdate
-    //team_membershipUpdate
-    //tournamentUpdate
+    // team_membershipUpdate
+    // tournamentUpdate
 };
