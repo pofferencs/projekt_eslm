@@ -12,15 +12,15 @@ const { teamList } = require('../controllers/teamController');
 const { teamMembershipList } = require('../controllers/teamMembershipController');
 const { tournamentList } = require('../controllers/tournamentController');
 
-router.get('/user', userList);
+router.get('/user', userList); 
 router.get('/application', applicationList);
-router.get('/event', eventList);
+router.get('/event', eventList); /*Esemény*/
 router.get('/game', gameList);
 router.get('/match', matchList);
 router.get('/picture', pictureList);
 router.get('/picturelink', picture_linkList);
 router.get('/team', teamList);
 router.get('/teamMembership', teamMembershipList);
-router.get('/tournament', tournamentList)
+router.get('/tournament', tournamentList) /*Verseny*/
 
 module.exports = router;

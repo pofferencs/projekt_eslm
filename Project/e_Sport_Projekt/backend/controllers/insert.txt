@@ -1,0 +1,46 @@
+
+app.use('/insert',require('./routes/insertRoutes'));
+
+// Megoldandó: már jelentkezett csapat ne tudjon mégegyszer!
+const applicationInsert = async (req, res) => {
+    const { dte, status, tem_id_get, tem_id_set, tnt_id, creator_id } = req.body;
+
+    try {
+        const team = await prisma.teams.findUnique({
+            where:{
+                creator_id: creator_id,
+                id: tem_id_get
+            }
+        });
+
+        const applicated = await prisma.applications.findUnique({
+            where: {
+                tem_id : tem_id_get,
+                tnt_id : tnt_id
+            }
+        })
+
+        if (!applicated) {
+            const application = await prisma.applications.create({
+                data: {
+                    dte: dte,
+                    status: status,
+                    uer_id: creator_id,                    
+                    tem_id: tem_id_set,
+                    tnt_id: tnt_id
+                }
+            });
+            res.status(200).json({ message: "Sikeres adatfrissítés!" });
+        }else{
+            res.status(400).json({message: "Nem létező creator_id, vagy már jelentkezett a csapat!"})
+        }
+
+    }
+    catch (error) {
+        console.log(error);
+        res.status(500).json({ message: "Hiba a fetch során!" });
+    }
+}
+
+
+
