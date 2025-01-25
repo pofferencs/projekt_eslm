@@ -19,13 +19,13 @@ const gameUpdate = async (req, res) => {
     try {
 
         const existingGame = await prisma.games.findFirst({
-            where:{
+            where: {
                 name: name_get
             }
         });
 
-        if( existingGame || existingGame.name == req.body.name_set){
-            res.status(400).json({message: "Ilyen nevű játék már létezik!"})
+        if (existingGame || existingGame.name == req.body.name_set) {
+            return res.status(400).json({ message: "Ilyen nevű játék már létezik!" })
         };
 
         const game = await prisma.games.update({
@@ -37,16 +37,41 @@ const gameUpdate = async (req, res) => {
                 name: name_set
             }
         });
-        res.status(200).json({ message: "Sikeres adatfrissítés!" });
+        return res.status(200).json({ message: "Sikeres adatfrissítés!" });
     }
     catch (err) {
         console.log(err);
-        res.status(500).json({ message: "Hiba a fetch során!" })
+        return res.status(500).json({ message: "Hiba a fetch során!" })
+    }
+}
+
+const gameInsert = async (req,res)=>{
+    const {name} = req.body;
+
+    try{
+        const existingGame = await prisma.games.findFirst({
+            where: {
+                name: name
+            }
+        });
+
+        if(existingGame){
+            return res.status(400).json({message: "Hiba! Ilyen nevű játék már létezik!"})
+        }
+
+        const game = await prisma.games.create({data:{name: name}})
+        return res.status(200).json({message:"Sikeres adatfrissítés!"})
+
+    }
+    catch (err) {
+        console.log(err);
+        return res.status(500).json({ message: "Hiba a fetch során!" })
     }
 }
 
 
 module.exports = {
     gameList,
-    gameUpdate
+    gameUpdate,
+    gameInsert
 }

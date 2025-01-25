@@ -16,23 +16,39 @@ const eventUpdate = async (req, res) => {
     const { id, name, start_date, end_date, place, details } = req.body;
 
     try {
-        const event = await prisma.events.update({
+        const existingEvent = await prisma.events.findFirst({
             where: {
-                id: id
-            },
-            data: {
-                name: name,
+                name:name,
                 start_date: start_date,
                 end_date: end_date,
                 place: place,
-                details: details
+                details: details,
             }
         });
-        res.status(200).json({ message: "Sikeres adatfrissítés!" });
+
+        if (!existingEvent) {
+            const event = await prisma.events.update({
+                where: {
+                    id: id
+                },
+                data: {
+                    name: name,
+                    start_date: start_date,
+                    end_date: end_date,
+                    place: place,
+                    details: details
+                }
+            });
+            return res.status(200).json({ message: "Sikeres adatfrissítés!" });
+        }else{            
+            return res.status(400).json({ message: "Az adott esemény már létezik!" });
+        }
+
+        
     }
     catch (err) {
         console.log(err);
-        res.status(500).json({ message: "Hiba a fetch során!" })
+        return res.status(500).json({ message: "Hiba a fetch során!" })
     }
 }
 
@@ -69,6 +85,7 @@ const eventInsert = async (req, res) => {
         // Megnézzük, hogy az esemény már létezik-e, ...
         const existingEvent = await prisma.events.findFirst({
             where: {
+                name: name,
                 start_date: startDate,
                 end_date: endDate,
                 place: place,
@@ -91,22 +108,22 @@ const eventInsert = async (req, res) => {
                 details: details
             }
         });
-        res.status(200).json({ message: "Sikeres adatfrissítés!" });
+        return res.status(200).json({ message: "Sikeres adatfrissítés!" });
 
         // Ez ugyan az a megoldás, csak hosszabban és olvashatatlanabbul
         //-------------------------------------------------------------------------------------------------------------------------------
         // let eventInsertAvailable = false;
 
         // if( startDate < now){
-        //     res.status(400).json({message:"Az esemény kezdetét nem lehet múltbeli időpontra rakni!"});
+        //     return res.status(400).json({message:"Az esemény kezdetét nem lehet múltbeli időpontra rakni!"});
         //     eventInsertAvailable = false;
         // }
         // else if( startDate < minStartDate){
-        //     res.status(400).json({message:"Az esemény kezdetét az adott naptól legalább 14. napra kell állítani!"});
+        //     return res.status(400).json({message:"Az esemény kezdetét az adott naptól legalább 14. napra kell állítani!"});
         //     eventInsertAvailable = false;
         // }
         // else if(startDate > endDate){
-        //     res.status(400).json({message:"Az esemény kezdete nem lehet később mint a vége!"});
+        //     return res.status(400).json({message:"Az esemény kezdete nem lehet később mint a vége!"});
         //     eventInsertAvailable = false;
         // }else{
         //     eventInsertAvailable = true;
@@ -122,13 +139,13 @@ const eventInsert = async (req, res) => {
         //             details: details
         //         }
         //     });
-        //     res.status(200).json({ message: "Sikeres adatfrissítés!" });
+        //     return res.status(200).json({ message: "Sikeres adatfrissítés!" });
         // }
         //-------------------------------------------------------------------------------------------------------------------------------
 
     } catch (err) {
         console.log(err);
-        res.status(500).json({ message: "Hiba a fetch során!" })
+        return res.status(500).json({ message: "Hiba a fetch során!" })
     }
 }
 

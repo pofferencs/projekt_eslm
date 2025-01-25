@@ -12,21 +12,14 @@ const matchList = async (req, res) => {
     }
 }
 
-// ??? - Meccs státusz update külön vagy egybe a matchUpdate-hez
-
 const matchUpdate = async (req, res) => {
     const { id, tem1_id, tem2_id, tnt_id, status, place, dte, details, winner, rslt } = req.body;
 
-    // státuszok: unstarted, started, ended, suspended
     try {
-
         if (status != "ended" || status !== "started") {
-            // unstarted, suspended
-            // dte, place, details
-
             const match = await prisma.matches.update({
                 where: {
-                    id_tem1_id_tem2_id_tnt_id:{
+                    id_tem1_id_tem2_id_tnt_id: {
                         id: id,
                         tem1_id: tem1_id,
                         tem2_id: tem2_id,
@@ -35,7 +28,6 @@ const matchUpdate = async (req, res) => {
                     AND: {
                         status: status
                     }
-                    
                 },
                 data: {
                     dte: dte,
@@ -48,12 +40,9 @@ const matchUpdate = async (req, res) => {
 
         }
         if (status == "ended") {
-            // ended
-            // winner, rslt, details
-
             const match = await prisma.matches.update({
                 where: {
-                    id_tem1_id_tem2_id_tnt_id:{
+                    id_tem1_id_tem2_id_tnt_id: {
                         id: id,
                         tem1_id: tem1_id,
                         tem2_id: tem2_id,
@@ -62,7 +51,7 @@ const matchUpdate = async (req, res) => {
                     AND: {
                         status: status
                     }
-                    
+
                 },
                 data: {
                     winner: winner,
@@ -70,17 +59,12 @@ const matchUpdate = async (req, res) => {
                     details: details
                 }
             })
-
             return res.status(200).json({ message: "Sikeres adatfrissítés!" });
-
         }
-        if(status == "started") {
-            // started
-            // details
-
+        if (status == "started") {
             const match = await prisma.matches.update({
                 where: {
-                    id_tem1_id_tem2_id_tnt_id:{
+                    id_tem1_id_tem2_id_tnt_id: {
                         id: id,
                         tem1_id: tem1_id,
                         tem2_id: tem2_id,
@@ -89,7 +73,6 @@ const matchUpdate = async (req, res) => {
                     AND: {
                         status: status
                     }
-                    
                 },
                 data: {
                     details: details

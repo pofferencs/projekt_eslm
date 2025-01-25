@@ -38,11 +38,11 @@ const tournamentUpdate = async (req, res) =>{
                 details: details
             }
         });
-        res.status(200).json({ message: "Sikeres adatfrissítés, felahsználó kép!" });
+        return res.status(200).json({ message: "Sikeres adatfrissítés, felahsználó kép!" });
     }
     catch (error) {
         console.log(error);
-        res.status(500).json({ message: "Hiba a fetch során!" })
+        return res.status(500).json({ message: "Hiba a fetch során!" })
     }
 
 };
