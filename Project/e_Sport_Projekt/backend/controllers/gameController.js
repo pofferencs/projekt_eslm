@@ -14,15 +14,27 @@ const gameList = async (req, res) => {
 
 
 const gameUpdate = async (req, res) => {
-    const { id, name } = req.body;
+    const { id, name_get, name_set } = req.body;
 
     try {
+
+        const existingGame = await prisma.games.findFirst({
+            where:{
+                name: name_get
+            }
+        });
+
+        if( existingGame || existingGame.name == req.body.name_set){
+            res.status(400).json({message: "Ilyen nevű játék már létezik!"})
+        };
+
         const game = await prisma.games.update({
             where: {
-                id: id
+                id: id,
+                name: name_get
             },
             data: {
-                name: name
+                name: name_set
             }
         });
         res.status(200).json({ message: "Sikeres adatfrissítés!" });
