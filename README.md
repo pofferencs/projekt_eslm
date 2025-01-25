@@ -4,7 +4,8 @@ Szervezési Felület.
 
 Jelenlegi teendők:
     - OPTIMALIZÁLNI BACKENDEN A CONTROLLEREKET:
-        - UPDATE finomítása, hogy ne legyenek ismétlődő sorok
+        - UPDATE és INSERT finomítása, hogy ne legyenek ismétlődő sorok:
+            - 
         - INSERT, DELETE megírása
     - regisztráció, belépés, kijelentkezés, token/cookie megvalósítás
 
