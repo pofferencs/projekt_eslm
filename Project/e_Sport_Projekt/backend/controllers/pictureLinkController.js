@@ -36,6 +36,7 @@ const picture_linkUpdate = async (req, res) => {
                             pte_id: pte_id_get
                         },
                         AND: {
+                            // https://hackmamba.io/blog/2020/11/dynamic-javascript-object-keys/
                             [condition]: entityId
                         }
                     },
