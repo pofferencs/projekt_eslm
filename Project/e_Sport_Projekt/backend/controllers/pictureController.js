@@ -42,7 +42,26 @@ const pictureList = async (req, res) => {
     }
 }
 
+const pictureDelete = async (req, res) =>{
+
+    const { id } = req.body;
+
+    try {
+        const picture = await prisma.pictures.delete({
+            where:{
+                id: id
+            }
+        })
+        res.status(200).json({message: "Sikeres törlés!"})
+        
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ message: "Hiba a törlés során!" });
+    }
+}
+
 module.exports = {
     pictureList,
-    pictureUpdate
+    pictureUpdate,
+    pictureDelete
 }

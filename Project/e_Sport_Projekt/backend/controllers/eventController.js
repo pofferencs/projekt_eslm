@@ -147,9 +147,28 @@ const eventInsert = async (req, res) => {
     }
 }
 
+const eventDelete = async (req, res) =>{
+
+    const { id } = req.body;
+
+    try {
+        const event = await prisma.events.delete({
+            where:{
+                id: id
+            }
+        })
+        res.status(200).json({message: "Sikeres törlés!"})
+        
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ message: "Hiba a törlés során!" });
+    }
+
+}
 
 module.exports = {
     eventList,
     eventUpdate,
-    eventInsert
+    eventInsert,
+    eventDelete
 }
