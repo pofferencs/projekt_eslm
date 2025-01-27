@@ -10,6 +10,7 @@ app.use(cors());
 app.use('/list',require('./routes/listsRoutes'));
 app.use('/update',require('./routes/updateRoutes'));
 app.use('/insert',require('./routes/insertRoutes'));
+app.use('delete',require('./routes/deleteRoutes'));
 
 app.listen(8000,()=>{console.log("Fut a szerver")});
 
