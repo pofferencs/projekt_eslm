@@ -122,7 +122,7 @@ model Matches {
 }
 
 model Applications {
-  id         Int         @default(autoincrement())
+  id         Int         @id @default(autoincrement())
   dte        DateTime
   status     String      @db.VarChar(12)
   uer_id     Int?
@@ -132,7 +132,7 @@ model Applications {
   team       Teams?      @relation(fields: [tem_id], references: [id], onDelete: Restrict)
   tournament Tournaments @relation(fields: [tnt_id], references: [id], onDelete: Cascade)
 
-  @@id([id, tnt_id])
+  @@unique([uer_id, tem_id, tnt_id])
 }
 
 model Picture_Links {
