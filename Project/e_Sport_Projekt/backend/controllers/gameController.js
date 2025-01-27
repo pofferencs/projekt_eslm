@@ -12,7 +12,6 @@ const gameList = async (req, res) => {
     }
 }
 
-
 const gameUpdate = async (req, res) => {
     const { id, name_get, name_set } = req.body;
 

@@ -21,8 +21,7 @@ const eventUpdate = async (req, res) => {
                 name:name,
                 start_date: start_date,
                 end_date: end_date,
-                place: place,
-                details: details,
+                place: place
             }
         });
 
@@ -88,8 +87,7 @@ const eventInsert = async (req, res) => {
                 name: name,
                 start_date: startDate,
                 end_date: endDate,
-                place: place,
-                details: details,
+                place: place
             }
         });
 
