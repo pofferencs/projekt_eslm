@@ -33,7 +33,25 @@ const teamUpdate = async (req,res)=>{
     }
 }
 
+const teamDelete = async (req, res) =>{
+    const {id} = req.body;
+
+    try {
+        const team = await prisma.teams.delete({
+            where:{
+                id: id
+            }
+        });
+        return res.status(200).json({message: "Sikeres törlés!"})
+
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({message: "Hiba a fetch során!"})
+    }
+}
+
 module.exports={
     teamList,
-    teamUpdate
+    teamUpdate,
+    teamDelete
 }
