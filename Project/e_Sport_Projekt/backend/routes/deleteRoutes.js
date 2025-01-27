@@ -9,4 +9,10 @@ const { tournamentDelete } = require('../controllers/tournamentController');
 // team
 // teamMembership
 
+router.delete('/application',applicationDelete);
+router.delete('/event',eventDelete);
+router.delete('/game',gameDelete);
+router.delete('/picture',pictureDelete);
+router.delete('/tournament',tournamentDelete);
+
 module.exports = router;
