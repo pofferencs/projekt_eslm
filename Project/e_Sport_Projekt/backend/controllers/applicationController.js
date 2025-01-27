@@ -93,8 +93,31 @@ const applicationInsert = async (req, res) => {
     }
 }
 
+const applicationDelete = async (req, res) =>{
+
+    const { id, tnt_id } = req.body;
+
+    try {
+        const applications = await prisma.applications.delete({
+            where:{
+                id_tnt_id:{
+                    id: id,
+                    tnt_id: tnt_id
+                }
+            }
+        })
+        res.status(200).json({message: "Sikeres törlés!"})
+        
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ message: "Hiba a törlés során!" });
+    }
+
+}
+
 module.exports = {
     applicationList,
     applicationUpdate,
-    applicationInsert
+    applicationInsert,
+    applicationDelete
 }

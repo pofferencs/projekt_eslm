@@ -68,9 +68,29 @@ const gameInsert = async (req,res)=>{
     }
 }
 
+const gameDelete = async (req, res) =>{
+
+    const { id } = req.body;
+
+    try {
+        const game = await prisma.games.delete({
+            where:{
+                id: id
+            }
+        })
+        res.status(200).json({message: "Sikeres törlés!"})
+        
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ message: "Hiba a törlés során!" });
+    }
+}
+
+
 
 module.exports = {
     gameList,
     gameUpdate,
-    gameInsert
+    gameInsert,
+    gameDelete
 }
