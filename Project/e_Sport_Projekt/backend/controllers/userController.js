@@ -37,11 +37,11 @@ const userUpdate = async (req, res) => {
             }
 
         });
-        res.status(200).json({ message: "Sikeres adatfrissítés!" });
+        return res.status(200).json({ message: "Sikeres adatfrissítés!" });
     }
     catch (error) {
         console.log(error);
-        res.status(500).json({ message: "Hiba a fetch során!" })
+        return res.status(500).json({ message: "Hiba a fetch során!" })
     }
 }
 

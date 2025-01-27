@@ -5,6 +5,16 @@ const pictureUpdate = async (req, res) => {
     const { id, img_path } = req.body;
 
     try {
+        const existingPicture = await prisma.pictures.findFirst({
+            where:{
+                img_path : img_path
+            }
+        })
+
+        if(existingPicture){
+           return res.status(404).json({message: "Hiba! Ez a kép már létezik az adatbázisban!"})
+        }
+
         const picture = await prisma.pictures.update({
             where: {
                 id: id
@@ -13,11 +23,11 @@ const pictureUpdate = async (req, res) => {
                 img_path: img_path
             }
         });
-        res.status(200).json({ message: "Sikeres adatfrissítés!" });
+        return res.status(200).json({ message: "Sikeres adatfrissítés!" });
     }
     catch (err) {
         console.log(err);
-        res.status(500).json({ message: "Hiba a fetch során!" })
+        return res.status(500).json({ message: "Hiba a fetch során!" })
     }
 }
 
