@@ -113,16 +113,16 @@ const eventInsert = async (req, res) => {
         // let eventInsertAvailable = false;
 
         // if( startDate < now){
-        //     return res.status(400).json({message:"Az esemény kezdetét nem lehet múltbeli időpontra rakni!"});
         //     eventInsertAvailable = false;
+        //     return res.status(400).json({message:"Az esemény kezdetét nem lehet múltbeli időpontra rakni!"});
         // }
         // else if( startDate < minStartDate){
-        //     return res.status(400).json({message:"Az esemény kezdetét az adott naptól legalább 14. napra kell állítani!"});
         //     eventInsertAvailable = false;
+        //     return res.status(400).json({message:"Az esemény kezdetét az adott naptól legalább 14. napra kell állítani!"});
         // }
         // else if(startDate > endDate){
-        //     return res.status(400).json({message:"Az esemény kezdete nem lehet később mint a vége!"});
         //     eventInsertAvailable = false;
+        //     return res.status(400).json({message:"Az esemény kezdete nem lehet később mint a vége!"});
         // }else{
         //     eventInsertAvailable = true;
         // }
