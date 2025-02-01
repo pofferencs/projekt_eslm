@@ -44,22 +44,22 @@ const gameUpdate = async (req, res) => {
     }
 }
 
-const gameInsert = async (req,res)=>{
-    const {name} = req.body;
+const gameInsert = async (req, res) => {
+    const { name } = req.body;
 
-    try{
+    try {
         const existingGame = await prisma.games.findFirst({
             where: {
                 name: name
             }
         });
 
-        if(existingGame){
-            return res.status(400).json({message: "Hiba! Ilyen nevű játék már létezik!"})
+        if (existingGame) {
+            return res.status(400).json({ message: "Hiba! Ilyen nevű játék már létezik!" })
         }
 
-        const game = await prisma.games.create({data:{name: name}})
-        return res.status(200).json({message:"Sikeres adatfrissítés!"})
+        const game = await prisma.games.create({ data: { name: name } })
+        return res.status(200).json({ message: "Sikeres adatfrissítés!" })
 
     }
     catch (err) {
@@ -68,25 +68,23 @@ const gameInsert = async (req,res)=>{
     }
 }
 
-const gameDelete = async (req, res) =>{
+const gameDelete = async (req, res) => {
 
     const { id } = req.body;
 
     try {
         const game = await prisma.games.delete({
-            where:{
+            where: {
                 id: id
             }
         })
-        res.status(200).json({message: "Sikeres törlés!"})
-        
+        res.status(200).json({ message: "Sikeres törlés!" })
+
     } catch (err) {
         console.log(err);
         res.status(500).json({ message: "Hiba a törlés során!" });
     }
 }
-
-
 
 module.exports = {
     gameList,

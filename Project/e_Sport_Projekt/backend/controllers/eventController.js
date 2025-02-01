@@ -18,7 +18,7 @@ const eventUpdate = async (req, res) => {
     try {
         const existingEvent = await prisma.events.findFirst({
             where: {
-                name:name,
+                name: name,
                 start_date: start_date,
                 end_date: end_date,
                 place: place
@@ -39,11 +39,11 @@ const eventUpdate = async (req, res) => {
                 }
             });
             return res.status(200).json({ message: "Sikeres adatfrissítés!" });
-        }else{            
+        } else {
             return res.status(400).json({ message: "Az adott esemény már létezik!" });
         }
 
-        
+
     }
     catch (err) {
         console.log(err);
@@ -147,18 +147,18 @@ const eventInsert = async (req, res) => {
     }
 }
 
-const eventDelete = async (req, res) =>{
+const eventDelete = async (req, res) => {
 
     const { id } = req.body;
 
     try {
         const event = await prisma.events.delete({
-            where:{
+            where: {
                 id: id
             }
         })
-        res.status(200).json({message: "Sikeres törlés!"})
-        
+        res.status(200).json({ message: "Sikeres törlés!" })
+
     } catch (err) {
         console.log(err);
         res.status(500).json({ message: "Hiba a törlés során!" });
