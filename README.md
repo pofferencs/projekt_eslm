@@ -14,7 +14,7 @@ Jelenlegi teendők:
                 ✔ pictureLink
                 ✔ team
                 ✔ teamMembership
-                ✔ tournament
+                - tournament
                 - user
             - Insert:
                 ✔ application
