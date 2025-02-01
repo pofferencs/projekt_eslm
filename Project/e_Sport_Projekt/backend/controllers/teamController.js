@@ -62,11 +62,6 @@ const teamDelete = async (req, res) =>{
     }
 }
 
-const teamInsert = async (req,res) =>{
-    const { short_name, full_name, creator_id} = req.body;
-
-}
-
 module.exports={
     teamList,
     teamUpdate,
