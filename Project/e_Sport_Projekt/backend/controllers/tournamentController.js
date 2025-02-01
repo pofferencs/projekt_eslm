@@ -12,64 +12,73 @@ const tournamentList = async (req, res) => {
     }
 };
 
-const tournamentUpdate = async (req, res) =>{
+const tournamentUpdate = async (req, res) => {
 
-    const {id, name, num_participant, team_num, start_date, end_date, game_mode, max_participant, apn_start, apn_end, details, evt_id, gae_id} = req.body;
+    const { id, name, num_participant, team_num, start_date, end_date, game_mode, max_participant, apn_start, apn_end, details, evt_id, gae_id } = req.body;
 
-    try {
-        const tournament = await prisma.tournaments.update({
-            where:{
-                id_evt_id_gae_id:{
-                    id: id,
-                    evt_id: evt_id,
-                    gae_id: gae_id
+    const existingTournament = await prisma.tournaments.findFirst({
+        where: {
+            name: name,
+            evt_id: evt_id,
+            gae_id: gae_id
+        }
+    })
+
+    if (existingTournament) {
+        return res.status(400).json({ message: "Ez a verseny már létezik az az adott eseményen!" })
+    } else {
+        try {
+            const tournament = await prisma.tournaments.update({
+                where: {
+                    id_evt_id_gae_id: {
+                        id: id,
+                        evt_id: evt_id,
+                        gae_id: gae_id
+                    }
+                },
+                data: {
+                    name: name,
+                    num_participant: num_participant,
+                    team_num: team_num,
+                    start_date: start_date,
+                    end_date: end_date,
+                    game_mode: game_mode,
+                    max_participant: max_participant,
+                    apn_start: apn_start,
+                    apn_end: apn_end,
+                    details: details
                 }
-            },
-            data:{
-                name: name,
-                num_participant: num_participant,
-                team_num: team_num,
-                start_date: start_date,
-                end_date: end_date,
-                game_mode: game_mode,
-                max_participant: max_participant,
-                apn_start: apn_start,
-                apn_end: apn_end,
-                details: details
-            }
-        });
-        return res.status(200).json({ message: "Sikeres adatfrissítés, felahsználó kép!" });
+            });
+            return res.status(200).json({ message: "Sikeres adatfrissítés!" });
+        }
+        catch (error) {
+            console.log(error);
+            return res.status(500).json({ message: "Hiba a fetch során!" })
+        }
     }
-    catch (error) {
-        console.log(error);
-        return res.status(500).json({ message: "Hiba a fetch során!" })
-    }
-
 };
 
-const tournamentDelete = async (req, res)=>{
+const tournamentDelete = async (req, res) => {
 
     const { id, evt_id, gae_id } = req.body;
 
     try {
 
         const tournaments = await prisma.tournaments.delete({
-            where:{
-                id_evt_id_gae_id:{
+            where: {
+                id_evt_id_gae_id: {
                     id: id,
                     evt_id: evt_id,
                     gae_id: gae_id
                 }
             }
         });
-        res.status(200).json({message: "Sikeres törlés!"})
-        
+        res.status(200).json({ message: "Sikeres törlés!" })
+
     } catch (err) {
         console.log(err);
         res.status(500).json({ message: "Hiba a törlés során!" })
     }
-
-
 }
 
 module.exports = {
