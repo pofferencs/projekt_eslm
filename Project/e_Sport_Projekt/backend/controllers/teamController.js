@@ -41,7 +41,6 @@ const teamUpdate = async (req,res)=>{
             console.log(error);
             return res.status(500).json({message: "Hiba a fetch során!"})
         }
-<<<<<<< Updated upstream
     }
 }
 
@@ -63,18 +62,9 @@ const teamDelete = async (req, res) =>{
     }
 }
 
-const teamCreate =  async (req,res) =>{
-    const {short_name, full_name, creator_id} = req.body;
-    
-=======
-    }
-}
-
 const teamInsert = async (req,res) =>{
     const { short_name, full_name, creator_id} = req.body;
 
-
->>>>>>> Stashed changes
 }
 
 module.exports={
