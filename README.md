@@ -21,7 +21,7 @@ Jelenlegi teendők:
                 ✔ event
                 ✔ game
                 ✔ teamMembership
-                ✔ match
+                - match
                 - picture
                 - pictureLink
                 - team
