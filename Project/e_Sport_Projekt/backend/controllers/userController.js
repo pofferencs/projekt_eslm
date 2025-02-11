@@ -52,10 +52,10 @@ const userUpdate = async (req, res) => {
 //Login és Regisztráció
 
 const tokenGen = (id)=>{
-    return jwt.sign({id}, process.env.JWT_SECRET, {expiresIn: "1h"});
+    return jwt.sign({id}, process.env.JWT_SECRET);
 }
 
-//Todo: login, regisztráció ÉS middleware
+//Todo: login, regisztráció ÉS middleware   
 
 const userReg = async (req, res)=>{
 
@@ -130,7 +130,7 @@ const userReg = async (req, res)=>{
 //let last_mod_date = new Date(Date.now())
 
 
-// const paswrd = "sajtoskiflissafdfdsafdfds123123fkoppofwpofwwopfweopr9ö9ö234rö923kir3";
+// const paswrd = "alicepass";
 // const hashedPass = bcrypt.hashSync(paswrd, 10);
 
 // console.log(paswrd)
@@ -146,22 +146,22 @@ const userLogin = async (req, res)=>{
 
     try {
 
-        const user = await prisma.users.findFirst({
+        const userL = await prisma.users.findFirst({
             where: {
                 usr_name: usr_name
             }
         })
 
-        if(!user){
+        if(!userL){
             return res.status(400).json({message:"Nincs ilyen felhasználó!"});
         }
-        //bcrypt.compare(paswrd, user.paswrd)
-        if(paswrd != user.paswrd ){
+        //!bcrypt.compare(paswrd, user.paswrd)
+        if(!bcrypt.compareSync(paswrd, userL.paswrd)){
             return res.status(400).json({message: "A jelszó nem megfelelő!"});
         }
 
 
-        const token = tokenGen(user.id);
+        const token = tokenGen(userL.id);
 
         res.cookie('token', token, {
             secure: true,
