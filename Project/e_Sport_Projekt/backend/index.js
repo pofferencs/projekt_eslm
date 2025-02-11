@@ -20,6 +20,7 @@ app.use(cookieParser())
 
 app.use('/list',require('./routes/listsRoutes'));
 app.use('/update',require('./routes/updateRoutes'));
+app.use('/user', require('./routes/userRoutes'));
 
 const options = {
     key: fs.readFileSync(path.join(__dirname)+"/config/ssl/cert.key"),
