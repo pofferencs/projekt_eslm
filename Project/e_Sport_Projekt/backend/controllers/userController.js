@@ -59,9 +59,19 @@ const tokenGen = (id)=>{
 
 const userReg = async (req, res)=>{
 
-    const { full_name, date_of_birth , usr_name, paswrd, school, clss, email_address, phone_num, discord_name } = req.body;
+    const { full_name, date_of_birth , usr_name, paswrd, school, clss, email_address, phone_num, discord_name, om_identifier } = req.body;
 
     try {
+
+            //Vizsgáláshoz szükséges adatok (tömbben)
+        const angolABC = [
+            "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", 
+            "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z",
+            "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", 
+            "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"
+        ];
+        const specChars = ["*", "@", "_"];
+        const nums = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
 
         //1. Felhasználónév ellenőrzése
 
@@ -88,23 +98,58 @@ const userReg = async (req, res)=>{
 
         //3. Adatok meglétének ellenőrzése
 
-        if(!full_name || !usr_name || !paswrd || !date_of_birth || !school || !clss || !email_address || !phone_num || !discord_name){
+        if(!full_name || !usr_name || !paswrd || !date_of_birth || !school || !clss || !email_address || !phone_num || !discord_name || !om_identifier){
             return res.status(400).json({message:"Hiányos adatok!"});
         }
+        if(om_identifier.length() != 11){
+            return res.status(400).json({message: "Rosszul adtad meg az OM-azonosítód!"})
+        }
 
-        //4. Jelszó hash létrehozása
+        //4. Jelszó ellenőrzése, utána a hash létrehozása
 
+            //Jelszó min. hosszúságának ellenőrzése
+        if(paswrd.length() < 8){
+            return res.status(400).json({message: "Túl rövid a jelszó!"});
+        }
+
+            //Különleges karakterrel való kezdődés
+        if(specChars.includes(paswrd.charAt(0))){
+            return res.status(400).json({message: "Különleges karakterekkel nem kezdődhet a jelszó!"});
+        }
+        
+            //Van-e szám a jelszóban
+        if(!paswrd.split("").some(szam=> nums.includes(szam))){
+            return res.status(400).json({message: "A jelszónak tartalmaznia kell számot!"});
+        }
+
+            //Nagybetű ellenőrzés
+        if(!paswrd.match(/[A-Z]/)){
+            return res.status(400).json({message: "Egy nagybetűt meg kell adj a jelszónál!"});
+        }
+
+            //Ékezetek ellenőrzése
+        if(!paswrd.split("").some(betu=> angolABC.includes(betu))){
+            return res.status(400).json({message: "Csak az angol ABC betűi elfogadottak a jelszónál!"});
+        }
+
+
+        
         const hashedPass = await bcrypt.hash(paswrd, 10);
 
         //Felhasználó regisztrálása a megfelelő adatokkal
             //Felhasználó felvétele a pictureLinks táblába
 
-        const last_mod_date = new Date()
+            let date = new Date();
+            let usna_last_mod_date = new Date(new Date(date).setMonth(date.getMonth()- 3));
+            let email_last_mod_date = new Date(new Date(date).setMonth(date.getMonth()- 1));
 
         const newUser = await prisma.users.create({
             data:{
+                inviteable: 0,
                 full_name: full_name,
                 usr_name: usr_name,
+                usna_last_mod_date: usna_last_mod_date,
+                usna_mod_num_remain: 3,
                 paswrd: hashedPass,
                 date_of_birth: date_of_birth, 
                 school: school,
@@ -112,8 +157,11 @@ const userReg = async (req, res)=>{
                 email_address: email_address,
                 phone_num: phone_num,
                 discord_name: discord_name,
-                //email_last_mod_date:
+                email_last_mod_date: email_last_mod_date,
                 
+                status: "active",
+                om_identifier: om_identifier,
+                               
 
             }
         })
@@ -127,10 +175,14 @@ const userReg = async (req, res)=>{
     }    
 }
 
-//let last_mod_date = new Date(Date.now())
 
 
-// const paswrd = "password123";
+
+const paswrd = "asd";
+const specChars = ["*", "@", "_"];
+const nums = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
+
+        
 // const hashedPass = bcrypt.hashSync(paswrd, 10);
 
 // console.log(paswrd)
@@ -138,7 +190,7 @@ const userReg = async (req, res)=>{
 // console.log(bcrypt.compareSync(paswrd, hashedPass))
 
 
-//console.log(new Date(Date.now()))
+
 
 
 const userLogin = async (req, res)=>{
