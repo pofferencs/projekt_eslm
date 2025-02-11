@@ -1,5 +1,8 @@
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
+const jwt = require('jsonwebtoken');
+const cookieParser = require('cookie-parser');
+
 
 const userList = async (req, res) => {
     try {
@@ -44,6 +47,12 @@ const userUpdate = async (req, res) => {
         res.status(500).json({ message: "Hiba a fetch során!" })
     }
 }
+
+
+
+
+
+
 
 module.exports = {
     userList,

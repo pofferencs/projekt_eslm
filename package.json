@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cookie-parser": "^1.4.7",
+    "fs": "^0.0.1-security",
+    "https": "^1.0.0",
+    "jsonwebtoken": "^9.0.2",
+    "path": "^0.12.7"
+  }
+}
