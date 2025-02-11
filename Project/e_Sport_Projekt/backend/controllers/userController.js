@@ -62,7 +62,7 @@ const userReg = async (req, res)=>{
     const { full_name, date_of_birth , usr_name, paswrd, school, clss, email_address, phone_num, discord_name, om_identifier } = req.body;
 
     try {
-
+        
             //Vizsgáláshoz szükséges adatok (tömbben)
         const angolABC = [
             "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", 
@@ -73,7 +73,15 @@ const userReg = async (req, res)=>{
         const specChars = ["*", "@", "_"];
         const nums = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
 
-        //1. Felhasználónév ellenőrzése
+
+        //1. Adatok meglétének ellenőrzése
+
+        if(!full_name || !usr_name || !paswrd || !date_of_birth || !school || !clss || !email_address || !phone_num || !discord_name || !om_identifier){
+            return res.status(400).json({message:"Hiányos adatok!"});
+        }
+
+
+        //2. Felhasználónév ellenőrzése
 
         const usernameCheck = await prisma.users.findFirst({
             where: {
@@ -82,10 +90,32 @@ const userReg = async (req, res)=>{
         });
 
         if(usernameCheck){
-            return res.status(400).json({message:"A felhasználói név foglalt!"})
+            return res.status(400).json({message:"A felhasználónév foglalt!"})
+        }
+            //Csapatnév ellenőrzés
+        const teamNameCheck = await prisma.teams.findFirst({
+            where: {
+                full_name: usr_name
+            }
+        })
+
+        if(teamNameCheck){
+            return res.status(400).json({message:"A felhasználónév, amit megadtál, megegyezik egy csapat teljes nevével. Adj meg újat!"})
         }
 
-        //2. E-mail cím ellenőrzése
+            //Számmal kezdődés
+        if(nums.includes(usr_name.charAt(0))){
+            return res.status(400).json({message: "Számmal nem kezdődhet a felhasználónév!"});
+        }
+
+            //Név hosszának ellenőrzése
+        if(usr_name.length < 3 || usr_name.length > 16){
+            return res.status(400).json({message: "Minimum 3, maximum 16 karakterből állhat a felhasználóneved!"});
+        }
+
+
+
+        //3. E-mail cím ellenőrzése
         const emailCheck = await prisma.users.findFirst({
             where: {
                 email_address: email_address
@@ -96,19 +126,15 @@ const userReg = async (req, res)=>{
             return res.status(400).json({message:"Ezzel az email címmel már regisztráltak!"});
         }
 
-        //3. Adatok meglétének ellenőrzése
-
-        if(!full_name || !usr_name || !paswrd || !date_of_birth || !school || !clss || !email_address || !phone_num || !discord_name || !om_identifier){
-            return res.status(400).json({message:"Hiányos adatok!"});
-        }
-        if(om_identifier.length() != 11){
+        
+        if(om_identifier.length != 11){
             return res.status(400).json({message: "Rosszul adtad meg az OM-azonosítód!"})
         }
 
         //4. Jelszó ellenőrzése, utána a hash létrehozása
 
             //Jelszó min. hosszúságának ellenőrzése
-        if(paswrd.length() < 8){
+        if(paswrd.length < 8){
             return res.status(400).json({message: "Túl rövid a jelszó!"});
         }
 
@@ -116,8 +142,13 @@ const userReg = async (req, res)=>{
         if(specChars.includes(paswrd.charAt(0))){
             return res.status(400).json({message: "Különleges karakterekkel nem kezdődhet a jelszó!"});
         }
+
+            //Van-e különleges karakter a jelszóban (kötelező)
+        if(!paswrd.split("").some(specCh=> specChars.includes(specCh))){
+            return res.status(400).json({message: "A jelszónak tartalmaznia kell különleges karaktereket! ('*', '@', '_')"});
+        }
         
-            //Van-e szám a jelszóban
+            //Van-e szám a jelszóban (kötelező)
         if(!paswrd.split("").some(szam=> nums.includes(szam))){
             return res.status(400).json({message: "A jelszónak tartalmaznia kell számot!"});
         }
@@ -133,41 +164,68 @@ const userReg = async (req, res)=>{
         }
 
 
+        //Dátum átkonvertálása helyes adattípusra
+        const szulDat = new Date(date_of_birth);
+
+        //Discord név hosszának ellenőrzése (32 karakter hivatalosan a username)
+        if(!discord_name.length > 32){
+            return res.status(400).json({message: "Túl hosszú a Discord felhasználóneved!"});
+        }
+
         
         const hashedPass = await bcrypt.hash(paswrd, 10);
 
-        //Felhasználó regisztrálása a megfelelő adatokkal
+        //5. Felhasználó regisztrálása a megfelelő adatokkal
             //Felhasználó felvétele a pictureLinks táblába
 
             let date = new Date();
-            let usna_last_mod_date = new Date(new Date(date).setMonth(date.getMonth()- 3));
-            let email_last_mod_date = new Date(new Date(date).setMonth(date.getMonth()- 1));
+            let uname_last_mod_date = new Date(new Date(date).setMonth(date.getMonth()- 3));
+            let mail_last_mod_date = new Date(new Date(date).setMonth(date.getMonth()- 1));
 
         const newUser = await prisma.users.create({
             data:{
-                inviteable: 0,
+                inviteable: true,
                 full_name: full_name,
                 usr_name: usr_name,
-                usna_last_mod_date: usna_last_mod_date,
+                usna_last_mod_date: uname_last_mod_date,
                 usna_mod_num_remain: 3,
                 paswrd: hashedPass,
-                date_of_birth: date_of_birth, 
+                date_of_birth: szulDat, 
                 school: school,
                 clss: clss,
                 email_address: email_address,
+                email_last_mod_date: mail_last_mod_date,
                 phone_num: phone_num,
-                discord_name: discord_name,
-                email_last_mod_date: email_last_mod_date,
-                
-                status: "active",
                 om_identifier: om_identifier,
-                               
+                status: "active",
+                discord_name: discord_name,
+                
 
             }
         })
 
+            //Süti
+        const token = tokenGen(newUser.id);
 
+        res.cookie('token', token, {
+            secure: true,
+            httpOnly: true,
+            sameSite: 'none',
+            maxAge: 360000
+        });
 
+        console.log(`${newUser.usr_name} (ID: ${newUser.id}) tokenje: ${token}`);
+
+            //kép hozzárendelés a fiókhoz
+        const newPicLink = await prisma.picture_Links.create({
+            data: {
+                uer_id: newUser.id,
+                pte_id: 1 //vagy ami ide jön pteId
+            }
+        })
+
+        console.log(`${{newPicLink}}`)
+        return res.status(200).json({message: "A regisztráció sikeres!"});
         
     } catch (error) {
         console.log(error);
@@ -175,16 +233,9 @@ const userReg = async (req, res)=>{
     }    
 }
 
-
-
-
-// const paswrd = "asd";
-// const specChars = ["*", "@", "_"];
-// const nums = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
-
-        
+    //Tesztelés a hash-jelszó összehasonlításhoz
+// const passwrd = "valami"
 // const hashedPass = bcrypt.hashSync(paswrd, 10);
-
 // console.log(paswrd)
 // console.log(hashedPass)
 // console.log(bcrypt.compareSync(paswrd, hashedPass))
@@ -244,5 +295,6 @@ const userLogin = async (req, res)=>{
 module.exports = {
     userList,
     userUpdate,
-    userLogin
+    userLogin,
+    userReg
 }

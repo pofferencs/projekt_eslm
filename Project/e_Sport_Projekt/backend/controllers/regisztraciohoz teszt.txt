@@ -1,0 +1,12 @@
+{
+  "full_name": "",
+  "usr_name": "",
+  "paswrd": "",
+  "date_of_birth": "",
+  "school": "",
+  "clss": "",
+  "email_address": "",
+  "phone_num": "",
+  "om_identifier": "",
+  "discord_name": ""
+}

@@ -7,9 +7,10 @@ const router = express.Router();
 //const { gameDelete } = require('../controllers/gameController');
 //const { pictureDelete } = require('../controllers/pictureController');
 //const { tournamentDelete } = require('../controllers/tournamentController');
-const {userLogin} = require('../controllers/userController');
+const {userLogin, userReg} = require('../controllers/userController');
 
 router.post('/login', userLogin);
+router.post('/register', userReg);
 
 //router.delete('/application', applicationDelete)
 //router.delete('/event', eventDelete);
