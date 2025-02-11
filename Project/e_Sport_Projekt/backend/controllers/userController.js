@@ -1,7 +1,6 @@
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 const jwt = require('jsonwebtoken');
-const cookieParser = require('cookie-parser');
 
 
 const userList = async (req, res) => {
@@ -49,7 +48,13 @@ const userUpdate = async (req, res) => {
 }
 
 
+//Login és Regisztráció
 
+const tokenGen = (id)=>{
+    return jwt.sign({id}, process.env.JWT_SECRET, {expiresIn: "1h"});
+}
+
+//Todo: login, regisztráció ÉS middleware
 
 
 
