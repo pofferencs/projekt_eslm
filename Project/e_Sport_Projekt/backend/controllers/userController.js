@@ -130,7 +130,7 @@ const userReg = async (req, res)=>{
 //let last_mod_date = new Date(Date.now())
 
 
-// const paswrd = "alicepass";
+// const paswrd = "password123";
 // const hashedPass = bcrypt.hashSync(paswrd, 10);
 
 // console.log(paswrd)
@@ -152,6 +152,12 @@ const userLogin = async (req, res)=>{
             }
         })
 
+
+        if(usr_name == null || paswrd == null){
+            return res.status(400).json({message: "Nincs megadott adat!"})
+        }
+
+        
         if(!userL){
             return res.status(400).json({message:"Nincs ilyen felhasználó!"});
         }
@@ -159,7 +165,7 @@ const userLogin = async (req, res)=>{
         if(!bcrypt.compareSync(paswrd, userL.paswrd)){
             return res.status(400).json({message: "A jelszó nem megfelelő!"});
         }
-
+        
 
         const token = tokenGen(userL.id);
 
