@@ -1,3 +1,6 @@
+Regisztráció:
+https://localhost:8000/user/register
+
 {
   "full_name": "",
   "usr_name": "",
@@ -9,4 +12,12 @@
   "phone_num": "",
   "om_identifier": "",
   "discord_name": ""
+}
+
+Bejelentkezés:
+https://localhost:8000/user/login
+
+{
+  "usr_name": "",
+  "paswrd": ""
 }

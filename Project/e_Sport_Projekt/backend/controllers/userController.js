@@ -241,9 +241,6 @@ const userReg = async (req, res)=>{
 // console.log(bcrypt.compareSync(paswrd, hashedPass))
 
 
-
-
-
 const userLogin = async (req, res)=>{
     const {usr_name, paswrd} = req.body
 
@@ -290,11 +287,43 @@ const userLogin = async (req, res)=>{
 
 }
 
+const userLogout = async (req, res) => {
+    res.clearCookie('token', {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'none'
+    });
+    res.status(200).json({message: "Kijelentkezve."});
+}
+
+
+
+const protected = async (req, res)=>{
+    const {usr_name} = req.body;
+    const token = tokenGen(usr_name);
+
+    res.cookie('token', token, {
+        secure: true,
+        httpOnly: true,
+        sameSite: 'none',
+        maxAge: 360000
+    });
+
+    res.json(token);
+}
+
+
+const isAuthenticated = async (req, res)=>{
+    res.json({"authenticated": true, user:req.user});
+};
 
 
 module.exports = {
     userList,
     userUpdate,
     userLogin,
-    userReg
+    userReg,
+    protected,
+    isAuthenticated,
+    userLogout
 }

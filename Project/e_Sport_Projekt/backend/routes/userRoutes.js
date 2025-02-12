@@ -7,10 +7,14 @@ const router = express.Router();
 //const { gameDelete } = require('../controllers/gameController');
 //const { pictureDelete } = require('../controllers/pictureController');
 //const { tournamentDelete } = require('../controllers/tournamentController');
-const {userLogin, userReg} = require('../controllers/userController');
+const {userLogin, userReg, userLogout, isAuthenticated, protected} = require('../controllers/userController');
+const { protect } = require('../middlewares/authMiddleware');
 
 router.post('/login', userLogin);
 router.post('/register', userReg);
+router.get('/protected', protect, protected);
+router.get('/auth', protect, isAuthenticated);
+router.post('/logout', protect, userLogout);
 
 //router.delete('/application', applicationDelete)
 //router.delete('/event', eventDelete);
