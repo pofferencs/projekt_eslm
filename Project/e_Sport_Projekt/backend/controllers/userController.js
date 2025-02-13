@@ -109,7 +109,7 @@ const userReg = async (req, res)=>{
         }
 
             //Név hosszának ellenőrzése
-        if(usr_name.length < 3 || usr_name.length > 16){
+        if(usr_name.length < 3 || usr_name.length > 17){
             return res.status(400).json({message: "Minimum 3, maximum 16 karakterből állhat a felhasználóneved!"});
         }
 
@@ -134,7 +134,7 @@ const userReg = async (req, res)=>{
         //4. Jelszó ellenőrzése, utána a hash létrehozása
 
             //Jelszó min. hosszúságának ellenőrzése
-        if(paswrd.length < 8){
+        if(paswrd.length < 9){
             return res.status(400).json({message: "Túl rövid a jelszó!"});
         }
 
@@ -168,7 +168,7 @@ const userReg = async (req, res)=>{
         const szulDat = new Date(date_of_birth);
 
         //Discord név hosszának ellenőrzése (32 karakter hivatalosan a username)
-        if(!discord_name.length > 32){
+        if(discord_name.length > 32){
             return res.status(400).json({message: "Túl hosszú a Discord felhasználóneved!"});
         }
 
@@ -224,7 +224,6 @@ const userReg = async (req, res)=>{
             }
         })
 
-        console.log(`${{newPicLink}}`)
         return res.status(200).json({message: "A regisztráció sikeres!"});
         
     } catch (error) {
@@ -242,19 +241,20 @@ const userReg = async (req, res)=>{
 
 
 const userLogin = async (req, res)=>{
-    const {usr_name, paswrd} = req.body
+    const {usr_name, email_address, paswrd} = req.body
 
     try {
 
         const userL = await prisma.users.findFirst({
             where: {
-                usr_name: usr_name
+                usr_name: usr_name,
+                email_address: email_address
             }
         })
 
 
-        if(usr_name == null || paswrd == null){
-            return res.status(400).json({message: "Nincs megadott adat!"})
+        if((!usr_name && !paswrd) || (!email_address && !paswrd)){
+            return res.status(400).json({message: "Nincs megadott adat!"});
         }
 
         

@@ -54,7 +54,7 @@ const protect = async (req, res, next) =>{
         //     sameSite: 'none',
         //     maxAge: 360000});
 
-        return res.status(401).json({message: "Be kell jelentkezni!"});đ
+        return res.status(401).json({message: "Be kell jelentkezni!"});
     }
 
 
