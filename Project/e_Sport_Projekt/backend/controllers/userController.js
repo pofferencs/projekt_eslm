@@ -89,9 +89,7 @@ const userReg = async (req, res)=>{
             }
         });
 
-        if(usernameCheck){
-            return res.status(400).json({message:"A felhasználónév foglalt!"})
-        }
+        
             //Csapatnév ellenőrzés
         const teamNameCheck = await prisma.teams.findFirst({
             where: {
@@ -99,22 +97,24 @@ const userReg = async (req, res)=>{
             }
         })
 
-        if(teamNameCheck){
-            return res.status(400).json({message:"A felhasználónév, amit megadtál, megegyezik egy csapat teljes nevével. Adj meg újat!"})
-        }
+        const numCheck = nums.includes(usr_name.charAt(0));
 
+
+        if(usernameCheck){
+            return res.status(400).json({message:"A felhasználónév foglalt!"})
+        }else if(teamNameCheck)
+        {
+            return res.status(400).json({message:"A felhasználónév, amit megadtál, megegyezik egy csapat teljes nevével. Adj meg újat!"})
+        }else if(numCheck){
             //Számmal kezdődés
-        if(nums.includes(usr_name.charAt(0))){
             return res.status(400).json({message: "Számmal nem kezdődhet a felhasználónév!"});
         }
-
-            //Név hosszának ellenőrzése
+     
+           //Név hosszának ellenőrzése
         if(usr_name.length < 3 || usr_name.length > 17){
             return res.status(400).json({message: "Minimum 3, maximum 16 karakterből állhat a felhasználóneved!"});
         }
-
-
-
+        
         //3. E-mail cím ellenőrzése
         const emailCheck = await prisma.users.findFirst({
             where: {
@@ -125,7 +125,6 @@ const userReg = async (req, res)=>{
         if(emailCheck){
             return res.status(400).json({message:"Ezzel az email címmel már regisztráltak!"});
         }
-
         
         if(om_identifier.length != 11){
             return res.status(400).json({message: "Rosszul adtad meg az OM-azonosítód!"})
@@ -133,35 +132,43 @@ const userReg = async (req, res)=>{
 
         //4. Jelszó ellenőrzése, utána a hash létrehozása
 
+        const upperCheck = paswrd.match(/[A-Z]/);
+        const lowerCheck = paswrd.match(/[a-z]/);
+        const alphabet = paswrd.match(/^[A-Za-z]+$/);
+        
+        
+
             //Jelszó min. hosszúságának ellenőrzése
         if(paswrd.length < 9){
             return res.status(400).json({message: "Túl rövid a jelszó!"});
+        }else
+            //Nagybetű ellenőrzés
+        if(!upperCheck){
+            return res.status(400).json({message: "Egy nagybetűt meg kell adj a jelszónál!"});
+        }else
+        if(!lowerCheck){
+            return res.status(400).json({message: "Kisbetűket meg kell adnod a jelszónál!"});
+        }else
+        //Előző: 
+        if(!paswrd.split("").some(szam=> nums.includes(szam))){
+            //Van-e szám a jelszóban (kötelező)
+            return res.status(400).json({message: "A jelszónak tartalmaznia kell számot!"});
         }
-
+        if(!paswrd.split("").some(betu=> angolABC.includes(betu)) && paswrd.split("").some(szam=> nums.includes(szam))){
+            //Ékezetek ellenőrzése
+            //Előző: 
+            return res.status(400).json({message: "Csak az angol ABC betűi elfogadottak a jelszónál!"});
+        }else
+            //Előző: 
+        if(!paswrd.split("").some(specCh=> specChars.includes(specCh))){
+            //Van-e különleges karakter a jelszóban (kötelező)
+            return res.status(400).json({message: "A jelszónak tartalmaznia kell különleges karaktereket! ('*', '@', '_')"});
+        }else
             //Különleges karakterrel való kezdődés
         if(specChars.includes(paswrd.charAt(0))){
             return res.status(400).json({message: "Különleges karakterekkel nem kezdődhet a jelszó!"});
-        }
-
-            //Van-e különleges karakter a jelszóban (kötelező)
-        if(!paswrd.split("").some(specCh=> specChars.includes(specCh))){
-            return res.status(400).json({message: "A jelszónak tartalmaznia kell különleges karaktereket! ('*', '@', '_')"});
-        }
+        }        
         
-            //Van-e szám a jelszóban (kötelező)
-        if(!paswrd.split("").some(szam=> nums.includes(szam))){
-            return res.status(400).json({message: "A jelszónak tartalmaznia kell számot!"});
-        }
-
-            //Nagybetű ellenőrzés
-        if(!paswrd.match(/[A-Z]/)){
-            return res.status(400).json({message: "Egy nagybetűt meg kell adj a jelszónál!"});
-        }
-
-            //Ékezetek ellenőrzése
-        if(!paswrd.split("").some(betu=> angolABC.includes(betu))){
-            return res.status(400).json({message: "Csak az angol ABC betűi elfogadottak a jelszónál!"});
-        }
 
 
         //Dátum átkonvertálása helyes adattípusra
