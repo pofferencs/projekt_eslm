@@ -54,13 +54,13 @@ const applicationInsert = async (req, res) => {
                 data: {
                     dte: dte,
                     status: status,
-                    uer_id: uer_id,                    
+                    uer_id: uer_id,
                     tem_id: tem_id,
                     tnt_id: tnt_id
                 }
             })
-        }else{
-            return res.status(400).json({message: "Hiba! Már jelentkeztél!"})
+        } else {
+            return res.status(400).json({ message: "Hiba! Már jelentkeztél!" })
         }
 
         // Egyéni jelentkezés
@@ -68,7 +68,7 @@ const applicationInsert = async (req, res) => {
             where: {
                 uer_id: uer_id,
                 tem_id: null,
-                tnt_id:tnt_id
+                tnt_id: tnt_id
             }
         });
         if (!applicatedSolo) {
@@ -76,15 +76,15 @@ const applicationInsert = async (req, res) => {
                 data: {
                     dte: dte,
                     status: status,
-                    uer_id: uer_id,                    
+                    uer_id: uer_id,
                     tem_id: tem_id,
                     tnt_id: tnt_id
                 }
             })
-        }else{
-            return res.status(400).json({message: "Hiba! Már jelentkeztél!"})
+        } else {
+            return res.status(400).json({ message: "Hiba! Már jelentkeztél!" })
         }
-        
+
         return res.status(200).json({ message: "Sikeres adatfrissítés!" });
     }
     catch (error) {
@@ -93,21 +93,21 @@ const applicationInsert = async (req, res) => {
     }
 }
 
-const applicationDelete = async (req, res) =>{
+const applicationDelete = async (req, res) => {
 
     const { id, tnt_id } = req.body;
 
     try {
         const applications = await prisma.applications.delete({
-            where:{
-                id_tnt_id:{
+            where: {
+                id_tnt_id: {
                     id: id,
                     tnt_id: tnt_id
                 }
             }
         })
-        res.status(200).json({message: "Sikeres törlés!"})
-        
+        res.status(200).json({ message: "Sikeres törlés!" })
+
     } catch (err) {
         console.log(err);
         res.status(500).json({ message: "Hiba a törlés során!" });

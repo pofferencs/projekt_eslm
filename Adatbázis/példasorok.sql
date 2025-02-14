@@ -3,7 +3,12 @@ INSERT INTO `users` (`id`, `inviteable`, `full_name`, `usr_name`, `usna_last_mod
 (2, 0, 'Jane Smith', 'janesmith', '2024-12-17 09:06:23', 5, 'password321', '1999-05-15', 'School B', '11B', 'janesmith@example.com', '2024-12-17 09:06:23', '0987654321', 'OM23456789', 'inactive', 'janesmith#5678'),
 (3, 1, 'Alice Johnson', 'alicej', '2024-12-17 09:06:23', 1, 'alicepass', '2001-03-23', 'School C', '10C', 'alice@example.com', '2024-12-17 09:06:23', '1122334455', 'OM34567890', 'active', 'alicej#9101'),
 (4, 1, 'Bob Brown', 'bobbrown', '2024-12-17 09:06:23', 2, 'bobpass', '2000-07-12', 'School D', '12D', 'bobbrown@example.com', '2024-12-17 09:06:23', '5566778899', 'OM45678901', 'active', 'bobbrown#2345'),
-(5, 0, 'Charlie Green', 'charlieg', '2024-12-17 09:06:23', 0, 'charliepass', '2002-11-05', 'School E', '9A', 'charlie@example.com', '2024-12-17 09:06:23', '6677889900', 'OM56789012', 'inactive', 'charlieg#3456');
+(5, 0, 'Charlie Green', 'charlieg', '2024-12-17 09:06:23', 0, 'charliepass', '2002-11-05', 'School E', '9A', 'charlie@example.com', '2024-12-17 09:06:23', '6677889900', 'OM56789012', 'inactive', 'charlieg#3456'),
+(6, 1, 'David White', 'davidw', '2024-12-17 09:06:23', 4, 'davidpass', '1998-08-30', 'School F', '12B', 'davidw@example.com', '2024-12-17 09:06:23', '7788990011', 'OM67890123', 'active', 'davidw#5678'),
+(7, 0, 'Emma Black', 'emmab', '2024-12-17 09:06:23', 2, 'emmapass', '2003-06-21', 'School G', '10B', 'emmab@example.com', '2024-12-17 09:06:23', '8899001122', 'OM78901234', 'inactive', 'emmab#6789'),
+(8, 1, 'Frank Harris', 'frankh', '2024-12-17 09:06:23', 3, 'frankpass', '2001-02-14', 'School H', '11A', 'frankh@example.com', '2024-12-17 09:06:23', '9900112233', 'OM89012345', 'active', 'frankh#7890'),
+(9, 1, 'Grace Adams', 'gracea', '2024-12-17 09:06:23', 1, 'gracepass', '2000-09-09', 'School I', '12C', 'gracea@example.com', '2024-12-17 09:06:23', '1122334455', 'OM90123456', 'active', 'gracea#8901'),
+(10, 0, 'Henry Wilson', 'henryw', '2024-12-17 09:06:23', 5, 'henrypass', '1999-12-03', 'School J', '11C', 'henryw@example.com', '2024-12-17 09:06:23', '2233445566', 'OM01234567', 'inactive', 'henryw#9012');
 
 INSERT INTO `teams` (`id`, `short_name`, `full_name`, `creator_id`) VALUES
 (1, 'ABCD', 'Alpha Bravo Char', 1),

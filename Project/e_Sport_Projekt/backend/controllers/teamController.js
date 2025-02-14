@@ -1,57 +1,98 @@
-const {PrismaClient} = require('@prisma/client');
+const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
-const teamList = async (req,res) =>{
+const teamList = async (req, res) => {
     try {
         const teams = await prisma.teams.findMany();
         res.status(200).json(teams);
     }
-    catch(error){
+    catch (error) {
         console.log(error);
-        res.status(500).json({message: "Hiba a fetch során!"})
+        res.status(500).json({ message: "Hiba a fetch során!" })
     }
 }
 
-const teamUpdate = async (req,res)=>{
-    const {id, short_name, full_name, creator_id} = req.body
-    try{
-        const team = await prisma.teams.update({
-            where:{
-                id: id
-            },
-            data:{
-                short_name: short_name,
-                full_name : full_name,
-                creator_id :creator_id
-            }
-        });
-        return res.status(200).json({ message: "Sikeres adatfrissítés!" });
-    }
-    catch(error){
-        console.log(error);
-        return res.status(500).json({message: "Hiba a fetch során!"})
+const teamUpdate = async (req, res) => {
+    const { id, short_name, full_name, creator_id } = req.body;
+
+    const existingTeam = await prisma.teams.findFirst({
+        where: {
+            full_name: full_name
+        }
+    })
+
+    if (existingTeam) {
+        return res.status(400).json({ message: "Ez a csapatnév foglalt!" })
+    } else {
+        try {
+            const team = await prisma.teams.update({
+                where: {
+                    id: id
+                },
+                data: {
+                    short_name: short_name,
+                    full_name: full_name,
+                    creator_id: creator_id
+                }
+            });
+            return res.status(200).json({ message: "Sikeres adatfrissítés!" });
+        }
+        catch (error) {
+            console.log(error);
+            return res.status(500).json({ message: "Hiba a fetch során!" })
+        }
     }
 }
 
-const teamDelete = async (req, res) =>{
-    const {id} = req.body;
+const teamInsert = async (req, res) => {
+    const { short_name, full_name, creator_id } = req.body;
+
+    const existingTeam = await prisma.teams.findFirst({
+        where: {
+            full_name: full_name
+        }
+    })
+
+    if (existingTeam) {
+        return res.status(400).json({ message: "Ez a csapatnév foglalt!" })
+    } else {
+        try {
+            const team = await prisma.teams.create({
+                data: {
+                    short_name: short_name,
+                    full_name: full_name,
+                    creator_id: creator_id
+                }
+            });
+            return res.status(200).json({ message: "Sikeres csapat létrehozás!" });
+        }
+        catch (error) {
+            console.log(error);
+            return res.status(500).json({ message: "Hiba a fetch során!" })
+        }
+    }
+}
+
+const teamDelete = async (req, res) => {
+    const { id } = req.body;
 
     try {
         const team = await prisma.teams.delete({
-            where:{
+            where: {
                 id: id
             }
         });
-        return res.status(200).json({message: "Sikeres törlés!"})
+        return res.status(200).json({ message: "Sikeres törlés!" })
 
     } catch (error) {
         console.log(error);
-        return res.status(500).json({message: "Hiba a fetch során!"})
+        return res.status(500).json({ message: "Hiba a fetch során!" })
     }
 }
 
-module.exports={
+module.exports = {
     teamList,
     teamUpdate,
+    teamInsert,
     teamDelete
 }
