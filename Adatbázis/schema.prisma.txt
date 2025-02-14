@@ -20,7 +20,7 @@ model Users {
   usr_name            String             @db.VarChar(16)
   usna_last_mod_date  DateTime
   usna_mod_num_remain Int
-  paswrd              String             @db.VarChar(32)
+  paswrd              String             @db.VarChar(60)
   date_of_birth       DateTime           @db.Date
   school              String             @db.VarChar(100)
   clss                String             @db.VarChar(10)

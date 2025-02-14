@@ -21,14 +21,14 @@ Jelenlegi teendők:
                 ✔ event
                 ✔ game
                 ✔ teamMembership
+                ✔ user
                 - match
                 - picture
                 - pictureLink
                 - team
                 - tournament
-                - user
                 
-    - regisztráció, belépés, kijelentkezés, token/cookie megvalósítás
+    ✔ regisztráció, belépés, kijelentkezés, token/cookie megvalósítás
 
 Kész dolgok:
     ✔ ötletelés
