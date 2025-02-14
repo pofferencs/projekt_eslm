@@ -47,11 +47,19 @@ const teamUpdate = async (req, res) => {
 const teamInsert = async (req, res) => {
     const { short_name, full_name, creator_id } = req.body;
 
+    if(!short_name || !full_name || !creator_id){
+        return res.status(400).json({ message: "Hiányos adatok!" });
+    }
+
     const existingTeam = await prisma.teams.findFirst({
         where: {
             full_name: full_name
         }
     })
+    
+    if(full_name.length > 16 || full_name.length < 3){
+        return res.status(400).json({ message: "Túl hosszú vagy rövid csapatnevet adtál meg! (Minimum 3, maximum 16 karakter!)" });
+    }    
 
     if (existingTeam) {
         return res.status(400).json({ message: "Ez a csapatnév foglalt!" })
@@ -64,6 +72,15 @@ const teamInsert = async (req, res) => {
                     creator_id: creator_id
                 }
             });
+
+
+            const newPicLink = await prisma.picture_Links.create({
+                data: {
+                    tem_id: team.id,
+                    pte_id: 3 //vagy ami ide jön pteId
+                }
+            })
+
             return res.status(200).json({ message: "Sikeres csapat létrehozás!" });
         }
         catch (error) {
