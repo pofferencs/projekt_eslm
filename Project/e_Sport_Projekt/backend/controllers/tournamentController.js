@@ -38,16 +38,42 @@ const tournamentUpdate = async (req, res) =>{
                 details: details
             }
         });
-        res.status(200).json({ message: "Sikeres adatfrissítés, felahsználó kép!" });
+        return res.status(200).json({ message: "Sikeres adatfrissítés, felahsználó kép!" });
     }
     catch (error) {
         console.log(error);
-        res.status(500).json({ message: "Hiba a fetch során!" })
+        return res.status(500).json({ message: "Hiba a fetch során!" })
     }
 
 };
 
+const tournamentDelete = async (req, res)=>{
+
+    const { id, evt_id, gae_id } = req.body;
+
+    try {
+
+        const tournaments = await prisma.tournaments.delete({
+            where:{
+                id_evt_id_gae_id:{
+                    id: id,
+                    evt_id: evt_id,
+                    gae_id: gae_id
+                }
+            }
+        });
+        res.status(200).json({message: "Sikeres törlés!"})
+        
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ message: "Hiba a törlés során!" })
+    }
+
+
+}
+
 module.exports = {
     tournamentList,
-    tournamentUpdate
+    tournamentUpdate,
+    tournamentDelete
 }

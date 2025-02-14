@@ -1,0 +1,13 @@
+model Applications {
+  id         Int         @id @default(autoincrement())
+  dte        DateTime
+  status     String      @db.VarChar(12)
+  uer_id     Int?
+  tem_id     Int?
+  tnt_id     Int
+  user       Users?      @relation(fields: [uer_id], references: [id], onDelete: Restrict)
+  team       Teams?      @relation(fields: [tem_id], references: [id], onDelete: Restrict)
+  tournament Tournaments @relation(fields: [tnt_id], references: [id], onDelete: Cascade)
+
+  @@unique([uer_id, tem_id, tnt_id])
+}

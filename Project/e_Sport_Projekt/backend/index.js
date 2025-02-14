@@ -20,6 +20,7 @@ app.use(cookieParser())
 
 app.use('/list',require('./routes/listsRoutes'));
 app.use('/update',require('./routes/updateRoutes'));
+
 app.use('/user', require('./routes/userRoutes'));
 
 const options = {
@@ -28,6 +29,10 @@ const options = {
 }
 
 const server = https.createServer(options,app);
+
+app.use('/insert',require('./routes/insertRoutes'));
+app.use('/delete',require('./routes/deleteRoutes'));
+
 
 server.listen(8000,()=>{console.log("Fut a szerver")});
 

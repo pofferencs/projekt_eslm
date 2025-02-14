@@ -14,21 +14,19 @@ const applicationList = async (req, res) => {
 
 
 const applicationUpdate = async (req, res) => {
-    const { id, dte, status, uer_id, tem_id, tnt_id } = req.body;
+    const { status, uer_id, tem_id, tnt_id } = req.body;
 
     try {
-        const applications = await prisma.applications.update({
+        const application = await prisma.applications.update({
             where: {
-                id_tnt_id: {
-                    id: id,
+                uer_id_tem_id_tnt_id: {
+                    uer_id: uer_id,
+                    tem_id: tem_id,
                     tnt_id: tnt_id
                 }
             },
             data: {
-                dte: dte,
-                status: status,
-                uer_id: uer_id,
-                tem_id: tem_id
+                status: status
             }
         });
         res.status(200).json({ message: "Sikeres adatfrissítés!" });
@@ -39,8 +37,87 @@ const applicationUpdate = async (req, res) => {
     }
 }
 
+const applicationInsert = async (req, res) => {
+    const { dte, status, tem_id, tnt_id, uer_id } = req.body;
+
+    try {
+        // Csapatos jelentkezés
+        const applicatedTeam = await prisma.applications.findFirst({
+            where: {
+                uer_id: uer_id,
+                tem_id: tem_id,
+                tnt_id: tnt_id
+            }
+        });
+        if (!applicatedTeam) {
+            const application = await prisma.applications.create({
+                data: {
+                    dte: dte,
+                    status: status,
+                    uer_id: uer_id,                    
+                    tem_id: tem_id,
+                    tnt_id: tnt_id
+                }
+            })
+        }else{
+            return res.status(400).json({message: "Hiba! Már jelentkeztél!"})
+        }
+
+        // Egyéni jelentkezés
+        const applicatedSolo = await prisma.applications.findFirst({
+            where: {
+                uer_id: uer_id,
+                tem_id: null,
+                tnt_id:tnt_id
+            }
+        });
+        if (!applicatedSolo) {
+            const application = await prisma.applications.create({
+                data: {
+                    dte: dte,
+                    status: status,
+                    uer_id: uer_id,                    
+                    tem_id: tem_id,
+                    tnt_id: tnt_id
+                }
+            })
+        }else{
+            return res.status(400).json({message: "Hiba! Már jelentkeztél!"})
+        }
+        
+        return res.status(200).json({ message: "Sikeres adatfrissítés!" });
+    }
+    catch (error) {
+        console.log(error);
+        return res.status(500).json({ message: "Hiba a fetch során!" });
+    }
+}
+
+const applicationDelete = async (req, res) =>{
+
+    const { id, tnt_id } = req.body;
+
+    try {
+        const applications = await prisma.applications.delete({
+            where:{
+                id_tnt_id:{
+                    id: id,
+                    tnt_id: tnt_id
+                }
+            }
+        })
+        res.status(200).json({message: "Sikeres törlés!"})
+        
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ message: "Hiba a törlés során!" });
+    }
+
+}
 
 module.exports = {
     applicationList,
-    applicationUpdate
+    applicationUpdate,
+    applicationInsert,
+    applicationDelete
 }
