@@ -2,17 +2,39 @@ const express=require('express');
 const cors=require('cors');
 const app=express();
 require('dotenv').config();
+const jwt = require('jsonwebtoken');
+const https = require('https');
+const cookieParser = require('cookie-parser');
+const fs = require('fs');
+const path = require('path');
+
 
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
-app.use(cors());
+app.use(cors({
+    origin: 'http://localhost:5173',
+    credentials: true
+    }
+));
+app.use(cookieParser())
 
 app.use('/list',require('./routes/listsRoutes'));
 app.use('/update',require('./routes/updateRoutes'));
+
+app.use('/user', require('./routes/userRoutes'));
+
+const options = {
+    key: fs.readFileSync(path.join(__dirname)+"/config/ssl/cert.key"),
+    cert: fs.readFileSync(path.join(__dirname)+"/config/ssl/cert.crt")
+}
+
+const server = https.createServer(options,app);
+
 app.use('/insert',require('./routes/insertRoutes'));
 app.use('/delete',require('./routes/deleteRoutes'));
 
-app.listen(8000,()=>{console.log("Fut a szerver")});
+
+server.listen(8000,()=>{console.log("Fut a szerver")});
 
 app.get('/',(req,res)=>{
     res.send("Esport adatbázisos Backend");

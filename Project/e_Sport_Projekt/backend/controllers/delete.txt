@@ -1,0 +1,102 @@
+const applicationDelete = async (req, res) =>{
+
+    const { id, tnt_id } = req.body;
+
+    try {
+        const applications = await prisma.applications.delete({
+            where:{
+                id_tnt_id:{
+                    id: id,
+                    tnt_id: tnt_id
+                }
+            }
+        })
+        res.status(200).json({message: "Sikeres törlés!"})
+        
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ message: "Hiba a törlés során!" });
+    }
+
+}
+
+
+const eventDelete = async (req, res) =>{
+
+    const { id } = req.body;
+
+    try {
+        const event = await prisma.events.delete({
+            where:{
+                id: id
+            }
+        })
+        res.status(200).json({message: "Sikeres törlés!"})
+        
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ message: "Hiba a törlés során!" });
+    }
+
+}
+
+const gameDelete = async (req, res) =>{
+
+    const { id } = req.body;
+
+    try {
+        const game = await prisma.games.delete({
+            where:{
+                id: id
+            }
+        })
+        res.status(200).json({message: "Sikeres törlés!"})
+        
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ message: "Hiba a törlés során!" });
+    }
+}
+
+const pictureDelete = async (req, res) =>{
+
+    const { id } = req.body;
+
+    try {
+        const picture = await prisma.pictures.delete({
+            where:{
+                id: id
+            }
+        })
+        res.status(200).json({message: "Sikeres törlés!"})
+        
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ message: "Hiba a törlés során!" });
+    }
+}
+
+const tournamentDelete = async (req, res)=>{
+
+    const { id, evt_id, gae_id } = req.body;
+
+    try {
+
+        const tournaments = await prisma.tournaments.delete({
+            where:{
+                id_evt_id_gae_id:{
+                    id: id,
+                    evt_id: evt_id,
+                    gae_id: gae_id
+                }
+            }
+        });
+        res.status(200).json({message: "Sikeres törlés!"})
+        
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ message: "Hiba a törlés során!" })
+    }
+
+
+}
