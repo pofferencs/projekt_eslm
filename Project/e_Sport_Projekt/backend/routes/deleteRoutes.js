@@ -14,9 +14,6 @@ const router = express.Router();
 //router.delete('/tournament', tournamentDelete);
 
 
-module.exports = router
-const router = express.Router();
-
 const { applicationDelete } = require('../controllers/applicationController');
 const { eventDelete } = require('../controllers/eventController');
 const { gameDelete } = require('../controllers/gameController');
