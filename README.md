@@ -6,16 +6,28 @@ Jelenlegi teendők:
     - OPTIMALIZÁLNI BACKENDEN A CONTROLLEREKET:
         - UPDATE és INSERT finomítása, hogy ne legyenek ismétlődő sorok:
             - UPDATE:
-                ✔ events
-                ✔ games
-                - applications: user, team, tournament alapján
-                - pictures: img_path alapján
-                - picture_links: user, team csak egyszer
-                - teames: full_name alapján
-                - team_memberships: user és team egyszerre nem szerepelhet többször
-                - tournaments: name alapján
-                - users: user_name, email_address, OM_identifier, discord_name
-        - INSERT, DELETE megírása
+                ✔ application
+                ✔ event
+                ✔ game
+                ✔ match
+                ✔ picture
+                ✔ pictureLink
+                ✔ team
+                ✔ teamMembership
+                - tournament
+                - user
+            - Insert:
+                ✔ application
+                ✔ event
+                ✔ game
+                ✔ teamMembership
+                - match
+                - picture
+                - pictureLink
+                - team
+                - tournament
+                - user
+                
     - regisztráció, belépés, kijelentkezés, token/cookie megvalósítás
 
 Kész dolgok:
