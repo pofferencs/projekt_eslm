@@ -26,9 +26,9 @@ Jelenlegi teendők:
                 - pictureLink
                 - team
                 - tournament
-                - user
+                ✔ user
                 
-    - regisztráció, belépés, kijelentkezés, token/cookie megvalósítás
+    ✔ regisztráció, belépés, kijelentkezés, token/cookie megvalósítás
 
 Kész dolgok:
     ✔ ötletelés
