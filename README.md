@@ -28,7 +28,7 @@ Jelenlegi teendők:
                 - pictureLink
                 - user
                 
-    - regisztráció, belépés, kijelentkezés, token/cookie megvalósítás
+    ✔ regisztráció, belépés, kijelentkezés, token/cookie megvalósítás
 
 Kész dolgok:
     ✔ ötletelés
