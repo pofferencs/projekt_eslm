@@ -9,24 +9,24 @@ Jelenlegi teendők:
                 ✔ application
                 ✔ event
                 ✔ game
-                ✔ match
                 ✔ picture
                 ✔ pictureLink
                 ✔ team
                 ✔ teamMembership
-                - tournament
+                ✔ tournament
+                - match (át kell beszélni)
                 - user
             - Insert:
                 ✔ application
                 ✔ event
                 ✔ game
+                ✔ match
+                ✔ team
                 ✔ teamMembership
-                ✔ user
-                - match
+                ✔ tournament
                 - picture
                 - pictureLink
-                - team
-                - tournament
+                - user
                 
     ✔ regisztráció, belépés, kijelentkezés, token/cookie megvalósítás
 
