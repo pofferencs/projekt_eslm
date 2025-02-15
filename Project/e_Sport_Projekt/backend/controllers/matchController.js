@@ -15,8 +15,43 @@ const matchList = async (req, res) => {
 const matchUpdate = async (req, res) => {
     const { id, tem1_id, tem2_id, tnt_id, status, place, dte, details, winner, rslt } = req.body;
 
+    if(!id || !tem1_id || !tem2_id || !tnt_id){
+        return res.status(400).json({message: "Hiányos adatok!"});
+    }
+
     try {
-        if (status != "ended" || status !== "started") {
+
+        //Verseny aktív időszakához szükséges adatok
+
+        const tournament = await prisma.tournaments.findFirst({
+            where: {
+                id: tnt_id
+            }
+        });
+
+        if(!tournament){
+            return res.status(400).json({message: "A megadott verseny nem található!"});
+        }
+
+        const tStartDate = new Date(tournament.start_date);
+        const tEndDate = new Date(tournament.end_date);
+
+        //Megadott dátum vizsgálata
+        const matchDate = new Date(dte);
+
+        const idoChecks = [
+            {condition: matchDate > tEndDate, message: "Az időpontot nem lehet megadni későbbre mint a verseny vége!"},
+            {condition: matchDate < tStartDate, message: "Az időpontot nem lehet megadni hamarabbra mint a verseny kezdete!"}
+        ]
+        
+        for (let validation of idoChecks) {
+            if (validation.condition) {
+                return res.status(400).json({ message: validation.message });
+            }
+        }
+
+
+        if (status != "ended" || status != "started") {
             const match = await prisma.matches.update({
                 where: {
                     id_tem1_id_tem2_id_tnt_id: {

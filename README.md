@@ -9,12 +9,12 @@ Jelenlegi teendők:
                 ✔ application
                 ✔ event
                 ✔ game
-                ✔ match
                 ✔ picture
                 ✔ pictureLink
                 ✔ team
                 ✔ teamMembership
                 ✔ tournament
+                - match (át kell beszélni)
                 - user
             - Insert:
                 ✔ application
