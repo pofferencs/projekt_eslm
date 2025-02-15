@@ -91,6 +91,28 @@ const matchUpdate = async (req, res) => {
 }
 
 
+const matchInsert = async (req, res)=>{
+
+    const { status, tem1_id, tem2_id, tnt_id } = req.body;
+
+    try {
+
+        
+
+
+
+        
+    } catch (error) {
+        console.log(err);
+        return res.status(500).json({ message: "Hiba a feltöltés során!" });
+    }
+
+
+
+}
+
+
+
 module.exports = {
     matchList,
     matchUpdate

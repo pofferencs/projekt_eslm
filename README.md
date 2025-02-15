@@ -14,18 +14,18 @@ Jelenlegi teendők:
                 ✔ pictureLink
                 ✔ team
                 ✔ teamMembership
-                - tournament
+                ✔ tournament
                 - user
             - Insert:
                 ✔ application
                 ✔ event
                 ✔ game
                 ✔ teamMembership
+                ✔ tournament
                 - match
                 - picture
                 - pictureLink
                 - team
-                - tournament
                 - user
                 
     - regisztráció, belépés, kijelentkezés, token/cookie megvalósítás

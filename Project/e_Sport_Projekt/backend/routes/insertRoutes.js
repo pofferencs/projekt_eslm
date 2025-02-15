@@ -6,11 +6,13 @@ const { eventInsert } = require('../controllers/eventController');
 const { gameInsert } = require('../controllers/gameController');
 const { teamMembershipInsert } = require('../controllers/teamMembershipController');
 const { teamInsert } = require('../controllers/teamController');
+const { tournamentInsert } = require('../controllers/tournamentController');
 
 router.post('/application',applicationInsert);
 router.post('/event',eventInsert);
 router.post('/game',gameInsert);
 router.post('/teammembership',teamMembershipInsert);
 router.post('/team',teamInsert);
+router.post('/tournament', tournamentInsert);
 
 module.exports = router;
