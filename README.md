@@ -20,12 +20,12 @@ Jelenlegi teendők:
                 ✔ application
                 ✔ event
                 ✔ game
+                ✔ match
+                ✔ team
                 ✔ teamMembership
                 ✔ tournament
-                - match
                 - picture
                 - pictureLink
-                - team
                 - user
                 
     - regisztráció, belépés, kijelentkezés, token/cookie megvalósítás
