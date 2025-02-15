@@ -13,7 +13,7 @@ const matchList = async (req, res) => {
 }
 
 const matchUpdate = async (req, res) => {
-    const { id, tem1_id, tem2_id, tnt_id, status, place, dte, details, winner, rslt } = req.body;
+    const { id, tem1_id, tem2_id, tnt_id, status, uj_status, place, dte, details, winner, rslt } = req.body;
 
     if(!id || !tem1_id || !tem2_id || !tnt_id){
         return res.status(400).json({message: "Hiányos adatok!"});
@@ -38,6 +38,7 @@ const matchUpdate = async (req, res) => {
 
         //Megadott dátum vizsgálata
         const matchDate = new Date(dte);
+               
 
         const idoChecks = [
             {condition: matchDate > tEndDate, message: "Az időpontot nem lehet megadni későbbre mint a verseny vége!"},
@@ -50,8 +51,9 @@ const matchUpdate = async (req, res) => {
             }
         }
 
+        //console.log(matchDate.getHours())
 
-        if (status != "ended" || status != "started") {
+        if (status != "ended" && status != "started") {
             const match = await prisma.matches.update({
                 where: {
                     id_tem1_id_tem2_id_tnt_id: {
@@ -65,9 +67,10 @@ const matchUpdate = async (req, res) => {
                     }
                 },
                 data: {
-                    dte: dte,
+                    dte: matchDate,
                     place: place,
-                    details: details
+                    details: details,
+                    status: uj_status
                 }
             })
 
@@ -110,7 +113,8 @@ const matchUpdate = async (req, res) => {
                     }
                 },
                 data: {
-                    details: details
+                    details: details,
+                    status: uj_status
                 }
             })
 
