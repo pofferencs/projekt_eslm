@@ -7,6 +7,7 @@ const https = require('https');
 const cookieParser = require('cookie-parser');
 const fs = require('fs');
 const path = require('path');
+require("./functions/conditions");
 
 
 app.use(express.json());
