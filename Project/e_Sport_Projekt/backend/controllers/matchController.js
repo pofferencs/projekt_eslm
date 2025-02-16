@@ -1,5 +1,5 @@
 const { PrismaClient } = require('@prisma/client');
-const { hianyzoAdat, validalasFuggveny, hianyzoAdatFuggveny } = require('../functions/conditions');
+const { validalasFuggveny, hianyzoAdatFuggveny } = require('../functions/conditions');
 const prisma = new PrismaClient();
 
 const matchList = async (req, res) => {
