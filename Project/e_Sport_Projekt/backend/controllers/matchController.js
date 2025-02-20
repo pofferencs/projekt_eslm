@@ -14,7 +14,7 @@ const matchList = async (req, res) => {
 }
 
 const matchUpdate = async (req, res) => {
-    const { id, tem1_id, tem2_id, tnt_id, status, place, dte, details, winner, rslt } = req.body;
+    const { id, tem1_id, tem2_id, tnt_id, status, uj_status, place, dte, details, winner, rslt } = req.body;
 
     if (hianyzoAdatFuggveny(res, "Hiányos adatok!", id, tem1_id, tem2_id, tnt_id)) {
         return;
@@ -50,6 +50,7 @@ const matchUpdate = async (req, res) => {
 
         //Megadott dátum vizsgálata
         const matchDate = new Date(dte);
+               
 
         if (validalasFuggveny(res, [
             { condition: matchDate > tEndDate, message: `Az időpontot nem lehet megadni későbbre mint a verseny vége! (${tournament.apn_end})` },
@@ -60,7 +61,7 @@ const matchUpdate = async (req, res) => {
             return;
         };
 
-        if (status != "ended" || status != "started") {
+        if (status != "ended" && status != "started") {
             const match = await prisma.matches.update({
                 where: {
                     id_tem1_id_tem2_id_tnt_id: {
@@ -74,9 +75,10 @@ const matchUpdate = async (req, res) => {
                     }
                 },
                 data: {
-                    dte: dte,
+                    dte: matchDate,
                     place: place,
-                    details: details
+                    details: details,
+                    status: uj_status
                 }
             })
             return res.status(200).json({ message: "Sikeres adatfrissítés!" });
@@ -117,7 +119,8 @@ const matchUpdate = async (req, res) => {
                     }
                 },
                 data: {
-                    details: details
+                    details: details,
+                    status: uj_status
                 }
             })
             return res.status(200).json({ message: "Sikeres adatfrissítés!" });

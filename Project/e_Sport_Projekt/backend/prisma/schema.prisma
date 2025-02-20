@@ -167,8 +167,8 @@ model Picture_Links {
   team       Teams?       @relation(fields: [tem_id], references: [id], onDelete: Restrict)
   tournament Tournaments? @relation(fields: [tnt_id], references: [id], onDelete: Cascade)
   event      Events?      @relation(fields: [evt_id], references: [id], onDelete: Cascade)
-  picture    Pictures     @relation(fields: [pte_id], references: [id])
   organizers Organizers?  @relation(fields: [ogr_id], references: [id])
+  picture    Pictures     @relation(fields: [pte_id], references: [id])  
 
   @@id([id, pte_id])
 }

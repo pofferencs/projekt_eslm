@@ -13,7 +13,7 @@ const picture_linkList = async (req, res) => {
 }
 
 const picture_linkUpdate = async (req, res) => {
-    const { id, uer_id, tem_id, tnt_id, evt_id, pte_id_get, pte_id_set } = req.body;
+    const { id, uer_id, tem_id, tnt_id, evt_id, ogr_id, pte_id_get, pte_id_set } = req.body;
 
     try {
         // Képhez tartozó id típusok és értékek
@@ -21,7 +21,8 @@ const picture_linkUpdate = async (req, res) => {
             { id: uer_id, message: "Sikeres adatfrissítés, felhasználó kép!", condition: "uer_id" },
             { id: tem_id, message: "Sikeres adatfrissítés, csapat kép!", condition: "tem_id" },
             { id: tnt_id, message: "Sikeres adatfrissítés, tournament kép!", condition: "tnt_id" },
-            { id: evt_id, message: "Sikeres adatfrissítés, event kép!", condition: "evt_id" }
+            { id: evt_id, message: "Sikeres adatfrissítés, event kép!", condition: "evt_id" },
+            { id: ogr_id, message: "SIkeres adatfrissítés, szervező kép!", condition: "ogr_id"}
         ];
 
         /*
