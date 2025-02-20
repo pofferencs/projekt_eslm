@@ -35,6 +35,24 @@ model Users {
   pictureLinks        Picture_Links[]
 }
 
+model Organizers {
+  id                  Int                @id @default(autoincrement())
+  full_name           String             @db.VarChar(64)
+  usr_name            String             @db.VarChar(16)
+  usna_last_mod_date  DateTime
+  usna_mod_num_remain Int
+  paswrd              String             @db.VarChar(60)
+  date_of_birth       DateTime           @db.Date
+  school              String             @db.VarChar(100)
+  email_address       String             @db.VarChar(64)
+  email_last_mod_date DateTime
+  phone_num           String             @db.VarChar(15)
+  om_identifier       String             @db.VarChar(11)
+  status              String             @db.VarChar(12)
+  pictureLinks        Picture_Links[]
+  events              Events[]
+}
+
 model Teams {
   id           Int                @id @default(autoincrement())
   short_name   String             @db.VarChar(4)
@@ -54,8 +72,10 @@ model Events {
   end_date     DateTime
   place        String          @db.VarChar(255)
   details      String?         @db.VarChar(512)
+  ogr_id       Int
   tournaments  Tournaments[]
   pictureLinks Picture_Links[]
+  organizers   Organizers      @relation(fields: [ogr_id], references: [id])
 }
 
 model Games {
@@ -141,12 +161,14 @@ model Picture_Links {
   tem_id     Int?
   tnt_id     Int?
   evt_id     Int?
+  ogr_id     Int?
   pte_id     Int
   user       Users?       @relation(fields: [uer_id], references: [id], onDelete: Restrict)
   team       Teams?       @relation(fields: [tem_id], references: [id], onDelete: Restrict)
   tournament Tournaments? @relation(fields: [tnt_id], references: [id], onDelete: Cascade)
   event      Events?      @relation(fields: [evt_id], references: [id], onDelete: Cascade)
-  picture    Pictures     @relation(fields: [pte_id], references: [id])
+  organizers Organizers?  @relation(fields: [ogr_id], references: [id])
+  picture    Pictures     @relation(fields: [pte_id], references: [id])  
 
   @@id([id, pte_id])
 }
