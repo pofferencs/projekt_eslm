@@ -11,6 +11,7 @@ const { picture_linkList } = require('../controllers/pictureLinkController');
 const { teamList } = require('../controllers/teamController');
 const { teamMembershipList } = require('../controllers/teamMembershipController');
 const { tournamentList } = require('../controllers/tournamentController');
+const { organizerList } = require('../controllers/organizerController');
 
 router.get('/user', userList); 
 router.get('/application', applicationList);
@@ -22,5 +23,6 @@ router.get('/picturelink', picture_linkList);
 router.get('/team', teamList);
 router.get('/teamMembership', teamMembershipList);
 router.get('/tournament', tournamentList) /*Verseny*/
+router.get('/organizer',organizerList);
 
 module.exports = router;

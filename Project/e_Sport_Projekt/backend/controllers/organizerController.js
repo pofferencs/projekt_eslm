@@ -4,10 +4,10 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 
 
-const userList = async (req, res) => {
+const organizerList = async (req, res) => {
     try {
-        const users = await prisma.users.findMany();
-        res.status(200).json(users);
+        const organizers = await prisma.organizers.findMany();
+        res.status(200).json(organizers);
 
     }
     catch (error) {
@@ -16,27 +16,24 @@ const userList = async (req, res) => {
     }
 }
 
-const userUpdate = async (req, res) => {
-    const { id, inviteable, full_name, usr_name, usna_last_mod_date, usna_mod_num_remain, paswrd, school, clss, email_address, email_last_mod_date, phone_num, status, discord_name } = req.body;
+const organizerUpdate = async (req, res) => {
+    const { id, full_name, usr_name, usna_last_mod_date, usna_mod_num_remain, paswrd, school, email_address, email_last_mod_date, phone_num, status } = req.body;
     try {
-        const user = await prisma.users.update({
+        const organizer = await prisma.organizers.update({
             where: {
                 id: id
             },
             data: {
-                inviteable: inviteable,
                 full_name: full_name,
                 usr_name: usr_name,
                 usna_last_mod_date: usna_last_mod_date,
                 usna_mod_num_remain: usna_mod_num_remain,
                 paswrd: paswrd,
                 school: school,
-                clss: clss,
                 email_address: email_address,
                 email_last_mod_date: email_last_mod_date,
                 phone_num: phone_num,
-                status: status,
-                discord_name: discord_name
+                status: status
             }
 
         });
@@ -57,9 +54,9 @@ const tokenGen = (id) => {
 
 //Todo: login, regisztráció ÉS middleware   
 
-const userReg = async (req, res) => {
+const organizerReg = async (req, res) => {
 
-    const { full_name, date_of_birth, usr_name, paswrd, school, clss, email_address, phone_num, discord_name, om_identifier } = req.body;
+    const { full_name, date_of_birth, usr_name, paswrd, school, email_address, phone_num, om_identifier } = req.body;
 
     try {
 
@@ -76,14 +73,14 @@ const userReg = async (req, res) => {
 
         //1. Adatok meglétének ellenőrzése
 
-        if (!full_name || !usr_name || !paswrd || !date_of_birth || !school || !clss || !email_address || !phone_num || !discord_name || !om_identifier) {
+        if (!full_name || !usr_name || !paswrd || !date_of_birth || !school || !email_address || !phone_num || !om_identifier) {
             return res.status(400).json({ message: "Hiányos adatok!" });
         }
 
 
         //2. Felhasználónév ellenőrzése
 
-        const usernameCheck = await prisma.users.findFirst({
+        const organizernameCheck = await prisma.organizers.findFirst({
             where: {
                 usr_name: usr_name
             }
@@ -103,7 +100,7 @@ const userReg = async (req, res) => {
             //Számmal kezdődés
             return res.status(400).json({ message: "Számmal nem kezdődhet a felhasználónév!" });
 
-        } else if (usernameCheck) {
+        } else if (organizernameCheck) {
 
             return res.status(400).json({ message: "A felhasználónév foglalt!" })
 
@@ -117,7 +114,7 @@ const userReg = async (req, res) => {
         }
 
         //3. E-mail cím ellenőrzése
-        const emailCheck = await prisma.users.findFirst({
+        const emailCheck = await prisma.organizers.findFirst({
             where: {
                 email_address: email_address
             }
@@ -174,12 +171,6 @@ const userReg = async (req, res) => {
         //Dátum átkonvertálása helyes adattípusra
         const szulDat = new Date(date_of_birth);
 
-        //Discord név hosszának ellenőrzése (32 karakter hivatalosan a username)
-        if (discord_name.length > 32) {
-            return res.status(400).json({ message: "Túl hosszú a Discord felhasználóneved!" });
-        }
-
-
         const hashedPass = await bcrypt.hash(paswrd, 10);
 
         //5. Felhasználó regisztrálása a megfelelő adatokkal
@@ -189,9 +180,8 @@ const userReg = async (req, res) => {
         let uname_last_mod_date = new Date(new Date(date).setMonth(date.getMonth() - 3));
         let mail_last_mod_date = new Date(new Date(date).setMonth(date.getMonth() - 1));
 
-        const newUser = await prisma.users.create({
+        const neworganizer = await prisma.organizers.create({
             data: {
-                inviteable: true,
                 full_name: full_name,
                 usr_name: usr_name,
                 usna_last_mod_date: uname_last_mod_date,
@@ -199,20 +189,16 @@ const userReg = async (req, res) => {
                 paswrd: hashedPass,
                 date_of_birth: szulDat,
                 school: school,
-                clss: clss,
                 email_address: email_address,
                 email_last_mod_date: mail_last_mod_date,
                 phone_num: phone_num,
                 om_identifier: om_identifier,
-                status: "active",
-                discord_name: discord_name,
-
-
+                status: "active"
             }
         })
 
         //Süti
-        const token = tokenGen(newUser.id);
+        const token = tokenGen(neworganizer.id);
 
         res.cookie('token', token, {
             secure: true,
@@ -221,12 +207,12 @@ const userReg = async (req, res) => {
             maxAge: 360000
         });
 
-        console.log(`${newUser.usr_name} (ID: ${newUser.id}) tokenje: ${token}`);
+        console.log(`${neworganizer.usr_name} (ID: ${neworganizer.id}) tokenje: ${token}`);
 
         //kép hozzárendelés a fiókhoz
         const newPicLink = await prisma.picture_Links.create({
             data: {
-                uer_id: newUser.id,
+                uer_id: neworganizer.id,
                 pte_id: 1 //vagy ami ide jön pteId
             }
         })
@@ -247,12 +233,12 @@ const userReg = async (req, res) => {
 // console.log(bcrypt.compareSync(paswrd, hashedPass))
 
 
-const userLogin = async (req, res) => {
+const organizerLogin = async (req, res) => {
     const { usr_name, email_address, paswrd } = req.body
 
     try {
 
-        const userL = await prisma.users.findFirst({
+        const organizerL = await prisma.organizers.findFirst({
             where: {
                 usr_name: usr_name,
                 email_address: email_address
@@ -265,16 +251,16 @@ const userLogin = async (req, res) => {
         }
 
 
-        if (!userL) {
+        if (!organizerL) {
             return res.status(400).json({ message: "Nincs ilyen felhasználó!" });
         }
-        //!bcrypt.compare(paswrd, user.paswrd)
-        if (!bcrypt.compareSync(paswrd, userL.paswrd)) {
+        //!bcrypt.compare(paswrd, organizer.paswrd)
+        if (!bcrypt.compareSync(paswrd, organizerL.paswrd)) {
             return res.status(400).json({ message: "A jelszó nem megfelelő!" });
         }
 
 
-        const token = tokenGen(userL.id);
+        const token = tokenGen(organizerL.id);
 
         res.cookie('token', token, {
             secure: true,
@@ -294,7 +280,7 @@ const userLogin = async (req, res) => {
 
 }
 
-const userLogout = async (req, res) => {
+const organizerLogout = async (req, res) => {
     res.clearCookie('token', {
         httpOnly: true,
         secure: true,
@@ -321,16 +307,16 @@ const protected = async (req, res) => {
 
 
 const isAuthenticated = async (req, res) => {
-    res.json({ "authenticated": true, user: req.user });
+    res.json({ "authenticated": true, organizer: req.organizer });
 };
 
 
 module.exports = {
-    userList,
-    userUpdate,
-    userLogin,
-    userReg,
+    organizerList,
+    organizerUpdate,
+    organizerLogin,
+    organizerReg,
     protected,
     isAuthenticated,
-    userLogout
+    organizerLogout
 }
