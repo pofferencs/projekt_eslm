@@ -212,8 +212,8 @@ const organizerReg = async (req, res) => {
         //kép hozzárendelés a fiókhoz
         const newPicLink = await prisma.picture_Links.create({
             data: {
-                uer_id: neworganizer.id,
-                pte_id: 1 //vagy ami ide jön pteId
+                ogr_id: neworganizer.id,
+                pte_id: 6 //vagy ami ide jön pteId
             }
         })
 
@@ -271,8 +271,6 @@ const organizerLogin = async (req, res) => {
 
         return res.status(200).json(token);
 
-
-
     } catch (error) {
         console.log(error);
         res.status(500).json({ message: error })
@@ -288,8 +286,6 @@ const organizerLogout = async (req, res) => {
     });
     res.status(200).json({ message: "Kijelentkezve." });
 }
-
-
 
 const protected = async (req, res) => {
     const { usr_name } = req.body;
