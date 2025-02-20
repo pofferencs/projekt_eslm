@@ -269,8 +269,8 @@ const userLogout = async (req, res) => {
 
 
 const protected = async (req, res) => {
-    const { usr_name } = req.body;
-    const token = tokenGen(usr_name);
+    const { id } = req.body;
+    const token = tokenGen(id);
 
     res.cookie('tokenU', token, {
         secure: true,

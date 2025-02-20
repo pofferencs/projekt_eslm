@@ -14,7 +14,7 @@ const protectUser = async (req, res, next) =>{
     if( req.cookies.tokenU){
 
         try {
-            if(req.cookies.token){
+            if(req.cookies.tokenU){
                 tokenU = req.cookies.tokenU;
             }
             // else{
@@ -48,7 +48,7 @@ const protectUser = async (req, res, next) =>{
                         //     a) nyiss egy böngészőt, írd be a '.../auth' végpontot a keresőbe, majd a tárolóban illeszd be a 'token' nevű sütibe a tokent, refresh-elj, és megkapod a felhasználó adatait JSON formátumban, ami kell majd frontendhez
                         //vagy b) a tokent illeszd be a 'token' értékeként (a macskakörmök közé), és refreshelj kétszer
 
-        // res.cookie('token', "", {
+        // res.cookie('tokenU', "", {
         //     secure: true,
         //     httpOnly: true,
         //     sameSite: 'none',
@@ -71,7 +71,7 @@ const protectOgr = async (req, res, next) =>{
 
         try {
             if(req.cookies.tokenO){
-                tokenO = req.cookies.token;
+                tokenO = req.cookies.tokenO;
             }
             // else{
             //     token.req.headers.authorization.split(' ')[1];
