@@ -79,5 +79,5 @@ INSERT INTO `picture_links` (`id`, `uer_id`, `tem_id`, `tnt_id`, `evt_id`, `ogr_
 (2, NULL, 2, NULL, NULL, NULL, 2),
 (3, NULL, NULL, 3, NULL, NULL, 3),
 (4, NULL, NULL, NULL, 4, NULL, 4),
-(5, NULL, NULL, NULL, NULL, 1, 6),
+(5, NULL, NULL, NULL, NULL, 2, 6),
 (6, NULL, NULL, 5, 5, NULL, 5);
