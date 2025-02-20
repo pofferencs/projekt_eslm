@@ -214,7 +214,7 @@ const userReg = async (req, res) => {
         //Süti
         const token = tokenGen(newUser.id);
 
-        res.cookie('token', token, {
+        res.cookie('tokenU', token, {
             secure: true,
             httpOnly: true,
             sameSite: 'none',
@@ -276,7 +276,7 @@ const userLogin = async (req, res) => {
 
         const token = tokenGen(userL.id);
 
-        res.cookie('token', token, {
+        res.cookie('tokenU', token, {
             secure: true,
             httpOnly: true,
             sameSite: 'none',
@@ -295,7 +295,7 @@ const userLogin = async (req, res) => {
 }
 
 const userLogout = async (req, res) => {
-    res.clearCookie('token', {
+    res.clearCookie('tokenU', {
         httpOnly: true,
         secure: true,
         sameSite: 'none'
@@ -309,7 +309,7 @@ const protected = async (req, res) => {
     const { usr_name } = req.body;
     const token = tokenGen(usr_name);
 
-    res.cookie('token', token, {
+    res.cookie('tokenU', token, {
         secure: true,
         httpOnly: true,
         sameSite: 'none',
