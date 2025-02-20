@@ -271,8 +271,6 @@ const organizerLogin = async (req, res) => {
 
         return res.status(200).json(token);
 
-
-
     } catch (error) {
         console.log(error);
         res.status(500).json({ message: error })
@@ -288,8 +286,6 @@ const organizerLogout = async (req, res) => {
     });
     res.status(200).json({ message: "Kijelentkezve." });
 }
-
-
 
 const protected = async (req, res) => {
     const { ogr_name } = req.body;
