@@ -16,17 +16,90 @@ const tournamentUpdate = async (req, res) => {
 
     const { id, name, num_participant, team_num, start_date, end_date, game_mode, max_participant, apn_start, apn_end, details, evt_id, gae_id } = req.body;
 
+    //Adatok megléte
+
+    if(!id || !name || !num_participant || !start_date || !end_date || !game_mode || !max_participant || !apn_start || !apn_end || !evt_id || !gae_id){
+        return res.status(400).json({message: "Hiányos adatok!"});
+    };
+
     const existingTournament = await prisma.tournaments.findFirst({
         where: {
-            name: name,
-            evt_id: evt_id,
-            gae_id: gae_id
+            id: id
         }
     })
 
-    if (existingTournament) {
-        return res.status(400).json({ message: "Ez a verseny már létezik az az adott eseményen!" })
-    } else {
+    if (!existingTournament) {
+        return res.status(400).json({ message: "Ez a verseny nem létezik az adott eseményen!"});
+    } 
+
+    //Event és game kikeresése a többi adat vizsgálásához
+    const event = await prisma.events.findFirst({
+        where: {
+            id: evt_id
+        }
+    });
+
+    const game = await prisma.games.findFirst({
+        where: {
+            id: gae_id
+        }
+    });
+
+    const tableValidations = [
+        {condition: !event, message: "Az esemény nem található!"},
+        {condition: !game, message: "A játék nem található!"}
+    ];
+
+    // Validációs ciklus
+    for (let validation of tableValidations) {
+        if (validation.condition) {
+            return res.status(400).json({ message: validation.message });
+        }
+    }
+
+    //Verseny kezdeti és végidőpont
+
+    const tStartDate = new Date(start_date);
+    const tEndDate = new Date(end_date);
+
+    const idopontCheck = [
+        {condition: tStartDate < event.start_date, message: "A verseny kezdete nem lehet hamarabb mint az esemény kezdete!"},
+        {condition: tStartDate > event.end_date, message: "A verseny vége után nem kezdődhet verseny!"},
+        {condition: tEndDate > event.end_date, message: "A verseny vége nem lehet később mint az esemény vége!"},
+        {condition: tStartDate > tEndDate, message: "Az verseny kezdete nem lehet később mint a vége!"}
+
+    ];
+
+    // Validációs ciklus
+    for (let validation of idopontCheck) {
+        if (validation.condition) {
+            return res.status(400).json({ message: validation.message });
+        }
+    }
+    
+    //Jelentkezés kezdeti és végidőpont
+
+    const aStartDate = new Date(apn_start);
+    const aEndDate = new Date(apn_end);
+
+    const aEndDateChk = new Date(apn_end);
+    aEndDateChk.setDate(tStartDate.getDate()-7);
+
+
+    const jIdopontCheck = [
+        {condition: aStartDate > aEndDate, message: "A jelentkezés kezdete nem lehet később mint a vége!"},
+        {condition: aStartDate > tStartDate, message: "A jelentkezés kezdete nem lehet később a verseny kezdetétől!"},
+        {condition: aEndDate > tEndDate, message: "A jelentkezés vége nem lehet később a verseny végénél!"},
+        {condition: aEndDate > aEndDateChk, message: "A jelentkezésnek legalább 7 nappal a verseny kezdete előtt kell véget érnie!"},
+        
+    ];
+
+    // Validációs ciklus
+    for (let validation of jIdopontCheck) {
+        if (validation.condition) {
+            return res.status(400).json({ message: validation.message });
+        }
+    }
         try {
             const tournament = await prisma.tournaments.update({
                 where: {
@@ -40,12 +113,12 @@ const tournamentUpdate = async (req, res) => {
                     name: name,
                     num_participant: num_participant,
                     team_num: team_num,
-                    start_date: start_date,
-                    end_date: end_date,
+                    start_date: tStartDate,
+                    end_date: tEndDate,
                     game_mode: game_mode,
                     max_participant: max_participant,
-                    apn_start: apn_start,
-                    apn_end: apn_end,
+                    apn_start: aStartDate,
+                    apn_end: aEndDate,
                     details: details
                 }
             });
@@ -55,8 +128,8 @@ const tournamentUpdate = async (req, res) => {
             console.log(error);
             return res.status(500).json({ message: "Hiba a fetch során!" })
         }
-    }
-};
+    };
+
 
 const tournamentDelete = async (req, res) => {
 
@@ -81,8 +154,129 @@ const tournamentDelete = async (req, res) => {
     }
 }
 
+
+const tournamentInsert = async (req, res) => {
+
+    const { name, num_participant, team_num, start_date, end_date, game_mode, max_participant, apn_start, apn_end, details, evt_id, gae_id } = req.body;
+
+    try {
+
+        //Adatok megléte
+        if(!name || !num_participant || !start_date || !end_date || !game_mode || !max_participant || !apn_start || !apn_end || !evt_id || !gae_id){
+            return res.status(400).json({message: "Hiányos adatok!"});
+        }
+
+        //Event és game kikeresése a többi adat vizsgálásához
+        const event = await prisma.events.findFirst({
+            where: {
+                id: evt_id
+            }
+        });
+
+        const game = await prisma.games.findFirst({
+            where: {
+                id: gae_id
+            }
+        });
+
+        const tableValidations = [
+            {condition: !event, message: "Az esemény nem található!"},
+            {condition: !game, message: "A játék nem található!"}
+        ];
+
+        // Validációs ciklus
+        for (let validation of tableValidations) {
+            if (validation.condition) {
+                return res.status(400).json({ message: validation.message });
+            }
+        }
+
+
+        //Verseny kezdeti és végidőpont
+
+        const tStartDate = new Date(start_date);
+        const tEndDate = new Date(end_date);
+
+        const idopontCheck = [
+            {condition: tStartDate < event.start_date, message: "A verseny kezdete nem lehet hamarabb mint az esemény kezdete!"},
+            {condition: tStartDate > event.end_date, message: "A verseny vége után nem kezdődhet verseny!"},
+            {condition: tEndDate > event.end_date, message: "A verseny vége nem lehet később mint az esemény vége!"},
+            {condition: tStartDate > tEndDate, message: "Az verseny kezdete nem lehet később mint a vége!"}
+
+        ];
+
+        // Validációs ciklus
+        for (let validation of idopontCheck) {
+            if (validation.condition) {
+                return res.status(400).json({ message: validation.message });
+            }
+        }
+        
+        //Jelentkezés kezdeti és végidőpont
+
+        const aStartDate = new Date(apn_start);
+        const aEndDate = new Date(apn_end);
+
+        const aEndDateChk = new Date(apn_end);
+        //console.log(aEndDateChk);
+        aEndDateChk.setDate(tStartDate.getDate()-7);
+        //console.log(aEndDateChk);
+
+        const jIdopontCheck = [
+            {condition: aStartDate > aEndDate, message: "A jelentkezés kezdete nem lehet később mint a vége!"},
+            {condition: aStartDate > tStartDate, message: "A jelentkezés kezdete nem lehet később a verseny kezdetétől!"},
+            {condition: aEndDate > tEndDate, message: "A jelentkezés vége nem lehet később a verseny végénél!"},
+            {condition: aEndDate > aEndDateChk, message: "A jelentkezésnek legalább 7 nappal a verseny kezdete előtt kell véget érnie!"},
+            
+        ];
+
+        // Validációs ciklus
+        for (let validation of jIdopontCheck) {
+            if (validation.condition) {
+                return res.status(400).json({ message: validation.message });
+            }
+        }
+
+
+        //Tournament és Picture Link létrehozás
+
+        const tournament = await prisma.tournaments.create({
+            data:{
+                name: name,
+                num_participant: num_participant,
+                team_num: team_num,
+                start_date: tStartDate,
+                end_date: tEndDate,
+                game_mode: game_mode,
+                max_participant: max_participant,
+                apn_start: aStartDate,
+                apn_end: aEndDate,
+                details: details,
+                evt_id: event.id,
+                gae_id: game.id
+            }
+        });
+
+        const picLink = await prisma.picture_Links.create({
+            data: {
+                tnt_id: tournament.id,
+                pte_id: 5
+            }
+        });
+
+        return res.status(200).json({message: "A verseny sikeresen feltöltésre került!"})
+
+        
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: "Hiba a feltöltés során!" })
+    }
+
+}
+
 module.exports = {
     tournamentList,
     tournamentUpdate,
-    tournamentDelete
+    tournamentDelete,
+    tournamentInsert
 }

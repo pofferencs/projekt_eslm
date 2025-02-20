@@ -15,35 +15,40 @@ const eventList = async (req, res) => {
 const eventUpdate = async (req, res) => {
     const { id, name, start_date, end_date, place, details } = req.body;
 
+
+    if(!id || !name || !place || !details || !start_date || !end_date){
+        return res.status(400).json({message: "Hiányos adatok!"});
+    }
+    
+        const startDate = new Date(start_date);
+        const endDate = new Date(end_date);
+
     try {
+
         const existingEvent = await prisma.events.findFirst({
             where: {
-                name: name,
-                start_date: start_date,
-                end_date: end_date,
-                place: place
+                id: id
             }
         });
 
         if (!existingEvent) {
-            const event = await prisma.events.update({
-                where: {
-                    id: id
-                },
-                data: {
-                    name: name,
-                    start_date: start_date,
-                    end_date: end_date,
-                    place: place,
-                    details: details
-                }
-            });
-            return res.status(200).json({ message: "Sikeres adatfrissítés!" });
-        } else {
-            return res.status(400).json({ message: "Az adott esemény már létezik!" });
+            return res.status(400).json({ message: "Az adott esemény nem létezik!" });
         }
 
+        const event = await prisma.events.update({
+            where: {
+                id: id
+            },
+            data: {
+                name: name,
+                start_date: startDate,
+                end_date: endDate,
+                place: place,
+                details: details
+            }
+        });
 
+        return res.status(200).json({ message: "Sikeres adatfrissítés!" });
     }
     catch (err) {
         console.log(err);
@@ -52,7 +57,11 @@ const eventUpdate = async (req, res) => {
 }
 
 const eventInsert = async (req, res) => {
-    const { name, place, details } = req.body;
+    const { name, place, details, start_date, end_date } = req.body;
+
+    if(!name || !place || !details || !start_date || !end_date){
+        return res.status(400).json({message: "Hiányos adatok!"});
+    }
 
     try {
         /* Az esemény kezdetét az adott naptól legalább 14,
@@ -64,8 +73,8 @@ const eventInsert = async (req, res) => {
         const maxStartDate = new Date(now);
         maxStartDate.setDate(now.getDate() + 60);
 
-        const startDate = new Date(req.body.start_date);
-        const endDate = new Date(req.body.end_date);
+        const startDate = new Date(start_date);
+        const endDate = new Date(end_date);
 
         // Validációk és üzenetek
         const validations = [
@@ -93,7 +102,7 @@ const eventInsert = async (req, res) => {
 
         // ... és ha létezik, akkor 400-as státuszt adunk
         if (existingEvent) {
-            res.status(400).json({ message: "Az adott esemény már létezik!" });
+            return res.status(400).json({ message: "Az adott esemény már létezik!" });
         }
 
         // Ha minden validáció rendben van, insertálás
@@ -106,7 +115,15 @@ const eventInsert = async (req, res) => {
                 details: details
             }
         });
-        return res.status(200).json({ message: "Sikeres adatfrissítés!" });
+
+        const picLink = await prisma.picture_Links.create({
+            data: {
+                evt_id: event.id,
+                pte_id: 5
+            }
+        });
+
+        return res.status(200).json({ message: "Az esemény sikeresen létrehozva!" });
 
         // Ez ugyan az a megoldás, csak hosszabban és olvashatatlanabbul
         //-------------------------------------------------------------------------------------------------------------------------------
