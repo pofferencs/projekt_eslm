@@ -14,7 +14,7 @@ const protectUser = async (req, res, next) =>{
     if( req.cookies.tokenU){
 
         try {
-            if(req.cookies.token){
+            if(req.cookies.tokenU){
                 tokenU = req.cookies.tokenU;
             }
             // else{
@@ -71,7 +71,7 @@ const protectOgr = async (req, res, next) =>{
 
         try {
             if(req.cookies.tokenO){
-                tokenO = req.cookies.token;
+                tokenO = req.cookies.tokenO;
             }
             // else{
             //     token.req.headers.authorization.split(' ')[1];
