@@ -43,7 +43,8 @@ INSERT INTO `pictures` (`id`, `img_path`) VALUES
 (2, '/images/player2.png'),
 (3, '/images/team1_logo.png'),
 (4, '/images/event1_poster.jpg'),
-(5, '/images/tournament1_banner.png');
+(5, '/images/tournament1_banner.png'),
+(6, '/images/organizer_logo.png');
 
 INSERT INTO `team_memberships` (`status`, `uer_id`, `tem_id`) VALUES
 ('active', 1, 1),
@@ -66,9 +67,10 @@ INSERT INTO `applications` (`id`, `dte`, `status`, `uer_id`, `tem_id`, `tnt_id`)
 (4, '2024-08-01 18:00:00', 'pending', 4, 4, 4),
 (5, '2024-09-01 20:00:00', 'approved', 5, 5, 5);
 
-INSERT INTO `picture_links` (`id`, `uer_id`, `tem_id`, `tnt_id`, `evt_id`, `pte_id`) VALUES
-(1, 1, NULL, NULL, NULL, 1),
-(2, NULL, 2, NULL, NULL, 2),
-(3, NULL, NULL, 3, NULL, 3),
-(4, NULL, NULL, NULL, 4, 4),
-(5, NULL, NULL, 5, 5, 5);
+INSERT INTO `picture_links` (`id`, `uer_id`, `tem_id`, `tnt_id`, `evt_id`, `ogr_id` ,`pte_id`) VALUES
+(1, 1, NULL, NULL, NULL, NULL, 1),
+(2, NULL, 2, NULL, NULL, NULL, 2),
+(3, NULL, NULL, 3, NULL, NULL, 3),
+(4, NULL, NULL, NULL, 4, NULL, 4),
+(5, NULL, NULL, NULL, NULL, 1, 6),
+(6, NULL, NULL, 5, 5, NULL, 5);
