@@ -10,6 +10,13 @@ INSERT INTO `users` (`id`, `inviteable`, `full_name`, `usr_name`, `usna_last_mod
 (9, 1, 'Grace Adams', 'gracea', '2024-12-17 09:06:23', 1, 'gracepass', '2000-09-09', 'School I', '12C', 'gracea@example.com', '2024-12-17 09:06:23', '1122334455', 'OM90123456', 'active', 'gracea#8901'),
 (10, 0, 'Henry Wilson', 'henryw', '2024-12-17 09:06:23', 5, 'henrypass', '1999-12-03', 'School J', '11C', 'henryw@example.com', '2024-12-17 09:06:23', '2233445566', 'OM01234567', 'inactive', 'henryw#9012');
 
+INSERT INTO `organizers` (`full_name`, `usr_name`, `usna_last_mod_date`, `usna_mod_num_remain`, `paswrd`, `date_of_birth`, `school`, `email_address`, `email_last_mod_date`, `phone_num`, `om_identifier`, `status`) VALUES
+('Kovács Péter', 'kovi_p', '2025-02-20 08:30:00', 5, 'hashed_password_1', '1980-04-15', 'Műszaki Egyetem', 'kovacspeter@email.com', '2025-02-19 16:45:00', '+36301234567', 'OM123456789', 'Aktív'),
+('Szabó Anna', 'szabo_anna', '2025-02-20 09:00:00', 3, 'hashed_password_2', '1992-08-30', 'Pécsi Egyetem', 'szaboanna@email.com', '2025-02-19 14:20:00', '+36201234568', 'OM987654321', 'Aktív'),
+('Tóth Márk', 'toth_mark', '2025-02-20 09:30:00', 4, 'hashed_password_3', '1995-03-12', 'Debreceni Egyetem', 'tothmark@email.com', '2025-02-19 13:15:00', '+36301234569', 'OM112233445', 'Aktív'),
+('Németh Gábor', 'nemeth_g', '2025-02-20 10:00:00', 6, 'hashed_password_4', '1988-11-22', 'Szegedi Tudományegyetem', 'nemethgabor@email.com', '2025-02-19 11:45:00', '+36301234570', 'OM44332211', 'Aktív'),
+('Bíró Laura', 'biro_laura', '2025-02-20 10:30:00', 2, 'hashed_password_5', '1990-07-07', 'Budapesti Corvinus Egyetem', 'birolaura@email.com', '2025-02-19 12:00:00', '+36301234571', 'OM55667788', 'Aktív');
+
 INSERT INTO `teams` (`id`, `short_name`, `full_name`, `creator_id`) VALUES
 (1, 'ABCD', 'Alpha Bravo Char', 1),
 (2, 'XYZ', 'Xeno Yellow Zeta', 2),
@@ -17,12 +24,12 @@ INSERT INTO `teams` (`id`, `short_name`, `full_name`, `creator_id`) VALUES
 (4, 'GHIJ', 'Gamma Hotel Indi', 4),
 (5, 'LMN', 'Lima Mike Novemb', 5);
 
-INSERT INTO `events` (`id`, `name`, `start_date`, `end_date`, `place`, `details`) VALUES
-(1, 'Summer Tournament', '2024-06-01 10:00:00', '2024-06-05 20:00:00', 'New York Arena', 'A large summer esports event'),
-(2, 'Fall Championship', '2024-09-01 12:00:00', '2024-09-03 18:00:00', 'Los Angeles Expo', 'Fall season grand championship'),
-(3, 'Winter Invitational', '2024-12-10 09:00:00', '2024-12-12 17:00:00', 'Chicago Dome', 'Exclusive winter invitational'),
-(4, 'Spring Cup', '2024-03-15 11:00:00', '2024-03-17 16:00:00', 'Dallas Convention Center', 'Spring esports showdown'),
-(5, 'Global Finals', '2024-11-05 08:00:00', '2024-11-10 22:00:00', 'London Arena', 'The final event of the global esports season');
+INSERT INTO `events` (`id`, `name`, `start_date`, `end_date`, `place`, `details`,`ogr_id`) VALUES
+(1, 'Summer Tournament', '2024-06-01 10:00:00', '2024-06-05 20:00:00', 'New York Arena', 'A large summer esports event',2),
+(2, 'Fall Championship', '2024-09-01 12:00:00', '2024-09-03 18:00:00', 'Los Angeles Expo', 'Fall season grand championship',2),
+(3, 'Winter Invitational', '2024-12-10 09:00:00', '2024-12-12 17:00:00', 'Chicago Dome', 'Exclusive winter invitational',3),
+(4, 'Spring Cup', '2024-03-15 11:00:00', '2024-03-17 16:00:00', 'Dallas Convention Center', 'Spring esports showdown',4),
+(5, 'Global Finals', '2024-11-05 08:00:00', '2024-11-10 22:00:00', 'London Arena', 'The final event of the global esports season',5);
 
 INSERT INTO `games` (`id`, `name`) VALUES
 (1, 'League of Legends'),
