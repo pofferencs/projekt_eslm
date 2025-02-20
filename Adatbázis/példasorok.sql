@@ -25,7 +25,7 @@ INSERT INTO `teams` (`id`, `short_name`, `full_name`, `creator_id`) VALUES
 (5, 'LMN', 'Lima Mike Novemb', 5);
 
 INSERT INTO `events` (`id`, `name`, `start_date`, `end_date`, `place`, `details`,`ogr_id`) VALUES
-(1, 'Summer Tournament', '2024-06-01 10:00:00', '2024-06-05 20:00:00', 'New York Arena', 'A large summer esports event',1),
+(1, 'Summer Tournament', '2024-06-01 10:00:00', '2024-06-05 20:00:00', 'New York Arena', 'A large summer esports event',2),
 (2, 'Fall Championship', '2024-09-01 12:00:00', '2024-09-03 18:00:00', 'Los Angeles Expo', 'Fall season grand championship',2),
 (3, 'Winter Invitational', '2024-12-10 09:00:00', '2024-12-12 17:00:00', 'Chicago Dome', 'Exclusive winter invitational',3),
 (4, 'Spring Cup', '2024-03-15 11:00:00', '2024-03-17 16:00:00', 'Dallas Convention Center', 'Spring esports showdown',4),
