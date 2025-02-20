@@ -200,7 +200,7 @@ const organizerReg = async (req, res) => {
         //Süti
         const token = tokenGen(neworganizer.id);
 
-        res.cookie('token', token, {
+        res.cookie('tokenO', token, {
             secure: true,
             httpOnly: true,
             sameSite: 'none',
@@ -212,8 +212,8 @@ const organizerReg = async (req, res) => {
         //kép hozzárendelés a fiókhoz
         const newPicLink = await prisma.picture_Links.create({
             data: {
-                uer_id: neworganizer.id,
-                pte_id: 1 //vagy ami ide jön pteId
+                ogr_id: neworganizer.id,
+                pte_id: 6 //vagy ami ide jön pteId
             }
         })
 
@@ -262,7 +262,7 @@ const organizerLogin = async (req, res) => {
 
         const token = tokenGen(organizerL.id);
 
-        res.cookie('token', token, {
+        res.cookie('tokenO', token, {
             secure: true,
             httpOnly: true,
             sameSite: 'none',
@@ -281,7 +281,7 @@ const organizerLogin = async (req, res) => {
 }
 
 const organizerLogout = async (req, res) => {
-    res.clearCookie('token', {
+    res.clearCookie('tokenO', {
         httpOnly: true,
         secure: true,
         sameSite: 'none'
@@ -292,10 +292,10 @@ const organizerLogout = async (req, res) => {
 
 
 const protected = async (req, res) => {
-    const { usr_name } = req.body;
-    const token = tokenGen(usr_name);
+    const { ogr_name } = req.body;
+    const token = tokenGen(ogr_name);
 
-    res.cookie('token', token, {
+    res.cookie('tokenO', token, {
         secure: true,
         httpOnly: true,
         sameSite: 'none',
