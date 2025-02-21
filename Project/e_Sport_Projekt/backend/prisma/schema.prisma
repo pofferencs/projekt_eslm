@@ -161,8 +161,8 @@ model Picture_Links {
   tem_id     Int?
   tnt_id     Int?
   evt_id     Int?
-  ogr_id     Int?
   pte_id     Int
+  ogr_id     Int?
   user       Users?       @relation(fields: [uer_id], references: [id], onDelete: Restrict)
   team       Teams?       @relation(fields: [tem_id], references: [id], onDelete: Restrict)
   tournament Tournaments? @relation(fields: [tnt_id], references: [id], onDelete: Cascade)
