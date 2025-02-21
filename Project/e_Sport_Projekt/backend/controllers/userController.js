@@ -86,15 +86,26 @@ const userReg = async (req, res) => {
             }
         })
 
+        //OM-szám ellenőrzés
+
+        const omIdCheck = await prisma.users.findFirst({
+            where:{
+                om_identifier: om_identifier
+            }
+        });
+
         if (validalasFuggveny(res, [
             { condition: /[0-9]/.test(usr_name.charAt(0)), message: "Számmal nem kezdődhet a felhasználónév!" },
             { condition: usernameCheck, message: "A felhasználónév foglalt!" },
+            { condition: omIdCheck, message: "Ezzel az OM-számmal regisztráltak már!"},
             { condition: teamNameCheck, message: "A felhasználónév, amit megadtál, megegyezik egy csapat teljes nevével. Adj meg újat!" },
             { condition: usr_name.length < 3 || usr_name.length > 17, message:  "Minimum 3, maximum 16 karakterből állhat a felhasználóneved!" }
 
         ])) {
             return;
         };
+
+        let trim_usr_name  = usr_name.replaceAll(" ", "");
 
         //3. E-mail cím ellenőrzése
         const emailCheck = await prisma.users.findFirst({
@@ -105,13 +116,14 @@ const userReg = async (req, res) => {
 
         if (validalasFuggveny(res, [
             { condition: emailCheck, message: "Ezzel az email címmel már regisztráltak!" },
-            { condition: usernameCheck, message: "A felhasználónév foglalt!" },
-            { condition: om_identifier.length != 11, message: "Rosszul adtad meg az OM-azonosítód!" },
-            { condition: usr_name.length < 3 || usr_name.length > 17, message:  "Minimum 3, maximum 16 karakterből állhat a felhasználóneved!" }
+            { condition: om_identifier.length != 11 || om_identifier[0] != "7" || om_identifier.split("").some(num=> !/[0-9]/.test(num)), message: "Rosszul adtad meg az OM-azonosítód!" },
 
         ])) {
             return;
         };
+
+        let trim_email = email_address.replaceAll(" ", "");
+        
 
         //4. Jelszó ellenőrzése, utána a hash létrehozása
 
@@ -157,14 +169,14 @@ const userReg = async (req, res) => {
             data: {
                 inviteable: true,
                 full_name: full_name,
-                usr_name: usr_name,
+                usr_name: trim_usr_name,
                 usna_last_mod_date: uname_last_mod_date,
                 usna_mod_num_remain: 3,
                 paswrd: hashedPass,
                 date_of_birth: szulDat,
                 school: school,
                 clss: clss,
-                email_address: email_address,
+                email_address: trim_email,
                 email_last_mod_date: mail_last_mod_date,
                 phone_num: phone_num,
                 om_identifier: om_identifier,
