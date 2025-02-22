@@ -18,35 +18,195 @@ const userList = async (req, res) => {
 }
 
 const userUpdate = async (req, res) => {
-    const { id, inviteable, full_name, usr_name, usna_last_mod_date, usna_mod_num_remain, paswrd, school, clss, email_address, email_last_mod_date, phone_num, status, discord_name } = req.body;
+    const { id, full_name, new_usr_name, usr_name, paswrd, new_paswrd, school, new_email_address, phone_num, status } = req.body;
     try {
-        const user = await prisma.users.update({
-            where: {
-                id: id
-            },
-            data: {
-                inviteable: inviteable,
-                full_name: full_name,
-                usr_name: usr_name,
-                usna_last_mod_date: usna_last_mod_date,
-                usna_mod_num_remain: usna_mod_num_remain,
-                paswrd: paswrd,
-                school: school,
-                clss: clss,
-                email_address: email_address,
-                email_last_mod_date: email_last_mod_date,
-                phone_num: phone_num,
-                status: status,
-                discord_name: discord_name
+    
+            let date = new Date();
+    
+            
+    
+            const user = await prisma.users.findFirst({
+                where: {
+                    id: id
+                }
+            });
+    
+            const usrnameCheck = await prisma.users.findFirst({
+                where:{
+                    usr_name: new_usr_name
+                }
+            });
+    
+            const emailCheck = await prisma.users.findFirst({
+                where:{
+                    email_address: new_email_address
+                }
+            });
+    
+    
+    
+        //Megadott adatok vizsgálata és update
+    
+            //Email módosítás esetén:
+    
+            if(((new_email_address && paswrd) && !new_usr_name && !new_paswrd)){
+    
+    
+                if(validalasFuggveny(res, [
+                    { condition: emailCheck, message: "Ezzel az email címmel más már regisztrált!"}
+                    
+                ]))
+                {
+                    return;
+                };
+    
+    
+                    let trim_email = new_email_address.replaceAll(" ", "");
+    
+    
+                    if(!bcrypt.compareSync(paswrd, user.paswrd)){
+                        return res.status(400).json({message: "A jelszó nem megfelelő!"});
+                    }
+                    
+                    console.log(new Date(new Date(date).setMonth(date.getMonth() - 1)));
+                    if(date > new Date(new Date(user.email_last_mod_date).setMonth(user.email_last_mod_date.getMonth() + 1))){
+                    
+    
+                        const modUser = await prisma.users.update({
+                            where: {
+                                id: id
+                            },
+                            data: {
+                                full_name: full_name,
+                                school: school,
+                                email_address: trim_email,
+                                email_last_mod_date: date,
+                                phone_num: phone_num,
+                                status: status
+                            }
+                
+                        });
+                        return res.status(200).json({ message: "Sikeres adatfrissítés!" });
+    
+    
+    
+    
+                }else{
+                    return res.status(400).json({ message: "E-mail cím meváltoztatásra nincs lehetőséged!" });
+                }
+                
+                
             }
+    
+    
+            //Felhasználónév esetén:
+    
+            if((usr_name && new_usr_name && paswrd) && !new_email_address && !new_paswrd){
+    
+                if(validalasFuggveny(res, [
+                    { condition: usrnameCheck, message: "Másnak is ez a neve! Adj meg újat!"}
+                    
+                ]))
+                {
+                    return;
+                };
+    
+                if(user.usna_mod_num_remain > 0  && user.usna_last_mod_date < date){
+    
+                    const modUser = await prisma.user.update({
+                        where: {
+                            id: id
+                        },
+                        data: {
+                            full_name: full_name,
+                            usr_name: new_usr_name,
+                            usna_last_mod_date: date,
+                            usna_mod_num_remain: user.usna_mod_num_remain - 1,
+                            school: school,
+                            phone_num: phone_num,
+                            status: status
+                        }
+                    });
+                    return res.status(200).json({ message: `Sikeres adatfrissítés! Remaining: ${user.usna_mod_num_remain}` });
+                }else
+                if(user.usna_mod_num_remain == 0 && !(date > new Date(new Date(user.email_last_mod_date).setMonth(user.email_last_mod_date.getMonth() + 3)))){
+    
+    
+                    return res.status(400.).json({ message: `Nem lehetséges a felhasználónév megváltoztatásra! (90 nap)`})
+                }else{
+                    return res.status(400.).json({ message: `Nem lehetséges a felhasználónév megváltoztatásra!`})
+                }
+            }
+    
+            //Jelszó esetén:
+            if((paswrd && new_paswrd) && !new_email_address && !usr_name){
+    
+                console.log({encrypted: paswrd == new_paswrd ? "true" : "false"})
+                console.log({encrypted: bcrypt.compareSync(paswrd, user.paswrd) == bcrypt.compareSync(new_paswrd, user.paswrd) ? "true" : "false"})
+                
+    
+                if(paswrd == new_paswrd){
+                    return res.status(400).json({message: "Ugyanazt a jelszót nem adhatod meg!"});
+                }
+    
+                if(bcrypt.compareSync(paswrd, user.paswrd) == bcrypt.compareSync(new_paswrd, user.paswrd)){
+                    return res.status(400).json({message: "Ugyanazt a jelszót nem adhatod meg!"});
+    
+                }   
+    
+                if(!bcrypt.compareSync(paswrd, user.paswrd)){
+                    return res.status(400).json({message: "Nem megfelelő jelszó!"});
+                }
+                
+    
+                
+                 
+                    
+                const specChars = /[*@_]/;
+                const ekezetesRegex = /[áéíóöőúüűÁÉÍÓÖŐÚÜŰ]/;
+                const validCharsRegex = /^[a-zA-Z0-9*@_]*$/;
+    
+                if (validalasFuggveny(res, [
+                    { condition: paswrd.length < 8, message: "A jelszónak minimum 8 karakter hosszúnak kell lennie!" },
+                    { condition: !/[A-Z]/.test(paswrd), message: "Egy nagybetűt meg kell adni a jelszónál!" },
+                    { condition: !/[a-z]/.test(paswrd), message: "Kisbetűket meg kell adnod a jelszónál!" },
+                    { condition: !/[0-9]/.test(paswrd), message: "A jelszónak tartalmaznia kell számot!" },
+                    { condition: !specChars.test(paswrd), message: "A jelszónak tartalmaznia kell különleges karaktereket! ('*', '@', '_')" },
+                    { condition: /^[*@_]/.test(paswrd), message: "Különleges karakterekkel nem kezdődhet a jelszó!" },
+                    { condition: ekezetesRegex.test(paswrd), message: "Csak az angol ABC betűi elfogadottak a jelszónál, ékezetek nem!" },
+                    { condition: !validCharsRegex.test(paswrd), message: "A jelszónak csak angol ABC betűi és az engedélyezett karakterek (számok, '*', '@', '_') tartalmazhatók!" }
+    
+                ])) {
+                    return;
+                };
+    
+                const hashedPass = await bcrypt.hash(paswrd, 10);
+            
+                const modUser = await prisma.users.update({
+                    where: {
+                        id: id
+                    },
+                    data: {
+                        full_name: full_name,
+                        paswrd: hashedPass,
+                        school: school,
+                        phone_num: phone_num,
+                        status: status
+                    }
+                });
+                return res.status(200).json({ message: "Sikeres adatfrissítés!" });
+                
+                
+                
+                }else{
+                    return res.status(400.).json({ message: "Nem lehetséges a jelszó megváltoztatás!"})
+                }
 
-        });
-        return res.status(200).json({ message: "Sikeres adatfrissítés!" });
-    }
-    catch (error) {
-        console.log(error);
-        return res.status(500).json({ message: "Hiba a fetch során!" })
-    }
+        }
+        catch (error) {
+            console.log(error);
+            return res.status(500).json({ message: "Hiba a fetch során!" })
+        }
 }
 
 
