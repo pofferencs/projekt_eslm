@@ -18,7 +18,7 @@ function UserLogin() {
       .then(res => res.json())
       .then(token => {
         if (!token.message) {
-          sessionStorage.setItem('usertoken', token);
+          sessionStorage.setItem('tokenU', token);
           authStatus();
           alert("Sikeres belépés!");
           navigate('/');
@@ -36,23 +36,32 @@ function UserLogin() {
 
   let formObj = {
     usr_name: "",
+    email_address: "",
     paswrd: ""
   }
 
   const [formData, setFormData] = useState(formObj);
+
   const writeData = (e) => {
-    setFormData((prevState) => ({ ...prevState, [e.target.id]: e.target.value }));
-
-    const [identifier, setIdentifier] = useState("");
-    const [isEmail, setIsEmail] = useState(false);
-
-    const valtozasKezelo = (e) =>{
-      const value = e.target.value;
-      setIdentifier(value);
-      setIsEmail(value.includes("@"));
+    const { id, value } = e.target;
+  
+    // Ha email vagy felhasználónevet gépelünk
+    if (id === "email_or_username") {
+      if (value.includes("@")) {
+        // Ha email, akkor állítsuk be az email_address mezőt és ürítsük a felhasználónév mezőt
+        setFormData((prevState) => ({ ...prevState, email_address: value, usr_name: "" }));
+      } else {
+        // Ha felhasználónév, akkor állítsuk be a usr_name mezőt és ürítsük az email_address mezőt
+        setFormData((prevState) => ({ ...prevState, usr_name: value, email_address: "" }));
+      }
     }
-
-  }
+  
+    // Ha jelszót gépelünk
+    if (id === "password") {
+      setFormData((prevState) => ({ ...prevState, paswrd: value }));
+    }
+  };
+  
 
   return (
     <div>
@@ -71,12 +80,12 @@ function UserLogin() {
         </div>
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-          <form className="space-y-6" action="#" method="POST">
+          <form onSubmit={onSubmit} className="space-y-6" action="#" method="POST">
             <div>
-              <label htmlFor="email" className="block text-sm/6 font-medium text-indigo-600">E-mail cím vagy felhasználónév</label>
-              
+              <label htmlFor="email_or_username" className="block text-sm/6 font-medium text-indigo-600">E-mail cím vagy felhasználónév</label>
+
               <div className="mt-2">
-                <input type="email" name="email" id="email" autoComplete="email" required className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" />
+                <input type="text" name="email_or_username" id="email_or_username" autoComplete="email_or_username" required value={formData.email_address || formData.usr_name} onChange={writeData} className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" />
               </div>
             </div>
 
@@ -88,7 +97,7 @@ function UserLogin() {
                 </div>
               </div>
               <div className="mt-2">
-                <input type="password" name="password" id="password" autoComplete="current-password" required className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" />
+                <input type="password" name="password" id="password" autoComplete="current-password" required value={formData.paswrd} onChange={writeData} className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" />
               </div>
             </div>
 
@@ -98,7 +107,7 @@ function UserLogin() {
           </form>
 
           <p className="mt-10 text-center text-sm/6 text-gray-500">
-            Nincs még fiókod? 
+            Nincs még fiókod?
             <Link to="/register" className="font-semibold text-indigo-600 hover:text-indigo-500">Regisztráció</Link>
           </p>
         </div>

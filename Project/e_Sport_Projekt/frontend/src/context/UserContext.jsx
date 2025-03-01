@@ -12,7 +12,7 @@ export const UserProvider = ({children})=>{
       method: 'GET',
       credentials: 'include',
       headers:{
-        "Content-tpye":"application/json"
+        "Content-Type":"application/json"
       }
     })
     .then(res=>res.json())
