@@ -252,14 +252,10 @@ const userReg = async (req, res) => {
                 om_identifier: om_identifier
             }
         });
-        
-        if(validalasFuggveny(res,[
-            { condition: !/^[A-ZÁÉÍÓÖŐÚÜŰ][a-záéíóöőúüű]{1,}(?:[-][A-ZÁÉÍÓÖŐÚÜŰ][a-záéíóöőúüű]{1,})*(\s+[A-ZÁÉÍÓÖŐÚÜŰ][a-záéíóöőúüű]{1,}(?:[-][A-ZÁÉÍÓÖŐÚÜŰ][a-záéíóöőúüű]{1,})*)+$/.test(full_name), message : "Hibás névmegadás!"}
-        ])){
-            return;
-        };
 
         if (validalasFuggveny(res, [
+            { condition: !/^[A-ZÁÉÍÓÖŐÚÜŰ][a-záéíóöőúüű]{1,}(?:[-][A-ZÁÉÍÓÖŐÚÜŰ][a-záéíóöőúüű]{1,})*(\s+[A-ZÁÉÍÓÖŐÚÜŰ][a-záéíóöőúüű]{1,}(?:[-][A-ZÁÉÍÓÖŐÚÜŰ][a-záéíóöőúüű]{1,})*)+$/.test(full_name), message : "Hibás névmegadás!"},
+            { condition: full_name.length > 64, message: "Túl hosszú név (max 64 karakter)!"},
             { condition: /@/.test(usr_name), message: "A felhasználó név nem tartalmazhat '@' jelet!" },
             { condition: /[0-9]/.test(usr_name.charAt(0)), message: "Számmal nem kezdődhet a felhasználónév!" },
             { condition: usernameCheck, message: "A felhasználónév foglalt!" },

@@ -267,6 +267,8 @@ const organizerReg = async (req, res) => {
         });
 
         if (validalasFuggveny(res, [
+            { condition: !/^[A-ZÁÉÍÓÖŐÚÜŰ][a-záéíóöőúüű]{1,}(?:[-][A-ZÁÉÍÓÖŐÚÜŰ][a-záéíóöőúüű]{1,})*(\s+[A-ZÁÉÍÓÖŐÚÜŰ][a-záéíóöőúüű]{1,}(?:[-][A-ZÁÉÍÓÖŐÚÜŰ][a-záéíóöőúüű]{1,})*)+$/.test(full_name), message : "Hibás névmegadás!"},
+            { condition: full_name.length > 64, message: "Túl hosszú név (max 64 karakter)!"},
             { condition: /[0-9]/.test(usr_name.charAt(0)), message: "Számmal nem kezdődhet a felhasználónév!" },
             { condition: organizernameCheck, message: "A felhasználónév foglalt!" },
             { condition: omIdCheck, message: "Ezzel az OM-számmal regisztráltak már!"},
