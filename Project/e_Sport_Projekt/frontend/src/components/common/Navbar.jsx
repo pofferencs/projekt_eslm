@@ -1,6 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom';
 import UserContext from '../../context/UserContext';
 import { useContext } from 'react';
+import Logo from '../../assets/logo.png';
 
 import { useState } from 'react';
 
@@ -45,7 +46,7 @@ function Navbar() {
             {/* Logó és menüelemek */}
             <div className="flex flex-1 items-center justify-center md:items-stretch sm:justify-start">
               <div className="flex shrink-0 items-center">
-                <img className="h-8 w-auto" src="https://tailwindui.com/plus-assets/img/logos/mark.svg?color=indigo&shade=500" alt="Your Company" />
+                <img className="h-12 w-auto" src={Logo} alt="Your Company" />
               </div>
               {/* Asztali nézetben látható menüpontok */}
               <div className="hidden sm:ml-6 sm:block">

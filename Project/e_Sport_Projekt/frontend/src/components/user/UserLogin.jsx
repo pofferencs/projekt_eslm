@@ -1,6 +1,7 @@
 import { useState, useContext } from "react";
 import UserContext from "../../context/UserContext";
 import { useNavigate, Link } from "react-router-dom";
+import Logo from '../../assets/logo.png'
 
 
 function UserLogin() {
@@ -75,8 +76,8 @@ function UserLogin() {
 // --> */}
       <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-          <img className="mx-auto h-10 w-auto" src="https://tailwindui.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600" alt="Your Company" />
-          <h2 className="mt-10 text-center text-2xl/9 font-bold tracking-tight text-indigo-600" >Jelentkezz be a fiókodba</h2>
+          <img className="mx-auto h-80 w-auto" src={Logo} alt="Your Company" />
+          <h2 className="mt-10 text-center text-4xl font-bold tracking-tight text-indigo-600" >Bejelentkezés</h2>
         </div>
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
