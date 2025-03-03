@@ -5,7 +5,7 @@ const UserContext = createContext();
 export const UserProvider = ({children})=>{
 
   const [refresh, setRefresh] = useState(false);
-  const[isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   const autStatus = () =>{
     fetch(`${import.meta.env.VITE_BASE_URL}/user/auth`,{

@@ -32,17 +32,23 @@ function UserLogin() {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    kuldes(formData, 'POST');
+    if(document.getElementById("email_or_username").textContent.includes('@')){
+      kuldes(formDataEmail, 'POST');
+    } else {
+      kuldes(formDataUsername, 'POST')
+    }
+    
   }
-
-  let formObj = {
+  let formObjUsername = {
     usr_name: "",
+    paswrd: ""
+  }
+  let formObjEmail = {
     email_address: "",
     paswrd: ""
   }
-
-  const [formData, setFormData] = useState(formObj);
-
+  const [formDataEmail, setFormDataEmail] = useState(formObjEmail);  
+  const [formDataUsername, setFormDataUsername] = useState(formObjUsername);
   const writeData = (e) => {
     const { id, value } = e.target;
   
@@ -50,16 +56,17 @@ function UserLogin() {
     if (id === "email_or_username") {
       if (value.includes("@")) {
         // Ha email, akkor állítsuk be az email_address mezőt és ürítsük a felhasználónév mezőt
-        setFormData((prevState) => ({ ...prevState, email_address: value, usr_name: "" }));
+        setFormDataEmail((prevState) => ({ ...prevState, email_address: value}));
       } else {
         // Ha felhasználónév, akkor állítsuk be a usr_name mezőt és ürítsük az email_address mezőt
-        setFormData((prevState) => ({ ...prevState, usr_name: value, email_address: "" }));
+        setFormDataUsername((prevState) => ({ ...prevState, usr_name: value}));
       }
     }
   
     // Ha jelszót gépelünk
     if (id === "password") {
-      setFormData((prevState) => ({ ...prevState, paswrd: value }));
+      setFormDataEmail((prevState) => ({ ...prevState, paswrd: value }));
+      setFormDataUsername((prevState) => ({ ...prevState, paswrd: value }));
     }
   };
   
@@ -86,7 +93,7 @@ function UserLogin() {
               <label htmlFor="email_or_username" className="block text-sm/6 font-medium text-indigo-600">E-mail cím vagy felhasználónév</label>
 
               <div className="mt-2">
-                <input type="text" name="email_or_username" id="email_or_username" autoComplete="email_or_username" required value={formData.email_address || formData.usr_name} onChange={writeData} className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" />
+                <input type="text" name="email_or_username" id="email_or_username" autoComplete="email_or_username" required value={formDataEmail.email_address || formDataUsername.usr_name} onChange={writeData} className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" />
               </div>
             </div>
 
@@ -98,7 +105,7 @@ function UserLogin() {
                 </div>
               </div>
               <div className="mt-2">
-                <input type="password" name="password" id="password" autoComplete="current-password" required value={formData.paswrd} onChange={writeData} className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" />
+                <input type="password" name="password" id="password" autoComplete="current-password" required value={formDataUsername.paswrd && formDataEmail.paswrd} onChange={writeData} className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" />
               </div>
             </div>
 
