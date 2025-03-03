@@ -7,7 +7,7 @@ export const UserProvider = ({children})=>{
   const [refresh, setRefresh] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  const autStatus = () =>{
+  const authStatus = () =>{
     fetch(`${import.meta.env.VITE_BASE_URL}/user/auth`,{
       method: 'GET',
       credentials: 'include',
@@ -42,7 +42,7 @@ export const UserProvider = ({children})=>{
     refresh,
     update,
     logout,
-    autStatus,
+    authStatus,
     isAuthenticated
   }}>{children}</UserContext.Provider>
 }

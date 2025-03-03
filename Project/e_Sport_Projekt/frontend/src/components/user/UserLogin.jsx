@@ -43,12 +43,15 @@ function UserLogin() {
     usr_name: "",
     paswrd: ""
   }
+
   let formObjEmail = {
     email_address: "",
     paswrd: ""
   }
+
   const [formDataEmail, setFormDataEmail] = useState(formObjEmail);  
   const [formDataUsername, setFormDataUsername] = useState(formObjUsername);
+  
   const writeData = (e) => {
     const { id, value } = e.target;
   
