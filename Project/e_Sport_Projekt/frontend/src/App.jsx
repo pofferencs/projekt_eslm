@@ -1,3 +1,11 @@
+import Navbar from "./components/common/Navbar";
+import UserMain from "./components/user/UserMain";
+import UserLogin from './components/user/UserLogin';
+
+
+import { BrowserRouter, Routes, Route, Navigate} from 'react-router-dom';
+
+import {UserProvider} from './context/UserContext';
 
 function App() {
 
@@ -5,7 +13,15 @@ function App() {
   return (
 
       <div>
-        <h1 className="text-5xl text-red-500 text-center font-bold">Tail test with DaisyUI</h1>
+        <UserProvider>
+          <BrowserRouter>
+            <Navbar />
+            <Routes>
+              <Route path="/" element={<UserMain />} />
+              <Route path="/login" element={<UserLogin />} />
+            </Routes>
+          </BrowserRouter>
+        </UserProvider>
       </div>
   )
 }
