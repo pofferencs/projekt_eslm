@@ -11,8 +11,10 @@ function Navbar() {
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
 
   const navigate = useNavigate();
-  const { logout, isAuthenticated, authStatus } = useContext(UserContext);
+  const { logout, isAuthenticated, authStatus, update } = useContext(UserContext);
   const token = sessionStorage.getItem('tokenU');
+
+  
 
   return (
     <div>
@@ -44,12 +46,12 @@ function Navbar() {
             </div>
 
             {/* Logó és menüelemek */}
-            <div className="flex flex-1 items-center justify-center md:items-stretch sm:justify-start">
+            <div className="flex flex-1 items-center justify-center md:items-stretch md:justify-start">
               <div className="flex shrink-0 items-center">
                 <img className="h-12 w-auto" src={Logo} alt="Your Company" />
               </div>
               {/* Asztali nézetben látható menüpontok */}
-              <div className="hidden sm:ml-6 sm:block">
+              <div className="hidden sm:ml-6 md:block">
                 <div className="flex space-x-4">
                   <Link to="/" className="rounded-md bg-gray-900 px-3 py-2 text-sm font-medium text-white">Főoldal</Link>
                   <Link to="/events" className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Események</Link>
@@ -75,7 +77,10 @@ function Navbar() {
                   <div className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5">
                     <Link to="/profile" className="block px-4 py-2 text-sm text-gray-700">Profiladatok</Link>
                     <Link to="/teams" className="block px-4 py-2 text-sm text-gray-700">Csapataim</Link>
-                    <button onClick={logout} className="block px-4 py-2 text-sm text-gray-700">Kijelentkezés</button>
+                    { (isAuthenticated || token) && (
+                      <button onClick={()=> {logout(token); sessionStorage.removeItem('tokenU'); navigate('/'); window.location.reload();}} className="block px-4 py-2 text-sm text-gray-700">Kijelentkezés</button>
+                    )}
+
                   </div>
                 )}
               </div>

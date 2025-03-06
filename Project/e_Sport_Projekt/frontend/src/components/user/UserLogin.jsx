@@ -7,35 +7,17 @@ import Logo from '../../assets/logo.png'
 function UserLogin() {
 
   const navigate = useNavigate();
-  const { authStatus } = useContext(UserContext);
+  const { authStatus, kuldes } = useContext(UserContext);
 
-  const kuldes = (formData, method) => {
-    fetch(`${import.meta.env.VITE_BASE_URL}/user/login`, {
-      method: method,
-      credentials: 'include',
-      headers: { "Content-type": "application/json" },
-      body: JSON.stringify(formData)
-    })
-      .then(res => res.json())
-      .then(token => {
-        if (!token.message) {
-          sessionStorage.setItem('tokenU', token);
-          authStatus();
-          alert("Sikeres belépés!");
-          navigate('/');
-        } else {
-          alert(token.message);
-        }
-      })
-      .catch(err => alert(err));
-  }
-
+  
   const onSubmit = (e) => {
     e.preventDefault();
     if(document.getElementById("email_or_username").textContent.includes('@')){
       kuldes(formDataEmail, 'POST');
+      navigate('/');
     } else {
       kuldes(formDataUsername, 'POST')
+      navigate('/');
     }
     
   }
