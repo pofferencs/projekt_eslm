@@ -56,7 +56,7 @@ export const UserProvider = ({children})=>{
         if (!token.message) {
           sessionStorage.setItem('tokenU', token);
           authStatus();
-          alert("Sikeres belépés!");
+          pageRefresh();
         } else {
           alert(token.message);
         }
