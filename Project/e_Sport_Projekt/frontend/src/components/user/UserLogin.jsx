@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import UserContext from "../../context/UserContext";
 import { useNavigate, Link } from "react-router-dom";
 import Logo from '../../assets/logo.png'
@@ -7,9 +7,17 @@ import Logo from '../../assets/logo.png'
 function UserLogin() {
 
   const navigate = useNavigate();
-  const { authStatus, kuldes } = useContext(UserContext);
+  const { isAuthenticated, authStatus, kuldes } = useContext(UserContext);
+  const token = sessionStorage.getItem('tokenU');
 
-  
+  //Ezzel akadályozzuk meg, hogy a login felület ne jelenjen meg akkor, ha már be vagy jelentkezve, hahaha
+  useEffect(()=>{
+    if(isAuthenticated || token){
+      navigate('/');
+    }
+
+  })
+
   const onSubmit = (e) => {
     e.preventDefault();
     if(document.getElementById("email_or_username").textContent.includes('@')){
@@ -101,7 +109,7 @@ function UserLogin() {
 
           <p className="mt-10 text-center text-sm/6 text-gray-500">
             Nincs még fiókod?
-            <Link to="/register" className="font-semibold text-indigo-600 hover:text-indigo-500">Regisztráció</Link>
+            <Link to="/register" className="font-semibold text-indigo-600 hover:text-indigo-500"> Regisztráció</Link>
           </p>
         </div>
       </div>
