@@ -30,10 +30,43 @@ export const UserProvider = ({children})=>{
     setRefresh(prev=>!prev);
   }
 
-  const logout = (tokenName) =>{
-    sessionStorage.removeItem(tokenName);
+  const logout = () =>{
+   
+    fetch(`${import.meta.env.VITE_BASE_URL}/user/logout`,{
+     method: 'POST',
+     credentials: 'include',
+     headers: {
+      "Content-Type": "application/json"
+     } 
+    }).catch(err=>{alert(err)});
+
     setIsAuthenticated(false);
     update()
+  }
+
+  const kuldes = (formData, method) => {
+    fetch(`${import.meta.env.VITE_BASE_URL}/user/login`, {
+      method: method,
+      credentials: 'include',
+      headers: { "Content-type": "application/json" },
+      body: JSON.stringify(formData)
+    })
+      .then(res => res.json())
+      .then(token => {
+        if (!token.message) {
+          sessionStorage.setItem('tokenU', token);
+          authStatus();
+          pageRefresh();
+        } else {
+          alert(token.message);
+        }
+      })
+      .catch(err => alert(err));
+
+  }
+
+  const pageRefresh = () =>{
+    window.location.reload();
   }
 
 
@@ -43,7 +76,9 @@ export const UserProvider = ({children})=>{
     update,
     logout,
     authStatus,
-    isAuthenticated
+    isAuthenticated,
+    kuldes,
+    pageRefresh
   }}>{children}</UserContext.Provider>
 }
 
