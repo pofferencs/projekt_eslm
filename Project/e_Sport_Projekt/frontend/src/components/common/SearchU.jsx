@@ -51,12 +51,17 @@ function SearchU() {
 
 
 
-            <div className="m-5">
+            <div className="m-5 h-screen">
               {(result.length > 0) ? (
-                result.map((user, i)=> (<div key={i}><p >{user.usr_name}</p></div>))
+                result.map((user, i)=> (<div key={i}>
+                  <p>{user.usr_name}</p>
+                  
+
+
+                  </div>))
               ):
                 (
-                  <p>asd</p>
+                  <p></p>
                 )
               }
             </div> 
