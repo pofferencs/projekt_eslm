@@ -15,7 +15,6 @@ function UserLogin() {
     if(isAuthenticated || token){
       navigate('/');
     }
-
   })
 
   const onSubmit = (e) => {
