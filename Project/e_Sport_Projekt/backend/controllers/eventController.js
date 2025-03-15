@@ -13,7 +13,7 @@ const eventList = async (req, res) => {
 }
 
     const eventSearchByName = async (req, res) =>{
-        const { name } = req.body;
+        const { name } = req.params;
 
         if(!name) return res.status(400).json({message: "Hiányos adatok!"});
 

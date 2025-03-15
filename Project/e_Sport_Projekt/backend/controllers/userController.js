@@ -18,7 +18,8 @@ const userList = async (req, res) => {
 }
 
 const userSearchByName = async (req,res) =>{
-    const {usr_name} =req.body;
+    const {usr_name} = req.params;
+
     if(!usr_name) return res.status(400).json({message: "Hiányos adatok!"});
 
     try {

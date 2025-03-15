@@ -14,7 +14,7 @@ const teamList = async (req, res) => {
 
 const teamSearchByName = async (req,res) =>{
 
-    const {full_name} =req.body;
+    const {full_name} =req.params;
 
     if(!full_name) return res.status(400).json({message: "Hiányos adatok!"});
 
