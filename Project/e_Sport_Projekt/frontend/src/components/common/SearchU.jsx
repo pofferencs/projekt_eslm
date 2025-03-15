@@ -10,12 +10,16 @@ function SearchU() {
     const kereses = (e) => {
         const { value } = e.target;
 
+        setResult([]);
+        
         setSearchInput(value)
 
-        fetch(`${import.meta.env.VITE_BASE_URL}/list/`)
+        fetch(`${import.meta.env.VITE_BASE_URL}/list/unamesearch`)
+        .then(res=>res.json())
+        .then(adat=>setResult(adat))
+        .catch(err=>toast.error(err))
 
     }
-
 
     return (
         <div>
@@ -35,8 +39,10 @@ function SearchU() {
 
 
 
-            <div>
-
+            <div className="m-5">
+              {
+                result.map((user, i)=> (<div><p key={i}>{user.usr_name}</p></div>))
+              }
             </div>
 
 
