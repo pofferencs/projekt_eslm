@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route, Navigate} from 'react-router-dom';
 import UserContext from "./context/UserContext";
 import { UserProvider } from './context/UserContext';
 import { useContext } from "react";
+import SearchU from "./components/common/SearchU";
 
 
 function App() {
@@ -31,6 +32,7 @@ function App() {
                 <Route path="/" element={<LoggedOutMain />} />
               )}
               <Route path="/login" element={<UserLogin />} />
+              <Route path="/player-search" element={<SearchU />}/>
             </Routes>
           </BrowserRouter>
         </UserProvider>
