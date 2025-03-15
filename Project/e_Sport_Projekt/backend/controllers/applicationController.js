@@ -17,6 +17,11 @@ const applicationUpdate = async (req, res) => {
     const { status, uer_id, tem_id, tnt_id } = req.body;
 
     try {
+
+        if(res,"Hiányzó adat(ok)!",uer_id, tem_id, tnt_id, status){
+            return;
+        };
+
         const application = await prisma.applications.update({
             where: {
                 uer_id_tem_id_tnt_id: {
@@ -41,6 +46,11 @@ const applicationInsert = async (req, res) => {
     const { dte, status, tem_id, tnt_id, uer_id } = req.body;
 
     try {
+
+        if(res,"Hiányzó adat(ok)!",dte, status, tem_id, tnt_id, uer_id){
+            return;
+        };
+
         // Csapatos jelentkezés
         const applicatedTeam = await prisma.applications.findFirst({
             where: {
@@ -98,6 +108,11 @@ const applicationDelete = async (req, res) => {
     const { id, tnt_id } = req.body;
 
     try {
+
+        if(res,"Hiányzó adat(ok)!", id, tnt_id){
+            return;
+        };
+
         const applications = await prisma.applications.delete({
             where: {
                 id_tnt_id: {

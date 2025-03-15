@@ -12,6 +12,29 @@ const eventList = async (req, res) => {
     }
 }
 
+    const eventSearchByName = async (req, res) =>{
+        const { name } = req.body;
+
+        if(!name) return res.status(400).json({message: "Hiányos adatok!"});
+
+        try {
+            const events = await prisma.events.findMany({
+                where:{
+                    name:{
+                        contains: name
+                    }
+                }
+            })
+            if(events.length == 0 || name == "") return res.status(400).json({message : "Nincs ilyen esemény!"});
+            else return res.status(200).json(events);
+
+            
+        } catch (error) {
+            console.log(error);
+            return res.status(500).json({ message: "Hiba a fetch során!" })
+        }
+    }
+
 const eventUpdate = async (req, res) => {
     const { id, name, start_date, end_date, place, details } = req.body;
 
@@ -187,5 +210,6 @@ module.exports = {
     eventList,
     eventUpdate,
     eventInsert,
-    eventDelete
+    eventDelete,
+    eventSearchByName
 }

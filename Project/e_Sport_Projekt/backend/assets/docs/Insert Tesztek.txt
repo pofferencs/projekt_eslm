@@ -26,19 +26,3 @@ https://localhost:8000/insert/event
     "details": "Életteleneknek Gamer Esport esemény."
 }
 
-
-Felhasználó regisztrálása:
-https://localhost:8000/user/register
-
-{
-  "full_name": "Teszt József",
-  "usr_name": "tesztfelhasznalo",
-  "paswrd": "Titkosjelszo1@",
-  "date_of_birth": "2003. 11. 23.",
-  "school": "Valami random oskola",
-  "clss": "13/F",
-  "email_address": "tesztfelhasznalo1@gmail.com",
-  "phone_num": "+36404206969",
-  "om_identifier": "72398780623",
-  "discord_name": "discord_name"
-}
