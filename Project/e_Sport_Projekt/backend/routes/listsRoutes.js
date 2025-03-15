@@ -24,9 +24,9 @@ router.get('/team', teamList);
 router.get('/teamMembership', teamMembershipList);
 router.get('/tournament', tournamentList) /*Verseny*/
 router.get('/organizer',organizerList);
-router.get('/enamesearch', eventSearchByName);
-router.get('/unamesearch', userSearchByName);
-router.get('/tonamesearch', torunamentSearchByName);
-router.get('/tenamesearch', teamSearchByName);
+router.get('/enamesearch/:name', eventSearchByName);
+router.get('/unamesearch/:usr_name', userSearchByName);
+router.get('/tonamesearch/:name', torunamentSearchByName);
+router.get('/tenamesearch/:full_name', teamSearchByName);
 
 module.exports = router;
