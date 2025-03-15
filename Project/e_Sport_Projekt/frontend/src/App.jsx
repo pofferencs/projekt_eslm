@@ -6,6 +6,8 @@ import { BrowserRouter, Routes, Route, Navigate} from 'react-router-dom';
 import UserContext from "./context/UserContext";
 import { UserProvider } from './context/UserContext';
 import { useContext } from "react";
+import SearchU from "./components/common/SearchU";
+import Footer from "./components/common/Footer";
 
 
 function App() {
@@ -18,7 +20,7 @@ function App() {
 
   return (
 
-      <div>
+      <div className="min-h-screen" >
         <UserProvider>
           <BrowserRouter>
             <Navbar />
@@ -31,7 +33,11 @@ function App() {
                 <Route path="/" element={<LoggedOutMain />} />
               )}
               <Route path="/login" element={<UserLogin />} />
+              <Route path="/player-search" element={<SearchU />}/>
             </Routes>
+            <div className="absolute bottom-0">
+              <Footer />
+            </div>
           </BrowserRouter>
         </UserProvider>
       </div>
