@@ -17,6 +17,25 @@ const userList = async (req, res) => {
     }
 }
 
+const userSearchByName = async (req,res) =>{
+    const {usr_name} =req.body;
+    if(!usr_name) return res.status(400).json({message: "Hiányos adatok!"});
+
+    try {
+        const user = await prisma.users.findMany({
+            where: {
+                usr_name:{
+                    contains: usr_name
+                }
+            }
+        });
+        if(user.length == 0 || usr_name == "") return res.status(400).json({message : "Nincs ilyen felhasználó"});
+        else return res.status(200).json(user);
+    } catch (error) {
+        return res.status(500).json(error);
+    }
+}
+
 const userUpdate = async (req, res) => {
     const { id, full_name, new_usr_name, usr_name, paswrd, new_paswrd, school, new_email_address, phone_num, status } = req.body;
     try {
@@ -469,5 +488,6 @@ module.exports = {
     userReg,
     protected,
     isAuthenticated,
-    userLogout
+    userLogout,
+    userSearchByName
 }

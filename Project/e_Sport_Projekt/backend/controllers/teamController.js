@@ -12,6 +12,27 @@ const teamList = async (req, res) => {
     }
 }
 
+const teamSearchByName = async (req,res) =>{
+
+    const {full_name} =req.body;
+
+    if(!full_name) return res.status(400).json({message: "Hiányos adatok!"});
+
+    try {
+        const team = await prisma.teams.findMany({
+            where: {
+                full_name:{
+                    contains: full_name
+                }
+            }
+        });
+        if(team.length == 0 || full_name == "") return res.status(400).json({message : "Nincs ilyen csapat!"});
+        else return res.status(200).json(team);
+    } catch (error) {
+        return res.status(500).json(error);
+    }
+}
+
 const teamUpdate = async (req, res) => {
     const { id, short_name, full_name, creator_id } = req.body;
 
@@ -111,5 +132,6 @@ module.exports = {
     teamList,
     teamUpdate,
     teamInsert,
-    teamDelete
+    teamDelete,
+    teamSearchByName
 }

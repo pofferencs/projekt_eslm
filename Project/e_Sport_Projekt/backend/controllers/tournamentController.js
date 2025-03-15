@@ -12,6 +12,26 @@ const tournamentList = async (req, res) => {
     }
 };
 
+const torunamentSearchByName = async (req,res) =>{
+    const { name } = req.body;
+
+    if(!name) return res.status(400).json({message: "Hiányos adatok!"});
+
+    try {
+        const tournaments = await prisma.tournaments.findMany({
+            where: {
+                name:{
+                    contains: name
+                }
+            }
+        });
+        if(tournaments.length == 0 || name == "") return res.status(400).json({message : "Nincs ilyen verseny!"});
+        else return res.status(200).json(user);
+    } catch (error) {
+        return res.status(500).json(error);
+    }
+}
+
 const tournamentUpdate = async (req, res) => {
 
     const { id, name, num_participant, team_num, start_date, end_date, game_mode, max_participant, apn_start, apn_end, details, evt_id, gae_id } = req.body;
@@ -278,5 +298,6 @@ module.exports = {
     tournamentList,
     tournamentUpdate,
     tournamentDelete,
-    tournamentInsert
+    tournamentInsert,
+    torunamentSearchByName
 }
