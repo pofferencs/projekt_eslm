@@ -51,18 +51,6 @@ function Navbar() {
                 <img className="h-12 w-auto" src={Logo} alt="Your Company" />
               </div>
               {/* Asztali nézetben látható menüpontok */}
-              {/* <div className="hidden sm:ml-6 md:block">
-                <div className="flex space-x-4">
-                  <Link to="/" className="rounded-md bg-gray-900 px-3 py-2 text-sm font-medium text-white">Főoldal</Link>
-                  <Link to="/events" className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Események</Link>
-                  <Link to="/player-search" className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Játékos kereső</Link>
-                  <Link to="/team-search" className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Csapat kereső</Link>
-                  <Link to="/tournament-search" className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Meccs kereső</Link>                  
-                  <Link to="/event-search" className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Esemény kereső</Link>
-                  <Link to="/contact" className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Névjegy</Link>              
-                </div>
-              </div> */}
-
               <div className="hidden sm:ml-6 md:block">
                 <div className="flex space-x-4">
                   <Link to="/" className="rounded-md bg-gray-900 px-3 py-2 text-sm font-medium text-white">Főoldal</Link>
