@@ -13,6 +13,7 @@ const tournamentList = async (req, res) => {
 };
 
 const torunamentSearchByName = async (req,res) =>{
+
     const { name } = req.params;
 
     if(!name) return res.status(400).json({message: "Hiányos adatok!"});
@@ -26,7 +27,7 @@ const torunamentSearchByName = async (req,res) =>{
             }
         });
         if(tournaments.length == 0 || name == "") return res.status(400).json({message : "Nincs ilyen verseny!"});
-        else return res.status(200).json(user);
+        else return res.status(200).json(tournaments);
     } catch (error) {
         return res.status(500).json(error);
     }
