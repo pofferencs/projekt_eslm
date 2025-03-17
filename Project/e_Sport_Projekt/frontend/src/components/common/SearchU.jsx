@@ -8,7 +8,6 @@ function SearchU() {
     const [result, setResult] = useState([]);
 
     
-    const [talalat, setTalalat] = useState("");
    
     const onSubmit =  (e)=>{
       
@@ -25,7 +24,6 @@ function SearchU() {
       .then(console.log(searchInput))
       .then(res=>res.json())
       .then(adat=>setResult(adat))
-      .then(talalat => setTalalat(result.length > 0 ? talalat = result : talalat = "Nincs találat!"))
       .catch(err=>toast.error(err))
       
       console.log(result)     
@@ -65,7 +63,7 @@ function SearchU() {
                   </div>))
               ):
                 (
-                  <p>{talalat}</p>
+                  <p>{result.message}</p>
                 )
               }
             </div> 
