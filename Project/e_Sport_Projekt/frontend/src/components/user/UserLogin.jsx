@@ -5,7 +5,7 @@ import Logo from "../../assets/logo.png";
 
 function UserLogin() {
   const navigate = useNavigate();
-  const { isAuthenticated, authStatus, kuldes } = useContext(UserContext);
+  const { isAuthenticated, authStatus, login } = useContext(UserContext);
   const token = sessionStorage.getItem("tokenU");
 
   //Ezzel akadályozzuk meg, hogy a login felület ne jelenjen meg akkor, ha már be vagy jelentkezve, hahaha
@@ -20,10 +20,10 @@ function UserLogin() {
     if (
       document.getElementById("email_or_username").textContent.includes("@")
     ) {
-      kuldes(formDataEmail, "POST");
+      login(formDataEmail, "POST");
       navigate("/");
     } else {
-      kuldes(formDataUsername, "POST");
+      login(formDataUsername, "POST");
       navigate("/");
     }
   };

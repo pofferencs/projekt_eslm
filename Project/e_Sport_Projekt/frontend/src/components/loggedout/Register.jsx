@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import UserContext from "../../context/UserContext";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -7,7 +7,14 @@ import { Link } from "react-router-dom";
 
 function Register() {
   const navigate = useNavigate();
-  const { authStatus } = useContext(UserContext);
+  const { authStatus, login, isAuthenticated, pageRefresh } = useContext(UserContext);
+  const token = sessionStorage.getItem("tokenU");
+
+    useEffect(() => {
+      if (isAuthenticated || token) {
+        navigate("/");
+      }
+    });
 
   const kuldes = (formData, method) => {
     fetch(`${import.meta.env.VITE_BASE_URL}/user/register`, {
@@ -20,14 +27,14 @@ function Register() {
       .then((token) => {
         if (!token.message) {
           sessionStorage.setItem("tokenU", token);
-          authStatus();
-          toast.success("Sikeres regisztráció!");
-          navigate("/");
         } else {
           toast.error(token.message);
         }
       })
       .catch((err) => alert(err));
+      
+      navigate("/login");
+      toast.success("Sikeres regisztráció!");
   };
 
   const onSubmit = (e) => {
@@ -58,14 +65,14 @@ function Register() {
   };
 
   return (
-    <section className="bg-gray-100 dark:bg-gray-900 min-h-screen flex flex-col justify-center items-center px-6 py-8">
+    <section className="bg-gray-900 min-h-screen flex flex-col justify-center items-center px-6 py-8">
       <div className="sm:w-full sm:max-w-md text-center">
         <img className="mx-auto h-20 w-auto" src={Logo} alt="Logo" />
         <h2 className="mt-6 text-3xl font-bold text-indigo-700">
           Regisztráció
         </h2>
       </div>
-      <div className="w-full bg-white rounded-lg shadow-lg md:mt-6 sm:max-w-2xl xl:p-0 dark:bg-gray-800 dark:border-gray-700">
+      <div className="w-full rounded-lg shadow-lg md:mt-6 sm:max-w-2xl xl:p-0 bg-gray-800 dark:border-gray-700">
         <div className="p-8 md:p-10">
           <form
             className="grid grid-cols-1 md:grid-cols-2 gap-6"
@@ -81,12 +88,12 @@ function Register() {
               ["clss", "Osztály", "text", "10/D"],
               ["phone_num", "Telefonszám", "text", "+36701234567"],
               ["om_identifier", "OM azonosító", "text", "72312345678"],
-              ["discord_name", "Discord név", "text", "johndoe#1234"],
+              ["discord_name", "Discord név", "text", "johndoe1234"],
             ].map(([id, label, type, placeholder]) => (
               <div key={id}>
                 <label
                   htmlFor={id}
-                  className="block text-sm font-medium text-gray-800 dark:text-white"
+                  className="block text-sm font-medium text-white"
                 >
                   {label}
                 </label>
@@ -96,7 +103,7 @@ function Register() {
                   value={formData[id]}
                   onChange={writeData}
                   placeholder={placeholder}
-                  className="mt-1 block w-full p-3 border border-gray-300 rounded-lg text-gray-900 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white shadow-sm"
+                  className="mt-1 block w-full p-3 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm"
                   required
                 />
               </div>
@@ -110,7 +117,7 @@ function Register() {
               />
               <label
                 htmlFor="terms"
-                className="ml-2 text-sm text-gray-600 dark:text-gray-300"
+                className="ml-2 text-sm text-gray-300"
               >
                 Elfogadom a
                 <a
@@ -128,7 +135,7 @@ function Register() {
             >
               Regisztrálok
             </button>
-            <p className="md:col-span-2 text-sm text-gray-600 dark:text-gray-400 text-center">
+            <p className="md:col-span-2 text-sm text-gray-400 text-center">
               Van már fiókod?{" "}
               <Link to="/login" className="text-indigo-600 hover:underline">
                 Bejelentkezés

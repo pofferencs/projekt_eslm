@@ -370,17 +370,19 @@ const userReg = async (req, res) => {
         })
 
         //Süti
-        const token = tokenGen(newUser.id);
+        // const token = tokenGen(newUser.id);
 
-        res.cookie('tokenU', token, {
-            secure: true,
-            httpOnly: true,
-            sameSite: 'none',
-            maxAge: 360000
-        });
+        // res.cookie('tokenU', token, {
+        //     secure: true,
+        //     httpOnly: true,
+        //     sameSite: 'none',
+        //     maxAge: 360000
+        // });
 
-        console.log(`${newUser.usr_name} (ID: ${newUser.id}) tokenje: ${token}`);
+        // console.log(`${newUser.usr_name} (ID: ${newUser.id}) tokenje: ${token}`);
 
+
+        
         //kép hozzárendelés a fiókhoz
         const newPicLink = await prisma.picture_Links.create({
             data: {
