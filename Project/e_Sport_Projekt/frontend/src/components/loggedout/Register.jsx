@@ -58,253 +58,83 @@ function Register() {
   };
 
   return (
-    <section className="bg-gray-50 dark:bg-gray-900">
-      <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
-        <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-          <img className="mx-auto h-80 w-auto mt-10" src={Logo} />
-          <h2 className="mt-10 text-center text-4xl font-bold tracking-tight text-indigo-600 mb-10">
-            Regisztráció
-          </h2>
-        </div>
-        <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
-          <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
-            <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
-              Regisztráció
-            </h1>
-            <form
-              className="space-y-4 md:space-y-6"
-              onSubmit={onSubmit}
-              action="#"
-              method="POST"
-            >
-              <div>
+    <section className="bg-gray-100 dark:bg-gray-900 min-h-screen flex flex-col justify-center items-center px-6 py-8">
+      <div className="sm:w-full sm:max-w-md text-center">
+        <img className="mx-auto h-20 w-auto" src={Logo} alt="Logo" />
+        <h2 className="mt-6 text-3xl font-bold text-indigo-700">
+          Regisztráció
+        </h2>
+      </div>
+      <div className="w-full bg-white rounded-lg shadow-lg md:mt-6 sm:max-w-2xl xl:p-0 dark:bg-gray-800 dark:border-gray-700">
+        <div className="p-8 md:p-10">
+          <form
+            className="grid grid-cols-1 md:grid-cols-2 gap-6"
+            onSubmit={onSubmit}
+          >
+            {[
+              ["email_address", "Email cím", "email", "johndoe@taszi.hu"],
+              ["paswrd", "Jelszó", "password", "••••••••"],
+              ["usr_name", "Felhasználónév", "text", "johndoe"],
+              ["full_name", "Teljes név", "text", "John Doe"],
+              ["date_of_birth", "Születési dátum", "date", ""],
+              ["school", "Iskola", "text", "Iskolád neve"],
+              ["clss", "Osztály", "text", "10/D"],
+              ["phone_num", "Telefonszám", "text", "+36701234567"],
+              ["om_identifier", "OM azonosító", "text", "72312345678"],
+              ["discord_name", "Discord név", "text", "johndoe#1234"],
+            ].map(([id, label, type, placeholder]) => (
+              <div key={id}>
                 <label
-                  htmlFor="email_address"
-                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                  htmlFor={id}
+                  className="block text-sm font-medium text-gray-800 dark:text-white"
                 >
-                  Email cím
+                  {label}
                 </label>
                 <input
+                  id={id}
+                  type={type}
+                  value={formData[id]}
                   onChange={writeData}
-                  value={formData.email_address}
-                  type="email"
-                  name="email_address"
-                  id="email_address"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  placeholder="johndoe@taszi.hu"
-                  required=""
+                  placeholder={placeholder}
+                  className="mt-1 block w-full p-3 border border-gray-300 rounded-lg text-gray-900 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white shadow-sm"
+                  required
                 />
               </div>
-              <div>
-                <label
-                  htmlFor="paswrd"
-                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                >
-                  Jelszó
-                </label>
-                <input
-                  onChange={writeData}
-                  value={formData.paswrd}
-                  type="password"
-                  name="paswrd"
-                  id="paswrd"
-                  placeholder="••••••••"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  required=""
-                />
-              </div>
-              <div>
-                <label
-                  htmlFor="usr_name"
-                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                >
-                  Felhasználónév
-                </label>
-                <input
-                  onChange={writeData}
-                  value={formData.usr_name}
-                  type="username"
-                  name="usr_name"
-                  id="usr_name"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  required=""
-                />
-              </div>
-              <div>
-                <label
-                  htmlFor="full_name"
-                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                >
-                  Teljes név
-                </label>
-                <input
-                  onChange={writeData}
-                  value={formData.full_name}
-                  type="text"
-                  name="full_name"
-                  id="full_name"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  required=""
-                />
-              </div>
-
-              <div>
-                <label
-                  htmlFor="date_of_birth"
-                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                >
-                  Születési dátum
-                </label>
-                <div className="relative max-w-sm">
-                  <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none"></div>
-                  <input
-                    onChange={writeData}
-                    value={formData.date_of_birth}
-                    id="date_of_birth"
-                    datepicker={true.toString()}
-                    datepicker-autohide={true.toString()}
-                    type="date"
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder="példa - 2003.07.30"
-                  />
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="school"
-                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                  >
-                    Iskola
-                  </label>
-                  <input
-                    onChange={writeData}
-                    value={formData.school}
-                    type="text"
-                    name="school"
-                    id="school"
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    required=""
-                  />
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="clss"
-                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                  >
-                    Osztály
-                  </label>
-                  <input
-                    onChange={writeData}
-                    value={formData.clss}
-                    type="text"
-                    name="clss"
-                    id="clss"
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    required=""
-                    placeholder="10/D"
-                  />
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="phone_num"
-                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                  >
-                    Telefonszám
-                  </label>
-                  <input
-                    onChange={writeData}
-                    value={formData.phone_num}
-                    type="text"
-                    name="phone_num"
-                    id="phone_num"
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    required=""
-                    placeholder="+36701234567"
-                  />
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="om_identifier"
-                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                  >
-                    Om azonosító
-                  </label>
-                  <input
-                    onChange={writeData}
-                    value={formData.om_identifier}
-                    type="text"
-                    name="om_identifier"
-                    id="om_identifier"
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    required=""
-                    placeholder="72312345678"
-                  />
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="discord_name"
-                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                  >
-                    Discord név
-                  </label>
-                  <input
-                    onChange={writeData}
-                    value={formData.discord_name}
-                    type="text"
-                    name="discord_name"
-                    id="discord_name"
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    required=""
-                    placeholder="johndoe#1234"
-                  />
-                </div>
-
-                <div className="flex items-start">
-                  <div className="flex items-center h-5">
-                    <input
-                      id="terms"
-                      aria-describedby="terms"
-                      type="checkbox"
-                      className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800"
-                    />
-                  </div>
-                </div>
-                <div className="ml-3 text-sm">
-                  <label
-                    htmlFor="terms"
-                    className="font-light text-gray-500 dark:text-gray-300"
-                  >
-                    Elfogadom a{" "}
-                    <a
-                      className="font-medium text-primary-600 hover:underline dark:text-primary-500"
-                      href="#"
-                    >
-                      Felhasználási feltételeket és Szabályzatot
-                    </a>
-                  </label>
-                </div>
-              </div>
-              <button
-                type="submit"
-                className="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+            ))}
+            <div className="md:col-span-2 flex items-start">
+              <input
+                id="terms"
+                type="checkbox"
+                className="w-4 h-4 border-gray-300 rounded bg-gray-50 focus:ring-indigo-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-indigo-600"
+                required
+              />
+              <label
+                htmlFor="terms"
+                className="ml-2 text-sm text-gray-600 dark:text-gray-300"
               >
-                Regisztrálok
-              </button>
-              <p className="text-sm font-light text-gray-500 dark:text-gray-400">
-                Van már fiókod?{" "}
-                <Link
-                  to="/login"
-                  className="font-medium text-primary-600 hover:underline dark:text-primary-500"
+                Elfogadom a
+                <a
+                  href="#"
+                  className="text-indigo-600 hover:underline dark:text-indigo-400"
                 >
-                  Bejelentkezés
-                </Link>
-              </p>
-            </form>
-          </div>
+                  {" "}
+                  Felhasználási feltételeket
+                </a>
+              </label>
+            </div>
+            <button
+              type="submit"
+              className="md:col-span-2 w-full text-white bg-indigo-600 hover:bg-indigo-700 focus:ring-4 focus:ring-indigo-400 font-medium rounded-lg text-sm px-5 py-2.5 shadow-md"
+            >
+              Regisztrálok
+            </button>
+            <p className="md:col-span-2 text-sm text-gray-600 dark:text-gray-400 text-center">
+              Van már fiókod?{" "}
+              <Link to="/login" className="text-indigo-600 hover:underline">
+                Bejelentkezés
+              </Link>
+            </p>
+          </form>
         </div>
       </div>
     </section>
