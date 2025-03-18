@@ -10,20 +10,35 @@ function Footer() {
   return (
     <footer className="footer sm:footer-horizontal bg-base-200 text-base-content p-10 mt-auto">
       <aside>
-        <img
-          src="https://taszi.hu/img/trefort_logo.png"
-          width={100}
-          alt="Trefort Logo"
-        />
-        <p>
-          Békéscsabai Szakképzési Centrum
-          <br />
-          Trefort Ágoston Technikum, Szakképző Iskola és Kollégium
-        </p>
+        <a
+          className="btn-link text-indigo-600 hover:no-underline hover:text-amber-600 flex no-underline items-center space-x-3"
+          href="https://taszi.hu"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <img
+            src="https://taszi.hu/img/trefort_logo.png"
+            width={100}
+            alt="Trefort Logo"
+          />
+          <p>
+            Békéscsabai Szakképzési Centrum
+            <br />
+            Trefort Ágoston Technikum, Szakképző Iskola és Kollégium
+          </p>
+        </a>
       </aside>
+
+      <nav>
+        <h6 className="font-bold uppercase">Telefonszám</h6>
+        <span className="inline-flex items-center space-x-2 hover:text-amber-500">
+          <FaPhone className="w-4 h-4" />
+          <a href="tel:+36664445110">(06 66) 444 5110</a>
+        </span>
+      </nav>
       <nav>
         <h6 className="font-bold uppercase">Cím</h6>
-        <span className="inline-flex items-center space-x-2">
+        <span className="inline-flex items-center space-x-2 hover:text-amber-500">
           <FaLocationDot className="w-4 h-4" />
           <a
             href="https://www.google.com/maps/place/B%C3%A9k%C3%A9scsaba,+Puskin+t%C3%A9r+1,+5600/"
@@ -44,14 +59,7 @@ function Footer() {
         ></iframe>
       </nav>
       <nav>
-        <h6 className="font-bold uppercase">Telefonszám</h6>
-        <span className="inline-flex items-center space-x-2">
-          <FaPhone className="w-4 h-4" />
-          <a href="tel:+36664445110">(06 66) 444 5110</a>
-        </span>
-      </nav>
-      <nav>
-        <h1 className="bg-gradient-to-r font-bold from-indigo-500 to-amber-600 inline-block text-transparent bg-clip-text">
+        <h1 className="bg-gradient-to-r font-bold from-indigo-500 to-amber-500 inline-block text-transparent bg-clip-text">
           TREFORT E-SPORT
         </h1>
       </nav>
