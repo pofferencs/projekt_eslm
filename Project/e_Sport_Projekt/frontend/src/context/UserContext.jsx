@@ -44,7 +44,7 @@ export const UserProvider = ({children})=>{
     update()
   }
 
-  const kuldes = (formData, method) => {
+  const login = (formData, method) => {
     fetch(`${import.meta.env.VITE_BASE_URL}/user/login`, {
       method: method,
       credentials: 'include',
@@ -77,7 +77,7 @@ export const UserProvider = ({children})=>{
     logout,
     authStatus,
     isAuthenticated,
-    kuldes,
+    login,
     pageRefresh
   }}>{children}</UserContext.Provider>
 }
