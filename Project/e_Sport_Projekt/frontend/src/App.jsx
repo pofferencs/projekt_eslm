@@ -1,26 +1,30 @@
 import Navbar from "./components/common/Navbar";
 import UserMain from "./components/user/UserMain";
-import UserLogin from './components/user/UserLogin';
+import UserLogin from "./components/user/UserLogin";
 import LoggedOutMain from "./components/loggedout/LoggedOutMain";
-import { BrowserRouter, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Navigate,
+  useNavigate,
+} from "react-router-dom";
 import UserContext from "./context/UserContext";
-import { UserProvider } from './context/UserContext';
+import { UserProvider } from "./context/UserContext";
 import { useContext } from "react";
-import SearchU from "./components/common/SearchU";
-import SearchTe from "./components/common/SearchTe";
-import SearchTo from "./components/common/SearchTo";
-import SearchE from "./components/common/SearchE";
+import SearchU from "./components/common/searches/SearchU";
+import SearchTe from "./components/common/searches/SearchTe";
+import SearchTo from "./components/common/searches/SearchTo";
+import SearchE from "./components/common/searches/SearchE";
 import Footer from "./components/common/Footer";
-
+import Register from "./components/loggedout/Register";
 
 function App() {
-
   const isAuthenticated = useContext(UserContext);
   const authStatus = useContext(UserContext);
-  const token = sessionStorage.getItem('tokenU');
+  const token = sessionStorage.getItem("tokenU");
 
   return (
-
     <UserProvider>
       <BrowserRouter>
         <Navbar />
@@ -36,6 +40,7 @@ function App() {
               <Route path="*" element={<Navigate to="/" />} />
             </>
           )}
+          <Route path="/register" element={<Register />} />
           <Route path="/login" element={<UserLogin />} />
           <Route path="/player-search" element={<SearchU />} />
           <Route path="/team-search" element={<SearchTe />} />
@@ -48,4 +53,4 @@ function App() {
   );
 }
 
-export default App
+export default App;
