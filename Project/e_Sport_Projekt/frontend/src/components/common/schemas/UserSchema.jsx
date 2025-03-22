@@ -1,0 +1,55 @@
+
+
+function UserSchema({ user }) {
+
+
+    return (
+        <div className="card bg-neutral drop-shadow-lg text-white w-96 bg-gradient-to-br inline-block from-indigo-700 to-amber-700">
+            <div className="card-body items-left text-left">
+                <div className="flex justify-between">
+                    <h2 className="card-title drop-shadow-lg">{user.usr_name}</h2>
+                    <p className={`drop-shadow-lg font-extrabold ml-2 " ${user.status == "inactive" ? "text-red-500" : "text-green-500"}`}>
+                        {user.status}
+                    </p>
+                    <img className="w-10 h-10 rounded-full drop-shadow-lg object-cover" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e" alt="User Profile" />
+                </div>
+
+                <div className="flex justify-evenly">
+                    {
+                        (user.status == "inactive" || user.inviteable === false)
+                        ?
+                        (<p className="drop-shadow-lg italic text-red-500">Nem fogad meghívót</p>)
+                        :
+                        (<p className="drop-shadow-lg italic text-green-500">Fogad meghívót</p>)
+                    }
+                </div>
+
+                <div className="flex justify-evenly">
+                    <p className="drop-shadow-lg text-yellow-400 font-semibold flex-none">Iskola:</p>
+                    <p className="drop-shadow-lg ml-2">{user.school}</p>
+                </div>
+
+                <div className="flex justify-evenly">
+                    <p className="drop-shadow-lg text-yellow-400 font-semibold flex-none">Osztály:</p>
+                    <p className="drop-shadow-lg ml-2">{user.clss}</p>
+                </div>
+
+                <div className="card-actions justify-start drop-shadow-lg">
+                    {
+                        (user.status == "inactive" || user.inviteable === false) ? (<button className="btn btn-ghost">További adatok...</button>) :
+
+                            (
+                                <>
+                                    <button className="btn btn-primary">Meghívás csapatba</button>
+                                    <button className="btn btn-ghost">További adatok...</button>
+                                </>
+                            )
+
+                    }
+                </div>
+            </div>
+        </div>
+    )
+}
+
+export default UserSchema

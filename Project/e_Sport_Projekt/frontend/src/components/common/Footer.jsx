@@ -31,14 +31,14 @@ function Footer() {
 
       <nav>
         <h6 className="font-bold uppercase">Telefonszám</h6>
-        <span className="inline-flex items-center space-x-2 hover:text-amber-500">
+        <span className="inline-flex items-center text-indigo-600 space-x-2 hover:text-amber-500">
           <FaPhone className="w-4 h-4" />
           <a href="tel:+36664445110">(06 66) 444 5110</a>
         </span>
       </nav>
       <nav>
         <h6 className="font-bold uppercase">Cím</h6>
-        <span className="inline-flex items-center space-x-2 hover:text-amber-500">
+        <span className="inline-flex items-center text-indigo-600 space-x-2 hover:text-amber-500">
           <FaLocationDot className="w-4 h-4" />
           <a
             href="https://www.google.com/maps/place/B%C3%A9k%C3%A9scsaba,+Puskin+t%C3%A9r+1,+5600/"
