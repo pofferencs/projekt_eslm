@@ -12,8 +12,11 @@ function UserSchema({ user }) {
             .catch(err => console.log(err));
     }, [user?.id]);
     
-
     
+    //Ezzel teszteltem, hogy a backend végpontja által szolgáltatott elérési útja a képnek jó-e
+    //.env fájlban: a 'VITE_BASE_PIC' változó tartalmazza az elérési út egy részét
+    console.log(import.meta.env.VITE_BASE_URL+`${import.meta.env.VITE_BASE_PIC}${userPicPath}`)
+     
 
     return (
         <div className="card bg-neutral drop-shadow-lg text-white w-96 bg-gradient-to-br inline-block from-indigo-700 to-amber-700">
@@ -23,7 +26,7 @@ function UserSchema({ user }) {
                     <p className={`drop-shadow-lg font-extrabold ml-2 ${user.status == "inactive" ? "text-red-500" : "text-green-500"}`}>
                         {user.status}
                     </p>
-                    <img className="w-10 h-10 rounded-full drop-shadow-lg object-cover" src={`${import.meta.env.PIC_PATH}${userPicPath}`} alt="User Profile" />
+                    <img className="w-10 h-10 rounded-full drop-shadow-lg object-cover" src={import.meta.env.VITE_BASE_URL+`${import.meta.env.VITE_BASE_PIC}${userPicPath}`} alt="User Profile" />
                 </div>
 
                 <div className="flex justify-evenly">

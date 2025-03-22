@@ -17,7 +17,7 @@ app.use(cors({
     }
 ));
 app.use(cookieParser())
-
+app.use('/assets', express.static(path.join(__dirname, 'assets'))); //Ez a sor a statikus fájlok kirendelését segíti elő, hogy simán "localhost" eléréssel el tudjuk érni a fájlokat (lehet ez kép, gif, videó, bármi)
 app.use('/list',require('./routes/listsRoutes'));
 app.use('/update',require('./routes/updateRoutes'));
 

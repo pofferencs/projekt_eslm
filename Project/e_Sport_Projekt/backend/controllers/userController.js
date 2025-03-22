@@ -501,6 +501,7 @@ const userGetPicturePath = async (req, res) => {
                 }
 
             })
+            //console.log(picPath.img_path);
             res.status(200).json(picPath.img_path);
         }else{
             res.status(400).json({message: "Nincs ilyen kép!"})
