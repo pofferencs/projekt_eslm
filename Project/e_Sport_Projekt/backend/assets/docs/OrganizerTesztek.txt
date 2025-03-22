@@ -1,0 +1,21 @@
+Regisztráció:
+https://localhost:8000/organizer/register
+
+{
+  "full_name": "",
+  "usr_name": "",
+  "paswrd": "",
+  "date_of_birth": "",
+  "school": "",
+  "email_address": "",
+  "phone_num": "",
+  "om_identifier": ""
+}
+
+Bejelentkezés:
+https://localhost:8000/organizer/login
+
+{
+  "usr_name": "",
+  "paswrd": ""
+}

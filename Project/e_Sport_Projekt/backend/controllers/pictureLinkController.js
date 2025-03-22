@@ -13,81 +13,41 @@ const picture_linkList = async (req, res) => {
 }
 
 const picture_linkUpdate = async (req, res) => {
-    const { id, uer_id, tem_id, tnt_id, evt_id, pte_id_get, pte_id_set } = req.body;
+    const { id, uer_id, tem_id, tnt_id, evt_id, ogr_id, pte_id_get, pte_id_set } = req.body;
 
     try {
-        if (uer_id != null) {
-            const picture_Link = await prisma.picture_Links.update({
-                where: {
-                    id_pte_id: {
-                        id: id,
-                        pte_id: pte_id_get
-                    },
-                    AND: {
-                        uer_id: uer_id
-                    }
-                },
-                data: {
-                    pte_id: pte_id_set
-                }
-            });
-            return res.status(200).json({ message: "Sikeres adatfrissítés, felahsználó kép!" });
-        }
+        // Képhez tartozó id típusok és értékek
+        const idTypes = [
+            { id: uer_id, message: "Sikeres adatfrissítés, felhasználó kép!", condition: "uer_id" },
+            { id: tem_id, message: "Sikeres adatfrissítés, csapat kép!", condition: "tem_id" },
+            { id: tnt_id, message: "Sikeres adatfrissítés, tournament kép!", condition: "tnt_id" },
+            { id: evt_id, message: "Sikeres adatfrissítés, event kép!", condition: "evt_id" },
+            { id: ogr_id, message: "SIkeres adatfrissítés, szervező kép!", condition: "ogr_id"}
+        ];
 
-        if (tem_id != null) {
-            const picture_Link = await prisma.picture_Links.update({
-                where: {
-                    id_pte_id: {
-                        id: id,
-                        pte_id: pte_id_get
+        /*
+        For ciklussal megkeresi hol nem null az id,
+        az idTypes tömb alapján és ott végrehajtja az updatet */
+        for (let { id: entityId, message, condition } of idTypes) {
+            if (entityId != null) {
+                const picture_Link = await prisma.picture_Links.update({
+                    where: {
+                        id_pte_id: {
+                            id: id,
+                            pte_id: pte_id_get
+                        },
+                        AND: {
+                            // https://hackmamba.io/blog/2020/11/dynamic-javascript-object-keys/
+                            [condition]: entityId
+                        }
                     },
-                    AND: {
-                        tem_id: tem_id
+                    data: {
+                        pte_id: pte_id_set
                     }
-                },
-                data: {
-                    pte_id: pte_id_set
-                }
-            });
-            return res.status(200).json({ message: "Sikeres adatfrissítés, csapat kép!" });
+                });
+                return res.status(200).json({ message });
+            }
         }
-
-        if (tnt_id != null) {
-            const picture_Link = await prisma.picture_Links.update({
-                where: {
-                    id_pte_id: {
-                        id: id,
-                        pte_id: pte_id_get
-                    },
-                    AND: {
-                        tnt_id: tnt_id
-                    }
-                },
-                data: {
-                    pte_id: pte_id_set
-                }
-            });
-            return res.status(200).json({ message: "Sikeres adatfrissítés, tournament kép!" });
-        }
-
-        if (evt_id != null) {
-            const picture_Link = await prisma.picture_Links.update({
-                where: {
-                    id_pte_id: {
-                        id: id,
-                        pte_id: pte_id_get
-                    },
-                    AND: {
-                        evt_id: evt_id
-                    }
-                },
-                data: {
-                    pte_id: pte_id_set
-                }
-            });
-            return res.status(200).json({ message: "Sikeres adatfrissítés, event kép!" });
-        }
-
         return res.status(200).json({ message: "Nincs beállítva kép az adott entitáshoz!" });
     } catch (err) {
         console.log(err);

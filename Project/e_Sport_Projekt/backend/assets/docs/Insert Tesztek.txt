@@ -1,0 +1,28 @@
+Verseny felvétele:
+https://localhost:8000/insert/tournament
+
+{
+    "name": "Kibaszott Nagy Valorant Showdown",
+    "num_participant": 12,
+    "start_date": "2025. 04. 08.",
+    "end_date": "2025. 04. 08.",
+    "game_mode": "Unrated Tournament",
+    "max_participant": 12,
+    "apn_start": "2025. 03. 25.",
+    "apn_end": "2025. 04. 01.",
+    "details": "Valorant Showdown. 12 nolife csapat küzd meg egymással, kiknek csapattagjaik nolife emberek. Szopjatok le.",
+    "evt_id": 17,
+    "gae_id": 3
+}
+
+Esemény felvétele:
+https://localhost:8000/insert/event
+
+{
+    "name": "Iskolai Esport Esemény",
+    "start_date": "2025. 04. 08.",
+    "end_date": "2025. 04. 11.",
+    "place": "Suli",
+    "details": "Életteleneknek Gamer Esport esemény."
+}
+

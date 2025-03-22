@@ -1,0 +1,1 @@
+globalThis.conditions = require("./functions/conditions");

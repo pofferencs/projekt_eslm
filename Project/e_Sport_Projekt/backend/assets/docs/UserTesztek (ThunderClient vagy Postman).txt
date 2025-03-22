@@ -1,0 +1,23 @@
+Regisztráció:
+https://localhost:8000/user/register
+
+{
+  "full_name": "",
+  "usr_name": "",
+  "paswrd": "",
+  "date_of_birth": "",
+  "school": "",
+  "clss": "",
+  "email_address": "",
+  "phone_num": "",
+  "om_identifier": "",
+  "discord_name": ""
+}
+
+Bejelentkezés:
+https://localhost:8000/user/login
+
+{
+  "usr_name": "",
+  "paswrd": ""
+}
