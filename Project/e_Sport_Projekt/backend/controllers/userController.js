@@ -17,20 +17,20 @@ const userList = async (req, res) => {
     }
 }
 
-const userSearchByName = async (req,res) =>{
-    const {usr_name} = req.params;
+const userSearchByName = async (req, res) => {
+    const { usr_name } = req.params;
 
-    if(!usr_name) return res.status(400).json({message: "Hiányos adatok!"});
+    if (!usr_name) return res.status(400).json({ message: "Hiányos adatok!" });
 
     try {
         const user = await prisma.users.findMany({
             where: {
-                usr_name:{
+                usr_name: {
                     contains: usr_name
                 }
             }
         });
-        if(user.length == 0 || usr_name == "") return res.status(400).json({message : "Nincs ilyen felhasználó"});
+        if (user.length == 0 || usr_name == "") return res.status(400).json({ message: "Nincs ilyen felhasználó" });
         else return res.status(200).json(user);
     } catch (error) {
         return res.status(500).json(error);
@@ -274,8 +274,8 @@ const userReg = async (req, res) => {
         });
 
         if (validalasFuggveny(res, [
-            { condition: !/^[A-ZÁÉÍÓÖŐÚÜŰ][a-záéíóöőúüű]{1,}(?:[-][A-ZÁÉÍÓÖŐÚÜŰ][a-záéíóöőúüű]{1,})*(\s+[A-ZÁÉÍÓÖŐÚÜŰ][a-záéíóöőúüű]{1,}(?:[-][A-ZÁÉÍÓÖŐÚÜŰ][a-záéíóöőúüű]{1,})*)+$/.test(full_name), message : "Hibás névmegadás!"},
-            { condition: full_name.length > 64, message: "Túl hosszú név (max 64 karakter)!"},
+            { condition: !/^[A-ZÁÉÍÓÖŐÚÜŰ][a-záéíóöőúüű]{1,}(?:[-][A-ZÁÉÍÓÖŐÚÜŰ][a-záéíóöőúüű]{1,})*(\s+[A-ZÁÉÍÓÖŐÚÜŰ][a-záéíóöőúüű]{1,}(?:[-][A-ZÁÉÍÓÖŐÚÜŰ][a-záéíóöőúüű]{1,})*)+$/.test(full_name), message: "Hibás névmegadás!" },
+            { condition: full_name.length > 64, message: "Túl hosszú név (max 64 karakter)!" },
             { condition: /@/.test(usr_name), message: "A felhasználó név nem tartalmazhat '@' jelet!" },
             { condition: /[0-9]/.test(usr_name.charAt(0)), message: "Számmal nem kezdődhet a felhasználónév!" },
             { condition: usernameCheck, message: "A felhasználónév foglalt!" },
@@ -382,7 +382,7 @@ const userReg = async (req, res) => {
         // console.log(`${newUser.usr_name} (ID: ${newUser.id}) tokenje: ${token}`);
 
 
-        
+
         //kép hozzárendelés a fiókhoz
         const newPicLink = await prisma.picture_Links.create({
             data: {
@@ -483,6 +483,41 @@ const isAuthenticated = async (req, res) => {
     res.json({ "authenticated": true, user: req.user });
 };
 
+const userGetPicturePath = async (req, res) => {
+    const { uer_id } = req.params;
+
+    try {
+
+        const usrPic = await prisma.picture_Links.findFirst({
+            where: {
+                uer_id: Number(uer_id)
+            }
+        })
+         
+        if (usrPic) {
+           const picPath = await prisma.pictures.findUnique({
+                where: {
+                    id: usrPic.pte_id
+                }
+
+            })
+            //console.log(picPath.img_path);
+            res.status(200).json(picPath.img_path);
+        }else{
+            res.status(400).json({message: "Nincs ilyen kép!"})
+        }
+
+        if (!usrPic || !usrPic.uer_id) {
+            return res.status(400).json({ message: "Nincs ilyen felhasználó!" });
+        }
+    }
+
+    catch (error) {
+        return res.status(500).json(error)
+
+    }
+}
+
 
 module.exports = {
     userList,
@@ -492,5 +527,6 @@ module.exports = {
     protected,
     isAuthenticated,
     userLogout,
-    userSearchByName
+    userSearchByName,
+    userGetPicturePath
 }

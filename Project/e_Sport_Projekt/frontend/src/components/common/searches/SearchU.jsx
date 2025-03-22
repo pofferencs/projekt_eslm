@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { toast } from "react-toastify";
 import Footer from "../Footer";
+import UserSchema from "../schemas/UserSchema";
 
 function SearchU() {
   const [searchInput, setSearchInput] = useState("");
@@ -65,12 +66,10 @@ function SearchU() {
         </form>
       </div>
 
-      <div className="m-5 h-screen">
+      <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 justify-items-center gap-5 mb-10 mt-20">
         {result.length > 0 ? (
-          result.map((user, i) => (
-            <div key={i}>
-              <p>{user.usr_name}</p>
-            </div>
+          result.map((user) => (
+            <UserSchema key={user.id} user={user}/>
           ))
         ) : (
           <p>{result.message}</p>
