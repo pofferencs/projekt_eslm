@@ -1,26 +1,38 @@
+import { useEffect, useState } from "react"
 
 
 function UserSchema({ user }) {
 
+    const [userPicPath, setUserPicPath] = useState("https://images.unsplash.com/photo-1472099645785-5658abf4ff4e")
+
+    useEffect(() => {    
+        fetch(`${import.meta.env.VITE_BASE_URL}/user/${user.id}`)
+            .then(res => res.json())
+            .then(adatok => setUserPicPath(adatok))
+            .catch(err => console.log(err));
+    }, [user?.id]);
+    
+
+    
 
     return (
         <div className="card bg-neutral drop-shadow-lg text-white w-96 bg-gradient-to-br inline-block from-indigo-700 to-amber-700">
             <div className="card-body items-left text-left">
                 <div className="flex justify-between">
                     <h2 className="card-title drop-shadow-lg">{user.usr_name}</h2>
-                    <p className={`drop-shadow-lg font-extrabold ml-2 " ${user.status == "inactive" ? "text-red-500" : "text-green-500"}`}>
+                    <p className={`drop-shadow-lg font-extrabold ml-2 ${user.status == "inactive" ? "text-red-500" : "text-green-500"}`}>
                         {user.status}
                     </p>
-                    <img className="w-10 h-10 rounded-full drop-shadow-lg object-cover" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e" alt="User Profile" />
+                    <img className="w-10 h-10 rounded-full drop-shadow-lg object-cover" src={`${import.meta.env.PIC_PATH}${userPicPath}`} alt="User Profile" />
                 </div>
 
                 <div className="flex justify-evenly">
                     {
                         (user.status == "inactive" || user.inviteable === false)
-                        ?
-                        (<p className="drop-shadow-lg italic text-red-500">Nem fogad meghívót</p>)
-                        :
-                        (<p className="drop-shadow-lg italic text-green-500">Fogad meghívót</p>)
+                            ?
+                            (<p className="drop-shadow-lg italic text-red-500">Nem fogad meghívót</p>)
+                            :
+                            (<p className="drop-shadow-lg italic text-green-500">Fogad meghívót</p>)
                     }
                 </div>
 
