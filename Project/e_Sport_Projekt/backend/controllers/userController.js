@@ -488,28 +488,27 @@ const userGetPicturePath = async (req, res) => {
 
     try {
 
-        const usrPic = await prisma.picture_Links.findFirst({
+        const uerPic = await prisma.picture_Links.findFirst({
             where: {
                 uer_id: Number(uer_id)
             }
-        })
-         
-        if (usrPic) {
-           const picPath = await prisma.pictures.findUnique({
-                where: {
-                    id: usrPic.pte_id
-                }
+        })        
 
-            })
-            //console.log(picPath.img_path);
-            res.status(200).json(picPath.img_path);
-        }else{
-            res.status(400).json({message: "Nincs ilyen kép!"})
-        }
-
-        if (!usrPic || !usrPic.uer_id) {
+        if (!uerPic || !uerPic.uer_id) {
             return res.status(400).json({ message: "Nincs ilyen felhasználó!" });
         }
+         
+        const picPath = await prisma.pictures.findUnique({
+            where: {
+                id: uerPic.pte_id
+            }
+        });
+        
+        if (!picPath) {
+            return res.status(400).json({ message: "Nincs ilyen kép!" });
+        }
+        
+        return res.status(200).json(picPath.img_path);
     }
 
     catch (error) {

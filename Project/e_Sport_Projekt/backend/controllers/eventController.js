@@ -206,10 +206,47 @@ const eventDelete = async (req, res) => {
 
 }
 
+const eventGetPicPath = async (req,res)=>{
+    const { evt_id } = req.params;
+
+    try {
+
+        const evtPic = await prisma.picture_Links.findFirst({
+            where: {
+                evt_id: Number(evt_id)
+            }
+        });
+        
+        if (!evtPic || !evtPic.evt_id) {
+            return res.status(400).json({ message: "Nincs ilyen esemény!" });
+        }
+        
+        const picPath = await prisma.pictures.findUnique({
+            where: {
+                id: evtPic.pte_id
+            }
+        });
+        
+        if (!picPath) {
+            return res.status(400).json({ message: "Nincs ilyen kép!" });
+        }
+        
+        return res.status(200).json(picPath.img_path);
+        
+    }
+
+    catch (error) {
+        return res.status(500).json(error)
+
+    }
+
+}
+
 module.exports = {
     eventList,
     eventUpdate,
     eventInsert,
     eventDelete,
-    eventSearchByName
+    eventSearchByName,
+    eventGetPicPath
 }

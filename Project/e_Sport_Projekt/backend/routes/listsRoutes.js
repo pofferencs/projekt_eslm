@@ -3,7 +3,7 @@ const router = express.Router();
 
 const { applicationList } = require('../controllers/applicationController');
 const { userList, userSearchByName } = require('../controllers/userController');
-const { eventList, eventSearchByName } = require('../controllers/eventController');
+const { eventList, eventSearchByName, eventGetPicPath } = require('../controllers/eventController');
 const { gameList } = require('../controllers/gameController');
 const { matchList } = require('../controllers/matchController');
 const { pictureList } = require('../controllers/pictureController');
@@ -28,5 +28,6 @@ router.get('/enamesearch/:name', eventSearchByName);
 router.get('/unamesearch/:usr_name', userSearchByName);
 router.get('/tonamesearch/:name', torunamentSearchByName);
 router.get('/tenamesearch/:full_name', teamSearchByName);
+router.get('/:evt_id',eventGetPicPath);
 
 module.exports = router;
