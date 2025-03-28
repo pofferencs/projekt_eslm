@@ -32,7 +32,7 @@ function SearchTo() {
   return (
     <div className="flex flex-col min-h-screen">
       <h2 className="mt-10 text-center text-4xl font-bold tracking-tight text-indigo-600">
-        Tournament kereső
+        Verseny kereső
       </h2>
       <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
         <form onSubmit={onSubmit}>
@@ -40,7 +40,7 @@ function SearchTo() {
             htmlFor="tournament"
             className="block text-sm/6 font-medium text-indigo-600"
           >
-            Tournament neve
+            Verseny neve
           </label>
 
           <div className="mt-2">
