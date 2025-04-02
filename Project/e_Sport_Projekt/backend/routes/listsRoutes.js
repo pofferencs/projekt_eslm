@@ -28,6 +28,6 @@ router.get('/enamesearch/:name', eventSearchByName);
 router.get('/unamesearch/:usr_name', userSearchByName);
 router.get('/tonamesearch/:name', torunamentSearchByName);
 router.get('/tenamesearch/:full_name', teamSearchByName);
-router.get('/:evt_id',eventGetPicPath);
+router.get('/eventpic/:evt_id',eventGetPicPath);
 
 module.exports = router;

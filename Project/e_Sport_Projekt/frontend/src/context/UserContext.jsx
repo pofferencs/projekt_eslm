@@ -1,4 +1,4 @@
-import { createContext, useState } from "react"
+import { createContext, useEffect, useState } from "react"
 
 const UserContext = createContext();
 
@@ -6,8 +6,11 @@ export const UserProvider = ({children})=>{
 
   const [refresh, setRefresh] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [profile, setProfile] = useState(false);
+ 
 
-  const authStatus = () =>{
+  const profileGet = () =>{
+
     fetch(`${import.meta.env.VITE_BASE_URL}/user/auth`,{
       method: 'GET',
       credentials: 'include',
@@ -15,16 +18,52 @@ export const UserProvider = ({children})=>{
         "Content-Type":"application/json"
       }
     })
-    .then(res=>res.json())
-    .then(auth=>{
-      if(auth.authenticated){
-        setIsAuthenticated(true);
-      } else {
-        setIsAuthenticated(false);
+    .then(res=> {res.json()})
+    .then(adat=>setProfile(adat.authenticated))
+    .catch(err=>{alert(err)});
+  }
+
+
+  const authStatus = () =>{
+
+    
+    const token = document.cookie.split(';').find(cookie => cookie.trim().startsWith('tokenU='));
+    console.log({token: token})
+    
+
+    if (!token) {
+      // sessionStorage.removeItem('tokenU');
+      setIsAuthenticated(false);  // Ha a süti nem található, töröljük az autentikációs állapotot
+    }
+
+    fetch(`${import.meta.env.VITE_BASE_URL}/user/auth`,{
+      method: 'GET',
+      credentials: 'include',
+      headers:{
+        "Content-Type":"application/json"
       }
     })
-    .catch(err=>{alert(err);setIsAuthenticated(false)});
+    .then(res=> res.json())
+    .then(auth=>{
+      if(auth.authenticated){
+        
+        setIsAuthenticated(true);
+        update();
+        
+      } else {
+        
+        setIsAuthenticated(false);
+        update();
+      }
+    })
+    .catch(err=>{alert(err);setIsAuthenticated(false); update();});
+
+    
   }
+
+  useEffect(()=>{
+    authStatus()
+  },[])
 
   const update = ()=>{
     setRefresh(prev=>!prev);
@@ -38,10 +77,16 @@ export const UserProvider = ({children})=>{
      headers: {
       "Content-Type": "application/json"
      } 
-    }).catch(err=>{alert(err)});
+    })
+    .then(res=>{
+      if(!res.ok){
+        console.log('Hiba: ', res.statusText);
+      }
+      return res.json();
+    })
+    .then(data=> {console.log('Kijelentkezve', data);setIsAuthenticated(false); update(); pageRefresh()})
+    .catch(err=>{alert(err)});
 
-    setIsAuthenticated(false);
-    update()
   }
 
   const login = (formData, method) => {
@@ -78,7 +123,8 @@ export const UserProvider = ({children})=>{
     authStatus,
     isAuthenticated,
     login,
-    pageRefresh
+    pageRefresh,
+    profileGet
   }}>{children}</UserContext.Provider>
 }
 

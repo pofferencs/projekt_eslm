@@ -1,4 +1,4 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import UserContext from '../../context/UserContext';
 import { useContext } from 'react';
 import Logo from '../../assets/logo.png';
@@ -10,10 +10,9 @@ function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
 
-  const navigate = useNavigate();
   const { logout, isAuthenticated, authStatus, update } = useContext(UserContext);
   const token = sessionStorage.getItem('tokenU');
-
+  console.log(isAuthenticated)
 
 
   return (
@@ -60,7 +59,13 @@ function Navbar() {
                   <div tabIndex={0} role='button' className='rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white'>Keresők...</div>
                   <ul tabIndex={0} className='dropdown-content menu bg-slate-500 rounded-box z-1 w-52 p-2 shadow-sm'>
 
-                  <li><Link to="/player-search" className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Játékos kereső</Link></li>
+                  {
+                  (isAuthenticated)?(
+                    <li><Link to="/player-search" className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Játékos kereső</Link></li>
+                  ):
+                  (<></>)
+                }
+                  
                   <li><Link to="/team-search" className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Csapat kereső</Link></li>
                   <li><Link to="/tournament-search" className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Verseny kereső</Link></li>
                   <li><Link to="/event-search" className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Esemény kereső</Link></li>
@@ -90,7 +95,7 @@ function Navbar() {
                       <Link to="/profile" className="block px-4 py-2 text-sm text-gray-700">Profiladatok</Link>
                       <Link to="/teams" className="block px-4 py-2 text-sm text-gray-700">Csapataim</Link>
                       {(isAuthenticated || token) && (
-                        <button onClick={() => { logout(token); sessionStorage.removeItem('tokenU'); navigate('/'); window.location.reload(); }} className="block px-4 py-2 text-sm text-gray-700">Kijelentkezés</button>
+                        <button onClick={() => { logout(); sessionStorage.removeItem('tokenU'); }} className="block px-4 py-2 text-sm text-gray-700">Kijelentkezés</button>
                       )}
 
                     </div>

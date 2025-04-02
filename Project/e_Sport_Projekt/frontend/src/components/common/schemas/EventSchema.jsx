@@ -37,7 +37,7 @@ function EventSchema({ event }) {
     const [eventStatus, setEventStatus] = useState({ started: false, ended: false, not_started: false });
 
     useEffect(() => {
-        fetch(`${import.meta.env.VITE_BASE_URL}/list/${event.id}`)
+        fetch(`${import.meta.env.VITE_BASE_URL}/list/eventpic/${event.id}`)
             .then(res => res.json())
             .then(kep => setEventPicPath(kep))
             .catch(error => console.log(error));

@@ -218,8 +218,8 @@ const eventGetPicPath = async (req,res)=>{
         });
         
         if (!evtPic || !evtPic.evt_id) {
-            return res.status(400).json({ message: "Nincs ilyen esemény!" });
-        }
+            return res.status(400).json({ message: "Ilyen esemény nem található!" }); 
+        }   
         
         const picPath = await prisma.pictures.findUnique({
             where: {

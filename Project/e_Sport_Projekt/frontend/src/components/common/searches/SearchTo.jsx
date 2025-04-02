@@ -9,18 +9,22 @@ function SearchTo() {
   const onSubmit = (e) => {
     e.preventDefault();
 
-    fetch(`${import.meta.env.VITE_BASE_URL}/list/tonamesearch/${searchInput}`, {
-      method: "GET",
-      headers: {
-        "Content-type": "application/json",
-      },
-    })
-      .then(console.log(searchInput))
-      .then((res) => res.json())
-      .then((adat) => setResult(adat))
-      .catch((err) => toast.error(err));
-
-    console.log(result);
+    if(searchInput!=""){
+      fetch(`${import.meta.env.VITE_BASE_URL}/list/tonamesearch/${searchInput}`, {
+        method: "GET",
+        headers: {
+          "Content-type": "application/json",
+        },
+      })
+        .then(console.log(searchInput))
+        .then((res) => res.json())
+        .then((adat) => setResult(adat))
+        .catch((err) => toast.error(err));
+  
+      console.log(result);
+    }else{
+      setResult([]);
+    }
   };
 
   const writeData = (e) => {

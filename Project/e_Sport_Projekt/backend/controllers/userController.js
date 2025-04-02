@@ -22,12 +22,12 @@ const userList = async (req, res) => {
                 om_identifier: true
             }
         });
-        res.status(200).json(users);
+        return res.status(200).json(users);
 
     }
     catch (error) {
         console.log(error);
-        res.status(500).json({ message: "Hiba a fetch során!" })
+        return res.status(500).json({ message: "Hiba a fetch során!" })
     }
 }
 
@@ -57,7 +57,7 @@ const userSearchByName = async (req, res) => {
                 om_identifier: true
             }
         });
-        if (user.length == 0 || usr_name == "") return res.status(400).json({ message: "Nincs ilyen felhasználó" });
+        if (user.length == 0 || usr_name == "") return res.status(400).json({ message: "Nincs ilyen felhasználó!" });
         else return res.status(200).json(user);
     } catch (error) {
         return res.status(500).json(error);
@@ -475,17 +475,20 @@ const userLogin = async (req, res) => {
 
     } catch (error) {
         console.log(error);
-        res.status(500).json({ message: error })
+        return res.status(500).json({ message: error })
     }
 
 }
 
 const userLogout = async (req, res) => {
+    
     res.clearCookie('tokenU', {
-        httpOnly: true,
         secure: true,
+        httpOnly: true,
         sameSite: 'none'
     });
+    
+    
     res.status(200).json({ message: "Kijelentkezve." });
 }
 

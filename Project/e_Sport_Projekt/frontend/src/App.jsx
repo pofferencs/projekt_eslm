@@ -48,6 +48,7 @@ function App() {
           <Route path="/tournament-search" element={<SearchTo />} />
           <Route path="/event-search" element={<SearchE />} />
           <Route path="/profile" element={<UserProfile />} />
+          <Route path="/profile/:name" element={<UserProfile />} />
         </Routes>
         <Footer />
       </BrowserRouter>

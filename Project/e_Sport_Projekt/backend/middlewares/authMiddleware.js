@@ -7,7 +7,7 @@ const protectUser = async (req, res, next) =>{
     let tokenU;
 
         //Token a loginból/regisztrációból
-    //console.log(req.cookies.token);
+    //console.log(req.cookies.tokenU);
 
 
     //req.headers.authorization && req.headers.authorization.startsWith('Bearer') ||

@@ -9,7 +9,8 @@ function SearchU() {
   const onSubmit = (e) => {
     e.preventDefault();
 
-    fetch(`${import.meta.env.VITE_BASE_URL}/list/unamesearch/${searchInput}`, {
+    if(searchInput!=""){
+      fetch(`${import.meta.env.VITE_BASE_URL}/list/unamesearch/${searchInput}`, {
       method: "GET",
       headers: {
         "Content-type": "application/json",
@@ -21,7 +22,10 @@ function SearchU() {
       .catch((err) => toast.error(err));
 
     console.log(result);
+  }else{
+    setResult([]);
   };
+    }
 
   const writeData = (e) => {
     setSearchInput(e.target.value);

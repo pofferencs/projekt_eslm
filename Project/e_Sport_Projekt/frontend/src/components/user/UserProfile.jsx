@@ -1,7 +1,37 @@
+import { useContext, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom"
+import UserContext from "../../context/UserContext";
+
 
 function UserProfile() {
+
+  const {name} = useParams();
+  const {profileGet, isAuthenticated} = useContext(UserContext);
+  const navigate = useNavigate();
+
+  console.log(profileGet())
+
+
+  useEffect(()=>{
+
+    if(isAuthenticated==false){
+      navigate('/');
+    }
+
+  },[]);
+
+
   return (
-    <div>UserProfile</div>
+    <div>
+      {
+        (name!=undefined)?(
+        <p>{name}</p>
+        ):
+        (
+        <p>Profile</p>
+        )
+      }
+    </div>
   )
 }
 
