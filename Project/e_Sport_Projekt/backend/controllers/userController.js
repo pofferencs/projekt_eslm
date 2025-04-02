@@ -7,7 +7,21 @@ const { validalasFuggveny, hianyzoAdatFuggveny } = require('../functions/conditi
 
 const userList = async (req, res) => {
     try {
-        const users = await prisma.users.findMany();
+        const users = await prisma.users.findMany({
+            select:{
+                id: true,
+                inviteable: true,
+                full_name: true,
+                usr_name: true,
+                date_of_birth: true,
+                school: true,
+                clss: true,
+                status: true,
+                email_address: true,
+                phone_num: true,
+                om_identifier: true
+            }
+        });
         res.status(200).json(users);
 
     }
