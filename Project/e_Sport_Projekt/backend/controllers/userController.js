@@ -42,6 +42,19 @@ const userSearchByName = async (req, res) => {
                 usr_name: {
                     contains: usr_name
                 }
+            },
+            select:{
+                id: true,
+                inviteable: true,
+                full_name: true,
+                usr_name: true,
+                date_of_birth: true,
+                school: true,
+                clss: true,
+                status: true,
+                email_address: true,
+                phone_num: true,
+                om_identifier: true
             }
         });
         if (user.length == 0 || usr_name == "") return res.status(400).json({ message: "Nincs ilyen felhasználó" });

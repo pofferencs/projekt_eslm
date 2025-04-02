@@ -42,7 +42,7 @@ function UserLogin() {
 
   const writeData = (e) => {
     const { id, value } = e.target;
-
+  
     // Ha email vagy felhasználónevet gépelünk
     if (id === "email_or_username") {
       if (value.includes("@")) {
@@ -51,12 +51,23 @@ function UserLogin() {
           ...prevState,
           email_address: value,
         }));
+        setFormDataUsername((prevState) => ({
+          ...prevState,
+          usr_name: "", // Ürítjük a felhasználónevet, ha email-t írtunk
+        }));
       } else {
         // Ha felhasználónév, akkor állítsuk be a usr_name mezőt és ürítsük az email_address mezőt
-        setFormDataUsername((prevState) => ({ ...prevState, usr_name: value }));
+        setFormDataUsername((prevState) => ({
+          ...prevState,
+          usr_name: value,
+        }));
+        setFormDataEmail((prevState) => ({
+          ...prevState,
+          email_address: "", // Ürítjük az email mezőt, ha felhasználónevet írtunk
+        }));
       }
     }
-
+  
     // Ha jelszót gépelünk
     if (id === "password") {
       setFormDataEmail((prevState) => ({ ...prevState, paswrd: value }));
