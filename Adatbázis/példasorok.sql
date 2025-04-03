@@ -1,4 +1,4 @@
---Jelszó: $2a$10$tRn.12E7m4FSl22.NbeQp.rNMaqlSdwQjupC0Zkolk.oSD3AMUz.S (Titkosjelszo1@)
+#Jelszó: $2a$10$tRn.12E7m4FSl22.NbeQp.rNMaqlSdwQjupC0Zkolk.oSD3AMUz.S (Titkosjelszo1@)
 INSERT INTO `users` (`id`, `inviteable`, `full_name`, `usr_name`, `usna_last_mod_date`, `usna_mod_num_remain`, `paswrd`, `date_of_birth`, `school`, `clss`, `email_address`, `email_last_mod_date`, `phone_num`, `om_identifier`, `status`, `discord_name`) VALUES
 (1, 1, 'John Doe', 'johndoe', '2024-12-17 09:06:23', 3, '$2a$10$tRn.12E7m4FSl22.NbeQp.rNMaqlSdwQjupC0Zkolk.oSD3AMUz.S', '2000-01-01', 'School A', '12A', 'johndoe@example.com', '2024-12-17 09:06:23', '1234567890', 'OM12345678', 'active', 'johndoe#1234'),
 (2, 0, 'Jane Smith', 'janesmith', '2024-12-17 09:06:23', 5, '$2a$10$tRn.12E7m4FSl22.NbeQp.rNMaqlSdwQjupC0Zkolk.oSD3AMUz.S', '1999-05-15', 'School B', '11B', 'janesmith@example.com', '2024-12-17 09:06:23', '0987654321', 'OM23456789', 'inactive', 'janesmith#5678'),
@@ -75,7 +75,7 @@ INSERT INTO `applications` (`id`, `dte`, `status`, `uer_id`, `tem_id`, `tnt_id`)
 (4, '2024-08-01 18:00:00', 'pending', 4, 4, 4),
 (5, '2024-09-01 20:00:00', 'approved', 5, 5, 5);
 
---Képhozzárendelések (sorbéli sorrend az alábbi insertnél-> user, ogr, tem, evt, tnt )
+#Képhozzárendelések (sorbéli sorrend az alábbi insertnél-> user, ogr, tem, evt, tnt )
 INSERT INTO `picture_links` (`id`, `uer_id`, `tem_id`, `tnt_id`, `evt_id`, `ogr_id` ,`pte_id`) VALUES
 (1, 1, NULL, NULL, NULL, NULL, 1),
 (2, 2, NULL, NULL, NULL, NULL, 1),
@@ -92,8 +92,18 @@ INSERT INTO `picture_links` (`id`, `uer_id`, `tem_id`, `tnt_id`, `evt_id`, `ogr_
 (13, NULL, NULL, NULL, NULL, 3, 1),
 (14, NULL, NULL, NULL, NULL, 4, 1),
 (15, NULL, NULL, NULL, NULL, 5, 1),
-(16, NULL, 1, NULL, NULL, NULL, 1),
-(17, NULL, 2, NULL, NULL, NULL, 1),
-(18, NULL, 3, NULL, NULL, NULL, 1),
-(19, NULL, 4, NULL, NULL, NULL, 1),
-(20, NULL, 5, NULL, NULL, NULL, 1);
+(16, NULL, 1, NULL, NULL, NULL, 3),
+(17, NULL, 2, NULL, NULL, NULL, 3),
+(18, NULL, 3, NULL, NULL, NULL, 3),
+(19, NULL, 4, NULL, NULL, NULL, 3),
+(20, NULL, 5, NULL, NULL, NULL, 3),
+(21, NULL, NULL, NULL, 1, NULL, 4),
+(22, NULL, NULL, NULL, 2, NULL, 4),
+(23, NULL, NULL, NULL, 3, NULL, 4),
+(24, NULL, NULL, NULL, 4, NULL, 4),
+(25, NULL, NULL, NULL, 5, NULL, 4),
+(26, NULL, NULL, 1, NULL, NULL, 4),
+(27, NULL, NULL, 2, NULL, NULL, 4),
+(28, NULL, NULL, 3, NULL, NULL, 4),
+(29, NULL, NULL, 4, NULL, NULL, 4),
+(30, NULL, NULL, 5, NULL, NULL, 4);
