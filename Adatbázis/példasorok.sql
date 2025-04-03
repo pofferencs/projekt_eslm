@@ -1,21 +1,22 @@
+--Jelszó: $2a$10$tRn.12E7m4FSl22.NbeQp.rNMaqlSdwQjupC0Zkolk.oSD3AMUz.S (Titkosjelszo1@)
 INSERT INTO `users` (`id`, `inviteable`, `full_name`, `usr_name`, `usna_last_mod_date`, `usna_mod_num_remain`, `paswrd`, `date_of_birth`, `school`, `clss`, `email_address`, `email_last_mod_date`, `phone_num`, `om_identifier`, `status`, `discord_name`) VALUES
-(1, 1, 'John Doe', 'johndoe', '2024-12-17 09:06:23', 3, 'password123', '2000-01-01', 'School A', '12A', 'johndoe@example.com', '2024-12-17 09:06:23', '1234567890', 'OM12345678', 'active', 'johndoe#1234'),
-(2, 0, 'Jane Smith', 'janesmith', '2024-12-17 09:06:23', 5, 'password321', '1999-05-15', 'School B', '11B', 'janesmith@example.com', '2024-12-17 09:06:23', '0987654321', 'OM23456789', 'inactive', 'janesmith#5678'),
-(3, 1, 'Alice Johnson', 'alicej', '2024-12-17 09:06:23', 1, 'alicepass', '2001-03-23', 'School C', '10C', 'alice@example.com', '2024-12-17 09:06:23', '1122334455', 'OM34567890', 'active', 'alicej#9101'),
-(4, 1, 'Bob Brown', 'bobbrown', '2024-12-17 09:06:23', 2, 'bobpass', '2000-07-12', 'School D', '12D', 'bobbrown@example.com', '2024-12-17 09:06:23', '5566778899', 'OM45678901', 'active', 'bobbrown#2345'),
-(5, 0, 'Charlie Green', 'charlieg', '2024-12-17 09:06:23', 0, 'charliepass', '2002-11-05', 'School E', '9A', 'charlie@example.com', '2024-12-17 09:06:23', '6677889900', 'OM56789012', 'inactive', 'charlieg#3456'),
-(6, 1, 'David White', 'davidw', '2024-12-17 09:06:23', 4, 'davidpass', '1998-08-30', 'School F', '12B', 'davidw@example.com', '2024-12-17 09:06:23', '7788990011', 'OM67890123', 'active', 'davidw#5678'),
-(7, 0, 'Emma Black', 'emmab', '2024-12-17 09:06:23', 2, 'emmapass', '2003-06-21', 'School G', '10B', 'emmab@example.com', '2024-12-17 09:06:23', '8899001122', 'OM78901234', 'inactive', 'emmab#6789'),
-(8, 1, 'Frank Harris', 'frankh', '2024-12-17 09:06:23', 3, 'frankpass', '2001-02-14', 'School H', '11A', 'frankh@example.com', '2024-12-17 09:06:23', '9900112233', 'OM89012345', 'active', 'frankh#7890'),
-(9, 1, 'Grace Adams', 'gracea', '2024-12-17 09:06:23', 1, 'gracepass', '2000-09-09', 'School I', '12C', 'gracea@example.com', '2024-12-17 09:06:23', '1122334455', 'OM90123456', 'active', 'gracea#8901'),
-(10, 0, 'Henry Wilson', 'henryw', '2024-12-17 09:06:23', 5, 'henrypass', '1999-12-03', 'School J', '11C', 'henryw@example.com', '2024-12-17 09:06:23', '2233445566', 'OM01234567', 'inactive', 'henryw#9012');
+(1, 1, 'John Doe', 'johndoe', '2024-12-17 09:06:23', 3, '$2a$10$tRn.12E7m4FSl22.NbeQp.rNMaqlSdwQjupC0Zkolk.oSD3AMUz.S', '2000-01-01', 'School A', '12A', 'johndoe@example.com', '2024-12-17 09:06:23', '1234567890', 'OM12345678', 'active', 'johndoe#1234'),
+(2, 0, 'Jane Smith', 'janesmith', '2024-12-17 09:06:23', 5, '$2a$10$tRn.12E7m4FSl22.NbeQp.rNMaqlSdwQjupC0Zkolk.oSD3AMUz.S', '1999-05-15', 'School B', '11B', 'janesmith@example.com', '2024-12-17 09:06:23', '0987654321', 'OM23456789', 'inactive', 'janesmith#5678'),
+(3, 1, 'Alice Johnson', 'alicej', '2024-12-17 09:06:23', 1, '$2a$10$tRn.12E7m4FSl22.NbeQp.rNMaqlSdwQjupC0Zkolk.oSD3AMUz.S', '2001-03-23', 'School C', '10C', 'alice@example.com', '2024-12-17 09:06:23', '1122334455', 'OM34567890', 'active', 'alicej#9101'),
+(4, 1, 'Bob Brown', 'bobbrown', '2024-12-17 09:06:23', 2, '$2a$10$tRn.12E7m4FSl22.NbeQp.rNMaqlSdwQjupC0Zkolk.oSD3AMUz.S', '2000-07-12', 'School D', '12D', 'bobbrown@example.com', '2024-12-17 09:06:23', '5566778899', 'OM45678901', 'active', 'bobbrown#2345'),
+(5, 0, 'Charlie Green', 'charlieg', '2024-12-17 09:06:23', 0, '$2a$10$tRn.12E7m4FSl22.NbeQp.rNMaqlSdwQjupC0Zkolk.oSD3AMUz.S', '2002-11-05', 'School E', '9A', 'charlie@example.com', '2024-12-17 09:06:23', '6677889900', 'OM56789012', 'inactive', 'charlieg#3456'),
+(6, 1, 'David White', 'davidw', '2024-12-17 09:06:23', 4, '$2a$10$tRn.12E7m4FSl22.NbeQp.rNMaqlSdwQjupC0Zkolk.oSD3AMUz.S', '1998-08-30', 'School F', '12B', 'davidw@example.com', '2024-12-17 09:06:23', '7788990011', 'OM67890123', 'active', 'davidw#5678'),
+(7, 0, 'Emma Black', 'emmab', '2024-12-17 09:06:23', 2, '$2a$10$tRn.12E7m4FSl22.NbeQp.rNMaqlSdwQjupC0Zkolk.oSD3AMUz.S', '2003-06-21', 'School G', '10B', 'emmab@example.com', '2024-12-17 09:06:23', '8899001122', 'OM78901234', 'inactive', 'emmab#6789'),
+(8, 1, 'Frank Harris', 'frankh', '2024-12-17 09:06:23', 3, '$2a$10$tRn.12E7m4FSl22.NbeQp.rNMaqlSdwQjupC0Zkolk.oSD3AMUz.S', '2001-02-14', 'School H', '11A', 'frankh@example.com', '2024-12-17 09:06:23', '9900112233', 'OM89012345', 'active', 'frankh#7890'),
+(9, 1, 'Grace Adams', 'gracea', '2024-12-17 09:06:23', 1, '$2a$10$tRn.12E7m4FSl22.NbeQp.rNMaqlSdwQjupC0Zkolk.oSD3AMUz.S', '2000-09-09', 'School I', '12C', 'gracea@example.com', '2024-12-17 09:06:23', '1122334455', 'OM90123456', 'active', 'gracea#8901'),
+(10, 0, 'Henry Wilson', 'henryw', '2024-12-17 09:06:23', 5, '$2a$10$tRn.12E7m4FSl22.NbeQp.rNMaqlSdwQjupC0Zkolk.oSD3AMUz.S', '1999-12-03', 'School J', '11C', 'henryw@example.com', '2024-12-17 09:06:23', '2233445566', 'OM01234567', 'inactive', 'henryw#9012');
 
 INSERT INTO `organizers` (`full_name`, `usr_name`, `usna_last_mod_date`, `usna_mod_num_remain`, `paswrd`, `date_of_birth`, `school`, `email_address`, `email_last_mod_date`, `phone_num`, `om_identifier`, `status`) VALUES
-('Kovács Péter', 'kovi_p', '2025-02-20 08:30:00', 5, 'hashed_password_1', '1980-04-15', 'Műszaki Egyetem', 'kovacspeter@email.com', '2025-02-19 16:45:00', '+36301234567', 'OM123456789', 'Aktív'),
-('Szabó Anna', 'szabo_anna', '2025-02-20 09:00:00', 3, 'hashed_password_2', '1992-08-30', 'Pécsi Egyetem', 'szaboanna@email.com', '2025-02-19 14:20:00', '+36201234568', 'OM987654321', 'Aktív'),
-('Tóth Márk', 'toth_mark', '2025-02-20 09:30:00', 4, 'hashed_password_3', '1995-03-12', 'Debreceni Egyetem', 'tothmark@email.com', '2025-02-19 13:15:00', '+36301234569', 'OM112233445', 'Aktív'),
-('Németh Gábor', 'nemeth_g', '2025-02-20 10:00:00', 6, 'hashed_password_4', '1988-11-22', 'Szegedi Tudományegyetem', 'nemethgabor@email.com', '2025-02-19 11:45:00', '+36301234570', 'OM44332211', 'Aktív'),
-('Bíró Laura', 'biro_laura', '2025-02-20 10:30:00', 2, 'hashed_password_5', '1990-07-07', 'Budapesti Corvinus Egyetem', 'birolaura@email.com', '2025-02-19 12:00:00', '+36301234571', 'OM55667788', 'Aktív');
+('Kovács Péter', 'kovi_p', '2025-02-20 08:30:00', 5, '$2a$10$tRn.12E7m4FSl22.NbeQp.rNMaqlSdwQjupC0Zkolk.oSD3AMUz.S', '1980-04-15', 'Műszaki Egyetem', 'kovacspeter@email.com', '2025-02-19 16:45:00', '+36301234567', 'OM123456789', 'Aktív'),
+('Szabó Anna', 'szabo_anna', '2025-02-20 09:00:00', 3, '$2a$10$tRn.12E7m4FSl22.NbeQp.rNMaqlSdwQjupC0Zkolk.oSD3AMUz.S', '1992-08-30', 'Pécsi Egyetem', 'szaboanna@email.com', '2025-02-19 14:20:00', '+36201234568', 'OM987654321', 'Aktív'),
+('Tóth Márk', 'toth_mark', '2025-02-20 09:30:00', 4, '$2a$10$tRn.12E7m4FSl22.NbeQp.rNMaqlSdwQjupC0Zkolk.oSD3AMUz.S', '1995-03-12', 'Debreceni Egyetem', 'tothmark@email.com', '2025-02-19 13:15:00', '+36301234569', 'OM112233445', 'Aktív'),
+('Németh Gábor', 'nemeth_g', '2025-02-20 10:00:00', 6, '$2a$10$tRn.12E7m4FSl22.NbeQp.rNMaqlSdwQjupC0Zkolk.oSD3AMUz.S', '1988-11-22', 'Szegedi Tudományegyetem', 'nemethgabor@email.com', '2025-02-19 11:45:00', '+36301234570', 'OM44332211', 'Aktív'),
+('Bíró Laura', 'biro_laura', '2025-02-20 10:30:00', 2, '$2a$10$tRn.12E7m4FSl22.NbeQp.rNMaqlSdwQjupC0Zkolk.oSD3AMUz.S', '1990-07-07', 'Budapesti Corvinus Egyetem', 'birolaura@email.com', '2025-02-19 12:00:00', '+36301234571', 'OM55667788', 'Aktív');
 
 INSERT INTO `teams` (`id`, `short_name`, `full_name`, `creator_id`) VALUES
 (1, 'ABCD', 'Alpha Bravo Char', 1),
@@ -74,10 +75,25 @@ INSERT INTO `applications` (`id`, `dte`, `status`, `uer_id`, `tem_id`, `tnt_id`)
 (4, '2024-08-01 18:00:00', 'pending', 4, 4, 4),
 (5, '2024-09-01 20:00:00', 'approved', 5, 5, 5);
 
+--Képhozzárendelések (sorbéli sorrend az alábbi insertnél-> user, ogr, tem, evt, tnt )
 INSERT INTO `picture_links` (`id`, `uer_id`, `tem_id`, `tnt_id`, `evt_id`, `ogr_id` ,`pte_id`) VALUES
 (1, 1, NULL, NULL, NULL, NULL, 1),
-(2, NULL, 2, NULL, NULL, NULL, 2),
-(3, NULL, NULL, 3, NULL, NULL, 3),
-(4, NULL, NULL, NULL, 4, NULL, 4),
-(5, NULL, NULL, NULL, NULL, 2, 6),
-(6, NULL, NULL, 5, 5, NULL, 5);
+(2, 2, NULL, NULL, NULL, NULL, 1),
+(3, 3, NULL, NULL, NULL, NULL, 1),
+(4, 4, NULL, NULL, NULL, NULL, 1),
+(5, 5, NULL, NULL, NULL, NULL, 1),
+(6, 6, NULL, NULL, NULL, NULL, 1),
+(7, 7, NULL, NULL, NULL, NULL, 1),
+(8, 8, NULL, NULL, NULL, NULL, 1),
+(9, 9, NULL, NULL, NULL, NULL, 1),
+(10, 10, NULL, NULL, NULL, NULL, 1),
+(11, NULL, NULL, NULL, NULL, 1, 1),
+(12, NULL, NULL, NULL, NULL, 2, 1),
+(13, NULL, NULL, NULL, NULL, 3, 1),
+(14, NULL, NULL, NULL, NULL, 4, 1),
+(15, NULL, NULL, NULL, NULL, 5, 1),
+(16, NULL, 1, NULL, NULL, NULL, 1),
+(17, NULL, 2, NULL, NULL, NULL, 1),
+(18, NULL, 3, NULL, NULL, NULL, 1),
+(19, NULL, 4, NULL, NULL, NULL, 1),
+(20, NULL, 5, NULL, NULL, NULL, 1);

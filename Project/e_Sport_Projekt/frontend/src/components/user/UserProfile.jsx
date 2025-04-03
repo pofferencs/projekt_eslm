@@ -6,7 +6,7 @@ import UserContext from "../../context/UserContext";
 function UserProfile() {
 
   const {name} = useParams();
-  const {profileGet, isAuthenticated} = useContext(UserContext);
+  const {profileGet, isAuthenticated, profile} = useContext(UserContext);
   const navigate = useNavigate();
 
   console.log(profileGet())

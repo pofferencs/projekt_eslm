@@ -1,4 +1,7 @@
 import { createContext, useEffect, useState } from "react"
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+
 
 const UserContext = createContext();
 
@@ -7,6 +10,7 @@ export const UserProvider = ({children})=>{
   const [refresh, setRefresh] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [profile, setProfile] = useState(false);
+  
  
 
   const profileGet = () =>{
@@ -26,16 +30,6 @@ export const UserProvider = ({children})=>{
 
   const authStatus = () =>{
 
-    
-    const token = document.cookie.split(';').find(cookie => cookie.trim().startsWith('tokenU='));
-    console.log({token: token})
-    
-
-    if (!token) {
-      // sessionStorage.removeItem('tokenU');
-      setIsAuthenticated(false);  // Ha a süti nem található, töröljük az autentikációs állapotot
-    }
-
     fetch(`${import.meta.env.VITE_BASE_URL}/user/auth`,{
       method: 'GET',
       credentials: 'include',
@@ -49,11 +43,13 @@ export const UserProvider = ({children})=>{
         
         setIsAuthenticated(true);
         update();
+    
         
       } else {
         
         setIsAuthenticated(false);
         update();
+        
       }
     })
     .catch(err=>{alert(err);setIsAuthenticated(false); update();});
@@ -63,6 +59,8 @@ export const UserProvider = ({children})=>{
 
   useEffect(()=>{
     authStatus()
+    
+    
   },[])
 
   const update = ()=>{
@@ -84,7 +82,7 @@ export const UserProvider = ({children})=>{
       }
       return res.json();
     })
-    .then(data=> {console.log('Kijelentkezve', data);setIsAuthenticated(false); update(); pageRefresh()})
+    .then(data=> {console.log(data);setIsAuthenticated(false); update(); toast.success("Sikeres kijelentkezés!");})
     .catch(err=>{alert(err)});
 
   }
@@ -101,9 +99,11 @@ export const UserProvider = ({children})=>{
         if (!token.message) {
           sessionStorage.setItem('tokenU', token);
           authStatus();
-          pageRefresh();
+          toast.success('Sikeres belépés!');
+          
+          
         } else {
-          alert(token.message);
+          toast.error(token.message);
         }
       })
       .catch(err => alert(err));

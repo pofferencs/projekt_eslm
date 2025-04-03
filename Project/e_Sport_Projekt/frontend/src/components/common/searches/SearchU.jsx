@@ -1,10 +1,22 @@
-import { useState } from "react";
-import { toast } from "react-toastify";
+import { useContext, useEffect, useState } from "react";
+import { toast, ToastContainer } from "react-toastify";
 import UserSchema from "../schemas/UserSchema";
+import UserContext from "../../../context/UserContext";
+import { useNavigate } from "react-router-dom";
+
 
 function SearchU() {
+  const token = sessionStorage.getItem("tokenU");
   const [searchInput, setSearchInput] = useState("");
   const [result, setResult] = useState([]);
+  const {isAuthenticated} = useContext(UserContext);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+      if (!isAuthenticated || !token) {
+        navigate("/");
+      }
+    });
 
   const onSubmit = (e) => {
     e.preventDefault();
@@ -35,6 +47,7 @@ function SearchU() {
 
   return (
     <div className="flex flex-col min-h-screen">
+      
       <h2 className="mt-10 text-center text-4xl font-bold tracking-tight text-indigo-600">
         Játékos kereső
       </h2>

@@ -21,10 +21,18 @@ function UserLogin() {
       document.getElementById("email_or_username").textContent.includes("@")
     ) {
       login(formDataEmail, "POST");
-      navigate("/");
+      if(isAuthenticated){
+        toast.success('Sikeres belépés!');
+      }else{
+        
+      }
     } else {
       login(formDataUsername, "POST");
-      navigate("/");
+      if(isAuthenticated){
+        toast.success('Sikeres belépés!');
+      }else{
+
+      }
     }
   };
   let formObjUsername = {

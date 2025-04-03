@@ -5,6 +5,20 @@ const bcrypt = require('bcryptjs');
 const { validalasFuggveny, hianyzoAdatFuggveny } = require('../functions/conditions');
 
 
+const passch = async (paswrd)=>{
+
+    // const hashedPass = await bcrypt.hash(paswrd, 10);
+    // console.log(hashedPass)
+    const nemtitkos = "$2a$10$tRn.12E7m4FSl22.NbeQp.rNMaqlSdwQjupC0Zkolk.oSD3AMUz.S"
+    console.log(bcrypt.compareSync(paswrd, nemtitkos))
+
+
+}
+
+passch("Titkosjelszo1@");
+
+
+
 const userList = async (req, res) => {
     try {
         const users = await prisma.users.findMany({
@@ -466,7 +480,8 @@ const userLogin = async (req, res) => {
             secure: true,
             httpOnly: true,
             sameSite: 'none',
-            maxAge: 360000
+            //maxAge: 360000 //6 perc
+            maxAge: 30000 //fél perc
         });
 
         return res.status(200).json(token);
@@ -502,7 +517,8 @@ const protected = async (req, res) => {
         secure: true,
         httpOnly: true,
         sameSite: 'none',
-        maxAge: 360000
+        //maxAge: 360000 //6 perc
+        maxAge: 30000 //fél perc
     });
 
     res.json(token);

@@ -1,22 +1,25 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import UserContext from '../../context/UserContext';
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import Logo from '../../assets/logo.png';
 
 import { useState } from 'react';
+import { toast, ToastContainer } from 'react-toastify';
 
 function Navbar() {
   // Állapotok a mobil és profil menü megnyitásához
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
+  const navigate = useNavigate();
 
   const { logout, isAuthenticated, authStatus, update } = useContext(UserContext);
   const token = sessionStorage.getItem('tokenU');
-  console.log(isAuthenticated)
+  console.log(isAuthenticated, token)
 
 
   return (
     <div>
+      <ToastContainer />
       {/* Fő navigációs sáv */}
       <nav className="bg-gray-800">
         <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
@@ -79,7 +82,7 @@ function Navbar() {
 
             </div>
 
-            {(isAuthenticated || token) ? (
+            {(isAuthenticated || !(token==null)) ? (
 
               /* Profil ikon */
               <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
@@ -95,7 +98,7 @@ function Navbar() {
                       <Link to="/profile" className="block px-4 py-2 text-sm text-gray-700">Profiladatok</Link>
                       <Link to="/teams" className="block px-4 py-2 text-sm text-gray-700">Csapataim</Link>
                       {(isAuthenticated || token) && (
-                        <button onClick={() => { logout(); sessionStorage.removeItem('tokenU'); }} className="block px-4 py-2 text-sm text-gray-700">Kijelentkezés</button>
+                        <button onClick={() => { logout(); sessionStorage.removeItem('tokenU'); navigate('/'); }} className="block px-4 py-2 text-sm text-gray-700">Kijelentkezés</button>
                       )}
 
                     </div>
