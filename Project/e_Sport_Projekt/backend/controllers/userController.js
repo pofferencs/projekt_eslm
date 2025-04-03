@@ -5,17 +5,15 @@ const bcrypt = require('bcryptjs');
 const { validalasFuggveny, hianyzoAdatFuggveny } = require('../functions/conditions');
 
 
-const passch = async (paswrd)=>{
+// const passch = async (paswrd)=>{
 
-    // const hashedPass = await bcrypt.hash(paswrd, 10);
-    // console.log(hashedPass)
-    const nemtitkos = "$2a$10$tRn.12E7m4FSl22.NbeQp.rNMaqlSdwQjupC0Zkolk.oSD3AMUz.S"
-    console.log(bcrypt.compareSync(paswrd, nemtitkos))
+//     // const hashedPass = await bcrypt.hash(paswrd, 10);
+//     // console.log(hashedPass)
+//     const nemtitkos = "$2a$10$tRn.12E7m4FSl22.NbeQp.rNMaqlSdwQjupC0Zkolk.oSD3AMUz.S"
+//     console.log(bcrypt.compareSync(paswrd, nemtitkos))
 
 
-}
-
-passch("Titkosjelszo1@");
+// }
 
 
 
@@ -496,11 +494,14 @@ const userLogin = async (req, res) => {
 }
 
 const userLogout = async (req, res) => {
+
+    
     
     res.clearCookie('tokenU', {
         secure: true,
         httpOnly: true,
-        sameSite: 'none'
+        sameSite: 'none',
+        path:'/'
     });
     
     

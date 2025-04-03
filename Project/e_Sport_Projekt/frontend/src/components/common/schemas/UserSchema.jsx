@@ -6,7 +6,7 @@ function UserSchema({ user }) {
     const [userPicPath, setUserPicPath] = useState("https://images.unsplash.com/photo-1472099645785-5658abf4ff4e")
 
     useEffect(() => {    
-        fetch(`${import.meta.env.VITE_BASE_URL}/user/${user.id}`)
+        fetch(`${import.meta.env.VITE_BASE_URL}/user/userpic/${user.id}`)
             .then(res => res.json())
             .then(adatok => setUserPicPath(adatok))
             .catch(err => console.log(err));

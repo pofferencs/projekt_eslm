@@ -28,9 +28,9 @@ export const UserProvider = ({children})=>{
   }
 
 
-  const authStatus = () =>{
+  const authStatus = async () =>{
 
-    fetch(`${import.meta.env.VITE_BASE_URL}/user/auth`,{
+    await fetch(`${import.meta.env.VITE_BASE_URL}/user/auth`,{
       method: 'GET',
       credentials: 'include',
       headers:{
@@ -46,14 +46,16 @@ export const UserProvider = ({children})=>{
     
         
       } else {
-        
+
         setIsAuthenticated(false);
         update();
         
       }
+      
     })
     .catch(err=>{alert(err);setIsAuthenticated(false); update();});
-
+   
+    
     
   }
 
@@ -67,9 +69,9 @@ export const UserProvider = ({children})=>{
     setRefresh(prev=>!prev);
   }
 
-  const logout = () =>{
+  const logout = async () =>{
    
-    fetch(`${import.meta.env.VITE_BASE_URL}/user/logout`,{
+    await fetch(`${import.meta.env.VITE_BASE_URL}/user/logout`,{
      method: 'POST',
      credentials: 'include',
      headers: {
@@ -82,13 +84,13 @@ export const UserProvider = ({children})=>{
       }
       return res.json();
     })
-    .then(data=> {console.log(data);setIsAuthenticated(false); update(); toast.success("Sikeres kijelentkezés!");})
+    .then(data=> {console.log(data);setIsAuthenticated(false); update(); toast.success(data.message);})
     .catch(err=>{alert(err)});
-
   }
 
-  const login = (formData, method) => {
-    fetch(`${import.meta.env.VITE_BASE_URL}/user/login`, {
+
+  const login = async (formData, method) => {
+    await fetch(`${import.meta.env.VITE_BASE_URL}/user/login`, {
       method: method,
       credentials: 'include',
       headers: { "Content-type": "application/json" },
