@@ -22,32 +22,23 @@ function UserLogin() {
     let userUres = formDataUsername.usr_name == "";
     let emailUres = formDataEmail.email_address == "";
 
-    if (document.getElementById("email_or_username").textContent.includes("@")) {
-      if(userUres){
-        login(formDataEmail, "POST");
-        if(isAuthenticated){
-          toast.success('Sikeres belépés!');
-        
-        }else{
-        
-        }
-      }else if(emailUres){
-          login(formDataUsername, "POST");
-        if(isAuthenticated){
-          toast.success('Sikeres belépés!');
-        }else{
-
-        }
-      }
+    if(userUres){
+      login(formDataEmail, "POST");
+      if(isAuthenticated){
+        toast.success('Sikeres belépés!');
       
-    } else {
-      login(formDataUsername, "POST");
+      }else{
+      
+      }
+    }else if(emailUres){
+        login(formDataUsername, "POST");
       if(isAuthenticated){
         toast.success('Sikeres belépés!');
       }else{
 
       }
     }
+    
   };
   let formObjUsername = {
     usr_name: "",
