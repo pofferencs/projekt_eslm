@@ -9,13 +9,13 @@ function UserProfile() {
   const {profileGet, isAuthenticated, profile} = useContext(UserContext);
   const navigate = useNavigate();
 
-  console.log(profileGet())
+  //console.log(profileGet())
 
 
   useEffect(()=>{
 
     if(isAuthenticated==false){
-      navigate('/');
+      // navigate('/');
     }
 
   },[]);
@@ -28,7 +28,7 @@ function UserProfile() {
         <p>{name}</p>
         ):
         (
-        <p>Profile</p>
+        <p>UserProfile</p>
         )
       }
     </div>

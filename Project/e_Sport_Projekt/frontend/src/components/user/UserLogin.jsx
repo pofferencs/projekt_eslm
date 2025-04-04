@@ -17,16 +17,29 @@ function UserLogin() {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    if (
-      document.getElementById("email_or_username").textContent.includes("@")
-    ) {
-      login(formDataEmail, "POST");
-      if(isAuthenticated){
-        toast.success('Sikeres belépés!');
+    console.log({username_kerdojel: formDataUsername.usr_name == "", email_kerdojel: formDataEmail.email_address == ""})
+
+    let userUres = formDataUsername.usr_name == "";
+    let emailUres = formDataEmail.email_address == "";
+
+    if (document.getElementById("email_or_username").textContent.includes("@")) {
+      if(userUres){
+        login(formDataEmail, "POST");
+        if(isAuthenticated){
+          toast.success('Sikeres belépés!');
         
-      }else{
+        }else{
         
+        }
+      }else if(emailUres){
+          login(formDataUsername, "POST");
+        if(isAuthenticated){
+          toast.success('Sikeres belépés!');
+        }else{
+
+        }
       }
+      
     } else {
       login(formDataUsername, "POST");
       if(isAuthenticated){
@@ -51,6 +64,8 @@ function UserLogin() {
 
   const writeData = (e) => {
     const { id, value } = e.target;
+    console.log(formDataEmail);
+    console.log(formDataUsername);
   
     // Ha email vagy felhasználónevet gépelünk
     if (id === "email_or_username") {
