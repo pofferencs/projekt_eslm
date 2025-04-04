@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom"
 import UserContext from "../../context/UserContext";
 
@@ -6,17 +6,40 @@ import UserContext from "../../context/UserContext";
 function UserProfile() {
 
   const {name} = useParams();
-  const {profileGet, isAuthenticated, profile} = useContext(UserContext);
+  const {isAuthenticated, profile} = useContext(UserContext);
+  const [profileAdat, setProfileAdat] = useState([]);
   const navigate = useNavigate();
 
-  //console.log(profileGet())
+  
 
 
   useEffect(()=>{
 
-    if(isAuthenticated==false){
-      // navigate('/');
+    console.log(name)
+
+    if(name){
+      fetch(`${import.meta.env.VITE_BASE_URL}/list/unamesearch/${name}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json"
+        }
+      })
+      .then(res=>res.json())
+      .then(adat=>{console.log(adat); setProfileAdat(adat)})
+      .catch(err=>alert(err));
+
+      
+
+    }else{
+      navigate('/profile')
     }
+
+    
+
+
+    // if(isAuthenticated == false && name != undefined){
+    //   navigate('/');
+    // }
 
   },[]);
 
@@ -25,10 +48,10 @@ function UserProfile() {
     <div>
       {
         (name!=undefined)?(
-        <p>{name}</p>
+        <p>{profileAdat.full_name}</p>
         ):
         (
-        <p>UserProfile</p>
+        <p>{profile.usr_name}</p>
         )
       }
     </div>

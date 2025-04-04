@@ -9,25 +9,10 @@ export const UserProvider = ({children})=>{
 
   const [refresh, setRefresh] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [profile, setProfile] = useState(false);
+  const [profile, setProfile] = useState([]);
   
- 
 
-  const profileGet = () =>{
-
-    fetch(`${import.meta.env.VITE_BASE_URL}/user/auth`,{
-      method: 'GET',
-      credentials: 'include',
-      headers:{
-        "Content-Type":"application/json"
-      }
-    })
-    .then(res=> {res.json()})
-    .then(adat=>setProfile(adat.authenticated))
-    .catch(err=>{alert(err)});
-  }
-
-
+  
   const authStatus = async () =>{
 
     await fetch(`${import.meta.env.VITE_BASE_URL}/user/auth`,{
@@ -41,6 +26,7 @@ export const UserProvider = ({children})=>{
     .then(auth=>{
       if(auth.authenticated){
         
+        setProfile(auth.user);
         setIsAuthenticated(true);
         update();
     
@@ -126,7 +112,7 @@ export const UserProvider = ({children})=>{
     isAuthenticated,
     login,
     pageRefresh,
-    profileGet
+    profile
   }}>{children}</UserContext.Provider>
 }
 
