@@ -21,8 +21,8 @@ function Navbar() {
 
     const interval = setInterval(()=>{
       authStatus()
-      console.log(isAuthenticated)
-    }, 5000)
+      //console.log(isAuthenticated)
+    }, 60000) //egyperces vizsgálat
       
     return ()=> clearInterval(interval);
     

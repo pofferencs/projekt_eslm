@@ -13,27 +13,29 @@ function UserProfile() {
 
   useEffect(()=>{
 
-    
+    if(isAuthenticated){
 
-    if(name != undefined){
-      fetch(`${import.meta.env.VITE_BASE_URL}/list/unamesearch/${name}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json"
+      if(name != undefined){
+        fetch(`${import.meta.env.VITE_BASE_URL}/list/unamesearch/${name}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json"
+          }
+        })
+        .then(res=>res.json())
+        .then(adat=>{console.log(adat); 
+        if(!adat.message)
+        {
+          setProfileAdat(adat[0]);
+        }else{
+          navigate('/')
         }
-      })
-      .then(res=>res.json())
-      .then(adat=>{console.log(adat); 
-      if(!adat.message)
-      {
-        setProfileAdat(adat[0]);
-      }else{
-        navigate('/')
+        })
+        .catch(err=>alert(err));
       }
-      })
-      .catch(err=>alert(err));
 
-
+    }else{
+      navigate('/');
     }
 
   },[]);
@@ -42,23 +44,13 @@ function UserProfile() {
 
     if(date != undefined){
       const [ev, honap, nap] = date.split('T')[0].split('-')
-    
-      console.log(ev, honap, nap)
 
-      // const [ev, honap, nap] = date.split('T')[0].split('-');
-      
-
-      
       return `${ev}. ${honap}. ${nap}.`;
     }else{
       return "";
     }
 
   }
-
-  console.log({name: name == undefined}, {profilAdat: profileAdat.length == 0}, {profil: Object.keys(profileAdat).length === 0})
-
-  console.log({keresősProfile: dateFormat(profileAdat.date_of_birth)}, {authProfile: dateFormat(profile.date_of_birth)})
 
   return (
     <div>
@@ -84,7 +76,7 @@ function UserProfile() {
         
         ):
         (
-        <p>
+        <div>
           {
             ( profile.inviteable == true) ? (
               <p>Meghívható</p>
@@ -100,7 +92,7 @@ function UserProfile() {
           {
            (<p>{dateFormat(profile.date_of_birth)}</p>)
           }
-        </p>
+        </div>
         )
       }
     </div>

@@ -28,15 +28,11 @@ function UserLogin() {
       if(isAuthenticated){
         toast.success('Sikeres belépés!');
       
-      }else{
-      
       }
     }else if(emailUres){
         login(formDataUsername, "POST");
       if(isAuthenticated){
         toast.success('Sikeres belépés!');
-      }else{
-
       }
     }
     
