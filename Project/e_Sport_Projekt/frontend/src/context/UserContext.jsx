@@ -7,13 +7,14 @@ const UserContext = createContext();
 
 export const UserProvider = ({children})=>{
 
+  const navigate = useNavigate();
   const [refresh, setRefresh] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [profile, setProfile] = useState([]);
-  
-
-  
+ 
   const authStatus = async () =>{
+  
+    
 
     await fetch(`${import.meta.env.VITE_BASE_URL}/user/auth`,{
       method: 'GET',
@@ -29,27 +30,32 @@ export const UserProvider = ({children})=>{
         setProfile(auth.user);
         setIsAuthenticated(true);
         update();
+        
     
         
       } else {
-
-        setIsAuthenticated(false);
-        update();
         
+        setIsAuthenticated(false);
+        logout();
+        navigate('/')
+        update();
+       
       }
       
+      
     })
-    .catch(err=>{alert(err);setIsAuthenticated(false); update();});
+    .catch(err=>{console.log(err); setIsAuthenticated(false); logout(); update();});
    
     
     
   }
 
-  useEffect(()=>{
-    authStatus()
-    
-    
-  },[])
+  // useEffect(()=>{
+
+  //     authStatus()
+
+
+  // },[])
 
   const update = ()=>{
     setRefresh(prev=>!prev);
@@ -65,12 +71,10 @@ export const UserProvider = ({children})=>{
      } 
     })
     .then(res=>{
-      if(!res.ok){
-        console.log('Hiba: ', res.statusText);
-      }
+      
       return res.json();
     })
-    .then(data=> {console.log(data);setIsAuthenticated(false); update(); toast.success(data.message);})
+    .then(data=> {setIsAuthenticated(false); sessionStorage.removeItem('tokenU'); update(); })
     .catch(err=>{alert(err)});
   }
 
@@ -86,9 +90,8 @@ export const UserProvider = ({children})=>{
       .then(token => {
         if (!token.message) {
           sessionStorage.setItem('tokenU', token);
-          authStatus();
           toast.success('Sikeres belépés!');
-          
+          setTimeout(()=>{navigate('/'); pageRefresh()},5000)
           
         } else {
           toast.error(token.message);

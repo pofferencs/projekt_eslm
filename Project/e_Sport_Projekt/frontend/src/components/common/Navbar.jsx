@@ -4,7 +4,7 @@ import { useContext, useEffect } from 'react';
 import Logo from '../../assets/logo.png';
 
 import { useState } from 'react';
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 
 function Navbar() {
   // Állapotok a mobil és profil menü megnyitásához
@@ -12,14 +12,27 @@ function Navbar() {
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
   const navigate = useNavigate();
 
-  const { logout, isAuthenticated, authStatus, update } = useContext(UserContext);
+  const { logout, isAuthenticated, authStatus, update, pageRefresh } = useContext(UserContext);
   const token = sessionStorage.getItem('tokenU');
-  console.log(isAuthenticated, token)
+  
+  useEffect(()=>{
+    authStatus()
+    if(isAuthenticated == false) return;
+
+    const interval = setInterval(()=>{
+      authStatus()
+      console.log(isAuthenticated)
+    }, 5000)
+      
+    return ()=> clearInterval(interval);
+    
+
+  },[isAuthenticated])
 
 
   return (
     <div>
-      <ToastContainer />
+      {/* <ToastContainer /> */}
       {/* Fő navigációs sáv */}
       <nav className="bg-gray-800">
         <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
@@ -98,7 +111,7 @@ function Navbar() {
                       <Link to="/profile" className="block px-4 py-2 text-sm text-gray-700">Profiladatok</Link>
                       <Link to="/teams" className="block px-4 py-2 text-sm text-gray-700">Csapataim</Link>
                       {(isAuthenticated || token) && (
-                        <button onClick={() => { logout(); sessionStorage.removeItem('tokenU'); navigate('/'); }} className="block px-4 py-2 text-sm text-gray-700">Kijelentkezés</button>
+                        <button onClick={() => { toast.success("Kijelentkeztél!"); logout(); setTimeout(()=>{navigate('/'); pageRefresh()},5000) }} className="block px-4 py-2 text-sm text-gray-700">Kijelentkezés</button>
                       )}
 
                     </div>

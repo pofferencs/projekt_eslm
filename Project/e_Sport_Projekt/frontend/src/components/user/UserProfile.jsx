@@ -7,17 +7,15 @@ function UserProfile() {
 
   const {name} = useParams();
   const {isAuthenticated, profile} = useContext(UserContext);
-  const [profileAdat, setProfileAdat] = useState([]);
-  const navigate = useNavigate();
-
-  
+  const [profileAdat, setProfileAdat] = useState({});
+  const navigate = useNavigate(); 
 
 
   useEffect(()=>{
 
-    console.log(name)
+    
 
-    if(name){
+    if(name != undefined){
       fetch(`${import.meta.env.VITE_BASE_URL}/list/unamesearch/${name}`, {
         method: "GET",
         headers: {
@@ -25,33 +23,84 @@ function UserProfile() {
         }
       })
       .then(res=>res.json())
-      .then(adat=>{console.log(adat); setProfileAdat(adat)})
+      .then(adat=>{console.log(adat); 
+      if(!adat.message)
+      {
+        setProfileAdat(adat[0]);
+      }else{
+        navigate('/')
+      }
+      })
       .catch(err=>alert(err));
 
-      
 
-    }else{
-      navigate('/profile')
     }
-
-    
-
-
-    // if(isAuthenticated == false && name != undefined){
-    //   navigate('/');
-    // }
 
   },[]);
 
+  const dateFormat = (date) =>{
+
+    if(date != undefined){
+      const [ev, honap, nap] = date.split('T')[0].split('-')
+    
+      console.log(ev, honap, nap)
+
+      // const [ev, honap, nap] = date.split('T')[0].split('-');
+      
+
+      
+      return `${ev}. ${honap}. ${nap}.`;
+    }else{
+      return "";
+    }
+
+  }
+
+  console.log({name: name == undefined}, {profilAdat: profileAdat.length == 0}, {profil: Object.keys(profileAdat).length === 0})
+
+  console.log({keresősProfile: dateFormat(profileAdat.date_of_birth)}, {authProfile: dateFormat(profile.date_of_birth)})
 
   return (
     <div>
       {
         (name!=undefined)?(
-        <p>{profileAdat.full_name}</p>
+        <div>
+          {
+            ( profileAdat.inviteable == true) ? (
+              <p>Meghívható</p>
+            ):
+            ( profileAdat.inviteable == false)? (
+              <p>Nem meghívható</p>
+
+            ): (<p>{/*ez itt egy üres sor, amivel megakadályozzuk, hogy a komponens betöltődésekor ne jelenjen még meg semmi, hanem majd akkor, ha lesz is adat*/}</p>)
+
+          }
+          <p>{profileAdat.full_name}</p>
+          <p>{profileAdat.usr_name}</p>
+          {
+           (<p>{dateFormat(profileAdat.date_of_birth)}</p>)
+          }
+        </div>
+        
         ):
         (
-        <p>{profile.usr_name}</p>
+        <p>
+          {
+            ( profile.inviteable == true) ? (
+              <p>Meghívható</p>
+            ):
+            ( profile.inviteable == false)? (
+              <p>Nem meghívható</p>
+
+            ): (<p>{/*ez itt egy üres sor, amivel megakadályozzuk, hogy a komponens betöltődésekor ne jelenjen még meg semmi, hanem majd akkor, ha lesz is adat*/}</p>)
+
+          }
+          <p>{profile.full_name}</p>
+          <p>{profile.usr_name}</p>
+          {
+           (<p>{dateFormat(profile.date_of_birth)}</p>)
+          }
+        </p>
         )
       }
     </div>

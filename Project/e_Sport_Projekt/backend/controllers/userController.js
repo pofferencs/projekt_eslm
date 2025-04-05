@@ -31,7 +31,6 @@ const userList = async (req, res) => {
                 status: true,
                 email_address: true,
                 phone_num: true,
-                om_identifier: true
             }
         });
         return res.status(200).json(users);
@@ -66,7 +65,6 @@ const userSearchByName = async (req, res) => {
                 status: true,
                 email_address: true,
                 phone_num: true,
-                om_identifier: true
             }
         });
         if (user.length == 0 || usr_name == "") return res.status(400).json({ message: "Nincs ilyen felhasználó!" });
