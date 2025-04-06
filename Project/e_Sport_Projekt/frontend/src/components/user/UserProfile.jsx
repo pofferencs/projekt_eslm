@@ -38,7 +38,7 @@ function UserProfile() {
       navigate('/');
     }
 
-  },[]);
+  },[isAuthenticated]);
 
   const dateFormat = (date) =>{
 
