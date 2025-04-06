@@ -35,7 +35,7 @@ function UserProfile() {
       }
 
     }else{
-      navigate('/');
+      //navigate('/');
     }
 
   },[isAuthenticated]);
