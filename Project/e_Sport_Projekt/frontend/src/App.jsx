@@ -19,6 +19,7 @@ import SearchE from "./components/common/searches/SearchE";
 import Footer from "./components/common/Footer";
 import Register from "./components/loggedout/Register";
 import UserProfile from "./components/user/UserProfile";
+import EventList from "./components/common/EventList";
 
 function App() {
   const isAuthenticated = useContext(UserContext);
@@ -48,6 +49,7 @@ function App() {
           <Route path="/tournament-search" element={<SearchTo />} />
           <Route path="/event-search" element={<SearchE />} />
           <Route path="/profile" element={<UserProfile />} />
+          <Route path="/events" element={<EventList />} />
         </Routes>
         <Footer />
       </BrowserRouter>
