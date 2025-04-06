@@ -18,7 +18,7 @@ function Register() {
 
   const kuldes = (formData, method) => {
     fetch(`${import.meta.env.VITE_BASE_URL}/user/register`, {
-      method: "POST",
+      method: method,
       headers: { "Content-type": "application/json" },
       credentials: "include",
       body: JSON.stringify(formData),
@@ -26,13 +26,18 @@ function Register() {
       .then((res) => res.json())
       .then((token) => {
         if (!token.message) {
+          
+          toast.error(token.message)
+        }else{
+          navigate("/login");
           sessionStorage.setItem("tokenU", token);
+          toast.success("Sikeres regisztráció!");
+          
         }
       })
       .catch((err) => alert(err));
       
-      navigate("/login");
-      toast.success("Sikeres regisztráció!");
+      
   };
 
   const onSubmit = (e) => {

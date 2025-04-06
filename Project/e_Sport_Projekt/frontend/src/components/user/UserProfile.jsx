@@ -35,10 +35,10 @@ function UserProfile() {
       }
 
     }else{
-      navigate('/');
+      //navigate('/');
     }
 
-  },[]);
+  },[isAuthenticated]);
 
   const dateFormat = (date) =>{
 
