@@ -27,8 +27,6 @@ function Register() {
       .then((token) => {
         if (!token.message) {
           sessionStorage.setItem("tokenU", token);
-        } else {
-          toast.error(token.message);
         }
       })
       .catch((err) => alert(err));

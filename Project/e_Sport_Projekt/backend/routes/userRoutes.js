@@ -10,6 +10,6 @@ router.post('/register', userReg);
 router.get('/protected', protectUser, protected);
 router.get('/auth', protectUser, isAuthenticated);
 router.post('/logout', protectUser, userLogout);
-router.get('/:uer_id',userGetPicturePath)
+router.get('/userpic/:uer_id',userGetPicturePath)
 
 module.exports = router

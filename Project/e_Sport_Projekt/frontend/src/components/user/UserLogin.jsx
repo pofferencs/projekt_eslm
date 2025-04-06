@@ -2,6 +2,7 @@ import { useState, useContext, useEffect } from "react";
 import UserContext from "../../context/UserContext";
 import { useNavigate, Link } from "react-router-dom";
 import Logo from "../../assets/logo.png";
+import { toast } from "react-toastify";
 
 function UserLogin() {
   const navigate = useNavigate();
@@ -17,15 +18,24 @@ function UserLogin() {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    if (
-      document.getElementById("email_or_username").textContent.includes("@")
-    ) {
+    console.log({username_kerdojel: formDataUsername.usr_name == "", email_kerdojel: formDataEmail.email_address == ""})
+
+    let userUres = formDataUsername.usr_name == "";
+    let emailUres = formDataEmail.email_address == "";
+
+    if(userUres){
       login(formDataEmail, "POST");
-      navigate("/");
-    } else {
-      login(formDataUsername, "POST");
-      navigate("/");
+      if(isAuthenticated){
+        toast.success('Sikeres belépés!');
+      
+      }
+    }else if(emailUres){
+        login(formDataUsername, "POST");
+      if(isAuthenticated){
+        toast.success('Sikeres belépés!');
+      }
     }
+    
   };
   let formObjUsername = {
     usr_name: "",
@@ -42,7 +52,9 @@ function UserLogin() {
 
   const writeData = (e) => {
     const { id, value } = e.target;
-
+    console.log(formDataEmail);
+    console.log(formDataUsername);
+  
     // Ha email vagy felhasználónevet gépelünk
     if (id === "email_or_username") {
       if (value.includes("@")) {
@@ -51,12 +63,23 @@ function UserLogin() {
           ...prevState,
           email_address: value,
         }));
+        setFormDataUsername((prevState) => ({
+          ...prevState,
+          usr_name: "", // Ürítjük a felhasználónevet, ha email-t írtunk
+        }));
       } else {
         // Ha felhasználónév, akkor állítsuk be a usr_name mezőt és ürítsük az email_address mezőt
-        setFormDataUsername((prevState) => ({ ...prevState, usr_name: value }));
+        setFormDataUsername((prevState) => ({
+          ...prevState,
+          usr_name: value,
+        }));
+        setFormDataEmail((prevState) => ({
+          ...prevState,
+          email_address: "", // Ürítjük az email mezőt, ha felhasználónevet írtunk
+        }));
       }
     }
-
+  
     // Ha jelszót gépelünk
     if (id === "password") {
       setFormDataEmail((prevState) => ({ ...prevState, paswrd: value }));

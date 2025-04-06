@@ -5,15 +5,40 @@ const bcrypt = require('bcryptjs');
 const { validalasFuggveny, hianyzoAdatFuggveny } = require('../functions/conditions');
 
 
+// const passch = async (paswrd)=>{
+
+//     // const hashedPass = await bcrypt.hash(paswrd, 10);
+//     // console.log(hashedPass)
+//     const nemtitkos = "$2a$10$tRn.12E7m4FSl22.NbeQp.rNMaqlSdwQjupC0Zkolk.oSD3AMUz.S"
+//     console.log(bcrypt.compareSync(paswrd, nemtitkos))
+
+
+// }
+
+
+
 const userList = async (req, res) => {
     try {
-        const users = await prisma.users.findMany();
-        res.status(200).json(users);
+        const users = await prisma.users.findMany({
+            select:{
+                id: true,
+                inviteable: true,
+                full_name: true,
+                usr_name: true,
+                date_of_birth: true,
+                school: true,
+                clss: true,
+                status: true,
+                email_address: true,
+                phone_num: true,
+            }
+        });
+        return res.status(200).json(users);
 
     }
     catch (error) {
         console.log(error);
-        res.status(500).json({ message: "Hiba a fetch során!" })
+        return res.status(500).json({ message: "Hiba a fetch során!" })
     }
 }
 
@@ -28,9 +53,21 @@ const userSearchByName = async (req, res) => {
                 usr_name: {
                     contains: usr_name
                 }
+            },
+            select:{
+                id: true,
+                inviteable: true,
+                full_name: true,
+                usr_name: true,
+                date_of_birth: true,
+                school: true,
+                clss: true,
+                status: true,
+                email_address: true,
+                phone_num: true,
             }
         });
-        if (user.length == 0 || usr_name == "") return res.status(400).json({ message: "Nincs ilyen felhasználó" });
+        if (user.length == 0 || usr_name == "") return res.status(400).json({ message: "Nincs ilyen felhasználó!" });
         else return res.status(200).json(user);
     } catch (error) {
         return res.status(500).json(error);
@@ -439,7 +476,8 @@ const userLogin = async (req, res) => {
             secure: true,
             httpOnly: true,
             sameSite: 'none',
-            maxAge: 360000
+            //maxAge: 360000 //6 perc
+            maxAge: 360000 //fél perc
         });
 
         return res.status(200).json(token);
@@ -448,17 +486,23 @@ const userLogin = async (req, res) => {
 
     } catch (error) {
         console.log(error);
-        res.status(500).json({ message: error })
+        return res.status(500).json({ message: error })
     }
 
 }
 
 const userLogout = async (req, res) => {
+
+    
+    
     res.clearCookie('tokenU', {
-        httpOnly: true,
         secure: true,
-        sameSite: 'none'
+        httpOnly: true,
+        sameSite: 'none',
+        path:'/'
     });
+    
+    
     res.status(200).json({ message: "Kijelentkezve." });
 }
 
@@ -472,7 +516,8 @@ const protected = async (req, res) => {
         secure: true,
         httpOnly: true,
         sameSite: 'none',
-        maxAge: 360000
+        //maxAge: 360000 //6 perc
+        maxAge: 360000 //fél perc
     });
 
     res.json(token);

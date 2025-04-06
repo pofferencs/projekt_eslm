@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react"
+import { useNavigate } from "react-router-dom";
 
 
 function UserSchema({ user }) {
-
+    const navigate = useNavigate();
     const [userPicPath, setUserPicPath] = useState("https://images.unsplash.com/photo-1472099645785-5658abf4ff4e")
 
     useEffect(() => {    
-        fetch(`${import.meta.env.VITE_BASE_URL}/user/${user.id}`)
+        fetch(`${import.meta.env.VITE_BASE_URL}/user/userpic/${user.id}`)
             .then(res => res.json())
             .then(adatok => setUserPicPath(adatok))
             .catch(err => console.log(err));
@@ -26,7 +27,7 @@ function UserSchema({ user }) {
                     <p className={`drop-shadow-lg font-extrabold ml-2 ${user.status == "inactive" ? "text-red-500" : "text-green-500"}`}>
                         {user.status}
                     </p>
-                    <img className="w-10 h-10 rounded-full drop-shadow-lg object-cover" src={import.meta.env.VITE_BASE_URL+`${import.meta.env.VITE_BASE_PIC}${userPicPath}`} alt="User Profile" />
+                    <img className="w-10 h-10 rounded-full drop-shadow-lg object-cover" src={import.meta.env.VITE_BASE_URL+`${import.meta.env.VITE_BASE_PIC}${userPicPath}`} alt="User Profile" onClick={()=>{navigate(`/profile/${user.usr_name}`)}} />
                 </div>
 
                 <div className="flex justify-evenly">

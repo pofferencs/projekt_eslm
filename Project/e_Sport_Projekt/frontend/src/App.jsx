@@ -7,7 +7,6 @@ import {
   Routes,
   Route,
   Navigate,
-  useNavigate,
 } from "react-router-dom";
 import UserContext from "./context/UserContext";
 import { UserProvider } from "./context/UserContext";
@@ -19,17 +18,18 @@ import SearchE from "./components/common/searches/SearchE";
 import Footer from "./components/common/Footer";
 import Register from "./components/loggedout/Register";
 import UserProfile from "./components/user/UserProfile";
-import EventList from "./components/common/EventList";
+import { ToastContainer } from "react-toastify";
 
 function App() {
   const isAuthenticated = useContext(UserContext);
-  const authStatus = useContext(UserContext);
   const token = sessionStorage.getItem("tokenU");
 
   return (
-    <UserProvider>
+    
       <BrowserRouter>
+      <UserProvider>
         <Navbar />
+        <ToastContainer autoClose={3000}/>
         <Routes>
           {token || isAuthenticated ? (
             <>
@@ -49,11 +49,12 @@ function App() {
           <Route path="/tournament-search" element={<SearchTo />} />
           <Route path="/event-search" element={<SearchE />} />
           <Route path="/profile" element={<UserProfile />} />
-          <Route path="/events" element={<EventList />} />
+          <Route path="/profile/:name" element={<UserProfile />} />
         </Routes>
         <Footer />
+        </UserProvider>
       </BrowserRouter>
-    </UserProvider>
+    
   );
 }
 
