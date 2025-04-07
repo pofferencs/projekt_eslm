@@ -11,18 +11,21 @@ function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
   const navigate = useNavigate();
+  const [first, setFirst] = useState(true);
+   
 
   const { logout, isAuthenticated, authStatus, update, pageRefresh } = useContext(UserContext);
   const token = sessionStorage.getItem('tokenU');
   
   useEffect(()=>{
-    authStatus()
-    if(isAuthenticated == false) return;
+    
+    if(isAuthenticated === false) return;
 
     const interval = setInterval(()=>{
+      console.log(isAuthenticated)
       authStatus()
       //console.log(isAuthenticated)
-    }, 60000) //egyperces vizsgálat
+    }, 5000) //egyperces vizsgálat
       
     return ()=> clearInterval(interval);
     

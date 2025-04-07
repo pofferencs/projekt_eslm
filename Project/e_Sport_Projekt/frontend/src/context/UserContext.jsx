@@ -11,7 +11,7 @@ export const UserProvider = ({children})=>{
   const [refresh, setRefresh] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [profile, setProfile] = useState([]);
- 
+
   const authStatus = async () =>{
   
     
@@ -37,7 +37,6 @@ export const UserProvider = ({children})=>{
         
         setIsAuthenticated(false);
         logout();
-        navigate('/')
         update();
        
       }
