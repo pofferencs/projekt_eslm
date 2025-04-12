@@ -30,27 +30,31 @@ function App() {
       <UserProvider>
         <Navbar />
         <ToastContainer autoClose={3000}/>
-        <Routes>
-          {token || isAuthenticated ? (
-            <>
-              <Route path="/" element={<UserMain />} />
-              <Route path="*" element={<Navigate to="/" />} />
-            </>
-          ) : (
-            <>
-              <Route path="/" element={<LoggedOutMain />} />
-              <Route path="*" element={<Navigate to="/" />} />
-            </>
-          )}
-          <Route path="/register" element={<Register />} />
-          <Route path="/login" element={<UserLogin />} />
-          <Route path="/player-search" element={<SearchU />} />
-          <Route path="/team-search" element={<SearchTe />} />
-          <Route path="/tournament-search" element={<SearchTo />} />
-          <Route path="/event-search" element={<SearchE />} />
-          <Route path="/profile" element={<UserProfile />} />
-          <Route path="/profile/:name" element={<UserProfile />} />
-        </Routes>
+        <div className="flex flex-col min-h-screen">
+          <Routes>
+            
+            {token || isAuthenticated ? (
+              <>
+                <Route path="/" element={<UserMain />} />
+                <Route path="*" element={<Navigate to="/" />} />
+              </>
+            ) : (
+              <>
+                <Route path="/" element={<LoggedOutMain />} />
+                <Route path="*" element={<Navigate to="/" />} />
+              </>
+            )}
+            <Route path="/register" element={<Register />} />
+            <Route path="/login" element={<UserLogin />} />
+            <Route path="/player-search" element={<SearchU />} />
+            <Route path="/team-search" element={<SearchTe />} />
+            <Route path="/tournament-search" element={<SearchTo />} />
+            <Route path="/event-search" element={<SearchE />} />
+            <Route path="/profile" element={<UserProfile />} />
+            <Route path="/profile/:name" element={<UserProfile />} />
+            
+          </Routes>
+        </div>
         <Footer />
         </UserProvider>
       </BrowserRouter>

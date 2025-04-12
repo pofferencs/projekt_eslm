@@ -10,14 +10,16 @@ function Navbar() {
   // Állapotok a mobil és profil menü megnyitásához
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
+  const [picPath, setPicPath] = useState("");
   const navigate = useNavigate();
-  const [first, setFirst] = useState(true);
    
 
-  const { logout, isAuthenticated, authStatus, update, pageRefresh } = useContext(UserContext);
+  const { logout, isAuthenticated, authStatus, update, pageRefresh, profile } = useContext(UserContext);
   const token = sessionStorage.getItem('tokenU');
   
   useEffect(()=>{
+
+    authStatus()
     
     if(isAuthenticated === false) return;
 
@@ -30,6 +32,15 @@ function Navbar() {
     return ()=> clearInterval(interval);
     
 
+  },[isAuthenticated])
+
+  useEffect(()=>{
+
+    fetch(`${import.meta.env.VITE_BASE_URL}/user/userpic/${profile.id}`)
+            .then(res => res.json())
+            .then(adat => setPicPath(adat))
+            .catch(err => {console.log(err)});
+    console.log("refreshed navbar")
   },[isAuthenticated])
 
 
@@ -107,14 +118,22 @@ function Navbar() {
                 <div className="relative ml-3">
                   <button className="relative flex rounded-full bg-gray-800 text-sm focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800" onClick={() => setProfileMenuOpen(!profileMenuOpen)}>
                     <span className="sr-only">Open user menu</span>
-                    <img className="w-10 h-10 rounded-full object-cover" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e" alt="User Profile" />
+                    {
+                      (picPath != undefined)? (
+                        <img className="w-10 h-10 rounded-full object-cover" src={`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_BASE_PIC}${picPath}`} alt={profile.usr_name} />
+                      ):
+                      (
+                        <></>
+                      )
+                    }
                   </button>
                   {profileMenuOpen && (
                     <div className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5">
+                      <p className='flex justify-center text-black font-bold'>{profile.usr_name}</p>
                       <Link to="/profile" className="block px-4 py-2 text-sm text-gray-700">Profiladatok</Link>
                       <Link to="/teams" className="block px-4 py-2 text-sm text-gray-700">Csapataim</Link>
                       {(isAuthenticated || token) && (
-                        <button onClick={() => { toast.success("Kijelentkeztél!"); logout(); setTimeout(()=>{navigate('/'); pageRefresh()},5000) }} className="block px-4 py-2 text-sm text-gray-700">Kijelentkezés</button>
+                        <button onClick={() => { toast.success("Kijelentkeztél! Oldalfrissítés 5 másodperc múlva!"); logout(); setTimeout(()=>{navigate('/'); pageRefresh()},5000) }} className="block px-4 py-2 text-sm text-gray-700">Kijelentkezés</button>
                       )}
 
                     </div>

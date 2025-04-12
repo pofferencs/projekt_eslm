@@ -89,7 +89,7 @@ export const UserProvider = ({children})=>{
       .then(token => {
         if (!token.message) {
           sessionStorage.setItem('tokenU', token);
-          toast.success('Sikeres belépés!');
+          toast.success('Sikeres belépés! Oldalfrissítés 5 másodperc múlva!');
           setTimeout(()=>{navigate('/'); pageRefresh()},5000)
           
         } else {

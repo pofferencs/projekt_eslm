@@ -8,6 +8,7 @@ function UserProfile() {
   const {name} = useParams();
   const {isAuthenticated, profile} = useContext(UserContext);
   const [profileAdat, setProfileAdat] = useState({});
+  const [picPath, setPicPath] = useState("");
   const navigate = useNavigate(); 
 
 
@@ -33,12 +34,28 @@ function UserProfile() {
         })
         .catch(err=>alert(err));
       }
-
-    }else{
-      //navigate('/');
     }
 
   },[isAuthenticated]);
+
+  useEffect(()=>{
+
+    if(name == profile.usr_name){
+      navigate('/profile');
+    }
+
+
+  },[]);
+
+
+  useEffect(()=>{
+
+    fetch(`${import.meta.env.VITE_BASE_URL}/user/userpic/${profile.id}`)
+            .then(res => res.json())
+            .then(adat => setPicPath(adat))
+            .catch(err => {console.log(err)});
+    console.log("refreshed navbar")
+  },[isAuthenticated])
 
   const dateFormat = (date) =>{
 
@@ -76,7 +93,11 @@ function UserProfile() {
         
         ):
         (
-        <div>
+        <div className="m-10 card rounded-md bg-slate-500 sm:w-[200px] md:w-[800px] lg:w-[1000px] xl:w-[1200px] mx-auto text-primary-content">
+          <div className="card-body">
+            <div className="flex justify-start">
+              <img className="w-52" src={`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_BASE_PIC}${picPath}`}/>
+            </div>
           {
             ( profile.inviteable == true) ? (
               <p>Meghívható</p>
@@ -92,6 +113,7 @@ function UserProfile() {
           {
            (<p>{dateFormat(profile.date_of_birth)}</p>)
           }
+          </div>
         </div>
         )
       }
