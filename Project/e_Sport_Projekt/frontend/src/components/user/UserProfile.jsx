@@ -6,7 +6,7 @@ import UserContext from "../../context/UserContext";
 function UserProfile() {
 
   const {name} = useParams();
-  const {isAuthenticated, profile} = useContext(UserContext);
+  const {isAuthenticated, profile, isLoading} = useContext(UserContext);
   const [profileAdat, setProfileAdat] = useState({});
   const [picPath, setPicPath] = useState("");
   const navigate = useNavigate(); 
@@ -39,11 +39,15 @@ function UserProfile() {
   },[isAuthenticated]);
 
   useEffect(()=>{
+    console.log(isLoading)
 
     if(name == profile.usr_name){
       navigate('/profile');
     }
 
+    if(!isAuthenticated && isLoading == false){
+      navigate('/');
+    }
 
   },[]);
 
@@ -70,7 +74,7 @@ function UserProfile() {
   }
 
   return (
-    <div>
+    <div className="">
       {
         (name!=undefined)?(
         <div>
@@ -93,7 +97,7 @@ function UserProfile() {
         
         ):
         (
-        <div className="m-10 card rounded-md bg-slate-500 sm:w-[200px] md:w-[800px] lg:w-[1000px] xl:w-[1200px] mx-auto text-primary-content">
+        <div className="m-10 rounded-md bg-gray-600 sm:w-[200px] md:w-[800px] lg:w-[1000px] xl:w-[1200px] mx-auto text-primary-content">
           <div className="card-body">
             <div className="flex justify-start">
               <img className="w-52" src={`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_BASE_PIC}${picPath}`}/>

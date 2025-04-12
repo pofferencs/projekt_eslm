@@ -11,6 +11,7 @@ export const UserProvider = ({children})=>{
   const [refresh, setRefresh] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [profile, setProfile] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const authStatus = async () =>{
   
@@ -29,6 +30,7 @@ export const UserProvider = ({children})=>{
         
         setProfile(auth.user);
         setIsAuthenticated(true);
+        setIsLoading(false);
         update();
         
     
@@ -36,6 +38,7 @@ export const UserProvider = ({children})=>{
       } else {
         
         setIsAuthenticated(false);
+        setIsLoading(false);
         logout();
         update();
        
@@ -43,7 +46,7 @@ export const UserProvider = ({children})=>{
       
       
     })
-    .catch(err=>{console.log(err); setIsAuthenticated(false); logout(); update();});
+    .catch(err=>{console.log(err); setIsAuthenticated(false); setIsLoading(false); logout(); update();});
    
     
     
@@ -73,7 +76,7 @@ export const UserProvider = ({children})=>{
       
       return res.json();
     })
-    .then(data=> {setIsAuthenticated(false); sessionStorage.removeItem('tokenU'); update(); })
+    .then(data=> {setIsAuthenticated(false); setIsLoading(false); sessionStorage.removeItem('tokenU'); update(); })
     .catch(err=>{alert(err)});
   }
 
@@ -102,6 +105,7 @@ export const UserProvider = ({children})=>{
 
   const pageRefresh = () =>{
     window.location.reload();
+    window.scroll(0,0);
   }
 
 
@@ -114,7 +118,8 @@ export const UserProvider = ({children})=>{
     isAuthenticated,
     login,
     pageRefresh,
-    profile
+    profile,
+    isLoading
   }}>{children}</UserContext.Provider>
 }
 
