@@ -22,6 +22,7 @@ const userList = async (req, res) => {
         const users = await prisma.users.findMany({
             select:{
                 id: true,
+                discord_name: true,
                 inviteable: true,
                 full_name: true,
                 usr_name: true,
@@ -57,6 +58,7 @@ const userSearchByName = async (req, res) => {
             select:{
                 id: true,
                 inviteable: true,
+                discord_name: true,
                 full_name: true,
                 usr_name: true,
                 date_of_birth: true,
@@ -75,7 +77,7 @@ const userSearchByName = async (req, res) => {
 }
 
 const userUpdate = async (req, res) => {
-    const { id, full_name, new_usr_name, usr_name, paswrd, new_paswrd, school, new_email_address, phone_num, status } = req.body;
+    const { id, full_name, new_usr_name, usr_name, paswrd, new_paswrd, school, new_email_address, phone_num, status, discord_name } = req.body;
     try {
 
         let date = new Date();
@@ -103,6 +105,29 @@ const userUpdate = async (req, res) => {
 
 
         //Megadott adatok vizsgálata és update
+
+
+        //Egyéb adat módosítás esetén:
+
+        if(!new_email_address && !paswrd && !new_usr_name && !usr_name){
+
+
+            const modUser = await prisma.users.update({
+                where: {
+                    id: id
+                },
+                data: {
+                    full_name: full_name,
+                    school: school,
+                    phone_num: phone_num,
+                    status: status,
+                    discord_name: discord_name
+                }
+
+            });
+            return res.status(200).json({ message: "Sikeres adatfrissítés!" });
+        }
+
 
         //Email módosítás esetén:
 
@@ -138,7 +163,8 @@ const userUpdate = async (req, res) => {
                         email_address: trim_email,
                         email_last_mod_date: date,
                         phone_num: phone_num,
-                        status: status
+                        status: status,
+                        discord_name: discord_name
                     }
 
                 });
@@ -179,6 +205,7 @@ const userUpdate = async (req, res) => {
                         usna_last_mod_date: date,
                         usna_mod_num_remain: user.usna_mod_num_remain - 1,
                         school: school,
+                        discord_name: discord_name,
                         phone_num: phone_num,
                         status: status
                     }
@@ -247,6 +274,7 @@ const userUpdate = async (req, res) => {
                     paswrd: hashedPass,
                     school: school,
                     phone_num: phone_num,
+                    discord_name: discord_name,
                     status: status
                 }
             });
