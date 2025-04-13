@@ -122,16 +122,16 @@ function Navbar() {
                       )
                     }
                   </div>
-                <ul tabIndex={0} className="dropdown-content bg-white rounded-box z-1 w-52 p-2 shadow-sm">
-                <p className='flex justify-center text-black font-bold pb-2'>{profile.usr_name}</p>
+                <ul tabIndex={0} className="dropdown-content bg-slate-500 rounded-box z-1 w-52 p-2 shadow-sm">
+                <p className='flex justify-center text-white font-bold pb-2'>{profile.usr_name}</p>
                   <li>
-                    <Link to="/profile" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-700 hover:text-white rounded-lg">Profiladatok</Link>
+                    <Link to="/profile" onClick={()=>{window.scroll(0,0)}} className="block px-4 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white rounded-lg">Profiladatok</Link>
                   </li>
                   <li>
-                    <Link to="/teams" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-700 hover:text-white rounded-lg">Csapataim</Link>
+                    <Link to="/teams" className="block px-4 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white rounded-lg">Csapataim</Link>
                   </li>
                   {(isAuthenticated || token) && (
-                        <li><button onClick={() => { toast.success("Kijelentkeztél! Oldalfrissítés 5 másodperc múlva!"); logout(); setTimeout(()=>{navigate('/'); pageRefresh()},5000) }} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-700 hover:text-white w-full text-start rounded-lg">Kijelentkezés</button></li>
+                        <li><button onClick={() => { toast.success("Kijelentkeztél! Oldalfrissítés 5 másodperc múlva!"); logout(); setTimeout(()=>{navigate('/'); pageRefresh()},5000) }} className="block px-4 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white w-full text-start rounded-lg">Kijelentkezés</button></li>
                       )}
                 </ul>
                 </div>
