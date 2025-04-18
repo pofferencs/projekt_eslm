@@ -74,6 +74,36 @@ const userSearchByName = async (req, res) => {
     }
 }
 
+const userProfileSearchByName = async (req, res) => {
+    const { usr_name } = req.params;
+
+    if (!usr_name) return res.status(400).json({ message: "Hiányos adatok!" });
+
+    try {
+        const user = await prisma.users.findFirst({
+            where: {
+                usr_name: usr_name
+            },
+            select:{
+                id: true,
+                inviteable: true,
+                full_name: true,
+                usr_name: true,
+                date_of_birth: true,
+                school: true,
+                clss: true,
+                status: true,
+                email_address: true,
+                phone_num: true,
+            }
+        });
+        if (!user || usr_name === "") return res.status(404).json({ message: "Nincs ilyen felhasználó!" });
+        else return res.status(200).json(user);
+    } catch (error) {
+        return res.status(500).json(error);
+    }
+}
+
 const userUpdate = async (req, res) => {
     const { id, full_name, new_usr_name, usr_name, paswrd, new_paswrd, school, new_email_address, phone_num, status } = req.body;
     try {
@@ -573,5 +603,6 @@ module.exports = {
     isAuthenticated,
     userLogout,
     userSearchByName,
-    userGetPicturePath
+    userGetPicturePath,
+    userProfileSearchByName
 }
