@@ -476,8 +476,9 @@ const userLogin = async (req, res) => {
             secure: true,
             httpOnly: true,
             sameSite: 'none',
+            maxAge: 2400000 //40 perc
             //maxAge: 360000 //6 perc
-            maxAge: 360000 //fél perc
+            //maxAge: 360000 //fél perc
         });
 
         return res.status(200).json(token);
