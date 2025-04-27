@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const { validalasFuggveny, hianyzoAdatFuggveny } = require('../functions/conditions');
 const nodemailer = require('nodemailer');
+require('dotenv').config();
 
 
 
@@ -29,22 +30,92 @@ const nodemailer = require('nodemailer');
 
 // //signing({email: "emailecske@gmail.com", jelszo: "Nagyontitkosjelszo1@"})
 
-// const verify = (token)=>{
 
-//     try {
-//         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-//         console.log('Token érvényes, payload:', decoded);
-//       } catch (error) {
-//         if (error.name === 'TokenExpiredError') {
-//           console.log('A token lejárt!');
-//         } else {
-//           console.log('Hiba a token ellenőrzésekor:', error.message);
-//         }
-//       }
+//Email küldés jelszó visszaállításra
+const passEmailSend = async (req, res)=>{
 
-// };
+    const {email} = req.body;
 
-// verify('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImdlZG92aWNzMTZAZ21haWwuY29tIiwiamVsc3pvIjoiTmFneW9udGl0a29zamVsc3pvMUAiLCJpYXQiOjE3NDU3NzU1NDYsImV4cCI6MTc0NTc3NTY2Nn0.cCYLRFHFCRH8NuSwnVo03JEwyE0hv1QVqpkAj_H4sew');
+    if(!email){
+        return res.status(500).json({message: "Add meg az e-mail címet!"});
+    }
+
+    //Létezik-e a felhasználó?
+
+    const user = await prisma.users.findFirst({
+        where:{
+            email_address: email
+        }
+    });
+
+    if(!user){
+        return res.status(500).json({message: "Ilyen felhasználó nem regisztrált!"});
+    }
+
+
+    const token = jwt.sign({email: user.email_address}, process.env.JWT_SECRET, {expiresIn: "15m"});
+
+
+    const transporter = nodemailer.createTransport({
+        host: process.env.SMTP_HOST,
+        service: process.env.SMTP_SERVICE,
+        port: process.env.SMTP_PORT,
+        secure: true,
+        auth: {
+          user: process.env.EMAIL_ADDRESS,
+          pass: process.env.EMAIL_PASSWORD
+        },
+        tls:{
+          rejectUnauthorized: false,
+        }
+      })
+    
+      const mailOptions = {
+        from: process.env.EMAIL_ADDRESS,
+        to: user.email_address,
+        subject: "Jelszó visszaállítás",
+        text: `Szia! Ezen a linken tudod a jelszavadat visszaállítani: ${process.env.VITE_PASS_RESET_URL}?token=${token}`,
+        html: `
+        <h1>Jelszó visszaállítás</h1>
+        <p>Szia! Ezen a linken tudod a jelszavadat visszaállítani:</p>
+        <p>${process.env.VITE_PASS_RESET_URL}?token=${token}</p>
+        `,
+      };
+
+      try {
+
+        await transporter.sendMail(mailOptions);
+        return res.status(200).json({message: "Kiküldtük az e-mailt a megadott címre!"})
+    
+    
+        
+      } catch (error) {
+        return res.status(500).json({message: error.message});
+      }
+
+
+};
+
+const passEmailVerify = (req, res) =>{
+
+    const {token} = req.body;
+    
+        try {
+
+            const decoded = jwt.verify(token, process.env.JWT_SECRET);
+            return res.status(200).json({verified: true, data: decoded});
+
+          } catch (error) {
+            if (error.name === 'TokenExpiredError') {
+              return res.status(400).json({verified: false, message: 'A token lejárt!'});
+            } else if (error.name === 'JsonWebTokenError') {
+                return res.status(400).json({verified: false, message: 'Érvénytelen token!'});
+            }else {
+              return res.status(500).json('Hiba a token ellenőrzésekor:', error.message);
+            }
+          }
+    
+};
 
 
 
@@ -633,5 +704,7 @@ module.exports = {
     isAuthenticated,
     userLogout,
     userSearchByName,
-    userGetPicturePath
+    userGetPicturePath,
+    passEmailSend,
+    passEmailVerify
 }

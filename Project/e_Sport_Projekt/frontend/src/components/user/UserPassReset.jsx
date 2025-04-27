@@ -2,6 +2,7 @@ import { useLocation, useNavigate, useParams } from "react-router-dom"
 import Logo from "../../assets/logo.png";
 import { useContext, useEffect, useState } from "react";
 import UserContext from "../../context/UserContext";
+import { toast } from "react-toastify";
 
 function UserPassReset() {
 
@@ -11,8 +12,10 @@ function UserPassReset() {
     const queryParams = new URLSearchParams(location.search);
     const token = queryParams.get('token');
     
-
-    const [tokenEmail, setTokenEmail] = useState("");
+    const [isLoading, setIsLoading] = useState(true);
+    const [isEmail, setIsEmail] = useState(true);
+    const [tokenVerified, setTokenVerified] = useState(false);
+    const [tokenMessage, setTokenMessage] = useState("");
     
 
     useEffect(()=>{
@@ -21,39 +24,99 @@ function UserPassReset() {
             navigate('/');
         }
 
+        console.log({Email_form: isEmail, Pass_form: tokenVerified, tokenMessage: tokenMessage, token: token})
+
         if(!token == ""){
-            setTokenEmail(token);
-        }
+
+            fetch(`${import.meta.env.VITE_BASE_URL}/user/passemail-verify`,{
+                method: "POST",
+                headers: { "Content-type": "application/json" },
+                body: JSON.stringify({
+                    token: token
+                }),
+            }).then((res) => res.json())
+                  .then((token) => {
+                    console.log(token.verified)
+                    if(token.verified==true) {
+                        setTokenVerified(true);
+                        setIsEmail(false);
+                        setIsLoading(false);
+                    }else if(token.verified==false){
+                        setTokenMessage(token.message)
+                        setIsEmail(false);
+                        setTokenVerified(false);
+                        setIsLoading(false);
+                    }
+                  })
+                  .catch((err) => alert(err));
+              
+
+                    
+          };
         
-
-        console.log(token)
-
-    });
+    },[]);
 
 
-    const kuldes = (formData, method) => {
+    const kuldesEmail = (formData, method) => {
         
         console.log(formData)
+        fetch(`${import.meta.env.VITE_BASE_URL}/user/password-reset`,{
+            method: method,
+            headers: { "Content-type": "application/json" },
+            body: JSON.stringify(formData),
+        }).then((res) => res.json())
+              .then((token) => {
+                if(!token.ok) {
+                  
+                  toast.success(token.message)
+                }
+              })
+              .catch((err) => alert(err));          
+      };
+
+      const kuldesPass = (passData, method) => {
+        
+        console.log(passData)
           
           
       };
     
-      const onSubmit = (e) => {
+      const onSubmitEmail = (e) => {
         e.preventDefault();
-        kuldes(formData, "POST");
+        kuldesEmail(formData, "POST");
+      };
+
+      const onSubmitPass = (e) => {
+        e.preventDefault();
+        kuldesPass(passData, "POST");
       };
     
       let formObj = {
         email: ""
 
       };
+
+      let passObj = {
+        pass: "",
+        passAgain: ""
+
+      };
     
       const [formData, setFormData] = useState(formObj);
+      const [passData, setPassData] = useState(passObj);
     
-      const writeData = (e) => {
+      const writeDataEmail = (e) => {
         const { id, value } = e.target;
 
         setFormData((prevState)=>({...prevState, email: value}))
+
+
+      };
+
+      const writeDataPass = (e) => {
+        const { id, value } = e.target;
+
+        setPassData((prevState)=>({...prevState, email: value}))
 
 
       };
@@ -62,7 +125,12 @@ function UserPassReset() {
 
   return (
 
-    <section className="bg-gray-900 min-h-screen flex flex-col items-center px-6 py-10">
+    (isLoading == true) ? (
+        <p></p>
+
+    ):(
+
+        <section className="bg-gray-900 min-h-screen flex flex-col items-center px-6 py-10">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
         <img className="mx-auto h-20 w-auto" src={Logo} alt="Logo" />
           <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-indigo-700">
@@ -70,17 +138,17 @@ function UserPassReset() {
           </h2>
         </div>
         {
-            (tokenEmail == "") ? (
+            (isEmail == true) ? (
                 <div className="w-full rounded-lg shadow-lg md:mt-6 sm:max-w-2xl xl:p-0 bg-gray-800 dark:border-gray-700">
         <button className="btn mt-4 ml-4 bg-indigo-600 text-white hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" onClick={()=>{navigate('/login')}}>
             <img src="https://www.svgrepo.com/show/500472/back.svg" className="h-5"/>
         </button>
         <div className="p-8 md:p-10">
             <h2 className="text-2xl text-center font-bold">Kérjük, add meg az e-mail címedet!</h2>
-            <p className="text-center font-bold">A megerősítő link 15 percig lesz érvényes.</p>
+            <p className="text-center font-bold">A megerősítő link 15 percig lesz érvényes. <br/>Előfordulhat, hogy a "Spam" mappába kerül bele az e-mailünk.</p>
 
         <div className="mt-1 sm:mx-auto sm:w-full sm:max-w-sm" >
-            <form onSubmit={onSubmit}
+            <form onSubmit={onSubmitEmail}
               className="space-y-6 flex flex-col items-center"
               action="#"
               method="POST">
@@ -103,7 +171,7 @@ function UserPassReset() {
                     value={
                       formData.email_address
                     }
-                    onChange={writeData}
+                    onChange={writeDataEmail}
                     className="block w-full h-12 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm px-3 py-1.5 text-base outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
                   />
                 </div>
@@ -121,15 +189,97 @@ function UserPassReset() {
 
         </div>
         </div>
-            ) : (
-                <p>ha a token jó, és be van írva fent az url-ben, akkor itt megfelelő elemek fognak megjelenni</p>
+            ) :(
+                (tokenVerified == false)?(
+                    <p className="mt-5">{tokenMessage}</p>
+                ):(
+
+
+                    <div className="w-full rounded-lg shadow-lg md:mt-6 sm:max-w-2xl xl:p-0 bg-gray-800 dark:border-gray-700">
+        <div className="p-8 md:p-10">
+            <h2 className="text-2xl text-center font-bold">Kérjük, add meg az új jelszót!</h2>
+
+        <div className="mt-1 sm:mx-auto sm:w-full sm:max-w-sm" >
+            <form onSubmit={onSubmitPass}
+              className="space-y-6 flex flex-col items-center"
+              action="#"
+              method="POST">
+
+            <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+                <label
+                  htmlFor="email"
+                  className="block text-sm/7 font-medium text-white"
+                >
+                    Jelszó
+                </label>
+
+                <div className="mt-2">
+                  <input
+                    type="text"
+                    name="pass"
+                    id="pass"
+                    autoComplete="pass"
+                    required
+                    value={
+                      passData.pass
+                    }
+                    onChange={writeDataPass}
+                    className="block w-full h-12 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm px-3 py-1.5 text-base outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+                  />
+                </div>
+              </div>
+              <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+                <label
+                  htmlFor="email"
+                  className="block text-sm/7 font-medium text-white"
+                >
+                    Jelszó ismét
+                </label>
+
+                <div className="mt-2">
+                  <input
+                    type="text"
+                    name="passAgain"
+                    id="passAgain"
+                    autoComplete="passAgain"
+                    required
+                    value={
+                      passData.passAgain
+                    }
+                    onChange={writeDataPass}
+                    className="block w-full h-12 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm px-3 py-1.5 text-base outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+                  />
+                </div>
+              </div>
+
+                <button
+                  type="submit"
+                  className="btn w-full rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                >
+                  Küldés
+                </button>
+                
+            </form>
+            </div>
+
+        </div>
+        </div>
+                )
+
             )
+                
+                
+            
         }
           
 
           
         
       </section>
+
+    )
+
+    
   )
 }
 
