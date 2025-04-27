@@ -76,7 +76,7 @@ function Register() {
   };
 
   return (
-    <section className="bg-gray-900 min-h-screen flex flex-col justify-center items-center px-6 py-8">
+    <section className="bg-gray-900 min-h-screen flex flex-col justify-center items-center px-6 py-10">
       <div className="sm:w-full sm:max-w-md text-center">
         <img className="mx-auto h-20 w-auto" src={Logo} alt="Logo" />
         <h2 className="mt-6 text-3xl font-bold text-indigo-700">
@@ -90,7 +90,7 @@ function Register() {
             onSubmit={onSubmit}
           >
             {[
-              ["email_address", "Email cím", "email", "johndoe@taszi.hu"],
+              ["email_address", "E-mail cím", "email", "johndoe@taszi.hu"],
               ["paswrd", "Jelszó", "password", placeholderPass],
               ["usr_name", "Felhasználónév", "text", "johndoe"],
               ["full_name", "Teljes név", "text", "John Doe"],
@@ -152,7 +152,7 @@ function Register() {
               />
               <label
                 htmlFor="terms"
-                className="ml-2 text-sm text-gray-300"
+                className="ml-2 text-sm text-gray-300 font-bold"
               >
                 Elfogadom a
                 <a
@@ -161,16 +161,16 @@ function Register() {
                 >
                   {" "}
                   Felhasználási feltételeket
-                </a>
+                </a> !
               </label>
             </div>
             <button
               type="submit"
-              className="md:col-span-2 w-full text-white bg-indigo-600 hover:bg-indigo-700 focus:ring-4 focus:ring-indigo-400 font-medium rounded-lg text-sm px-5 py-2.5 shadow-md"
+              className="btn md:col-span-2 w-full text-white bg-indigo-600 hover:bg-indigo-700 focus:ring-4 focus:ring-indigo-400 font-medium rounded-lg text-sm px-5 py-2.5 shadow-md"
             >
               Regisztrálok
             </button>
-            <p className="md:col-span-2 text-sm text-gray-400 text-center">
+            <p className="md:col-span-2 text-sm text-gray-400 text-center font-bold">
               Van már fiókod?{" "}
               <Link to="/login" className="text-indigo-600 hover:underline">
                 Bejelentkezés

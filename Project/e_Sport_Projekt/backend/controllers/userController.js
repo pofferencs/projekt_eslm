@@ -3,17 +3,48 @@ const prisma = new PrismaClient();
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const { validalasFuggveny, hianyzoAdatFuggveny } = require('../functions/conditions');
+const nodemailer = require('nodemailer');
+
 
 
 // const passch = async (paswrd)=>{
 
-//     // const hashedPass = await bcrypt.hash(paswrd, 10);
-//     // console.log(hashedPass)
+//     const hashedPass = await bcrypt.hash(paswrd, 10);
+//     console.log(hashedPass)
 //     const nemtitkos = "$2a$10$tRn.12E7m4FSl22.NbeQp.rNMaqlSdwQjupC0Zkolk.oSD3AMUz.S"
 //     console.log(bcrypt.compareSync(paswrd, nemtitkos))
+// }
 
+// passch("Titkosjelszo1@")
+
+
+// //Példa tokenizálásra
+// const signing = (adat)=>{
+
+
+//     const token = jwt.sign(adat, process.env.JWT_SECRET, {expiresIn: '2m'});
+//     console.log(token);
 
 // }
+
+// //signing({email: "emailecske@gmail.com", jelszo: "Nagyontitkosjelszo1@"})
+
+// const verify = (token)=>{
+
+//     try {
+//         const decoded = jwt.verify(token, process.env.JWT_SECRET);
+//         console.log('Token érvényes, payload:', decoded);
+//       } catch (error) {
+//         if (error.name === 'TokenExpiredError') {
+//           console.log('A token lejárt!');
+//         } else {
+//           console.log('Hiba a token ellenőrzésekor:', error.message);
+//         }
+//       }
+
+// };
+
+// verify('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImdlZG92aWNzMTZAZ21haWwuY29tIiwiamVsc3pvIjoiTmFneW9udGl0a29zamVsc3pvMUAiLCJpYXQiOjE3NDU3NzU1NDYsImV4cCI6MTc0NTc3NTY2Nn0.cCYLRFHFCRH8NuSwnVo03JEwyE0hv1QVqpkAj_H4sew');
 
 
 

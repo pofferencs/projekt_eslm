@@ -19,6 +19,7 @@ import Footer from "./components/common/Footer";
 import Register from "./components/loggedout/Register";
 import UserProfile from "./components/user/UserProfile";
 import { ToastContainer } from "react-toastify";
+import UserPassReset from "./components/user/UserPassReset";
 
 function App() {
   const isAuthenticated = useContext(UserContext);
@@ -45,6 +46,7 @@ function App() {
             )}
             <Route path="/register" element={<Register />} />
             <Route path="/login" element={<UserLogin />} />
+            <Route path="/password-reset" element={<UserPassReset />} />
             <Route path="/player-search" element={<SearchU />} />
             <Route path="/team-search" element={<SearchTe />} />
             <Route path="/tournament-search" element={<SearchTo />} />
