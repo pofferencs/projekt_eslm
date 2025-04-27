@@ -16,6 +16,8 @@ function UserPassReset() {
     const [isEmail, setIsEmail] = useState(true);
     const [tokenVerified, setTokenVerified] = useState(false);
     const [tokenMessage, setTokenMessage] = useState("");
+    const [email, setEmail] = useState("");
+    const [id, setId] = useState(0);
     
 
     useEffect(()=>{
@@ -24,7 +26,7 @@ function UserPassReset() {
             navigate('/');
         }
 
-        console.log({Email_form: isEmail, Pass_form: tokenVerified, tokenMessage: tokenMessage, token: token})
+        
 
         if(!token == ""){
 
@@ -40,6 +42,8 @@ function UserPassReset() {
                     if(token.verified==true) {
                         setTokenVerified(true);
                         setIsEmail(false);
+                        setEmail(token.data.email);
+                        setId(token.id);
                         setIsLoading(false);
                     }else if(token.verified==false){
                         setTokenMessage(token.message)
@@ -50,9 +54,12 @@ function UserPassReset() {
                   })
                   .catch((err) => alert(err));
               
-
+                  
                     
           };
+          setIsLoading(false);
+
+          //console.log({Email_form: isEmail, Pass_form: tokenVerified, tokenMessage: tokenMessage, email: email, isloading: isLoading})
         
     },[]);
 
@@ -71,13 +78,42 @@ function UserPassReset() {
                   toast.success(token.message)
                 }
               })
-              .catch((err) => alert(err));          
+              .catch((err) => alert(err));
       };
 
       const kuldesPass = (passData, method) => {
         
-        console.log(passData)
-          
+        const {pass, passAgain} = passData;
+
+        if(pass == passAgain){
+
+            fetch(`${import.meta.env.VITE_BASE_URL}/update/user`,{
+                method: method,
+                headers: { "Content-type": "application/json" },
+                body: JSON.stringify({
+                    id: id,
+                    new_paswrd: pass
+                }),
+            }).then(async (res) => {
+                const data = await res.json();
+                if(!res.ok){
+                    
+                    toast.error(data.message);
+                }else{
+                    navigate('/login');
+                    toast.success(data.message);
+                }
+    
+                
+    
+            }).catch((err) => alert(err));
+
+        }else{
+            toast.error("A jelszavak nem egyeznek!");
+        }
+
+        
+            
           
       };
     
@@ -88,7 +124,7 @@ function UserPassReset() {
 
       const onSubmitPass = (e) => {
         e.preventDefault();
-        kuldesPass(passData, "POST");
+        kuldesPass(passData, "PATCH");
       };
     
       let formObj = {
@@ -114,9 +150,9 @@ function UserPassReset() {
       };
 
       const writeDataPass = (e) => {
-        const { id, value } = e.target;
-
-        setPassData((prevState)=>({...prevState, email: value}))
+        setPassData((prevState)=>({...prevState, 
+            [e.target.id]: e.target.value,
+        }))
 
 
       };
@@ -145,7 +181,7 @@ function UserPassReset() {
         </button>
         <div className="p-8 md:p-10">
             <h2 className="text-2xl text-center font-bold">Kérjük, add meg az e-mail címedet!</h2>
-            <p className="text-center font-bold">A megerősítő link 15 percig lesz érvényes. <br/>Előfordulhat, hogy a "Spam" mappába kerül bele az e-mailünk.</p>
+            <p className="text-center font-bold">A megerősítő link 15 percig lesz érvényes. <br/>Előfordulhat, hogy a "Spam" mappába kerül az e-mailünk.</p>
 
         <div className="mt-1 sm:mx-auto sm:w-full sm:max-w-sm" >
             <form onSubmit={onSubmitEmail}
