@@ -43,6 +43,8 @@ function UserProfile() {
         })
         .catch(err=>alert(err));
       }
+    }else if(!isAuthenticated){
+      navigate('/');
     }
 
   },[isAuthenticated]);
@@ -52,11 +54,6 @@ function UserProfile() {
     if(name == profile.usr_name){
       navigate('/profile');
     }
-
-    if(!isAuthenticated && isLoading == false){
-      navigate('/');
-    }
-
   },[]);
 
 
@@ -68,6 +65,10 @@ function UserProfile() {
             .then(res => res.json())
             .then(adat => setPicPath(adat))
             .catch(err => {console.log(err)});
+    }
+
+    if(!isAuthenticated){
+      navigate('/');
     }
 
     

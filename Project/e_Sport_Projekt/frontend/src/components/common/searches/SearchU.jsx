@@ -6,14 +6,13 @@ import { useNavigate } from "react-router-dom";
 
 
 function SearchU() {
-  const token = sessionStorage.getItem("tokenU");
   const [searchInput, setSearchInput] = useState("");
   const [result, setResult] = useState([]);
   const {isAuthenticated} = useContext(UserContext);
   const navigate = useNavigate();
 
   useEffect(() => {
-      if (!isAuthenticated || !token) {
+      if (!isAuthenticated) {
         navigate("/");
       }
     });

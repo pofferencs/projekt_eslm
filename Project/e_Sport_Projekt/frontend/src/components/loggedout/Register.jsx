@@ -8,10 +8,10 @@ import { Link } from "react-router-dom";
 function Register() {
   const navigate = useNavigate();
   const { authStatus, login, isAuthenticated, pageRefresh } = useContext(UserContext);
-  const token = sessionStorage.getItem("tokenU");
+  //const token = sessionStorage.getItem("tokenU");
 
     useEffect(() => {
-      if (isAuthenticated || token) {
+      if (isAuthenticated) {
         navigate("/");
       }
     });
@@ -30,7 +30,7 @@ function Register() {
           toast.error(token.message)
         }else{
           navigate("/login");
-          sessionStorage.setItem("tokenU", token);
+          //sessionStorage.setItem("tokenU", token);
           toast.success("Sikeres regisztráció!");
           
         }

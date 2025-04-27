@@ -7,11 +7,16 @@ import { toast } from "react-toastify";
 function UserLogin() {
   const navigate = useNavigate();
   const { isAuthenticated, authStatus, login } = useContext(UserContext);
-  const token = sessionStorage.getItem("tokenU");
+  const [showPass, isShowPass] = useState(false);
+  const [type, setType] = useState('password');
+
+  const showHidePass = ()=>{
+    isShowPass(prev=> !prev);
+  }
 
   //Ezzel akadályozzuk meg, hogy a login felület ne jelenjen meg akkor, ha már be vagy jelentkezve, hahaha
   useEffect(() => {
-    if (isAuthenticated || token) {
+    if (isAuthenticated) {
       navigate("/");
     }
   });
@@ -52,8 +57,8 @@ function UserLogin() {
 
   const writeData = (e) => {
     const { id, value } = e.target;
-    console.log(formDataEmail);
-    console.log(formDataUsername);
+    // console.log(formDataEmail);
+    // console.log(formDataUsername);
   
     // Ha email vagy felhasználónevet gépelünk
     if (id === "email_or_username") {
@@ -153,17 +158,25 @@ function UserLogin() {
                   </a>
                 </div>
               </div>
-              <div className="mt-2">
+              <div className="mt-2 flex flex-row">
                 <input
-                  type="password"
+                  type={type}
                   name="password"
                   id="password"
                   autoComplete="current-password"
                   required
                   value={formDataUsername.paswrd && formDataEmail.paswrd}
                   onChange={writeData}
-                  className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+                  className="block w-full rounded-md rounded-r-none bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
                 />
+                {
+                  (!showPass) ? (
+                    <button className="btn border-none bg-white hover:bg-slate-300 active:bg-slate-500 rounded-l-none" type="button" onClick={()=>{showHidePass(); setType('text')}}><img className="w-5" src="https://www.svgrepo.com/show/522528/eye.svg"/></button>
+                  ):
+                  (
+                    <button className="btn border-none bg-white hover:bg-slate-300 active:bg-slate-500 rounded-l-none" type="button" onClick={()=>{showHidePass(); setType('password')}}><img className="w-5" src="https://www.svgrepo.com/show/522530/eye-off.svg"/></button>
+                  )
+                }
               </div>
             </div>
 

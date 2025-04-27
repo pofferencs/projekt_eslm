@@ -52,13 +52,6 @@ export const UserProvider = ({children})=>{
     
   }
 
-  // useEffect(()=>{
-
-  //     authStatus()
-
-
-  // },[])
-
   const update = ()=>{
     setRefresh(prev=>!prev);
   }
@@ -91,7 +84,6 @@ export const UserProvider = ({children})=>{
       .then(res => res.json())
       .then(token => {
         if (!token.message) {
-          sessionStorage.setItem('tokenU', token);
           toast.success('Sikeres belépés! Oldalfrissítés 5 másodperc múlva!');
           setTimeout(()=>{navigate('/'); pageRefresh()},5000)
           

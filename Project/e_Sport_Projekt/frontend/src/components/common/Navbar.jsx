@@ -2,7 +2,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import UserContext from '../../context/UserContext';
 import { useContext, useEffect } from 'react';
 import Logo from '../../assets/logo.png';
-
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 
@@ -15,22 +14,10 @@ function Navbar() {
    
 
   const { logout, isAuthenticated, authStatus, update, pageRefresh, profile } = useContext(UserContext);
-  const token = sessionStorage.getItem('tokenU');
   
   useEffect(()=>{
 
     authStatus()
-    
-    if(isAuthenticated === false) return;
-
-    const interval = setInterval(()=>{
-      console.log(isAuthenticated)
-      authStatus()
-      //console.log(isAuthenticated)
-    }, 5000) //egyperces vizsgálat
-      
-    return ()=> clearInterval(interval);
-    
 
   },[isAuthenticated])
 
@@ -40,7 +27,7 @@ function Navbar() {
             .then(res => res.json())
             .then(adat => setPicPath(adat))
             .catch(err => {console.log(err)});
-    console.log("refreshed navbar")
+            //console.log("refreshed navbar")
   },[isAuthenticated])
 
 
@@ -109,7 +96,7 @@ function Navbar() {
 
             </div>
 
-            {(isAuthenticated || !(token==null)) ? (
+            {(isAuthenticated) ? (
 
                 <div className="dropdown dropdown-bottom dropdown-left">
                 <div tabIndex={0} role="button">
@@ -130,7 +117,7 @@ function Navbar() {
                   <li>
                     <Link to="/teams" className="block px-4 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white rounded-lg">Csapataim</Link>
                   </li>
-                  {(isAuthenticated || token) && (
+                  {(isAuthenticated) && (
                         <li><button onClick={() => { toast.success("Kijelentkeztél! Oldalfrissítés 5 másodperc múlva!"); logout(); setTimeout(()=>{navigate('/'); pageRefresh()},5000) }} className="block px-4 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white w-full text-start rounded-lg">Kijelentkezés</button></li>
                       )}
                 </ul>

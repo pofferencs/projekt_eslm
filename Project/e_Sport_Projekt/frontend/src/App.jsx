@@ -10,7 +10,7 @@ import {
 } from "react-router-dom";
 import UserContext from "./context/UserContext";
 import { UserProvider } from "./context/UserContext";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import SearchU from "./components/common/searches/SearchU";
 import SearchTe from "./components/common/searches/SearchTe";
 import SearchTo from "./components/common/searches/SearchTo";
@@ -22,7 +22,6 @@ import { ToastContainer } from "react-toastify";
 
 function App() {
   const isAuthenticated = useContext(UserContext);
-  const token = sessionStorage.getItem("tokenU");
 
   return (
     
@@ -33,7 +32,7 @@ function App() {
         <div className="flex flex-col min-h-screen">
           <Routes>
             
-            {token || isAuthenticated ? (
+            { (isAuthenticated) ? (
               <>
                 <Route path="/" element={<UserMain />} />
                 <Route path="*" element={<Navigate to="/" />} />
