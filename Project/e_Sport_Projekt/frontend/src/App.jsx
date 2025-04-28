@@ -29,7 +29,7 @@ function App() {
       <BrowserRouter>
       <UserProvider>
         <Navbar />
-        <ToastContainer autoClose={3000}/>
+        <ToastContainer autoClose={3000} />
         <div className="flex flex-col min-h-screen">
           <Routes>
             

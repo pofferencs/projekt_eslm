@@ -41,16 +41,16 @@ function UserProfile() {
         })
         .catch(err=>alert(err));
       }
+      
     
   },[isAuthenticated]);
 
   useEffect(()=>{
-    
 
     if(!name){
       fetch(`${import.meta.env.VITE_BASE_URL}/user/userpic/${profile.id}`)
             .then(res => res.json())
-            .then(adat => setPicPath(adat))
+            .then(adat => {setPicPath(adat); setIsLoading(false)})
             .catch(err => {console.log(err)});
     }
 
@@ -58,9 +58,17 @@ function UserProfile() {
     if(name == profile.usr_name){
       navigate(`/profile`);
     }
+   
     
     console.log("refreshed navbar")
   },[isAuthenticated])
+
+  useEffect(()=>{
+    if(isAuthenticated==false && !name){
+      navigate('/');
+    }
+
+  },[profileAdat])
 
   const dateFormat = (date) =>{
 
@@ -151,7 +159,12 @@ function UserProfile() {
 
 
   return (
-    <div className="">
+    (isLoading!=false)?
+    (
+      <></>
+
+    ):(
+      <div className="">
       {
         (name!=undefined)?(
           <div className="m-10 rounded-md bg-gradient-to-br from-indigo-950 to-slate-500 sm:w-[600px] md:w-[800px] lg:w-[1000px] xl:w-[1200px] mx-auto text-primary-content">
@@ -405,6 +418,7 @@ function UserProfile() {
         )
       }
     </div>
+    )
   )
 }
 
