@@ -45,14 +45,6 @@ function UserProfile() {
   },[isAuthenticated]);
 
   useEffect(()=>{
-
-    if(name == profile.usr_name){
-      navigate('/profile');
-    }
-  },[]);
-
-
-  useEffect(()=>{
     
 
     if(!name){
@@ -62,6 +54,10 @@ function UserProfile() {
             .catch(err => {console.log(err)});
     }
 
+
+    if(name == profile.usr_name){
+      navigate(`/profile`);
+    }
     
     console.log("refreshed navbar")
   },[profileAdat])
