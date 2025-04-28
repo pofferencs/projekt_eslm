@@ -111,7 +111,8 @@ export const UserProvider = ({children})=>{
     login,
     pageRefresh,
     profile,
-    isLoading
+    isLoading,
+    setIsLoading
   }}>{children}</UserContext.Provider>
 }
 

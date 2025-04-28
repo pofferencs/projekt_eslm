@@ -7,7 +7,7 @@ import { toast } from "react-toastify";
 function UserProfile() {
 
   const {name} = useParams();
-  const {isAuthenticated, profile, isLoading} = useContext(UserContext);
+  const {isAuthenticated, profile, isLoading, setIsLoading} = useContext(UserContext);
   const [profileAdat, setProfileAdat] = useState({});
   const [picPath, setPicPath] = useState("");
   const [isForm, setIsForm] = useState(false);
@@ -16,8 +16,6 @@ function UserProfile() {
   
 
   useEffect(()=>{
-
-    if(isAuthenticated){
 
       if(name != undefined){
         fetch(`${import.meta.env.VITE_BASE_URL}/list/unamesearch/${name}`, {
@@ -34,7 +32,7 @@ function UserProfile() {
           setPicPath(
             fetch(`${import.meta.env.VITE_BASE_URL}/user/userpic/${adat[0].id}`)
             .then(res => res.json())
-            .then(adat => setPicPath(adat))
+            .then(adat => {setPicPath(adat); setIsLoading(false);})
             .catch(err => {console.log(err)})
           )
         }else{
@@ -43,10 +41,7 @@ function UserProfile() {
         })
         .catch(err=>alert(err));
       }
-    }else if(!isAuthenticated){
-      navigate('/');
-    }
-
+    
   },[isAuthenticated]);
 
   useEffect(()=>{
@@ -65,10 +60,6 @@ function UserProfile() {
             .then(res => res.json())
             .then(adat => setPicPath(adat))
             .catch(err => {console.log(err)});
-    }
-
-    if(!isAuthenticated){
-      navigate('/');
     }
 
     
@@ -178,7 +169,11 @@ function UserProfile() {
                 ( profileAdat.inviteable == true) ? (
                   <div>
                   <p className="text-green-500 text-lg">Meghívható</p>
-                  <button className="btn mt-3 text-white">Meghívás csapatba</button>
+                  {(isAuthenticated==true)?(
+                    <button className="btn mt-3 text-white">Meghívás csapatba</button>
+                  ):(
+                    <p></p>
+                  )}
                   </div>
                 ):
                 ( profileAdat.inviteable == false)? (

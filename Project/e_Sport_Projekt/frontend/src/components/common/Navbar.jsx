@@ -75,14 +75,7 @@ function Navbar() {
                 <div className='dropdown'>
                   <div tabIndex={0} role='button' className='rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white'>Keresők...</div>
                   <ul tabIndex={0} className='dropdown-content menu bg-slate-500 rounded-box z-1 w-52 p-2 shadow-sm'>
-
-                  {
-                  (isAuthenticated)?(
-                    <li><Link to="/player-search" className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Játékos kereső</Link></li>
-                  ):
-                  (<></>)
-                }
-                  
+                  <li><Link to="/player-search" className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Játékos kereső</Link></li>
                   <li><Link to="/team-search" className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Csapat kereső</Link></li>
                   <li><Link to="/tournament-search" className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Verseny kereső</Link></li>
                   <li><Link to="/event-search" className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Esemény kereső</Link></li>

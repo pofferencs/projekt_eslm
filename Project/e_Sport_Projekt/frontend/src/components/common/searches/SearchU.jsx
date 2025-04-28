@@ -11,12 +11,7 @@ function SearchU() {
   const {isAuthenticated} = useContext(UserContext);
   const navigate = useNavigate();
 
-  useEffect(() => {
-      if (!isAuthenticated) {
-        navigate("/");
-      }
-    });
-
+  
   const onSubmit = (e) => {
     e.preventDefault();
 

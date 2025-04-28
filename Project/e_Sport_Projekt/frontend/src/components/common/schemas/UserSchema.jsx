@@ -1,10 +1,12 @@
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom";
+import UserContext from "../../../context/UserContext";
 
 
 function UserSchema({ user }) {
     const navigate = useNavigate();
     const [userPicPath, setUserPicPath] = useState("https://images.unsplash.com/photo-1472099645785-5658abf4ff4e")
+    const {isAuthenticated} = useContext(UserContext);
 
     useEffect(() => {    
         fetch(`${import.meta.env.VITE_BASE_URL}/user/userpic/${user.id}`)
@@ -52,15 +54,23 @@ function UserSchema({ user }) {
 
                 <div className="card-actions justify-start drop-shadow-lg">
                     {
-                        (user.status == "inactive" || user.inviteable === false) ? (<button className="btn btn-ghost" onClick={()=>{navigate(`/profile/${user.usr_name}`); window.scroll(0,0)}}>További adatok...</button>) :
+                        ((user.status == "inactive" || user.inviteable === false)) ? (
+                        
+                        <button className="btn btn-ghost" onClick={()=>{navigate(`/profile/${user.usr_name}`); window.scroll(0,0)}}>További adatok...</button>) :
 
                             (
                                 <>
-                                    <button className="btn btn-primary">Meghívás csapatba</button>
                                     <button className="btn btn-ghost" onClick={()=>{navigate(`/profile/${user.usr_name}`); window.scroll(0,0)}}>További adatok...</button>
+                                    {
+                                    (isAuthenticated)?
+
+                                    (<button className="btn btn-primary">Meghívás csapatba</button>)
+                                    : 
+                                    (<p></p>)
+                                    
+                                    }       
                                 </>
                             )
-
                     }
                 </div>
             </div>
