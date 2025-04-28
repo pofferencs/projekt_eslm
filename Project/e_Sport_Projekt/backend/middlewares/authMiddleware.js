@@ -7,11 +7,12 @@ const protectUser = async (req, res, next) =>{
     let tokenU;
 
         //Token a loginból/regisztrációból
-    //console.log(req.cookies.token);
-
+    //console.log(req.cookies.tokenU);
+    // console.log(req.cookies)
 
     //req.headers.authorization && req.headers.authorization.startsWith('Bearer') ||
     if( req.cookies.tokenU){
+        
 
         try {
             if(req.cookies.tokenU){
@@ -30,11 +31,24 @@ const protectUser = async (req, res, next) =>{
             req.user = await prisma.users.findFirst({
                 where:{
                     id: unameFromtoken.id
+                }, select:{
+                    id: true,
+                    inviteable: true,
+                    full_name: true,
+                    usr_name: true,
+                    date_of_birth: true,
+                    school: true,
+                    clss: true,
+                    status: true,
+                    email_address: true,
+                    phone_num: true,
+                    om_identifier: true
                 }
             });
             next();
             
         } catch (error) {
+            res.clearCookie('tokenU');
             return res.status(401).json({message:error.message});
         }
 
@@ -86,6 +100,16 @@ const protectOgr = async (req, res, next) =>{
             req.organizer = await prisma.organizers.findFirst({
                 where:{
                     id: unameFromtoken.id
+                }, select:{
+                    id: true,
+                    full_name: true,
+                    usr_name: true,
+                    date_of_birth: true,
+                    school: true,
+                    status: true,
+                    email_address: true,
+                    phone_num: true,
+                    om_identifier: true
                 }
             });
             next();

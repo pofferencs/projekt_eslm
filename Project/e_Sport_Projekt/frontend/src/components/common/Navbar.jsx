@@ -1,23 +1,39 @@
 import { Link, useNavigate } from 'react-router-dom';
 import UserContext from '../../context/UserContext';
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import Logo from '../../assets/logo.png';
-
 import { useState } from 'react';
+import { toast } from 'react-toastify';
 
 function Navbar() {
   // Állapotok a mobil és profil menü megnyitásához
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
-
+  const [picPath, setPicPath] = useState("");
   const navigate = useNavigate();
-  const { logout, isAuthenticated, authStatus, update } = useContext(UserContext);
-  const token = sessionStorage.getItem('tokenU');
+   
 
+  const { logout, isAuthenticated, authStatus, update, pageRefresh, profile } = useContext(UserContext);
+  
+  useEffect(()=>{
+
+    authStatus()
+
+  },[isAuthenticated])
+
+  useEffect(()=>{
+
+    fetch(`${import.meta.env.VITE_BASE_URL}/user/userpic/${profile.id}`)
+            .then(res => res.json())
+            .then(adat => setPicPath(adat))
+            .catch(err => {console.log(err)});
+            //console.log("refreshed navbar")
+  },[isAuthenticated])
 
 
   return (
     <div>
+      {/* <ToastContainer /> */}
       {/* Fő navigációs sáv */}
       <nav className="bg-gray-800">
         <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
@@ -56,13 +72,12 @@ function Navbar() {
                   <Link to="/" className="rounded-md bg-gray-900 px-3 py-2 text-sm font-medium text-white">Főoldal</Link>
                   <Link to="/events" className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Események</Link>
 
-                <div className='dropdown dropdown-start'>
+                <div className='dropdown'>
                   <div tabIndex={0} role='button' className='rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white'>Keresők...</div>
                   <ul tabIndex={0} className='dropdown-content menu bg-slate-500 rounded-box z-1 w-52 p-2 shadow-sm'>
-
                   <li><Link to="/player-search" className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Játékos kereső</Link></li>
                   <li><Link to="/team-search" className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Csapat kereső</Link></li>
-                  <li><Link to="/tournament-search" className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Meccs kereső</Link></li>
+                  <li><Link to="/tournament-search" className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Verseny kereső</Link></li>
                   <li><Link to="/event-search" className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Esemény kereső</Link></li>
                   </ul>
                   </div>
@@ -74,29 +89,32 @@ function Navbar() {
 
             </div>
 
-            {(isAuthenticated || token) ? (
+            {(isAuthenticated) ? (
 
-              /* Profil ikon */
-              <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-
-                {/* Profil gomb és lenyíló menü */}
-                <div className="relative ml-3">
-                  <button className="relative flex rounded-full bg-gray-800 text-sm focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800" onClick={() => setProfileMenuOpen(!profileMenuOpen)}>
-                    <span className="sr-only">Open user menu</span>
-                    <img className="w-10 h-10 rounded-full object-cover" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e" alt="User Profile" />
-                  </button>
-                  {profileMenuOpen && (
-                    <div className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5">
-                      <Link to="/profile" className="block px-4 py-2 text-sm text-gray-700">Profiladatok</Link>
-                      <Link to="/teams" className="block px-4 py-2 text-sm text-gray-700">Csapataim</Link>
-                      {(isAuthenticated || token) && (
-                        <button onClick={() => { logout(token); sessionStorage.removeItem('tokenU'); navigate('/'); window.location.reload(); }} className="block px-4 py-2 text-sm text-gray-700">Kijelentkezés</button>
+                <div className="dropdown dropdown-bottom dropdown-left">
+                <div tabIndex={0} role="button">
+                {
+                      (picPath != undefined)? (
+                        <img className="w-10 h-10 rounded-full object-cover" src={`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_BASE_PIC}${picPath}`} alt={profile.usr_name} />
+                      ):
+                      (
+                        <></>
+                      )
+                    }
+                  </div>
+                <ul tabIndex={0} className="dropdown-content bg-slate-500 rounded-box z-1 w-52 p-2 shadow-sm">
+                <p className='flex justify-center text-white font-bold pb-2'>{profile.usr_name}</p>
+                  <li>
+                    <Link to="/profile" onClick={()=>{window.scroll(0,0)}} className="block px-4 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white rounded-lg">Profiladatok</Link>
+                  </li>
+                  <li>
+                    <Link to="/teams" className="block px-4 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white rounded-lg">Csapataim</Link>
+                  </li>
+                  {(isAuthenticated) && (
+                        <li><button onClick={() => { toast.success("Kijelentkeztél! Oldalfrissítés 5 másodperc múlva!"); logout(); setTimeout(()=>{navigate('/'); pageRefresh()},5000) }} className="block px-4 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white w-full text-start rounded-lg">Kijelentkezés</button></li>
                       )}
-
-                    </div>
-                  )}
+                </ul>
                 </div>
-              </div>
 
             ) : (
               <div>
