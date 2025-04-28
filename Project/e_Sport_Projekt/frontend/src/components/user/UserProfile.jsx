@@ -60,7 +60,7 @@ function UserProfile() {
     }
     
     console.log("refreshed navbar")
-  },[profileAdat])
+  },[isAuthenticated])
 
   const dateFormat = (date) =>{
 
