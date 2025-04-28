@@ -3,17 +3,153 @@ const prisma = new PrismaClient();
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const { validalasFuggveny, hianyzoAdatFuggveny } = require('../functions/conditions');
+const nodemailer = require('nodemailer');
+require('dotenv').config();
+
+
+
+// const passch = async (paswrd)=>{
+
+//     const hashedPass = await bcrypt.hash(paswrd, 10);
+//     console.log(hashedPass)
+//     const nemtitkos = "$2a$10$tRn.12E7m4FSl22.NbeQp.rNMaqlSdwQjupC0Zkolk.oSD3AMUz.S"
+//     console.log(bcrypt.compareSync(paswrd, nemtitkos))
+// }
+
+// passch("Titkosjelszo1@")
+
+
+// //Példa tokenizálásra
+// const signing = (adat)=>{
+
+
+//     const token = jwt.sign(adat, process.env.JWT_SECRET, {expiresIn: '2m'});
+//     console.log(token);
+
+// }
+
+// //signing({email: "emailecske@gmail.com", jelszo: "Nagyontitkosjelszo1@"})
+
+
+//Email küldés jelszó visszaállításra
+const passEmailSend = async (req, res)=>{
+
+    const {email} = req.body;
+
+    if(!email){
+        return res.status(500).json({message: "Add meg az e-mail címet!"});
+    }
+
+    //Létezik-e a felhasználó?
+
+    const user = await prisma.users.findFirst({
+        where:{
+            email_address: email
+        }
+    });
+
+    if(!user){
+        return res.status(500).json({message: "Ilyen felhasználó nem regisztrált!"});
+    }
+
+
+    const token = jwt.sign({email: user.email_address}, process.env.JWT_SECRET, {expiresIn: "15m"});
+
+
+    const transporter = nodemailer.createTransport({
+        host: process.env.SMTP_HOST,
+        service: process.env.SMTP_SERVICE,
+        port: process.env.SMTP_PORT,
+        secure: true,
+        auth: {
+          user: process.env.EMAIL_ADDRESS,
+          pass: process.env.EMAIL_PASSWORD
+        },
+        tls:{
+          rejectUnauthorized: false,
+        }
+      })
+    
+      const mailOptions = {
+        from: process.env.EMAIL_ADDRESS,
+        to: user.email_address,
+        subject: "Jelszó visszaállítás",
+        text: `Szia! Ezen a linken tudod a jelszavadat visszaállítani: ${process.env.VITE_PASS_RESET_URL}?token=${token}`,
+        html: `
+        <h1>Jelszó visszaállítás</h1>
+        <p>Szia! Ezen a linken tudod a jelszavadat visszaállítani:</p>
+        <p>${process.env.VITE_PASS_RESET_URL}?token=${token}</p>
+        `,
+      };
+
+      try {
+
+        await transporter.sendMail(mailOptions);
+        return res.status(200).json({message: "Kiküldtük az e-mailt a megadott címre!"})
+    
+    
+        
+      } catch (error) {
+        return res.status(500).json({message: error.message});
+      }
+
+
+};
+
+const passEmailVerify = async (req, res) =>{
+
+    const {token} = req.body;
+    
+        try {
+
+            const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+            const user =  await prisma.users.findFirst({
+                where: {
+                    email_address: decoded.email
+                }
+            })
+
+
+            return res.status(200).json({verified: true, data: decoded, id: user.id});
+
+          } catch (error) {
+            if (error.name === 'TokenExpiredError') {
+              return res.status(400).json({verified: false, message: 'A token lejárt!'});
+            } else if (error.name === 'JsonWebTokenError') {
+                return res.status(400).json({verified: false, message: 'Érvénytelen token!'});
+            }else {
+              return res.status(500).json('Hiba a token ellenőrzésekor:', error.message);
+            }
+          }
+    
+};
+
 
 
 const userList = async (req, res) => {
     try {
-        const users = await prisma.users.findMany();
-        res.status(200).json(users);
+        const users = await prisma.users.findMany({
+            select:{
+                id: true,
+                discord_name: true,
+                inviteable: true,
+                full_name: true,
+                usr_name: true,
+                date_of_birth: true,
+                school: true,
+                clss: true,
+                status: true,
+                email_address: true,
+                phone_num: true,
+            }
+        });
+        return res.status(200).json(users);
 
     }
     catch (error) {
         console.log(error);
-        res.status(500).json({ message: "Hiba a fetch során!" })
+        return res.status(500).json({ message: "Hiba a fetch során!" })
     }
 }
 
@@ -28,9 +164,22 @@ const userSearchByName = async (req, res) => {
                 usr_name: {
                     contains: usr_name
                 }
+            },
+            select:{
+                id: true,
+                inviteable: true,
+                discord_name: true,
+                full_name: true,
+                usr_name: true,
+                date_of_birth: true,
+                school: true,
+                clss: true,
+                status: true,
+                email_address: true,
+                phone_num: true,
             }
         });
-        if (user.length == 0 || usr_name == "") return res.status(400).json({ message: "Nincs ilyen felhasználó" });
+        if (user.length == 0 || usr_name == "") return res.status(400).json({ message: "Nincs ilyen felhasználó!" });
         else return res.status(200).json(user);
     } catch (error) {
         return res.status(500).json(error);
@@ -38,10 +187,12 @@ const userSearchByName = async (req, res) => {
 }
 
 const userUpdate = async (req, res) => {
-    const { id, full_name, new_usr_name, usr_name, paswrd, new_paswrd, school, new_email_address, phone_num, status } = req.body;
+    const { id, full_name, new_usr_name, usr_name, paswrd, new_paswrd, school, new_email_address, phone_num, status, discord_name } = req.body;
     try {
 
         let date = new Date();
+
+        console.log(req.body);
 
 
 
@@ -66,6 +217,29 @@ const userUpdate = async (req, res) => {
 
 
         //Megadott adatok vizsgálata és update
+
+
+        //Egyéb adat módosítás esetén:
+
+        // if(!new_email_address && !paswrd && !new_usr_name && !usr_name){
+
+
+        //     const modUser = await prisma.users.update({
+        //         where: {
+        //             id: id
+        //         },
+        //         data: {
+        //             full_name: full_name,
+        //             school: school,
+        //             phone_num: phone_num,
+        //             status: status,
+        //             discord_name: discord_name
+        //         }
+
+        //     });
+        //     return res.status(200).json({ message: "Sikeres adatfrissítés!" });
+        // }
+
 
         //Email módosítás esetén:
 
@@ -101,7 +275,8 @@ const userUpdate = async (req, res) => {
                         email_address: trim_email,
                         email_last_mod_date: date,
                         phone_num: phone_num,
-                        status: status
+                        status: status,
+                        discord_name: discord_name
                     }
 
                 });
@@ -142,6 +317,7 @@ const userUpdate = async (req, res) => {
                         usna_last_mod_date: date,
                         usna_mod_num_remain: user.usna_mod_num_remain - 1,
                         school: school,
+                        discord_name: discord_name,
                         phone_num: phone_num,
                         status: status
                     }
@@ -157,25 +333,35 @@ const userUpdate = async (req, res) => {
                 }
         }
 
+       
         //Jelszó esetén:
-        if ((paswrd && new_paswrd) && !new_email_address && !usr_name) {
 
-            console.log({ encrypted: paswrd == new_paswrd ? "true" : "false" })
-            console.log({ encrypted: bcrypt.compareSync(paswrd, user.paswrd) == bcrypt.compareSync(new_paswrd, user.paswrd) ? "true" : "false" })
+        if ((id && new_paswrd) || ((paswrd && new_paswrd)) && !new_email_address && !usr_name) {
+
+            //console.log({ encrypted: paswrd == new_paswrd ? "true" : "false" })
+            //console.log({ encrypted: bcrypt.compareSync(paswrd, user.paswrd) == bcrypt.compareSync(new_paswrd, user.paswrd) ? "true" : "false" })
 
 
-            if (paswrd == new_paswrd) {
-                return res.status(400).json({ message: "Ugyanazt a jelszót nem adhatod meg!" });
+            
+
+            if(paswrd && new_paswrd){
+
+                if (paswrd == new_paswrd) {
+                    return res.status(400).json({ message: "Ugyanazt a jelszót nem adhatod meg!" });
+                }
+
+                if (bcrypt.compareSync(paswrd, user.paswrd) == bcrypt.compareSync(new_paswrd, user.paswrd)) {
+                    return res.status(400).json({ message: "Ugyanazt a jelszót nem adhatod meg!" });
+    
+                }
+    
+                if (!bcrypt.compareSync(paswrd, user.paswrd)) {
+                    return res.status(400).json({ message: "Nem megfelelő jelszó!" });
+                }
+
             }
-
-            if (bcrypt.compareSync(paswrd, user.paswrd) == bcrypt.compareSync(new_paswrd, user.paswrd)) {
-                return res.status(400).json({ message: "Ugyanazt a jelszót nem adhatod meg!" });
-
-            }
-
-            if (!bcrypt.compareSync(paswrd, user.paswrd)) {
-                return res.status(400).json({ message: "Nem megfelelő jelszó!" });
-            }
+            
+            
 
 
 
@@ -186,20 +372,20 @@ const userUpdate = async (req, res) => {
             const validCharsRegex = /^[a-zA-Z0-9*@_]*$/;
 
             if (validalasFuggveny(res, [
-                { condition: paswrd.length < 8, message: "A jelszónak minimum 8 karakter hosszúnak kell lennie!" },
-                { condition: !/[A-Z]/.test(paswrd), message: "Egy nagybetűt meg kell adni a jelszónál!" },
-                { condition: !/[a-z]/.test(paswrd), message: "Kisbetűket meg kell adnod a jelszónál!" },
-                { condition: !/[0-9]/.test(paswrd), message: "A jelszónak tartalmaznia kell számot!" },
-                { condition: !specChars.test(paswrd), message: "A jelszónak tartalmaznia kell különleges karaktereket! ('*', '@', '_')" },
-                { condition: /^[*@_]/.test(paswrd), message: "Különleges karakterekkel nem kezdődhet a jelszó!" },
-                { condition: ekezetesRegex.test(paswrd), message: "Csak az angol ABC betűi elfogadottak a jelszónál, ékezetek nem!" },
-                { condition: !validCharsRegex.test(paswrd), message: "A jelszónak csak angol ABC betűi és az engedélyezett karakterek (számok, '*', '@', '_') tartalmazhatók!" }
+                { condition: new_paswrd.length < 8, message: "A jelszónak minimum 8 karakter hosszúnak kell lennie!" },
+                { condition: !/[A-Z]/.test(new_paswrd), message: "Egy nagybetűt meg kell adni a jelszónál!" },
+                { condition: !/[a-z]/.test(new_paswrd), message: "Kisbetűket meg kell adnod a jelszónál!" },
+                { condition: !/[0-9]/.test(new_paswrd), message: "A jelszónak tartalmaznia kell számot!" },
+                { condition: !specChars.test(new_paswrd), message: "A jelszónak tartalmaznia kell különleges karaktereket! ('*', '@', '_')" },
+                { condition: /^[*@_]/.test(new_paswrd), message: "Különleges karakterekkel nem kezdődhet a jelszó!" },
+                { condition: ekezetesRegex.test(new_paswrd), message: "Csak az angol ABC betűi elfogadottak a jelszónál, ékezetek nem!" },
+                { condition: !validCharsRegex.test(new_paswrd), message: "A jelszónak csak angol ABC betűi és az engedélyezett karakterek (számok, '*', '@', '_') tartalmazhatók!" }
 
             ])) {
                 return;
             };
 
-            const hashedPass = await bcrypt.hash(paswrd, 10);
+            const hashedPass = await bcrypt.hash(new_paswrd, 10);
 
             const modUser = await prisma.users.update({
                 where: {
@@ -210,6 +396,7 @@ const userUpdate = async (req, res) => {
                     paswrd: hashedPass,
                     school: school,
                     phone_num: phone_num,
+                    discord_name: discord_name,
                     status: status
                 }
             });
@@ -439,7 +626,9 @@ const userLogin = async (req, res) => {
             secure: true,
             httpOnly: true,
             sameSite: 'none',
-            maxAge: 360000
+            maxAge: 3600000 //60 perc
+            //maxAge: 360000 //6 perc
+            //maxAge: 120000 //2 perc
         });
 
         return res.status(200).json(token);
@@ -448,17 +637,23 @@ const userLogin = async (req, res) => {
 
     } catch (error) {
         console.log(error);
-        res.status(500).json({ message: error })
+        return res.status(500).json({ message: error })
     }
 
 }
 
 const userLogout = async (req, res) => {
+
+    
+    
     res.clearCookie('tokenU', {
-        httpOnly: true,
         secure: true,
-        sameSite: 'none'
+        httpOnly: true,
+        sameSite: 'none',
+        path:'/'
     });
+    
+    
     res.status(200).json({ message: "Kijelentkezve." });
 }
 
@@ -472,7 +667,9 @@ const protected = async (req, res) => {
         secure: true,
         httpOnly: true,
         sameSite: 'none',
-        maxAge: 360000
+        maxAge: 3600000 //60 perc
+        //maxAge: 360000 //6 perc
+        //maxAge: 120000 //2 perc
     });
 
     res.json(token);
@@ -488,28 +685,27 @@ const userGetPicturePath = async (req, res) => {
 
     try {
 
-        const usrPic = await prisma.picture_Links.findFirst({
+        const uerPic = await prisma.picture_Links.findFirst({
             where: {
                 uer_id: Number(uer_id)
             }
-        })
-         
-        if (usrPic) {
-           const picPath = await prisma.pictures.findUnique({
-                where: {
-                    id: usrPic.pte_id
-                }
+        })        
 
-            })
-            //console.log(picPath.img_path);
-            res.status(200).json(picPath.img_path);
-        }else{
-            res.status(400).json({message: "Nincs ilyen kép!"})
-        }
-
-        if (!usrPic || !usrPic.uer_id) {
+        if (!uerPic || !uerPic.uer_id) {
             return res.status(400).json({ message: "Nincs ilyen felhasználó!" });
         }
+         
+        const picPath = await prisma.pictures.findUnique({
+            where: {
+                id: uerPic.pte_id
+            }
+        });
+        
+        if (!picPath) {
+            return res.status(400).json({ message: "Nincs ilyen kép!" });
+        }
+        
+        return res.status(200).json(picPath.img_path);
     }
 
     catch (error) {
@@ -528,5 +724,7 @@ module.exports = {
     isAuthenticated,
     userLogout,
     userSearchByName,
-    userGetPicturePath
+    userGetPicturePath,
+    passEmailSend,
+    passEmailVerify,
 }

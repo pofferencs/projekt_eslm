@@ -1,51 +1,81 @@
-import { createContext, useState } from "react"
+import { createContext, useEffect, useState } from "react"
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+
 
 const UserContext = createContext();
 
 export const UserProvider = ({children})=>{
 
+  const navigate = useNavigate();
   const [refresh, setRefresh] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [profile, setProfile] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const authStatus = () =>{
-    fetch(`${import.meta.env.VITE_BASE_URL}/user/auth`,{
+  const authStatus = async () =>{
+  
+    
+
+    await fetch(`${import.meta.env.VITE_BASE_URL}/user/auth`,{
       method: 'GET',
       credentials: 'include',
       headers:{
         "Content-Type":"application/json"
       }
     })
-    .then(res=>res.json())
+    .then(res=> res.json())
     .then(auth=>{
       if(auth.authenticated){
+        
+        setProfile(auth.user);
         setIsAuthenticated(true);
+        setIsLoading(false);
+        update();
+        
+    
+        
       } else {
+        
         setIsAuthenticated(false);
+        setIsLoading(false);
+        logout();
+        update();
+       
       }
+      
+      
     })
-    .catch(err=>{alert(err);setIsAuthenticated(false)});
+    .catch(err=>{console.log(err); setIsAuthenticated(false); setIsLoading(false); logout(); update();});
+   
+    
+    
   }
 
   const update = ()=>{
     setRefresh(prev=>!prev);
   }
 
-  const logout = () =>{
+  const logout = async () =>{
    
-    fetch(`${import.meta.env.VITE_BASE_URL}/user/logout`,{
+    await fetch(`${import.meta.env.VITE_BASE_URL}/user/logout`,{
      method: 'POST',
      credentials: 'include',
      headers: {
       "Content-Type": "application/json"
      } 
-    }).catch(err=>{alert(err)});
-
-    setIsAuthenticated(false);
-    update()
+    })
+    .then(res=>{
+      
+      return res.json();
+    })
+    .then(data=> {setIsAuthenticated(false); setIsLoading(false); sessionStorage.removeItem('tokenU'); update(); })
+    .catch(err=>{alert(err)});
   }
 
-  const login = (formData, method) => {
-    fetch(`${import.meta.env.VITE_BASE_URL}/user/login`, {
+
+  const login = async (formData, method) => {
+    await fetch(`${import.meta.env.VITE_BASE_URL}/user/login`, {
       method: method,
       credentials: 'include',
       headers: { "Content-type": "application/json" },
@@ -54,11 +84,11 @@ export const UserProvider = ({children})=>{
       .then(res => res.json())
       .then(token => {
         if (!token.message) {
-          sessionStorage.setItem('tokenU', token);
-          authStatus();
-          pageRefresh();
+          toast.success('Sikeres belépés! Oldalfrissítés 5 másodperc múlva!');
+          setTimeout(()=>{navigate('/'); pageRefresh()},5000)
+          
         } else {
-          alert(token.message);
+          toast.error(token.message);
         }
       })
       .catch(err => alert(err));
@@ -67,6 +97,7 @@ export const UserProvider = ({children})=>{
 
   const pageRefresh = () =>{
     window.location.reload();
+    window.scroll(0,0);
   }
 
 
@@ -78,7 +109,10 @@ export const UserProvider = ({children})=>{
     authStatus,
     isAuthenticated,
     login,
-    pageRefresh
+    pageRefresh,
+    profile,
+    isLoading,
+    setIsLoading
   }}>{children}</UserContext.Provider>
 }
 

@@ -9,18 +9,22 @@ function SearchTo() {
   const onSubmit = (e) => {
     e.preventDefault();
 
-    fetch(`${import.meta.env.VITE_BASE_URL}/list/tonamesearch/${searchInput}`, {
-      method: "GET",
-      headers: {
-        "Content-type": "application/json",
-      },
-    })
-      .then(console.log(searchInput))
-      .then((res) => res.json())
-      .then((adat) => setResult(adat))
-      .catch((err) => toast.error(err));
-
-    console.log(result);
+    if(searchInput!=""){
+      fetch(`${import.meta.env.VITE_BASE_URL}/list/tonamesearch/${searchInput}`, {
+        method: "GET",
+        headers: {
+          "Content-type": "application/json",
+        },
+      })
+        .then(console.log(searchInput))
+        .then((res) => res.json())
+        .then((adat) => setResult(adat))
+        .catch((err) => toast.error(err));
+  
+      console.log(result);
+    }else{
+      setResult([]);
+    }
   };
 
   const writeData = (e) => {
@@ -32,7 +36,7 @@ function SearchTo() {
   return (
     <div className="flex flex-col min-h-screen">
       <h2 className="mt-10 text-center text-4xl font-bold tracking-tight text-indigo-600">
-        Meccs kereső
+        Verseny kereső
       </h2>
       <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
         <form onSubmit={onSubmit}>
@@ -40,7 +44,7 @@ function SearchTo() {
             htmlFor="tournament"
             className="block text-sm/6 font-medium text-indigo-600"
           >
-            Meccs neve
+            Verseny neve
           </label>
 
           <div className="mt-2">

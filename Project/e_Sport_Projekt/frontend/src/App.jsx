@@ -7,11 +7,10 @@ import {
   Routes,
   Route,
   Navigate,
-  useNavigate,
 } from "react-router-dom";
 import UserContext from "./context/UserContext";
 import { UserProvider } from "./context/UserContext";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import SearchU from "./components/common/searches/SearchU";
 import SearchTe from "./components/common/searches/SearchTe";
 import SearchTo from "./components/common/searches/SearchTo";
@@ -19,39 +18,48 @@ import SearchE from "./components/common/searches/SearchE";
 import Footer from "./components/common/Footer";
 import Register from "./components/loggedout/Register";
 import UserProfile from "./components/user/UserProfile";
+import { ToastContainer } from "react-toastify";
+import UserPassReset from "./components/user/UserPassReset";
 
 function App() {
   const isAuthenticated = useContext(UserContext);
-  const authStatus = useContext(UserContext);
-  const token = sessionStorage.getItem("tokenU");
 
   return (
-    <UserProvider>
+    
       <BrowserRouter>
+      <UserProvider>
         <Navbar />
-        <Routes>
-          {token || isAuthenticated ? (
-            <>
-              <Route path="/" element={<UserMain />} />
-              <Route path="*" element={<Navigate to="/" />} />
-            </>
-          ) : (
-            <>
-              <Route path="/" element={<LoggedOutMain />} />
-              <Route path="*" element={<Navigate to="/" />} />
-            </>
-          )}
-          <Route path="/register" element={<Register />} />
-          <Route path="/login" element={<UserLogin />} />
-          <Route path="/player-search" element={<SearchU />} />
-          <Route path="/team-search" element={<SearchTe />} />
-          <Route path="/tournament-search" element={<SearchTo />} />
-          <Route path="/event-search" element={<SearchE />} />
-          <Route path="/profile" element={<UserProfile />} />
-        </Routes>
+        <ToastContainer autoClose={3000}/>
+        <div className="flex flex-col min-h-screen">
+          <Routes>
+            
+            { (isAuthenticated) ? (
+              <>
+                <Route path="/" element={<UserMain />} />
+                <Route path="*" element={<Navigate to="/" />} />
+              </>
+            ) : (
+              <>
+                <Route path="/" element={<LoggedOutMain />} />
+                <Route path="*" element={<Navigate to="/" />} />
+              </>
+            )}
+            <Route path="/register" element={<Register />} />
+            <Route path="/login" element={<UserLogin />} />
+            <Route path="/password-reset" element={<UserPassReset />} />
+            <Route path="/player-search" element={<SearchU />} />
+            <Route path="/team-search" element={<SearchTe />} />
+            <Route path="/tournament-search" element={<SearchTo />} />
+            <Route path="/event-search" element={<SearchE />} />
+            <Route path="/profile" element={<UserProfile />} />
+            <Route path="/profile/:name" element={<UserProfile />} />
+            
+          </Routes>
+        </div>
         <Footer />
+        </UserProvider>
       </BrowserRouter>
-    </UserProvider>
+    
   );
 }
 

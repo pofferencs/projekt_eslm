@@ -35,7 +35,7 @@ app.use('/insert',require('./routes/insertRoutes'));
 app.use('/delete',require('./routes/deleteRoutes'));
 
 
-server.listen(8000,()=>{console.log("Fut a szerver")});
+server.listen(8000,()=>{console.log(`Fut a szerver\nhttps://localhost:8000/`)});
 
 app.get('/',(req,res)=>{
     res.send("Esport adatbázisos Backend");
