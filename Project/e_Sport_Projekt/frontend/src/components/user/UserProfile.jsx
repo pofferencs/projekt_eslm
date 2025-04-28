@@ -53,22 +53,16 @@ function UserProfile() {
             .then(adat => {setPicPath(adat); setIsLoading(false)})
             .catch(err => {console.log(err)});
     }
-
-
-    if(name == profile.usr_name){
-      navigate(`/profile`);
-    }
    
-    
     console.log("refreshed navbar")
   },[isAuthenticated])
 
-  useEffect(()=>{
-    if(isAuthenticated==false && !name){
-      navigate('/');
-    }
+  // useEffect(()=>{
+  //   if(isAuthenticated==false && !name){
+  //     navigate('/');
+  //   }
 
-  },[profileAdat])
+  // },[profileAdat])
 
   const dateFormat = (date) =>{
 
