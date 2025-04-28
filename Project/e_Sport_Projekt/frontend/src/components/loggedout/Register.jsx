@@ -24,6 +24,29 @@ function Register() {
       }
     });
 
+  const emailSend = (email, method) => {
+
+    fetch(`${import.meta.env.VITE_BASE_URL}/user/email-verify-send`, {
+      method: method,
+      headers: { "Content-type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({email: email}),
+    })
+    .then(async (res) => {
+      const data = await res.json();
+      if(!res.ok){
+          
+          toast.error(data.message);
+      }else{
+          navigate('/');
+          toast.success(data.message);
+      }
+      })
+      .catch((err) => alert(err));
+
+
+  };
+
   const kuldes = (formData, method) => {
     fetch(`${import.meta.env.VITE_BASE_URL}/user/register`, {
       method: method,
@@ -31,21 +54,16 @@ function Register() {
       credentials: "include",
       body: JSON.stringify(formData),
     })
-      .then((res) => res.json())
-      .then((token) => {
-        if (!token.message) {
+    .then(async (res) => {
+      const data = await res.json();
+      if(!res.ok){
           
-          toast.error(token.message)
-        }else{
-          navigate("/login");
-          //sessionStorage.setItem("tokenU", token);
-          toast.success("Sikeres regisztráció!");
-          
-        }
+          toast.error(data.message);
+      }else{
+          emailSend(formData.email_address, "POST");
+      }
       })
       .catch((err) => alert(err));
-      
-      
   };
 
   const onSubmit = (e) => {

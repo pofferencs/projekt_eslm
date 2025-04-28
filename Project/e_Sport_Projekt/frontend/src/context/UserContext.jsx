@@ -69,7 +69,7 @@ export const UserProvider = ({children})=>{
       
       return res.json();
     })
-    .then(data=> {setIsAuthenticated(false); setIsLoading(false); sessionStorage.removeItem('tokenU'); update(); })
+    .then(data=> {setIsAuthenticated(false); setIsLoading(false); update(); })
     .catch(err=>{alert(err)});
   }
 
@@ -112,7 +112,7 @@ export const UserProvider = ({children})=>{
     pageRefresh,
     profile,
     isLoading,
-    setIsLoading
+    setIsLoading,
   }}>{children}</UserContext.Provider>
 }
 
