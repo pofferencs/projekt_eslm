@@ -160,7 +160,7 @@ function UserProfile() {
     ):(
       <div className="">
       {
-        (name!=undefined)?(
+        (name!=profile.usr_name)?(
           <div className="m-10 rounded-md bg-gradient-to-br from-indigo-950 to-slate-500 sm:w-[600px] md:w-[800px] lg:w-[1000px] xl:w-[1200px] mx-auto text-primary-content">
           <div className="card-body">
             <div className="flex justify-center pb-8 gap-10">
