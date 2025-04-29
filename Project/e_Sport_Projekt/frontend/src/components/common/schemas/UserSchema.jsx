@@ -26,7 +26,7 @@ function UserSchema({ user }) {
             <div className="card-body items-left text-left">
                 <div className="flex justify-between">
                     <h2 className="card-title drop-shadow-lg">{user.usr_name}</h2>
-                    <p className={`drop-shadow-lg font-extrabold ml-2 ${user.status == "inactive" ? "text-red-500" : "text-green-500"}`}>
+                    <p className={`drop-shadow-lg font-extrabold ml-2 ${user.status == "inactive" || user.status == "banned" ? "text-red-500" : "text-green-500"}`}>
                         {user.status}
                     </p>
                     <img className="w-10 h-10 rounded-full drop-shadow-lg object-cover" src={import.meta.env.VITE_BASE_URL+`${import.meta.env.VITE_BASE_PIC}${userPicPath}`} alt="User Profile" onClick={()=>{navigate(`/profile/${user.usr_name}`); window.scroll(0,0)}} />
@@ -34,7 +34,7 @@ function UserSchema({ user }) {
 
                 <div className="flex justify-evenly">
                     {
-                        (user.status == "inactive" || user.inviteable === false)
+                        ((user.status == "inactive" || user.status == "banned") || user.inviteable === false)
                             ?
                             (<p className="drop-shadow-lg italic text-red-500">Nem fogad meghívót</p>)
                             :

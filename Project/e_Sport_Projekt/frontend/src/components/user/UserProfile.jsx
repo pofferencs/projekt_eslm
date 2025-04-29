@@ -11,7 +11,24 @@ function UserProfile() {
   const [profileAdat, setProfileAdat] = useState({});
   const [picPath, setPicPath] = useState("");
   const [isForm, setIsForm] = useState(false);
+  const [disabled, setDisabled] = useState(true);
+  const [emailDisabled, setEmailDisabled] = useState(false);
   const navigate = useNavigate(); 
+
+  let formObj = {
+    full_name: "", //megvan
+    paswrd: "", //megvan
+    email_address: "",
+    date_of_birth: "", //megvan
+    school: "", //megvan
+    clss: "", //megvan
+    phone_num: "", // megvan
+    om_identifier: "", //megvan
+    discord_name: "", //megvan
+};
+
+
+  const [formData, setFormData] = useState(formObj);
   
   
 
@@ -32,7 +49,7 @@ function UserProfile() {
           setPicPath(
             fetch(`${import.meta.env.VITE_BASE_URL}/user/userpic/${adat[0].id}`)
             .then(res => res.json())
-            .then(adat => {setPicPath(adat); setIsLoading(false);})
+            .then(adat => {setPicPath(adat); setIsLoading(false); setFormData(profile)})
             .catch(err => {console.log(err)})
           )
         }else{
@@ -50,7 +67,7 @@ function UserProfile() {
     if(!name){
       fetch(`${import.meta.env.VITE_BASE_URL}/user/userpic/${profile.id}`)
             .then(res => res.json())
-            .then(adat => {setPicPath(adat); setIsLoading(false)})
+            .then(adat => {setPicPath(adat); setIsLoading(false);})
             .catch(err => {console.log(err)});
     }
    
@@ -69,9 +86,9 @@ function UserProfile() {
     if(date != undefined){
       const [ev, honap, nap] = date.split('T')[0].split('-')
 
-      return `${ev}. ${honap}. ${nap}.`;
+      return `${ev}-${honap}-${nap}`;
     }else{
-      return "";
+      return ``;
     }
 
   }
@@ -79,11 +96,31 @@ function UserProfile() {
 
   //Adatmódosító rész
 
+  const kuldesEmail = (email, method) => {
+        
+    fetch(`${import.meta.env.VITE_BASE_URL}/user/password-reset`,{
+        method: method,
+        headers: { "Content-type": "application/json" },
+        body: JSON.stringify({email: email}),
+    }).then((res) => res.json())
+          .then((token) => {
+            if(!token.ok) {
+              
+              toast.success(token.message)
+            }
+          })
+          .catch((err) => alert(err));
+  };
 
+
+
+
+  console.log(formData);
+
+  
+ 
   const modify = (formData, method) => {
 
-    
-    let formObj = {};
 
     //1. vizsgálódás
 
@@ -104,35 +141,7 @@ function UserProfile() {
       
     }
 
-    const writeData = (e) => {
-      setFormData((prevState) => ({
-        ...prevState,
-        [e.target.id]: e.target.value,
-      }));
-    };
-
-
-    //2. küldés
-
-    // fetch(`${import.meta.env.VITE_BASE_URL}/user/modify`, {
-    //   method: method,
-    //   headers: { "Content-type": "application/json" },
-    //   credentials: "include",
-    //   body: JSON.stringify(formData),
-    // })
-    //   .then((res) => res.json())
-    //   .then((token) => {
-    //     if (!token.message) {
-          
-    //       toast.error(token.message)
-    //     }else{
-          
-    //       toast.success("valami!");
-          
-    //     }
-    //   })
-    //   .catch((err) => alert(err));
-      
+    
       
   };
 
@@ -141,7 +150,12 @@ function UserProfile() {
     modify(formData, "POST");
   };
 
-  
+  const writeData = (e) => {
+    setFormData((prevState) => ({
+      ...prevState,
+      [e.target.id]: e.target.value,
+    }));
+  };
 
 
 
@@ -153,6 +167,7 @@ function UserProfile() {
 
 
   return (
+
     (isLoading!=false)?
     (
       <></>
@@ -161,6 +176,7 @@ function UserProfile() {
       <div className="">
       {
         (name!=profile.usr_name)?(
+          <>
           <div className="m-10 rounded-md bg-gradient-to-br from-indigo-950 to-slate-500 sm:w-[600px] md:w-[800px] lg:w-[1000px] xl:w-[1200px] mx-auto text-primary-content">
           <div className="card-body">
             <div className="flex justify-center pb-8 gap-10">
@@ -169,17 +185,17 @@ function UserProfile() {
                 <div className="pl-14">
                 <p className="text-3xl pb-2 text-white">{profileAdat.usr_name}</p>
                 {
-                ( profileAdat.inviteable == true) ? (
+                ( profileAdat.inviteable == true && profileAdat.status == "active") ? (
                   <div>
                   <p className="text-green-500 text-lg">Meghívható</p>
-                  {(isAuthenticated==true)?(
+                  {(isAuthenticated==true && profileAdat.status == "active")?(
                     <button className="btn mt-3 text-white">Meghívás csapatba</button>
                   ):(
                     <p></p>
                   )}
                   </div>
                 ):
-                ( profileAdat.inviteable == false)? (
+                ( profileAdat.inviteable == false || (profileAdat.status == "inactive" || profileAdat.status == "banned") )? (
                   <div>
                   <p className="text-red-500 text-lg">Nem meghívható</p>
                   </div>
@@ -220,6 +236,7 @@ function UserProfile() {
         </div>
           </div>
         </div>
+        </>
         ):
         (
         (!isForm)? (
@@ -234,28 +251,22 @@ function UserProfile() {
                 ( profile.inviteable == true) ? (
                   <p className="text-green-500 text-lg">Meghívható</p>
                 ):
-                ( profile.inviteable == false)? (
+                ( profile.inviteable == false || (profile.status == "banned" || profile.status == "inactive" ))? (
                   <p className="text-red-500 text-lg">Nem meghívható</p>
                   
                 ): (<p>{/*ez itt egy üres sor, amivel megakadályozzuk, hogy a komponens betöltődésekor ne jelenjen még meg semmi, hanem majd akkor, ha lesz is adat*/}</p>)
               }
-              <button className="btn mt-3 text-white" onClick={()=> {setIsForm(true);}}>Adatok módosítása</button>
+              <div className="flex flex-col">
+              <button className="btn mt-3 text-white w-52" onClick={()=> {setIsForm(true); setDisabled(false);}}>Adatok módosítása</button>
+              
+              </div>
                   </div>
               </div>
             </div>
-            
-          
-          <div className="border-t border-b border-gray-200 px-4 py-5 sm:p-0">
-            <dl className="sm:divide-y sm:divide-gray-200">
-                <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt className="text-sm text-white font-bold">
-                        Teljes név
-                    </dt>
-                    <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                      <p>{profile.full_name}</p>
-                    </dd>
-                </div>
-                <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+
+            {/* <button disabled={emailDisabled} className="btn mt-3 text-white w-52" onClick={()=> {kuldesEmail(profile.email_address, "POST"); setEmailDisabled(true)}}>Jelszó módosítás</button> */}
+
+            {/* <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                     <dt className="text-sm text-white font-bold">
                         Születési dátum
                     </dt>
@@ -264,48 +275,57 @@ function UserProfile() {
                     (<p>{dateFormat(profile.date_of_birth)}</p>)
                     }
                     </dd>
+                </div> */}
+            
+          
+          <div className="w-full mx-auto rounded-lg shadow-lg md:mt-6 md:max-w-lg sm:max-w-4xl xl:p-0 bg-gray-800 dark:border-gray-700">
+            <div className="p-8 md:p-10">
+              <form className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                <div key={"full_name"}>
+                  <label className="block text-sm font-medium text-white">
+                      Teljes név
+                  </label>
+                  <input id="full_name" type="text" disabled={disabled} onChange={writeData} value={formData.full_name} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm"/>
                 </div>
-                <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt className="text-sm text-white font-bold">
-                        E-mail cím
-                    </dt>
-                    <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                      <p>{profile.email_address}</p>
-                    </dd>
+
+                <div key={"date_of_birth"}>
+                  <label className="block text-sm font-medium text-white">
+                      Születési dátum
+                  </label>
+                  <input id="date_of_birth" type="date" disabled={disabled} onChange={writeData} value={dateFormat(formData.date_of_birth)} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm"/>
                 </div>
-                <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                  <dt className="text-sm text-white font-bold">
-                        Telefonszám
-                    </dt>
-                    <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                      <p>{profile.phone_num}</p>
-                    </dd>
+
+                <div key={"full_name"}>
+                  <label className="block text-sm font-medium text-white">
+                      E-mail cím
+                  </label>
+                  <input id="email_address" type="text" disabled={disabled} onChange={writeData} value={formData.email_address} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm"/>
                 </div>
-                <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt className="text-sm text-white font-bold"> 
-                        Iskola
-                    </dt>
-                    <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                      <p>{profile.school}</p>
-                    </dd>
+
+                <div key={"phone_num"}>
+                  <label className="block text-sm font-medium text-white">
+                      Telefonszám
+                  </label>
+                  <input id="phone_num" type="text" disabled={disabled} onChange={writeData} value={formData.phone_num} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm"/>
                 </div>
-                <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt className="text-sm text-white font-bold">
-                        Osztály
-                    </dt>
-                    <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                      <p>{profile.clss}</p>
-                    </dd>
+
+                <div key={"school"}>
+                  <label className="block text-sm font-medium text-white">
+                      Iskola
+                  </label>
+                  <input id="school" type="text" disabled={disabled} onChange={writeData} value={formData.school} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm"/>
                 </div>
-                <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt className="text-sm text-white font-bold">
-                        OM-azonosító
-                    </dt>
-                    <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                      <p>{profile.om_identifier}</p>
-                    </dd>
+
+                <div key={"clss"}>
+                  <label className="block text-sm font-medium text-white">
+                      Osztály
+                  </label>
+                  <input id="clss" type="text" disabled={disabled} onChange={writeData} value={formData.clss} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm"/>
                 </div>
-            </dl>
+
+              </form>
+            </div>
         </div>
           </div>
         </div>
@@ -331,12 +351,13 @@ function UserProfile() {
                   
                 ): (<p>{/*ez itt egy üres sor, amivel megakadályozzuk, hogy a komponens betöltődésekor ne jelenjen még meg semmi, hanem majd akkor, ha lesz is adat*/}</p>)
               }
+              <div className="flex flex-wrap gap-2">
               <button className="btn mt-3 text-white" type="submit">Módosítás</button>
-              <button className="btn mt-3 text-white" onClick={()=> setIsForm(false)}>Mégse</button>
+              <button className="btn mt-3 text-white" onClick={()=> {setIsForm(false); setDisabled(true);}}>Mégse</button>
+              </div>
                   </div>
               </div>
-            </div>
-            
+            </div>            
           
           <div className="border-t border-b border-gray-200 px-4 py-5 sm:p-0">
             <dl className="sm:divide-y sm:divide-gray-200">

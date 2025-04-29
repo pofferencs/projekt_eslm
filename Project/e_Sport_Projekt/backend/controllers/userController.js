@@ -8,6 +8,8 @@ require('dotenv').config();
 const cron = require('node-cron');
 
 
+let verifyTokens = [];
+
 
 // const passch = async (paswrd)=>{
 
@@ -53,9 +55,10 @@ const passEmailSend = async (req, res)=>{
         return res.status(500).json({message: "Ilyen felhasználó nem regisztrált!"});
     }
 
-
+    //TODO: Itt elágazásba azt, hogy cseréljük a tokent egy adott emailnél
+    
     const token = jwt.sign({email: user.email_address}, process.env.JWT_SECRET, {expiresIn: "15m"});
-
+    verifyTokens.push({"token": token, "email": user.email_address});
 
     const transporter = nodemailer.createTransport({
         host: process.env.SMTP_HOST,
@@ -87,8 +90,34 @@ const passEmailSend = async (req, res)=>{
 
       try {
 
-        await transporter.sendMail(mailOptions);
-        return res.status(200).json({message: "Kiküldtük az e-mailt a megadott címre!"})
+        console.log(verifyTokens);
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        console.log(Boolean(decoded.email == user.email_address));
+        
+
+        if((decoded.email == user.email_address)){
+
+            const index = verifyTokens.findIndex(x=>x.token === token)
+            if(index !== -1){
+                verifyTokens.splice(index,1);
+                console.log("Token törölve!");
+                
+            }
+
+            return res.status(400).json({message: 'Erre az e-mail címre már küldtünk levelet!'});
+            
+        }else{
+
+            
+
+            
+
+            await transporter.sendMail(mailOptions);
+            return res.status(200).json({message: "Kiküldtük az e-mailt a megadott címre!"})
+
+        }
+
+        
     
     
         
@@ -101,11 +130,17 @@ const passEmailSend = async (req, res)=>{
 
 const passEmailVerify = async (req, res) =>{
 
-    const {token} = req.body;
+    const {token} = req.body;  
     
         try {
 
             const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+            
+
+            if(!verifyTokens.find(e=>e.token == token)){
+                return res.status(400).json({verified: false, message: 'A token lejárt!'});
+            }
 
             const user =  await prisma.users.findFirst({
                 where: {
@@ -113,6 +148,13 @@ const passEmailVerify = async (req, res) =>{
                 }
             })
 
+            const index = verifyTokens.findIndex(x=>x.token === token)
+            if(index !== -1){
+                verifyTokens.splice(index,1);
+                console.log("Token törölve!");
+            }else{
+                console.log("Token nem található.")
+            }
 
             return res.status(200).json({verified: true, data: decoded, id: user.id});
 
@@ -244,7 +286,7 @@ const emailVerifiedMod = async (req, res) =>{
 };
 
  
-// Ő itt cron, minden éjfélkor törli automatikusan a "pending" (regisztráció megerősítésre váró) felhasználókat az adatbázisból, hogy ne foglaljanak feleslegesen helyet.
+// Ő itt cron, félóránként törli automatikusan a "pending" (regisztráció megerősítésre váró) felhasználókat az adatbázisból, hogy ne foglaljanak feleslegesen helyet.
 cron.schedule('*/30 * * * *', async () => {
     try {
 
