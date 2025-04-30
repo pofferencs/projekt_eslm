@@ -34,8 +34,13 @@ function UserProfile() {
 
   useEffect(()=>{
 
-      if(name != undefined){
-        fetch(`${import.meta.env.VITE_BASE_URL}/list/unamesearch/${name}`, {
+
+  useEffect(() => {
+
+    if (isAuthenticated) {
+
+      if (name != undefined) {
+        fetch(`${import.meta.env.VITE_BASE_URL}/user/userprofilesearch/${name}`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json"
@@ -57,6 +62,7 @@ function UserProfile() {
         }
         })
         .catch(err=>alert(err));
+
       }
       
     
@@ -69,6 +75,7 @@ function UserProfile() {
             .then(res => res.json())
             .then(adat => {setPicPath(adat); setIsLoading(false);})
             .catch(err => {console.log(err)});
+
     }
    
     console.log("refreshed navbar")
@@ -81,9 +88,10 @@ function UserProfile() {
 
   // },[profileAdat])
 
-  const dateFormat = (date) =>{
 
-    if(date != undefined){
+  const dateFormat = (date) => {
+
+    if (date != undefined) {
       const [ev, honap, nap] = date.split('T')[0].split('-')
 
       return `${ev}-${honap}-${nap}`;
@@ -432,6 +440,7 @@ function UserProfile() {
         )
         )
       }
+
     </div>
     )
   )

@@ -30,6 +30,7 @@ function UserSchema({ user }) {
                         {user.status}
                     </p>
                     <img className="w-10 h-10 rounded-full drop-shadow-lg object-cover" src={import.meta.env.VITE_BASE_URL+`${import.meta.env.VITE_BASE_PIC}${userPicPath}`} alt="User Profile" onClick={()=>{navigate(`/profile/${user.usr_name}`); window.scroll(0,0)}} />
+
                 </div>
 
                 <div className="flex justify-evenly">
@@ -69,6 +70,7 @@ function UserSchema({ user }) {
                                     (<p></p>)
                                     
                                     }       
+
                                 </>
                             )
                     }
