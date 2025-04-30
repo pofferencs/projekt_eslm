@@ -11,7 +11,8 @@ export const UserProvider = ({children})=>{
   const [refresh, setRefresh] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [profile, setProfile] = useState([]);
- 
+  const [isLoading, setIsLoading] = useState(true);
+
   const authStatus = async () =>{
   
     
@@ -29,6 +30,7 @@ export const UserProvider = ({children})=>{
         
         setProfile(auth.user);
         setIsAuthenticated(true);
+        setIsLoading(false);
         update();
         
     
@@ -36,26 +38,19 @@ export const UserProvider = ({children})=>{
       } else {
         
         setIsAuthenticated(false);
+        setIsLoading(false);
         logout();
-        navigate('/')
         update();
        
       }
       
       
     })
-    .catch(err=>{console.log(err); setIsAuthenticated(false); logout(); update();});
+    .catch(err=>{console.log(err); setIsAuthenticated(false); setIsLoading(false); logout(); update();});
    
     
     
   }
-
-  // useEffect(()=>{
-
-  //     authStatus()
-
-
-  // },[])
 
   const update = ()=>{
     setRefresh(prev=>!prev);
@@ -74,7 +69,7 @@ export const UserProvider = ({children})=>{
       
       return res.json();
     })
-    .then(data=> {setIsAuthenticated(false); sessionStorage.removeItem('tokenU'); update(); })
+    .then(data=> {setIsAuthenticated(false); setIsLoading(false); update(); })
     .catch(err=>{alert(err)});
   }
 
@@ -89,8 +84,7 @@ export const UserProvider = ({children})=>{
       .then(res => res.json())
       .then(token => {
         if (!token.message) {
-          sessionStorage.setItem('tokenU', token);
-          toast.success('Sikeres belépés!');
+          toast.success('Sikeres belépés! Oldalfrissítés 5 másodperc múlva!');
           setTimeout(()=>{navigate('/'); pageRefresh()},5000)
           
         } else {
@@ -103,6 +97,7 @@ export const UserProvider = ({children})=>{
 
   const pageRefresh = () =>{
     window.location.reload();
+    window.scroll(0,0);
   }
 
 
@@ -115,7 +110,9 @@ export const UserProvider = ({children})=>{
     isAuthenticated,
     login,
     pageRefresh,
-    profile
+    profile,
+    isLoading,
+    setIsLoading,
   }}>{children}</UserContext.Provider>
 }
 

@@ -1,25 +1,39 @@
 import { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom"
 import UserContext from "../../context/UserContext";
+import { toast } from "react-toastify";
 
 
 function UserProfile() {
 
-  const { name } = useParams();
-  const { isAuthenticated, profile } = useContext(UserContext);
+  const {name} = useParams();
+  const {isAuthenticated, profile, isLoading, setIsLoading} = useContext(UserContext);
   const [profileAdat, setProfileAdat] = useState({});
-  const navigate = useNavigate();
+  const [picPath, setPicPath] = useState("");
+  const [isForm, setIsForm] = useState(false);
+  const [disabled, setDisabled] = useState(true);
+  const [emailDisabled, setEmailDisabled] = useState(false);
+  const navigate = useNavigate(); 
 
-  const [userPicPath, setUserPicPath] = useState("https://images.unsplash.com/photo-1472099645785-5658abf4ff4e")
+  let formObj = {
+    full_name: "", //megvan
+    paswrd: "", //megvan
+    email_address: "",
+    date_of_birth: "", //megvan
+    school: "", //megvan
+    clss: "", //megvan
+    phone_num: "", // megvan
+    om_identifier: "", //megvan
+    discord_name: "", //megvan
+};
 
-  useEffect(() => {
-    if (!profile?.id) return;
 
-    fetch(`${import.meta.env.VITE_BASE_URL}/user/userpic/${profile.id}`)
-      .then(res => res.json())
-      .then(adatok => setUserPicPath(adatok))
-      .catch(err => console.log(err));
-  }, [profile?.id]);
+  const [formData, setFormData] = useState(formObj);
+  
+  
+
+  useEffect(()=>{
+
 
   useEffect(() => {
 
@@ -32,112 +46,403 @@ function UserProfile() {
             "Content-Type": "application/json"
           }
         })
-          .then(res => res.json())
-          .then(adat => {
-            console.log(adat);
-            if (!adat.message) {
-              setProfileAdat(adat[0]);
-            } else {
-              navigate('/')
-            }
-          })
-          .catch(err => alert(err));
+        .then(res=>res.json())
+        .then(adat=>{console.log(adat); 
+        if(!adat.message)
+        {
+          setProfileAdat(adat[0]);
+          setPicPath(
+            fetch(`${import.meta.env.VITE_BASE_URL}/user/userpic/${adat[0].id}`)
+            .then(res => res.json())
+            .then(adat => {setPicPath(adat); setIsLoading(false); setFormData(profile)})
+            .catch(err => {console.log(err)})
+          )
+        }else{
+          navigate('/')
+        }
+        })
+        .catch(err=>alert(err));
+
       }
+      
+    
+  },[isAuthenticated]);
 
-    } else {
-      //navigate('/');
+  useEffect(()=>{
+
+    if(!name){
+      fetch(`${import.meta.env.VITE_BASE_URL}/user/userpic/${profile.id}`)
+            .then(res => res.json())
+            .then(adat => {setPicPath(adat); setIsLoading(false);})
+            .catch(err => {console.log(err)});
+
     }
+   
+    console.log("refreshed navbar")
+  },[isAuthenticated])
 
-    console.log(profileAdat)
+  // useEffect(()=>{
+  //   if(isAuthenticated==false && !name){
+  //     navigate('/');
+  //   }
 
-  }, [isAuthenticated]);
+  // },[profileAdat])
+
 
   const dateFormat = (date) => {
 
     if (date != undefined) {
       const [ev, honap, nap] = date.split('T')[0].split('-')
 
-      return `${ev}. ${honap}. ${nap}.`;
-    } else {
-      return "";
+      return `${ev}-${honap}-${nap}`;
+    }else{
+      return ``;
     }
 
   }
+
+
+  //Adatmódosító rész
+
+  const kuldesEmail = (email, method) => {
+        
+    fetch(`${import.meta.env.VITE_BASE_URL}/user/password-reset`,{
+        method: method,
+        headers: { "Content-type": "application/json" },
+        body: JSON.stringify({email: email}),
+    }).then((res) => res.json())
+          .then((token) => {
+            if(!token.ok) {
+              
+              toast.success(token.message)
+            }
+          })
+          .catch((err) => alert(err));
+  };
+
+
+
+
+  console.log(formData);
+
+  
+ 
+  const modify = (formData, method) => {
+
+
+    //1. vizsgálódás
+
+    if(formData.paswrd != ""){
+      formObj = {
+        full_name: profile.full_name, //megvan
+        paswrd: "a", //megvan
+        date_of_birth: "", //megvan
+        school: "", //megvan
+        clss: "", //megvan
+        phone_num: "", // megvan
+        om_identifier: "", //megvan
+        discord_name: "", //megvan
+      }
+
+      
+      console.log(formObj)
+      
+    }
+
+    
+      
+  };
+
+  const onSubmit = (e) => {
+    e.preventDefault();
+    modify(formData, "POST");
+  };
+
+  const writeData = (e) => {
+    setFormData((prevState) => ({
+      ...prevState,
+      [e.target.id]: e.target.value,
+    }));
+  };
+
+
+
+  
+
+  
+
+
+
+
   return (
 
-    <div className="bg-gradient-to-r from-indigo-800 to-blue-900 min-h-screen flex items-center justify-center p-4">
-      <div className="font-std mb-10 w-full rounded-2xl bg-gray-800 p-10 font-normal leading-relaxed text-gray-900 shadow-xl">
-        <div className="justify justify-center">
+    (isLoading!=false)?
+    (
+      <></>
 
-          <div>
-            <div className="md:w-1/3 text-center mb-8 md:mb-0">
-              <img src={import.meta.env.VITE_BASE_URL + `${import.meta.env.VITE_BASE_PIC}${userPicPath}`} alt={`${profileAdat.usr_name} profilképe`} title={`${profileAdat.usr_name} profilképe`} className="rounded-full w-48 h-48 mx-auto mb-4 border-4 border-indigo-800 transition-transform duration-300 hover:scale-105 ring ring-gray-300" />
-              <button className="mt-4 bg-indigo-800 text-white px-4 py-2 rounded-lg hover:bg-blue-900 transition-colors duration-300 ring ring-gray-300 hover:ring-indigo-300">Szerkesztés</button>
-            </div>
-            <div className="md:w-2/3 md:pl-8">
-              <p className="text-slate-400">
-                Felhasználónév
-              </p>
-              <h1 className="text-2xl font-bold  text-indigo-400 mb-5 ml-7">{profileAdat.usr_name}</h1>
-
-              <p className="text-slate-400">
-                Teljes név
-              </p>
-              <h2 className="text-xl italic font-bold text-indigo-400  ml-7 mb-5 ">{profileAdat.full_name}</h2>
-
-              <p className="text-slate-400">
-                Meghívhatóság
-              </p>
-              {
-                (profile.status == "inactive" || profile.inviteable === false)
-                  ?
-                  (<p className="drop-shadow-lg italic text-red-500  mb-5 ml-7">Nem fogad meghívót</p>)
-                  :
-                  (<p className="drop-shadow-lg italic text-green-500  mb-5 ml-7">Fogad meghívót</p>)
-
+    ):(
+      <div className="">
+      {
+        (name!=profile.usr_name)?(
+          <>
+          <div className="m-10 rounded-md bg-gradient-to-br from-indigo-950 to-slate-500 sm:w-[600px] md:w-[800px] lg:w-[1000px] xl:w-[1200px] mx-auto text-primary-content">
+          <div className="card-body">
+            <div className="flex justify-center pb-8 gap-10">
+              <img className="w-60" src={`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_BASE_PIC}${picPath}`}/>
+              <div className="card-title">
+                <div className="pl-14">
+                <p className="text-3xl pb-2 text-white">{profileAdat.usr_name}</p>
+                {
+                ( profileAdat.inviteable == true && profileAdat.status == "active") ? (
+                  <div>
+                  <p className="text-green-500 text-lg">Meghívható</p>
+                  {(isAuthenticated==true && profileAdat.status == "active")?(
+                    <button className="btn mt-3 text-white">Meghívás csapatba</button>
+                  ):(
+                    <p></p>
+                  )}
+                  </div>
+                ):
+                ( profileAdat.inviteable == false || (profileAdat.status == "inactive" || profileAdat.status == "banned") )? (
+                  <div>
+                  <p className="text-red-500 text-lg">Nem meghívható</p>
+                  </div>
+                ): (<p>{/*ez itt egy üres sor, amivel megakadályozzuk, hogy a komponens betöltődésekor ne jelenjen még meg semmi, hanem majd akkor, ha lesz is adat*/}</p>)
               }
-
-              <p className="text-slate-400">
-                Iskola
-              </p>
-              <h2 className="text-xl italic font-bold text-indigo-400  ml-7 mb-5 ">{profileAdat.school}</h2>
-
-
-              <p className="text-slate-400">
-                Osztály
-              </p>
-              <h2 className="text-xl italic font-bold text-indigo-400  ml-7 mb-5 ">{profileAdat.clss}</h2>
-
-              <p className="text-slate-400">
-                Születési dátum
-              </p>
-              <h2 className="text-xl italic font-bold text-indigo-400  ml-7 mb-5 ">{dateFormat(profileAdat.date_of_birth)}</h2>
-
-              <h2 className="text-xl font-semibold text-indigo-200 mb-4">Contact Information</h2>
-              <ul className="space-y-2 text-gray-700">
-                <li className="flex items-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-indigo-800 " viewBox="0 0 20 20" fill="currentColor">
-                    <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
-                    <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
-                  </svg>
-                  {profileAdat.email_address}
-                </li>
-                <li className="flex items-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-indigo-800" viewBox="0 0 20 20" fill="currentColor">
-                    <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
-                  </svg>
-                  {profileAdat.phone_num}
-                </li>
-              </ul>
+                  </div>
+              </div>
             </div>
-          </div>
 
 
-
+          <div className="border-t border-b border-gray-200 px-4 py-5 sm:p-0">
+            <dl className="sm:divide-y sm:divide-gray-200">
+                <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt className="text-sm text-white font-bold">
+                        Teljes név
+                    </dt>
+                    <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                      <p>{profileAdat.full_name}</p>
+                    </dd>
+                </div>
+                <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt className="text-sm text-white font-bold"> 
+                        Iskola
+                    </dt>
+                    <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                      <p>{profileAdat.school}</p>
+                    </dd>
+                </div>
+                <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt className="text-sm text-white font-bold">
+                        Osztály
+                    </dt>
+                    <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                      <p>{profileAdat.clss}</p>
+                    </dd>
+                </div>
+            </dl>
         </div>
+          </div>
+        </div>
+        </>
+        ):
+        (
+        (!isForm)? (
+          <div className="m-10 rounded-md bg-gradient-to-br from-indigo-950 to-slate-500 sm:w-[600px] md:w-[800px] lg:w-[1000px] xl:w-[1200px] mx-auto text-primary-content">
+          <div className="card-body">
+            <div className="flex justify-center pb-8 gap-10">
+              <img className="w-60" src={`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_BASE_PIC}${picPath}`}/>
+              <div className="card-title">
+                <div className="pl-14">
+                <p className="text-3xl pb-2 text-white">{profile.usr_name}</p>
+                {
+                ( profile.inviteable == true) ? (
+                  <p className="text-green-500 text-lg">Meghívható</p>
+                ):
+                ( profile.inviteable == false || (profile.status == "banned" || profile.status == "inactive" ))? (
+                  <p className="text-red-500 text-lg">Nem meghívható</p>
+                  
+                ): (<p>{/*ez itt egy üres sor, amivel megakadályozzuk, hogy a komponens betöltődésekor ne jelenjen még meg semmi, hanem majd akkor, ha lesz is adat*/}</p>)
+              }
+              <div className="flex flex-col">
+              <button className="btn mt-3 text-white w-52" onClick={()=> {setIsForm(true); setDisabled(false);}}>Adatok módosítása</button>
+              
+              </div>
+                  </div>
+              </div>
+            </div>
 
-      </div>
+            {/* <button disabled={emailDisabled} className="btn mt-3 text-white w-52" onClick={()=> {kuldesEmail(profile.email_address, "POST"); setEmailDisabled(true)}}>Jelszó módosítás</button> */}
+
+            {/* <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt className="text-sm text-white font-bold">
+                        Születési dátum
+                    </dt>
+                    <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                    {
+                    (<p>{dateFormat(profile.date_of_birth)}</p>)
+                    }
+                    </dd>
+                </div> */}
+            
+          
+          <div className="w-full mx-auto rounded-lg shadow-lg md:mt-6 md:max-w-lg sm:max-w-4xl xl:p-0 bg-gray-800 dark:border-gray-700">
+            <div className="p-8 md:p-10">
+              <form className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                <div key={"full_name"}>
+                  <label className="block text-sm font-medium text-white">
+                      Teljes név
+                  </label>
+                  <input id="full_name" type="text" disabled={disabled} onChange={writeData} value={formData.full_name} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm"/>
+                </div>
+
+                <div key={"date_of_birth"}>
+                  <label className="block text-sm font-medium text-white">
+                      Születési dátum
+                  </label>
+                  <input id="date_of_birth" type="date" disabled={disabled} onChange={writeData} value={dateFormat(formData.date_of_birth)} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm"/>
+                </div>
+
+                <div key={"full_name"}>
+                  <label className="block text-sm font-medium text-white">
+                      E-mail cím
+                  </label>
+                  <input id="email_address" type="text" disabled={disabled} onChange={writeData} value={formData.email_address} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm"/>
+                </div>
+
+                <div key={"phone_num"}>
+                  <label className="block text-sm font-medium text-white">
+                      Telefonszám
+                  </label>
+                  <input id="phone_num" type="text" disabled={disabled} onChange={writeData} value={formData.phone_num} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm"/>
+                </div>
+
+                <div key={"school"}>
+                  <label className="block text-sm font-medium text-white">
+                      Iskola
+                  </label>
+                  <input id="school" type="text" disabled={disabled} onChange={writeData} value={formData.school} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm"/>
+                </div>
+
+                <div key={"clss"}>
+                  <label className="block text-sm font-medium text-white">
+                      Osztály
+                  </label>
+                  <input id="clss" type="text" disabled={disabled} onChange={writeData} value={formData.clss} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm"/>
+                </div>
+
+              </form>
+            </div>
+        </div>
+          </div>
+        </div>
+        ): (
+          <>
+          {/* Itt lesz egy form kialakítású módosító felület*/}
+
+          <form onSubmit={onSubmit}>
+          
+          <div className="m-10 rounded-md bg-gradient-to-br from-indigo-950 to-slate-500 sm:w-[600px] md:w-[800px] lg:w-[1000px] xl:w-[1200px] mx-auto text-primary-content">
+          <div className="card-body">
+            <div className="flex justify-center pb-8 gap-10">
+              <img className="w-60" src={`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_BASE_PIC}${picPath}`}/>
+              <div className="card-title">
+                <div className="pl-14">
+                <p className="text-3xl pb-2 text-white">{profile.usr_name}</p>
+                {
+                ( profile.inviteable == true) ? (
+                  <p className="text-green-500 text-lg">Meghívható</p>
+                ):
+                ( profile.inviteable == false)? (
+                  <p className="text-red-500 text-lg">Nem meghívható</p>
+                  
+                ): (<p>{/*ez itt egy üres sor, amivel megakadályozzuk, hogy a komponens betöltődésekor ne jelenjen még meg semmi, hanem majd akkor, ha lesz is adat*/}</p>)
+              }
+              <div className="flex flex-wrap gap-2">
+              <button className="btn mt-3 text-white" type="submit">Módosítás</button>
+              <button className="btn mt-3 text-white" onClick={()=> {setIsForm(false); setDisabled(true);}}>Mégse</button>
+              </div>
+                  </div>
+              </div>
+            </div>            
+          
+          <div className="border-t border-b border-gray-200 px-4 py-5 sm:p-0">
+            <dl className="sm:divide-y sm:divide-gray-200">
+                <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt className="text-sm text-white font-bold">
+                        Teljes név
+                    </dt>
+                    <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                      <p>{profile.full_name}</p>
+                    </dd>
+                </div>
+                <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt className="text-sm text-white font-bold">
+                        Születési dátum
+                    </dt>
+                    <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                    {
+                    (<p>{dateFormat(profile.date_of_birth)}</p>)
+                    }
+                    </dd>
+                </div>
+                <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt className="text-sm text-white font-bold">
+                        E-mail cím
+                    </dt>
+                    <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                      <p>{profile.email_address}</p>
+                    </dd>
+                </div>
+                <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                  <dt className="text-sm text-white font-bold">
+                        Telefonszám
+                    </dt>
+                    <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                      <p>{profile.phone_num}</p>
+                    </dd>
+                </div>
+                <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt className="text-sm text-white font-bold"> 
+                        Iskola
+                    </dt>
+                    <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                      <p>{profile.school}</p>
+                    </dd>
+                </div>
+                <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt className="text-sm text-white font-bold">
+                        Osztály
+                    </dt>
+                    <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                      <p>{profile.clss}</p>
+                    </dd>
+                </div>
+                <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt className="text-sm text-white font-bold">
+                        OM-azonosító
+                    </dt>
+                    <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                      <p>{profile.om_identifier}</p>
+                    </dd>
+                </div>
+            </dl>
+        </div>
+          </div>
+        </div>
+          
+          
+        </form>
+          
+          
+          </>
+        )
+        )
+      }
+
     </div>
+    )
   )
 }
 
