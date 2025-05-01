@@ -42,7 +42,8 @@ const protectUser = async (req, res, next) =>{
                     status: true,
                     email_address: true,
                     phone_num: true,
-                    om_identifier: true
+                    om_identifier: true,
+                    discord_name: true
                 }
             });
             next();
@@ -109,7 +110,9 @@ const protectOgr = async (req, res, next) =>{
                     status: true,
                     email_address: true,
                     phone_num: true,
-                    om_identifier: true
+                    om_identifier: true,
+                    discord_name: true
+
                 }
             });
             next();

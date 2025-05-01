@@ -2,7 +2,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import UserContext from '../../context/UserContext';
 import { useContext, useEffect, useState } from 'react';
 import Logo from '../../assets/logo.png';
-import { useState } from 'react';
 import { toast } from 'react-toastify';
 
 function Navbar() {
@@ -23,12 +22,13 @@ function Navbar() {
 
   useEffect(()=>{
 
+    
     fetch(`${import.meta.env.VITE_BASE_URL}/user/userpic/${profile.id}`)
             .then(res => res.json())
             .then(adat => setPicPath(adat))
             .catch(err => {console.log(err)});
             //console.log("refreshed navbar")
-  },[isAuthenticated])
+  
 
 
     const interval = setInterval(() => {
@@ -36,6 +36,7 @@ function Navbar() {
     }, 60000); // 1 percenként
 
     return () => clearInterval(interval);
+
   }, [isAuthenticated]);
 
   return (
