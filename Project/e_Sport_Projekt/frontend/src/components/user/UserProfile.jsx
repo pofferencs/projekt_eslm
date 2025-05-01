@@ -50,7 +50,7 @@ function UserProfile() {
    
 
       if (name != undefined) {
-        fetch(`${import.meta.env.VITE_BASE_URL}/list/unamesearch/${name}`, {
+        fetch(`${import.meta.env.VITE_BASE_URL}/user/userprofilesearchbyname/${name}`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json"
@@ -60,9 +60,9 @@ function UserProfile() {
         .then(adat=>{console.log(adat); 
         if(!adat.message)
         {
-          setProfileAdat(adat[0]);
+          setProfileAdat(adat);
           setPicPath(
-            fetch(`${import.meta.env.VITE_BASE_URL}/user/userpic/${adat[0].id}`)
+            fetch(`${import.meta.env.VITE_BASE_URL}/user/userpic/${adat.id}`)
             .then(res => res.json())
             .then(adat => {setPicPath(adat); setIsLoading(false); setFormData(profile);})
             .catch(err => {console.log(err)})
