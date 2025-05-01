@@ -32,15 +32,13 @@ function UserProfile() {
   
   
 
-  useEffect(()=>{
-
 
   useEffect(() => {
 
     if (isAuthenticated) {
 
       if (name != undefined) {
-        fetch(`${import.meta.env.VITE_BASE_URL}/user/userprofilesearch/${name}`, {
+        fetch(`${import.meta.env.VITE_BASE_URL}/list/unamesearch/${name}`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json"
@@ -63,7 +61,7 @@ function UserProfile() {
         })
         .catch(err=>alert(err));
 
-      }
+      }}
       
     
   },[isAuthenticated]);
