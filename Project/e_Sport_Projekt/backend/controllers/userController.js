@@ -56,9 +56,27 @@ const passEmailSend = async (req, res)=>{
     }
 
     //TODO: Itt elágazásba azt, hogy cseréljük a tokent egy adott emailnél
+
+    console.log(verifyTokens);
+
+    if(verifyTokens.find(x=>x.email == user.email_address)){
+        const token = jwt.sign({email: user.email_address}, process.env.JWT_SECRET, {expiresIn: "15m"});
+        const index = verifyTokens.findIndex(x=>x.email == user.email_address);
+
+        verifyTokens[index].token = token;
+
+        //console.log("Cserélve!", verifyTokens);
+    }else{
+        const token = jwt.sign({email: user.email_address}, process.env.JWT_SECRET, {expiresIn: "15m"});
+        verifyTokens.push({"token": token, "email": user.email_address});
+
+        //console.log("Új felvéve!", verifyTokens)
+    }
+
+    const token = verifyTokens.find(x=>x.email == user.email_address);
     
-    const token = jwt.sign({email: user.email_address}, process.env.JWT_SECRET, {expiresIn: "15m"});
-    verifyTokens.push({"token": token, "email": user.email_address});
+    
+    
 
     const transporter = nodemailer.createTransport({
         host: process.env.SMTP_HOST,
@@ -78,44 +96,24 @@ const passEmailSend = async (req, res)=>{
         from: process.env.EMAIL_ADDRESS,
         to: user.email_address,
         subject: "Jelszó visszaállítás",
-        text: `Szia! Az alábbi link 15 percig érvényes, így újra kell kérned, ha lejár. Ezen a linken tudod a jelszavadat visszaállítani: ${process.env.VITE_PASS_RESET_URL}?token=${token}`,
+        text: `Szia! Az alábbi link 15 percig érvényes, így újra kell kérned, ha lejár. Ezen a linken tudod a jelszavadat visszaállítani: ${process.env.VITE_PASS_RESET_URL}?token=${token.token}`,
         html: `
         <h1>Jelszó visszaállítás</h1>
         <p>Szia! Az alábbi link 15 percig érvényes, így újra kell kérned, ha lejár.</p>
         <p>Ezen a linken tudod a jelszavadat visszaállítani:</p>
-        <p>${process.env.VITE_PASS_RESET_URL}?token=${token}</p>
+        <p>${process.env.VITE_PASS_RESET_URL}?token=${token.token}</p>
         <p>Vedd figyelembe, hogy a fenti link 15 percig érvényes, így újra kell kérned, ha lejár.</p>
         `,
       };
 
       try {
 
-        console.log(verifyTokens);
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        console.log(Boolean(decoded.email == user.email_address));
         
+        const decoded = jwt.verify(token.token, process.env.JWT_SECRET);
+        console.log(Boolean(decoded.email == user.email_address));
 
-        if((decoded.email == user.email_address)){
-
-            const index = verifyTokens.findIndex(x=>x.token === token)
-            if(index !== -1){
-                verifyTokens.splice(index,1);
-                console.log("Token törölve!");
-                
-            }
-
-            return res.status(400).json({message: 'Erre az e-mail címre már küldtünk levelet!'});
-            
-        }else{
-
-            
-
-            
-
-            await transporter.sendMail(mailOptions);
-            return res.status(200).json({message: "Kiküldtük az e-mailt a megadott címre!"})
-
-        }
+        await transporter.sendMail(mailOptions);
+        return res.status(200).json({message: "Kiküldtük az e-mailt a megadott címre!"})
 
         
     
@@ -147,14 +145,6 @@ const passEmailVerify = async (req, res) =>{
                     email_address: decoded.email
                 }
             })
-
-            const index = verifyTokens.findIndex(x=>x.token === token)
-            if(index !== -1){
-                verifyTokens.splice(index,1);
-                console.log("Token törölve!");
-            }else{
-                console.log("Token nem található.")
-            }
 
             return res.status(200).json({verified: true, data: decoded, id: user.id});
 
@@ -433,24 +423,24 @@ const userUpdate = async (req, res) => {
 
         //Egyéb adat módosítás esetén:
 
-        // if(!new_email_address && !paswrd && !new_usr_name && !usr_name){
+        if(!new_email_address && !paswrd && !new_usr_name && !usr_name){
 
 
-        //     const modUser = await prisma.users.update({
-        //         where: {
-        //             id: id
-        //         },
-        //         data: {
-        //             full_name: full_name,
-        //             school: school,
-        //             phone_num: phone_num,
-        //             status: status,
-        //             discord_name: discord_name
-        //         }
+            const modUser = await prisma.users.update({
+                where: {
+                    id: id
+                },
+                data: {
+                    full_name: full_name,
+                    school: school,
+                    phone_num: phone_num,
+                    status: status,
+                    discord_name: discord_name
+                }
 
-        //     });
-        //     return res.status(200).json({ message: "Sikeres adatfrissítés!" });
-        // }
+            });
+            return res.status(200).json({ message: "Sikeres adatfrissítés!" });
+        }
 
 
         //Email módosítás esetén:
