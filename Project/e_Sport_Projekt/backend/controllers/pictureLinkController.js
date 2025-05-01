@@ -22,7 +22,7 @@ const picture_linkUpdate = async (req, res) => {
             { id: tem_id, message: "Sikeres adatfrissítés, csapat kép!", condition: "tem_id" },
             { id: tnt_id, message: "Sikeres adatfrissítés, tournament kép!", condition: "tnt_id" },
             { id: evt_id, message: "Sikeres adatfrissítés, event kép!", condition: "evt_id" },
-            { id: ogr_id, message: "Sikeres adatfrissítés, szervező kép!", condition: "ogr_id"}
+            { id: ogr_id, message: "Sikeres adatfrissítés, szervező kép!", condition: "ogr_id" }
         ];
 
         /*

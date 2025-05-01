@@ -459,17 +459,16 @@ function UserProfile() {
                               <form onSubmit={onSubmit}>
                                 <div className="flex flex-wrap gap-2">
                                   <button className="btn mt-3 text-white" type="submit">Módosítás</button>
+                                  <button className="btn mt-3 text-white" type="submit">Fénykép törlés</button>
+
                                   <button className="btn mt-3 text-white" type="button" onClick={() => { setIsForm(false); setDisabled(true); formReset() }}>Mégse</button>
+
                                 </div>
-
                                 {/* Fénykép feltöltés */}
-
-                                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="default_size">Default size</label>
-                                <input class="block w-full mb-5 text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" id="default_size" type="file" />
-
-
-
-
+                                <div className="mt-3">
+                                  <label className="block text-sm font-medium text-white" htmlFor="default_size">Fénykép cseréje</label>
+                                  <input className="block w-full mb-5 text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 mt-1" id="default_size" type="file" />
+                                </div>
                               </form>
                             </div>
                           </div>
@@ -541,6 +540,9 @@ function UserProfile() {
                                 </label>
                                 <input type="text" disabled value={formData.om_identifier} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-gray-400 shadow-sm" />
                               </div>
+
+
+
 
                             </div>
 

@@ -35,48 +35,48 @@ let verifyTokens = [];
 
 
 //Email küldés jelszó visszaállításra
-const passEmailSend = async (req, res)=>{
+const passEmailSend = async (req, res) => {
 
-    const {email} = req.body;
+    const { email } = req.body;
 
-    if(!email){
-        return res.status(500).json({message: "Add meg az e-mail címet!"});
+    if (!email) {
+        return res.status(500).json({ message: "Add meg az e-mail címet!" });
     }
 
     //Létezik-e a felhasználó?
 
     const user = await prisma.users.findFirst({
-        where:{
+        where: {
             email_address: email
         }
     });
 
-    if(!user){
-        return res.status(500).json({message: "Ilyen felhasználó nem regisztrált!"});
+    if (!user) {
+        return res.status(500).json({ message: "Ilyen felhasználó nem regisztrált!" });
     }
 
     //TODO: Itt elágazásba azt, hogy cseréljük a tokent egy adott emailnél
 
     console.log(verifyTokens);
 
-    if(verifyTokens.find(x=>x.email == user.email_address)){
-        const token = jwt.sign({email: user.email_address}, process.env.JWT_SECRET, {expiresIn: "15m"});
-        const index = verifyTokens.findIndex(x=>x.email == user.email_address);
+    if (verifyTokens.find(x => x.email == user.email_address)) {
+        const token = jwt.sign({ email: user.email_address }, process.env.JWT_SECRET, { expiresIn: "15m" });
+        const index = verifyTokens.findIndex(x => x.email == user.email_address);
 
         verifyTokens[index].token = token;
 
         //console.log("Cserélve!", verifyTokens);
-    }else{
-        const token = jwt.sign({email: user.email_address}, process.env.JWT_SECRET, {expiresIn: "15m"});
-        verifyTokens.push({"token": token, "email": user.email_address});
+    } else {
+        const token = jwt.sign({ email: user.email_address }, process.env.JWT_SECRET, { expiresIn: "15m" });
+        verifyTokens.push({ "token": token, "email": user.email_address });
 
         //console.log("Új felvéve!", verifyTokens)
     }
 
-    const token = verifyTokens.find(x=>x.email == user.email_address);
-    
-    
-    
+    const token = verifyTokens.find(x => x.email == user.email_address);
+
+
+
 
     const transporter = nodemailer.createTransport({
         host: process.env.SMTP_HOST,
@@ -84,15 +84,15 @@ const passEmailSend = async (req, res)=>{
         port: process.env.SMTP_PORT,
         secure: true,
         auth: {
-          user: process.env.EMAIL_ADDRESS,
-          pass: process.env.EMAIL_PASSWORD
+            user: process.env.EMAIL_ADDRESS,
+            pass: process.env.EMAIL_PASSWORD
         },
-        tls:{
-          rejectUnauthorized: false,
+        tls: {
+            rejectUnauthorized: false,
         }
-      })
-    
-      const mailOptions = {
+    })
+
+    const mailOptions = {
         from: process.env.EMAIL_ADDRESS,
         to: user.email_address,
         subject: "Jelszó visszaállítás",
@@ -104,87 +104,87 @@ const passEmailSend = async (req, res)=>{
         <p>${process.env.VITE_PASS_RESET_URL}?token=${token.token}</p>
         <p>Vedd figyelembe, hogy a fenti link 15 percig érvényes, így újra kell kérned, ha lejár.</p>
         `,
-      };
+    };
 
-      try {
+    try {
 
-        
+
         const decoded = jwt.verify(token.token, process.env.JWT_SECRET);
         console.log(Boolean(decoded.email == user.email_address));
 
         await transporter.sendMail(mailOptions);
-        return res.status(200).json({message: "Kiküldtük az e-mailt a megadott címre!"})
+        return res.status(200).json({ message: "Kiküldtük az e-mailt a megadott címre!" })
 
-        
-    
-    
-        
-      } catch (error) {
-        return res.status(500).json({message: error.message});
-      }
+
+
+
+
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
 
 
 };
 
-const passEmailVerify = async (req, res) =>{
+const passEmailVerify = async (req, res) => {
 
-    const {token} = req.body;  
-    
-        try {
+    const { token } = req.body;
 
-            const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    try {
 
-            
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-            if(!verifyTokens.find(e=>e.token == token)){
-                return res.status(400).json({verified: false, message: 'A token lejárt!'});
+
+
+        if (!verifyTokens.find(e => e.token == token)) {
+            return res.status(400).json({ verified: false, message: 'A token lejárt!' });
+        }
+
+        const user = await prisma.users.findFirst({
+            where: {
+                email_address: decoded.email
             }
+        })
 
-            const user =  await prisma.users.findFirst({
-                where: {
-                    email_address: decoded.email
-                }
-            })
+        return res.status(200).json({ verified: true, data: decoded, id: user.id });
 
-            return res.status(200).json({verified: true, data: decoded, id: user.id});
+    } catch (error) {
+        if (error.name === 'TokenExpiredError') {
+            return res.status(400).json({ verified: false, message: 'A token lejárt!' });
+        } else if (error.name === 'JsonWebTokenError') {
+            return res.status(400).json({ verified: false, message: 'Érvénytelen token!' });
+        } else {
+            return res.status(500).json('Hiba a token ellenőrzésekor:', error.message);
+        }
+    }
 
-          } catch (error) {
-            if (error.name === 'TokenExpiredError') {
-              return res.status(400).json({verified: false, message: 'A token lejárt!'});
-            } else if (error.name === 'JsonWebTokenError') {
-                return res.status(400).json({verified: false, message: 'Érvénytelen token!'});
-            }else {
-              return res.status(500).json('Hiba a token ellenőrzésekor:', error.message);
-            }
-          }
-    
 };
 
 
 //Email verifikációhoz email küldés
 
-const verifyEmailSend = async (req, res)=>{
+const verifyEmailSend = async (req, res) => {
 
-    const {email} = req.body;
+    const { email } = req.body;
 
-    if(!email){
-        return res.status(500).json({message: "Add meg az e-mail címet!"});
+    if (!email) {
+        return res.status(500).json({ message: "Add meg az e-mail címet!" });
     }
 
     //Létezik-e a felhasználó?
 
     const user = await prisma.users.findFirst({
-        where:{
+        where: {
             email_address: email
         }
     });
 
-    if(!user){
-        return res.status(500).json({message: "Ilyen felhasználó nem regisztrált!"});
+    if (!user) {
+        return res.status(500).json({ message: "Ilyen felhasználó nem regisztrált!" });
     }
 
 
-    const token = jwt.sign({email: user.email_address}, process.env.JWT_SECRET, {expiresIn: "15m"});
+    const token = jwt.sign({ email: user.email_address }, process.env.JWT_SECRET, { expiresIn: "15m" });
 
 
     const transporter = nodemailer.createTransport({
@@ -193,15 +193,15 @@ const verifyEmailSend = async (req, res)=>{
         port: process.env.SMTP_PORT,
         secure: true,
         auth: {
-          user: process.env.EMAIL_ADDRESS,
-          pass: process.env.EMAIL_PASSWORD
+            user: process.env.EMAIL_ADDRESS,
+            pass: process.env.EMAIL_PASSWORD
         },
-        tls:{
-          rejectUnauthorized: false,
+        tls: {
+            rejectUnauthorized: false,
         }
-      })
-    
-      const mailOptions = {
+    })
+
+    const mailOptions = {
         from: process.env.EMAIL_ADDRESS,
         to: user.email_address,
         subject: "Regisztráció megerősítő levél",
@@ -213,18 +213,18 @@ const verifyEmailSend = async (req, res)=>{
         <p>${process.env.VITE_EMAIL_VERIFY_URL}?token=${token}</p>
         <p>Vedd figyelembe, hogy a fenti link 15 percig érvényes, így újra kell kérned, ha lejár.</p>
         `,
-      };
+    };
 
-      try {
+    try {
 
         await transporter.sendMail(mailOptions);
-        return res.status(200).json({message: "E-mail címedre megerősítő levelet küldtünk!"})
-    
-    
-        
-      } catch (error) {
-        return res.status(500).json({message: error.message});
-      }
+        return res.status(200).json({ message: "E-mail címedre megerősítő levelet küldtünk!" })
+
+
+
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
 
 
 };
@@ -232,56 +232,56 @@ const verifyEmailSend = async (req, res)=>{
 //Email verifikált függvény hívás
 
 
-const emailVerifiedMod = async (req, res) =>{
+const emailVerifiedMod = async (req, res) => {
 
-    const {token} = req.body;
-    
-        try {
+    const { token } = req.body;
 
-            const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    try {
 
-            const user =  await prisma.users.findFirst({
-                where: {
-                    email_address: decoded.email
-                }
-            })
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-            if(user.status=="active" || user.status=="inactive"){
-                return res.status(400).json({status: user.status, verified: true, message: "Ennek a fióknak megerősítése már van!"});
+        const user = await prisma.users.findFirst({
+            where: {
+                email_address: decoded.email
             }
+        })
 
-            //A megtalált felhasználó adatával módosítunk
-            const modUser = await prisma.users.update({
-                where:{
-                    id: user.id
-                },
-                data:{
-                    status: "active"
-                }
-            });
+        if (user.status == "active" || user.status == "inactive") {
+            return res.status(400).json({ status: user.status, verified: true, message: "Ennek a fióknak megerősítése már van!" });
+        }
 
-            return res.status(200).json({status: user.status, verified: true, message: "A fiók megerősítése sikeres! Bejelentkezhetsz!"});
-
-          } catch (error) {
-
-            if (error.name === 'TokenExpiredError') {
-              return res.status(400).json({verified: false, message: 'A token lejárt!'});
-            } else if (error.name === 'JsonWebTokenError') {
-                return res.status(400).json({verified: false, message: 'Érvénytelen token!'});
-            }else {
-              return res.status(500).json('Hiba a token ellenőrzésekor:', error.message);
+        //A megtalált felhasználó adatával módosítunk
+        const modUser = await prisma.users.update({
+            where: {
+                id: user.id
+            },
+            data: {
+                status: "active"
             }
-          }
-    
+        });
+
+        return res.status(200).json({ status: user.status, verified: true, message: "A fiók megerősítése sikeres! Bejelentkezhetsz!" });
+
+    } catch (error) {
+
+        if (error.name === 'TokenExpiredError') {
+            return res.status(400).json({ verified: false, message: 'A token lejárt!' });
+        } else if (error.name === 'JsonWebTokenError') {
+            return res.status(400).json({ verified: false, message: 'Érvénytelen token!' });
+        } else {
+            return res.status(500).json('Hiba a token ellenőrzésekor:', error.message);
+        }
+    }
+
 };
 
- 
+
 // Ő itt cron, félóránként törli automatikusan a "pending" (regisztráció megerősítésre váró) felhasználókat az adatbázisból, hogy ne foglaljanak feleslegesen helyet.
 cron.schedule('*/30 * * * *', async () => {
     try {
 
         const delPicLinks = await prisma.$queryRaw
-        `
+            `
         DELETE FROM pl USING picture_links pl, users u WHERE pl.uer_id = (SELECT id FROM users WHERE status="pending")
         `;
 
@@ -292,9 +292,9 @@ cron.schedule('*/30 * * * *', async () => {
         });
 
         return console.log("A megerősítésre váró fiókok törlésre kerültek!")
-        
+
     } catch (error) {
-        return console.log({error: error})
+        return console.log({ error: error })
     }
 })
 
@@ -302,7 +302,7 @@ cron.schedule('*/30 * * * *', async () => {
 const userList = async (req, res) => {
     try {
         const users = await prisma.users.findMany({
-            select:{
+            select: {
                 id: true,
                 discord_name: true,
                 inviteable: true,
@@ -337,7 +337,7 @@ const userSearchByName = async (req, res) => {
                     contains: usr_name
                 }
             },
-            select:{
+            select: {
                 id: true,
                 inviteable: true,
                 discord_name: true,
@@ -368,7 +368,7 @@ const userProfileSearchByName = async (req, res) => {
             where: {
                 usr_name: usr_name
             },
-            select:{
+            select: {
                 id: true,
                 inviteable: true,
                 full_name: true,
@@ -442,7 +442,7 @@ const userUpdate = async (req, res) => {
 
         //Egyéb adat módosítás esetén:
 
-        if(!new_email_address && !paswrd && !new_usr_name && !usr_name && !new_paswrd){
+        if (!new_email_address && !paswrd && !new_usr_name && !usr_name && !new_paswrd) {
 
 
             const modUser = await prisma.users.update({
@@ -548,7 +548,7 @@ const userUpdate = async (req, res) => {
                         status: status
                     }
                 });
-                return res.status(200).json({ message: `Sikeres felhasználónév frissítés! Hátralévő módosítások száma: ${user.usna_mod_num_remain-1}` });
+                return res.status(200).json({ message: `Sikeres felhasználónév frissítés! Hátralévő módosítások száma: ${user.usna_mod_num_remain - 1}` });
             } else
                 if (user.usna_mod_num_remain == 0 && !(date > new Date(new Date(user.email_last_mod_date).setMonth(user.email_last_mod_date.getMonth() + 3)))) {
 
@@ -559,7 +559,7 @@ const userUpdate = async (req, res) => {
                 }
         }
 
-       
+
         //Jelszó esetén:
 
         if ((id && new_paswrd) || ((paswrd && new_paswrd)) && !new_email_address && !usr_name) {
@@ -568,9 +568,9 @@ const userUpdate = async (req, res) => {
             //console.log({ encrypted: bcrypt.compareSync(paswrd, user.paswrd) == bcrypt.compareSync(new_paswrd, user.paswrd) ? "true" : "false" })
 
 
-            
 
-            if(paswrd && new_paswrd){
+
+            if (paswrd && new_paswrd) {
 
                 if (paswrd == new_paswrd) {
                     return res.status(400).json({ message: "Ugyanazt a jelszót nem adhatod meg!" });
@@ -578,16 +578,16 @@ const userUpdate = async (req, res) => {
 
                 if (bcrypt.compareSync(paswrd, user.paswrd) == bcrypt.compareSync(new_paswrd, user.paswrd)) {
                     return res.status(400).json({ message: "Ugyanazt a jelszót nem adhatod meg!" });
-    
+
                 }
-    
+
                 if (!bcrypt.compareSync(paswrd, user.paswrd)) {
                     return res.status(400).json({ message: "Nem megfelelő jelszó!" });
                 }
 
             }
-            
-            
+
+
 
 
 
@@ -840,11 +840,11 @@ const userLogin = async (req, res) => {
         if (!userL) {
             return res.status(400).json({ message: "Nincs ilyen felhasználó!" });
         }
-        if(userL.status=="pending"){
+        if (userL.status == "pending") {
             return res.status(400).json({ message: "A fiókod nincs megerősítve!" })
         }
-        if(userL.status=="banned"){
-            return res.status(400).json({message: "A fiókod tiltásra került! :("})
+        if (userL.status == "banned") {
+            return res.status(400).json({ message: "A fiókod tiltásra került! :(" })
         }
 
         //!bcrypt.compare(paswrd, user.paswrd)
@@ -877,16 +877,16 @@ const userLogin = async (req, res) => {
 
 const userLogout = async (req, res) => {
 
-    
-    
+
+
     res.clearCookie('tokenU', {
         secure: true,
         httpOnly: true,
         sameSite: 'none',
-        path:'/'
+        path: '/'
     });
-    
-    
+
+
     res.status(200).json({ message: "Kijelentkezve." });
 }
 
@@ -910,7 +910,7 @@ const protected = async (req, res) => {
 
 
 const isAuthenticated = async (req, res) => {
-    res.json({ "authenticated": true, user: req.user});
+    res.json({ "authenticated": true, user: req.user });
 };
 
 const userGetPicturePath = async (req, res) => {
@@ -922,22 +922,22 @@ const userGetPicturePath = async (req, res) => {
             where: {
                 uer_id: Number(uer_id)
             }
-        })        
+        })
 
         if (!uerPic || !uerPic.uer_id) {
             return res.status(400).json({ message: "Nincs ilyen felhasználó!" });
         }
-         
+
         const picPath = await prisma.pictures.findUnique({
             where: {
                 id: uerPic.pte_id
             }
         });
-        
+
         if (!picPath) {
             return res.status(400).json({ message: "Nincs ilyen kép!" });
         }
-        
+
         return res.status(200).json(picPath.img_path);
     }
 
