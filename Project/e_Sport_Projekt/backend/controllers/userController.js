@@ -389,7 +389,7 @@ const userProfileSearchByName = async (req, res) => {
 }
 
 const userUpdate = async (req, res) => {
-    const { id, full_name, new_usr_name, usr_name, paswrd, new_paswrd, school, new_email_address, phone_num, status, discord_name } = req.body;
+    const { id, full_name, new_usr_name, usr_name, paswrd, new_paswrd, school, new_email_address, phone_num, status, discord_name, inviteable, clss } = req.body;
     try {
 
         let date = new Date();
@@ -421,9 +421,28 @@ const userUpdate = async (req, res) => {
         //Megadott adatok vizsgálata és update
 
 
+
+        //Meghívhatóság módosítás esetén: (azért kell ez, mert a felhasználó mindentől függetlenül beállíthatja ezt)
+
+        // if(inviteable && id){
+
+        //     const modUser = await prisma.users.update({
+        //         where: {
+        //             id: id
+        //         },
+        //         data: {
+        //             inviteable: inviteable
+        //         }
+
+        //     });
+        //     return res.status(200).json({ message: "A meghívhatóságod sikeresen beállítottad!" });
+
+        // }
+
+
         //Egyéb adat módosítás esetén:
 
-        if(!new_email_address && !paswrd && !new_usr_name && !usr_name){
+        if(!new_email_address && !paswrd && !new_usr_name && !usr_name && !new_paswrd){
 
 
             const modUser = await prisma.users.update({
@@ -435,17 +454,20 @@ const userUpdate = async (req, res) => {
                     school: school,
                     phone_num: phone_num,
                     status: status,
-                    discord_name: discord_name
+                    discord_name: discord_name,
+                    inviteable: inviteable,
+                    clss: clss
+
                 }
 
             });
-            return res.status(200).json({ message: "Sikeres adatfrissítés! Egyéb" });
+            return res.status(200).json({ message: "Sikeres adatfrissítés!" });
         }
 
 
-        //Email módosítás esetén:
+        //Email módosítás esetén: előző -> (((new_email_address && paswrd) && !new_usr_name && !new_paswrd))
 
-        if (((new_email_address && paswrd) && !new_usr_name && !new_paswrd)) {
+        if (((new_email_address) && !new_usr_name && !new_paswrd)) {
 
 
             if (validalasFuggveny(res, [
@@ -459,9 +481,11 @@ const userUpdate = async (req, res) => {
             let trim_email = new_email_address.replaceAll(" ", "");
 
 
-            if (!bcrypt.compareSync(paswrd, user.paswrd)) {
-                return res.status(400).json({ message: "A jelszó nem megfelelő!" });
-            }
+            //Ha a jelszó kell, akkor ezt ki kell kommentelni
+
+            // if (!bcrypt.compareSync(paswrd, user.paswrd)) {
+            //     return res.status(400).json({ message: "A jelszó nem megfelelő!" });
+            // }
 
             console.log(new Date(new Date(date).setMonth(date.getMonth() - 1)));
             if (date > new Date(new Date(user.email_last_mod_date).setMonth(user.email_last_mod_date.getMonth() + 1))) {
@@ -482,7 +506,7 @@ const userUpdate = async (req, res) => {
                     }
 
                 });
-                return res.status(200).json({ message: "Sikeres adatfrissítés!" });
+                return res.status(200).json({ message: "Sikeres email frissítés!" });
 
 
 
@@ -495,9 +519,9 @@ const userUpdate = async (req, res) => {
         }
 
 
-        //Felhasználónév esetén:
+        //Felhasználónév esetén: előző -> ((usr_name && new_usr_name && paswrd) && !new_email_address && !new_paswrd)
 
-        if ((usr_name && new_usr_name && paswrd) && !new_email_address && !new_paswrd) {
+        if ((usr_name && new_usr_name) && !new_email_address && !new_paswrd) {
 
             if (validalasFuggveny(res, [
                 { condition: /@/.test(new_usr_name), message: "A felhasználó név nem tartalmazhat '@' jelet!" },
@@ -509,7 +533,7 @@ const userUpdate = async (req, res) => {
 
             if (user.usna_mod_num_remain > 0 && user.usna_last_mod_date < date) {
 
-                const modUser = await prisma.user.update({
+                const modUser = await prisma.users.update({
                     where: {
                         id: id
                     },
@@ -524,7 +548,7 @@ const userUpdate = async (req, res) => {
                         status: status
                     }
                 });
-                return res.status(200).json({ message: `Sikeres adatfrissítés! Remaining: ${user.usna_mod_num_remain}` });
+                return res.status(200).json({ message: `Sikeres felhasználónév frissítés! Hátralévő módosítások száma: ${user.usna_mod_num_remain-1}` });
             } else
                 if (user.usna_mod_num_remain == 0 && !(date > new Date(new Date(user.email_last_mod_date).setMonth(user.email_last_mod_date.getMonth() + 3)))) {
 
@@ -602,7 +626,7 @@ const userUpdate = async (req, res) => {
                     status: status
                 }
             });
-            return res.status(200).json({ message: "Sikeres adatfrissítés!" });
+            return res.status(200).json({ message: "Sikeres jelszó megváltoztatás!" });
 
 
 
