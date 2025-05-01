@@ -439,7 +439,7 @@ const userUpdate = async (req, res) => {
                 }
 
             });
-            return res.status(200).json({ message: "Sikeres adatfrissítés!" });
+            return res.status(200).json({ message: "Sikeres adatfrissítés! Egyéb" });
         }
 
 
@@ -937,5 +937,6 @@ module.exports = {
     passEmailSend,
     passEmailVerify,
     verifyEmailSend,
-    emailVerifiedMod
+    emailVerifiedMod,
+    userProfileSearchByName
 }
