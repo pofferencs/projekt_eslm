@@ -1,89 +1,117 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import EventSchema from "../schemas/EventSchema";
 
 function SearchE() {
-  const [searchInput, setSearchInput] = useState("");
-  const [result, setResult] = useState([]);
+  const [events, setEvents] = useState([]);
+  const [filteredEvents, setFilteredEvents] = useState([]);
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [limit, setLimit] = useState(3);
 
-  const onSubmit = (e) => {
-    e.preventDefault();
+  useEffect(() => {
+    fetch(`${import.meta.env.VITE_BASE_URL}/list/event`)
+      .then((res) => res.json())
+      .then((data) => {
+        const now = new Date().getTime();
+        const withStatus = data.map((event) => {
+          const start = new Date(event.start_date).getTime();
+          const end = new Date(event.end_date).getTime();
 
-    if(searchInput!=""){
-      fetch(`${import.meta.env.VITE_BASE_URL}/list/enamesearch/${searchInput}`, {
-        method: "GET",
-        headers: {
-          "Content-type": "application/json",
-        },
+          if (now < start) return { ...event, status: "not_started" };
+          if (now >= start && now < end) return { ...event, status: "started" };
+          return { ...event, status: "ended" };
+        });
+        setEvents(withStatus);
       })
-        .then(console.log(searchInput))
-        .then((res) => res.json())
-        .then((adat) =>setResult(adat))
-        .catch((err) => toast.error(err));
-  
-      console.log(result);
-    }else{
-      setResult([]);
+      .catch((err) => toast.error("Hiba történt az események betöltésekor"));
+  }, []);
+
+  useEffect(() => {
+    let filtered = [...events];
+
+    if (statusFilter !== "all") {
+      filtered = filtered.filter((e) => e.status === statusFilter);
     }
-    
-  };
 
-  const writeData = (e) => {
-    setSearchInput(e.target.value);
-
-    console.log("Input mező>>>" + searchInput);
-  };
+    setFilteredEvents(filtered.slice(0, limit));
+  }, [events, statusFilter, limit]);
 
   return (
     <div className="flex flex-col min-h-screen">
       <h2 className="mt-10 text-center text-4xl font-bold tracking-tight text-indigo-600">
-        Esemény kereső
+        Esemény szűrő
       </h2>
+
       <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-        <form onSubmit={onSubmit}>
+        <form>
+          <div className="grid grid-cols-6 gap-4">
 
+            {/* Státusz szűrő */}
+            <div className="col-start-1 col-end-4">
+              <label
+                htmlFor="status"
+                className="block text-sm/6 font-medium text-indigo-600"
+              >
+                Státusz
+              </label>
+              <select
+                id="status"
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value)}
+                className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+              >
+                <option value="all">Összes</option>
+                <option value="started">Aktív</option>
+                <option value="not_started">Nem kezdett</option>
+                <option value="ended">Lezárt</option>
+              </select>
+            </div>
 
-        <div className="grid grid-cols-6 gap-4">
-            <div className="col-start-1 col-end-4 ...">
-              <div className="mt-2">
-                <label
-                  htmlFor="event"
-                  className="block text-sm/6 font-medium text-indigo-600"
-                >Esemény neve
-                </label>
-                <input
-                  type="text"
-                  name="event"
-                  id="event"
-                  autoComplete="event"
-                  value={searchInput}
-                  onChange={writeData}
-                  className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
-                />
-              </div>
+            {/* Limit szűrő */}
+            <div className="col-start-4 col-end-7">
+              <label
+                htmlFor="limit"
+                className="block text-sm/6 font-medium text-indigo-600"
+              >
+                Megjelenítendő darabszám
+              </label>
+              <select
+                id="limit"
+                value={limit}
+                onChange={(e) => setLimit(parseInt(e.target.value))}
+                className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+              >
+                {[3, 6, 9, 12].map((num) => (
+                  <option key={num} value={num}>
+                    {num} esemény
+                  </option>
+                ))}
+              </select>
             </div>
-            <div className="col-start-4 col-end-7 ...">
-            </div>
-            <div className="col-span-2 col-end-7 ..."></div>
-            <div className="col-start-1 col-end-7 ...">
+
+            <div className="col-start-1 col-end-7">
               <button
-                type="submit"
+                type="button"
+                onClick={() => {
+                  setStatusFilter("all");
+                  setLimit(3);
+                }}
                 className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
               >
-                Keresés
+                Szűrők alaphelyzetbe
               </button>
             </div>
           </div>
         </form>
       </div>
 
-      <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 justify-items-center gap-5 mb-10 mt-20">
-        {result.length > 0 ? (
-          result.map((event) => (
-              <EventSchema key={event.id} event={event}/>
+      <div className={`grid ${events.length === 1 ? 'lg:grid-cols-1' : 'lg:grid-cols-3'} md:grid-cols-2 sm:grid-cols-1 justify-items-center gap-5 mb-10 mt-10`} >
+        {events.length > 0 ? (
+          events.map((event) => (
+            <EventSchema key={event.id} event={event} />
           ))
         ) : (
-          <p>{result.message}</p>
+          <p>{events.message}</p>
         )}
       </div>
     </div>
