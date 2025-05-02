@@ -138,9 +138,6 @@ const pictureInsert = async (req, res) => {
                         
                     }
 
-                    console.log(oldFilePath)
-                    
-
                     await prisma.picture_Links.delete({
                         where: { uer_id: parseInt(id), 
                             id_pte_id: {
@@ -215,7 +212,6 @@ const pictureDelete = async (req, res) => {
             const picture = await prisma.pictures.findFirst({
                 where: { id: existingLink.pte_id }
             });
-            console.log(picture);
 
             if(picture.img_path == "/user/user_0.png"){
                 return res.status(400).json({message: "Alapértelmezett képet nem törölhetsz!"});
