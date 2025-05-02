@@ -128,10 +128,43 @@ const teamDelete = async (req, res) => {
     }
 }
 
+const teamGetPicPath = async (req,res)=>{
+    const { team_id } = req.params;
+
+    try {
+        const teamPic = await prisma.picture_Links.findFirst({
+            where: {
+                tem_id: Number(team_id)
+            }
+        });
+
+        if (!teamPic || !teamPic.tem_id) {
+            return res.status(400).json({ message: "Nincs ilyen csapat!" });
+        }
+
+        const picPath = await prisma.pictures.findUnique({
+            where: {
+                id: teamPic.pte_id
+            }
+        });
+
+        if (!picPath) {
+            return res.status(400).json({ message: "Nincs ilyen kép!" });
+        }
+
+        return res.status(200).json(picPath.img_path);
+
+    } catch (error) {
+        return res.status(500).json(error);
+    }
+
+}
+
 module.exports = {
     teamList,
     teamUpdate,
     teamInsert,
     teamDelete,
-    teamSearchByName
+    teamSearchByName,
+    teamGetPicPath
 }
