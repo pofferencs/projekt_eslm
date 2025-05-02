@@ -3,6 +3,7 @@ const prisma = new PrismaClient();
 const multer = require('multer');
 const path = require('path');
 const fs = require("fs");
+const { randomInt } = require('crypto');
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -72,6 +73,7 @@ const pictureInsert = async (req, res) => {
                 where: { id: existingLink.pte_id }
             });
 
+
             if (!oldPicture || oldPicture.id === 1) {
                 return res.status(400).json({ message: "Az alapértelmezett kép nem törölhető." });
             }
@@ -102,7 +104,7 @@ const pictureInsert = async (req, res) => {
         // Ha új képet töltünk fel
         if (!file) return res.status(400).json({ message: "Hiányzó kép." });
 
-        const newFileName = `${type}_${id}.png`;
+        const newFileName = `${type}_${id}_${randomInt(1000,9999)}.png`;
         const destDir = path.join(__dirname, `../assets/pictures/${type}`);
         const finalPath = path.join(destDir, newFileName);
 
@@ -130,15 +132,52 @@ const pictureInsert = async (req, res) => {
                 });
 
                 if (oldPicture && oldPicture.id !== 1) {
-                    const oldFilePath = path.join(__dirname, `../assets${oldPicture.img_path}`);
+                    const oldFilePath = path.join(__dirname, `../assets/pictures${oldPicture.img_path}`);
                     if (fs.existsSync(oldFilePath)) {
                         fs.unlinkSync(oldFilePath);
+                        
+                    }
+
+                    console.log(oldFilePath)
+                    
+
+                    await prisma.picture_Links.delete({
+                        where: { uer_id: parseInt(id), 
+                            id_pte_id: {
+                                id: existingLink.id,
+                                pte_id: oldPicture.id
+                            } 
+                        },
+                    });
+
+                    await prisma.pictures.delete({
+                        where:{
+                            id: oldPicture.id
+                        }
+                    })
+                    
+
+                    //fs.rmSync(oldFilePath, {force: true});
+
+
+                }else if(oldPicture && oldPicture.id == 1){
+                    const oldFilePath = path.join(__dirname, `../assets/pictures/${oldPicture.img_path}`);
+                    if (fs.existsSync(oldFilePath)) {
+                        //fs.unlinkSync(oldFilePath);
                     }
 
                     await prisma.picture_Links.delete({
-                        where: { uer_id: parseInt(id) },
+                        where: { uer_id: parseInt(id), 
+                            id_pte_id: {
+                                id: existingLink.id,
+                                pte_id: oldPicture.id
+                            } 
+                        },
                     });
+
                 }
+
+                
             }
 
             const newPicture = await prisma.pictures.create({
@@ -176,27 +215,55 @@ const pictureDelete = async (req, res) => {
             const picture = await prisma.pictures.findFirst({
                 where: { id: existingLink.pte_id }
             });
+            console.log(picture);
 
-            if (picture && picture.img_path !== "/pictures/user/user_0.png") {
+            if(picture.img_path == "/user/user_0.png"){
+                return res.status(400).json({message: "Alapértelmezett képet nem törölhetsz!"});
+            }
+
+            if (picture && picture.img_path !== "/user/user_0.png") {
                 // Töröljük a nem alapértelmezett képet
-                const oldFilePath = path.join(__dirname, `../assets${picture.img_path}`);
+                const oldFilePath = path.join(__dirname, `../assets/pictures${picture.img_path}`);
                 if (fs.existsSync(oldFilePath)) {
                     fs.unlinkSync(oldFilePath);
                 }
 
                 // Visszaállítjuk az alap képet
-                const defaultImgPath = "/pictures/user/user_0.png";
+
+                const defaultImgPath = "/user/user_0.png";
+
+                const alapPic = await prisma.pictures.findFirst({
+                    where: {
+                        img_path: defaultImgPath
+                    }
+                });
+                
                 const updatedPicture = await prisma.pictures.update({
                     where: { id: picture.id },
                     data: { img_path: defaultImgPath }
                 });
 
                 await prisma.picture_Links.update({
-                    where: { uer_id: id, id_pte_id: true },
-                    data: { pte_id: updatedPicture.id }
+                    where:{
+                        id_pte_id:{
+                            id: existingLink.id,
+                            pte_id: existingLink.pte_id
+                        }
+                    },
+                    data:{
+                        pte_id: alapPic.id
+                    }
                 });
 
-                return res.status(200).json({ message: "Kép sikeresen törölve, visszaállítva az alapértelmezett kép." });
+                await prisma.pictures.delete({
+                    where:{
+                        id: existingLink.pte_id
+                    }
+                });
+
+
+
+                return res.status(200).json({ message: "Kép sikeresen törölve, visszaállítva az alapértelmezett kép!" });
             }
         } else {
             return res.status(404).json({ message: "A felhasználóhoz nem tartozik kép." });

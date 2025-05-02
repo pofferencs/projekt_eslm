@@ -7,13 +7,14 @@ import { toast } from "react-toastify";
 function UserProfile() {
 
   const { name } = useParams();
-  const { isAuthenticated, profile, isLoading, setIsLoading, authStatus } = useContext(UserContext);
+  const { isAuthenticated, profile, isLoading, setIsLoading, authStatus, uPicPath, update, refresh, setUPicPath } = useContext(UserContext);
   const [profileAdat, setProfileAdat] = useState({});
   const [picPath, setPicPath] = useState("");
   const [isForm, setIsForm] = useState(false);
   const [disabled, setDisabled] = useState(true);
   const [emailDisabled, setEmailDisabled] = useState(false);
   const navigate = useNavigate();
+  const [pfpFile, setPfpFile] = useState({});
 
   let formObj = {
     full_name: "", //megvan
@@ -49,7 +50,6 @@ function UserProfile() {
 
   useEffect(() => {
 
-
     if (name != undefined) {
       fetch(`${import.meta.env.VITE_BASE_URL}/user/userprofilesearchbyname/${name}`, {
         method: "GET",
@@ -59,15 +59,17 @@ function UserProfile() {
       })
         .then(res => res.json())
         .then(adat => {
-          console.log(adat);
+          //console.log(adat);
           if (!adat.message) {
             setProfileAdat(adat);
             setPicPath(
-              fetch(`${import.meta.env.VITE_BASE_URL}/user/userpic/${adat.id}`)
+              fetch(`${import.meta.env.VITE_BASE_URL}/user/userpic/${adat.id}`,
+              )
                 .then(res => res.json())
-                .then(adat => { setPicPath(adat); setIsLoading(false); setFormData(profile); })
+                .then(adat => { setPicPath(adat); setIsLoading(false); setFormData(profile); console.log(adat)})
                 .catch(err => { console.log(err) })
             )
+
           } else {
             navigate('/')
           }
@@ -79,18 +81,18 @@ function UserProfile() {
 
   }, [isAuthenticated]);
 
-  useEffect(() => {
+  // useEffect(() => {
 
-    if (!name) {
-      fetch(`${import.meta.env.VITE_BASE_URL}/user/userpic/${profile.id}`)
-        .then(res => res.json())
-        .then(adat => { setPicPath(adat); setIsLoading(false); })
-        .catch(err => { console.log(err) });
+  //   if (!name) {
+  //     fetch(`${import.meta.env.VITE_BASE_URL}/user/userpic/${profile.id}`)
+  //       .then(res => res.json())
+  //       .then(adat => { setPicPath(adat); setIsLoading(false); })
+  //       .catch(err => { console.log(err) });
 
-    }
+  //   }
 
-    console.log("refreshed navbar")
-  }, [isAuthenticated])
+  //   console.log("refreshed navbar")
+  // }, [isAuthenticated])
 
   // useEffect(()=>{
   //   if(isAuthenticated==false && !name){
@@ -134,7 +136,7 @@ function UserProfile() {
 
 
 
-  console.log(formData);
+  //console.log(formData);
 
 
 
@@ -252,32 +254,36 @@ function UserProfile() {
         toast.error(data.message || "Hiba történt");
       } else {
         toast.success(data.message);
+        authStatus();
       }
     } catch (error) {
       alert("Hiba a feltöltés során: " + error.message);
     }
+
+    
   };
 
   const deleteImage = async (id) => {
-    const formData = new FormData();
-    formData.append("id", id);      // pl. 0
-  
-    try {
-      const res = await fetch(`${import.meta.env.VITE_BASE_URL}/delete/picture`, {
+
+    
+    fetch(`${import.meta.env.VITE_BASE_URL}/delete/picture`, {
         method: "DELETE",
-        body: formData
-      });
-  
-      const data = await res.json();
+        headers: { "Content-type": "application/json" },
+        body: JSON.stringify({id: id})
+      })
+      .then(async res=>{
+        const data = await res.json();
   
       if (!res.ok) {
         toast.error(data.message || "Hiba történt");
       } else {
         toast.success(data.message);
       }
-    } catch (error) {
-      alert("Hiba a feltöltés során: " + error.message);
-    }
+      })
+      .catch(err=>alert(err));
+  
+      
+    
   };
   
 
@@ -298,7 +304,7 @@ function UserProfile() {
                 <div className="m-10 rounded-md bg-gradient-to-br from-indigo-950 to-slate-500 sm:w-[600px] md:w-[800px] lg:w-[1000px] xl:w-[1200px] mx-auto text-primary-content">
                   <div className="card-body">
                     <div className="flex justify-center pb-8 gap-10">
-                      <img className="w-60" src={`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_BASE_PIC}${picPath}`} alt={`${name} profilképe`} title={`${name} profilképe`} />
+                      <img className="w-56 h-56" src={`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_BASE_PIC}${picPath}`} alt={`${name} profilképe`} title={`${name} profilképe`} />
                       <div className="card-title">
                         <div className="pl-14">
                           <p className="text-3xl pb-2 text-white">{profileAdat.usr_name}</p>
@@ -361,7 +367,7 @@ function UserProfile() {
                   <div className="m-10 rounded-md bg-gradient-to-br from-indigo-950 to-slate-500 sm:w-[600px] md:w-[800px] lg:w-[1000px] xl:w-[1200px] mx-auto text-primary-content">
                     <div className="card-body">
                       <div className="flex justify-center pb-8 gap-10">
-                        <img className="w-60" src={`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_BASE_PIC}${picPath}`} alt={`${name} profilképe`} title={`${name} profilképe`} />
+                        <img className="w-56 h-56" src={`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_BASE_PIC}${uPicPath}`} alt={`${name} profilképe`} title={`${name} profilképe`} />
                         <div className="card-title">
                           <div className="pl-14">
                             <p className="text-3xl pb-2 text-white">{profile.usr_name}</p>
@@ -479,7 +485,7 @@ function UserProfile() {
                     <div className="m-10 rounded-md bg-gradient-to-br from-indigo-950 to-slate-500 sm:w-[600px] md:w-[800px] lg:w-[1000px] xl:w-[1200px] mx-auto text-primary-content">
                       <div className="card-body">
                         <div className="flex justify-center pb-8 gap-10">
-                          <img className="w-60" src={`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_BASE_PIC}${picPath}`} />
+                          <img className="w-56 h-56" src={`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_BASE_PIC}${uPicPath}`} />
                           <div className="card-title">
                             <div className="pl-14">
                               <p className="text-3xl pb-2 text-white">{profile.usr_name}</p>
@@ -505,7 +511,7 @@ function UserProfile() {
                               <form onSubmit={onSubmit}>
                                 <div className="flex flex-wrap gap-2">
                                   <button className="btn mt-3 text-white" type="submit">Módosítás</button>
-                                  <button className="btn mt-3 text-white" type="button" onClick={()=> {deleteImage(profile.id)}} >Fénykép törlés</button>
+                                  <button className="btn mt-3 text-white" type="button" onClick={()=> { deleteImage(profile.id); authStatus() }} >Fénykép törlés</button>
 
                                   <button className="btn mt-3 text-white" type="button" onClick={() => { setIsForm(false); setDisabled(true); formReset() }}>Mégse</button>
 
@@ -525,12 +531,10 @@ function UserProfile() {
                                     type="file"
                                     onChange={(e) => {
                                       const file = e.target.files[0];
-                                      if (file) {
-                                        sendImage(file, "user", profileAdat.id); // dinamikusan küldjük
-                                      }
+                                      setPfpFile(file);
                                     }}
                                   />
-                                  <button type="submit">Feltöltés</button>
+                                  <button className="btn mt-3 text-white" type="button" onClick={()=>{sendImage(pfpFile, "user", profileAdat.id); }}>Feltöltés</button>
                                 </div>
                               </form>
 

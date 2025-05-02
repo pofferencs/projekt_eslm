@@ -8,11 +8,10 @@ function Navbar() {
   // Állapotok a mobil és profil menü megnyitásához
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
-  const [picPath, setPicPath] = useState("");
   const navigate = useNavigate();
    
 
-  const { logout, isAuthenticated, authStatus, update, pageRefresh, profile } = useContext(UserContext);
+  const { logout, isAuthenticated, authStatus, update, pageRefresh, profile, uPicPath } = useContext(UserContext);
   
   useEffect(()=>{
 
@@ -22,14 +21,7 @@ function Navbar() {
 
   useEffect(()=>{
 
-    
-    fetch(`${import.meta.env.VITE_BASE_URL}/user/userpic/${profile.id}`)
-            .then(res => res.json())
-            .then(adat => setPicPath(adat))
-            .catch(err => {console.log(err)});
             //console.log("refreshed navbar")
-  
-
 
     const interval = setInterval(() => {
       authStatus();
@@ -98,8 +90,8 @@ function Navbar() {
                 <div className="dropdown dropdown-bottom dropdown-left">
                 <div tabIndex={0} role="button">
                 {
-                      (picPath != undefined)? (
-                        <img className="w-10 h-10 rounded-full object-cover" src={`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_BASE_PIC}${picPath}`} alt={profile.usr_name} />
+                      (uPicPath != undefined)? (
+                        <img className="w-10 h-10 rounded-full object-cover" src={`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_BASE_PIC}${uPicPath}`} alt={profile.usr_name} />
                       ):
                       (
                         <></>

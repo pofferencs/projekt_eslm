@@ -6,7 +6,7 @@ import UserContext from "../../../context/UserContext";
 function UserSchema({ user }) {
     const navigate = useNavigate();
     const [userPicPath, setUserPicPath] = useState("https://images.unsplash.com/photo-1472099645785-5658abf4ff4e")
-    const { isAuthenticated } = useContext(UserContext);
+    const { isAuthenticated, profile } = useContext(UserContext);
 
     useEffect(() => {
         fetch(`${import.meta.env.VITE_BASE_URL}/user/userpic/${user.id}`)
@@ -63,7 +63,7 @@ function UserSchema({ user }) {
                                 <>
                                     <button className="btn btn-ghost" onClick={() => { navigate(`/profile/${user.usr_name}`); window.scroll(0, 0) }}>További adatok...</button>
                                     {
-                                        (isAuthenticated) ?
+                                        (isAuthenticated && user.inviteable === true && user.usr_name != profile.usr_name) ?
 
                                             (<button className="btn btn-primary">Meghívás csapatba</button>)
                                             :
