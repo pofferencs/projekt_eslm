@@ -1,12 +1,10 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import EventSchema from "../common/schemas/EventSchema";
+import { Link } from "react-router-dom";
 
 function Main() {
   const [events, setEvents] = useState([]);
-  const [filteredEvents, setFilteredEvents] = useState([]);
-  const [statusFilter, setStatusFilter] = useState("all");
-  const [limit, setLimit] = useState(3);
 
   useEffect(() => {
     fetch(`${import.meta.env.VITE_BASE_URL}/list/event`)
@@ -21,99 +19,63 @@ function Main() {
           if (now >= start && now < end) return { ...event, status: "started" };
           return { ...event, status: "ended" };
         });
-        setEvents(withStatus);
+
+        // Időrend szerint rendezés (kezdés dátuma alapján)
+        withStatus.sort((a, b) => new Date(a.start_date) - new Date(b.start_date));
+
+        // Szűrés preferencia szerint
+        const started = withStatus.filter((e) => e.status === "started").slice(0, 3);
+        const notStarted = withStatus.filter((e) => e.status === "not_started").slice(0, 3);
+        const ended = withStatus.filter((e) => e.status === "ended").slice(0, 3);
+
+        if (started.length > 0) {
+          setEvents(started);
+        } else if (notStarted.length > 0) {
+          setEvents(notStarted);
+        } else {
+          setEvents(ended);
+        }
       })
       .catch((err) => toast.error("Hiba történt az események betöltésekor"));
   }, []);
 
-  useEffect(() => {
-    let filtered = [...events];
-
-    if (statusFilter !== "all") {
-      filtered = filtered.filter((e) => e.status === statusFilter);
-    }
-
-    setFilteredEvents(filtered.slice(0, limit));
-  }, [events, statusFilter, limit]);
-
   return (
     <div className="flex flex-col min-h-screen">
-      <h2 className="mt-10 text-center text-4xl font-bold tracking-tight text-indigo-600">
-        Esemény szűrő
+      <h2 className="mt-10 text-center text-4xl font-bold bg-gradient-to-tr from-indigo-500 to-amber-500 inline-block text-transparent bg-clip-text">
+        Események
       </h2>
+      <div className="mx-auto mt-2 h-1 w-[60%] bg-gradient-to-r from-indigo-500 to-amber-500 rounded-full" />
 
-      <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-        <form>
-          <div className="grid grid-cols-6 gap-4">
 
-            {/* Státusz szűrő */}
-            <div className="col-start-1 col-end-4">
-              <label
-                htmlFor="status"
-                className="block text-sm/6 font-medium text-indigo-600"
-              >
-                Státusz
-              </label>
-              <select
-                id="status"
-                value={statusFilter}
-                onChange={(e) => setStatusFilter(e.target.value)}
-                className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
-              >
-                <option value="all">Összes</option>
-                <option value="started">Aktív</option>
-                <option value="not_started">Nem kezdett</option>
-                <option value="ended">Lezárt</option>
-              </select>
-            </div>
+      <div className="mt-5 text-center text-md text-gray-500">
+        {events.length > 0 && events[0].status === "started"
+          ? "Aktív események"
+          : events.length > 0 && events[0].status === "not_started"
+            ? "Hamarosan kezdődő események"
+            : "Lezárt események"}
 
-            {/* Limit szűrő */}
-            <div className="col-start-4 col-end-7">
-              <label
-                htmlFor="limit"
-                className="block text-sm/6 font-medium text-indigo-600"
-              >
-                Megjelenítendő darabszám
-              </label>
-              <select
-                id="limit"
-                value={limit}
-                onChange={(e) => setLimit(parseInt(e.target.value))}
-                className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
-              >
-                {[3, 6, 9, 12].map((num) => (
-                  <option key={num} value={num}>
-                    {num} esemény
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div className="col-start-1 col-end-7">
-              <button
-                type="button"
-                onClick={() => {
-                  setStatusFilter("all");
-                  setLimit(3);
-                }}
-                className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-              >
-                Szűrők alaphelyzetbe
-              </button>
-            </div>
-          </div>
-        </form>
+        <div className="flex justify-center mt-8">
+          <Link
+            to="/event-search"
+            className="px-6 py-2 bg-indigo-600 text-white font-semibold rounded-md shadow hover:bg-indigo-500 transition duration-200"
+          >
+            Más események…
+          </Link>
+        </div>
       </div>
 
-      <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 justify-items-center gap-5 mb-10 mt-20">
-        {filteredEvents.length > 0 ? (
-          filteredEvents.map((event) => (
+      <div
+        className={`grid ${events.length === 1 ? 'lg:grid-cols-1' : 'lg:grid-cols-3'} md:grid-cols-2 sm:grid-cols-1 justify-items-center gap-5 mb-10 mt-10`}
+      >
+        {events.length > 0 ? (
+          events.map((event) => (
             <EventSchema key={event.id} event={event} />
           ))
         ) : (
-          <p className="text-white">Nincs megjeleníthető esemény.</p>
+          <p>{events.message}</p>
         )}
       </div>
+
     </div>
   );
 }
