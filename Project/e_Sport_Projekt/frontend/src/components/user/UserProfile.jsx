@@ -175,6 +175,7 @@ function UserProfile() {
     }
 
 
+
     fetch(`${import.meta.env.VITE_BASE_URL}/update/user`, {
       method: method,
       headers: { "Content-type": "application/json" },
@@ -234,6 +235,30 @@ function UserProfile() {
 
   }
 
+  const sendImage = async (file, type, id) => {
+    const formData = new FormData();
+    formData.append("image", file);
+    formData.append("type", type);  // pl. 'user'
+    formData.append("id", id);      // pl. 0
+  
+    try {
+      const res = await fetch(`${import.meta.env.VITE_BASE_URL}/insert/upload`, {
+        method: "POST",
+        body: formData
+      });
+  
+      const data = await res.json();
+  
+      if (!res.ok) {
+        toast.error(data.message || "Hiba történt");
+      } else {
+        toast.success(data.message);
+      }
+    } catch (error) {
+      alert("Hiba a feltöltés során: " + error.message);
+    }
+  };
+  
 
 
 
@@ -464,12 +489,32 @@ function UserProfile() {
                                   <button className="btn mt-3 text-white" type="button" onClick={() => { setIsForm(false); setDisabled(true); formReset() }}>Mégse</button>
 
                                 </div>
-                                {/* Fénykép feltöltés */}
+
+                              </form>
+                              {/* Fénykép feltöltés */}
+                              <form encType="multipart/form-data">
                                 <div className="mt-3">
-                                  <label className="block text-sm font-medium text-white" htmlFor="default_size">Fénykép cseréje</label>
-                                  <input className="block w-full mb-5 text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 mt-1" id="default_size" type="file" />
+                                  <label className="block text-sm font-medium text-white" htmlFor="image">
+                                    Fénykép cseréje
+                                  </label>
+                                  <input
+                                    className="block w-full mb-5 text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 mt-1"
+                                    id="image"
+                                    name="image"
+                                    type="file"
+                                    onChange={(e) => {
+                                      const file = e.target.files[0];
+                                      if (file) {
+                                        sendImage(file, "user", profileAdat.id); // dinamikusan küldjük
+                                      }
+                                    }}
+                                  />
+                                  <button type="submit">Feltöltés</button>
                                 </div>
                               </form>
+
+
+
                             </div>
                           </div>
                         </div>

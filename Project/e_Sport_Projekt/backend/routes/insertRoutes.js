@@ -8,7 +8,7 @@ const { matchInsert } = require('../controllers/matchController');
 const { teamMembershipInsert } = require('../controllers/teamMembershipController');
 const { teamInsert } = require('../controllers/teamController');
 const { tournamentInsert } = require('../controllers/tournamentController');
-const { pictureInsert } = require('../controllers/pictureController')
+const { pictureInsert, upload } = require('../controllers/pictureController')
 
 
 router.post('/application', applicationInsert);
@@ -18,6 +18,6 @@ router.post('/match', matchInsert);
 router.post('/teammembership', teamMembershipInsert);
 router.post('/team', teamInsert);
 router.post('/tournament', tournamentInsert);
-router.post('/picture', pictureInsert)
+router.post('/upload', upload.single('image'), pictureInsert)
 
 module.exports = router;
