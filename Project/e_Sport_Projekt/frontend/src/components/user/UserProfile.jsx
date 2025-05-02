@@ -50,7 +50,6 @@ function UserProfile() {
   useEffect(() => {
 
 
-
     if (name != undefined) {
       fetch(`${import.meta.env.VITE_BASE_URL}/user/userprofilesearchbyname/${name}`, {
         method: "GET",
@@ -244,6 +243,28 @@ function UserProfile() {
     try {
       const res = await fetch(`${import.meta.env.VITE_BASE_URL}/insert/upload`, {
         method: "POST",
+        body: formData
+      });
+  
+      const data = await res.json();
+  
+      if (!res.ok) {
+        toast.error(data.message || "Hiba történt");
+      } else {
+        toast.success(data.message);
+      }
+    } catch (error) {
+      alert("Hiba a feltöltés során: " + error.message);
+    }
+  };
+
+  const deleteImage = async (id) => {
+    const formData = new FormData();
+    formData.append("id", id);      // pl. 0
+  
+    try {
+      const res = await fetch(`${import.meta.env.VITE_BASE_URL}/delete/picture`, {
+        method: "DELETE",
         body: formData
       });
   
@@ -484,7 +505,7 @@ function UserProfile() {
                               <form onSubmit={onSubmit}>
                                 <div className="flex flex-wrap gap-2">
                                   <button className="btn mt-3 text-white" type="submit">Módosítás</button>
-                                  <button className="btn mt-3 text-white" type="submit">Fénykép törlés</button>
+                                  <button className="btn mt-3 text-white" type="button" onClick={()=> {deleteImage(profile.id)}} >Fénykép törlés</button>
 
                                   <button className="btn mt-3 text-white" type="button" onClick={() => { setIsForm(false); setDisabled(true); formReset() }}>Mégse</button>
 

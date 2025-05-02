@@ -192,7 +192,7 @@ const pictureDelete = async (req, res) => {
                 });
 
                 await prisma.picture_Links.update({
-                    where: { uer_id: id },
+                    where: { uer_id: id, id_pte_id: true },
                     data: { pte_id: updatedPicture.id }
                 });
 
