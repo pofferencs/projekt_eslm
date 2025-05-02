@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import EventSchema from "../schemas/EventSchema";
+import EventSchema from "../common/schemas/EventSchema";
 
-function SearchE() {
+function Main() {
   const [events, setEvents] = useState([]);
   const [filteredEvents, setFilteredEvents] = useState([]);
   const [statusFilter, setStatusFilter] = useState("all");
@@ -118,4 +118,4 @@ function SearchE() {
   );
 }
 
-export default SearchE;
+export default Main;

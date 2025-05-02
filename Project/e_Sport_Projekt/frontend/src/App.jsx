@@ -1,7 +1,5 @@
 import Navbar from "./components/common/Navbar";
-import UserMain from "./components/user/UserMain";
 import UserLogin from "./components/user/UserLogin";
-import LoggedOutMain from "./components/loggedout/LoggedOutMain";
 import {
   BrowserRouter,
   Routes,
@@ -21,6 +19,7 @@ import UserProfile from "./components/user/UserProfile";
 import { ToastContainer } from "react-toastify";
 import UserPassReset from "./components/user/UserPassReset";
 import UserEmailVerify from "./components/user/UserEmailVerify";
+import Main from "./components/loggedout/Main";
 
 function App() {
   const isAuthenticated = useContext(UserContext);
@@ -33,18 +32,8 @@ function App() {
         <ToastContainer autoClose={3000} />
         <div className="flex flex-col min-h-screen">
           <Routes>
-            
-            { (isAuthenticated) ? (
-              <>
-                <Route path="/" element={<UserMain />} />
-                <Route path="*" element={<Navigate to="/" />} />
-              </>
-            ) : (
-              <>
-                <Route path="/" element={<LoggedOutMain />} />
-                <Route path="*" element={<Navigate to="/" />} />
-              </>
-            )}
+            <Route path="/" element={<Main />} />
+            <Route path="*" element={<Navigate to="/" />} />
             <Route path="/register" element={<Register />} />
             <Route path="/login" element={<UserLogin />} />
             <Route path="/password-reset" element={<UserPassReset />} />
