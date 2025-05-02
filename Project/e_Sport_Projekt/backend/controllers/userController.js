@@ -8,6 +8,8 @@ require('dotenv').config();
 const cron = require('node-cron');
 
 
+let verifyTokens = [];
+
 
 // const passch = async (paswrd)=>{
 
@@ -33,28 +35,47 @@ const cron = require('node-cron');
 
 
 //Email küldés jelszó visszaállításra
-const passEmailSend = async (req, res)=>{
+const passEmailSend = async (req, res) => {
 
-    const {email} = req.body;
+    const { email } = req.body;
 
-    if(!email){
-        return res.status(500).json({message: "Add meg az e-mail címet!"});
+    if (!email) {
+        return res.status(500).json({ message: "Add meg az e-mail címet!" });
     }
 
     //Létezik-e a felhasználó?
 
     const user = await prisma.users.findFirst({
-        where:{
+        where: {
             email_address: email
         }
     });
 
-    if(!user){
-        return res.status(500).json({message: "Ilyen felhasználó nem regisztrált!"});
+    if (!user) {
+        return res.status(500).json({ message: "Ilyen felhasználó nem regisztrált!" });
     }
 
+    //TODO: Itt elágazásba azt, hogy cseréljük a tokent egy adott emailnél
 
-    const token = jwt.sign({email: user.email_address}, process.env.JWT_SECRET, {expiresIn: "15m"});
+    console.log(verifyTokens);
+
+    if (verifyTokens.find(x => x.email == user.email_address)) {
+        const token = jwt.sign({ email: user.email_address }, process.env.JWT_SECRET, { expiresIn: "15m" });
+        const index = verifyTokens.findIndex(x => x.email == user.email_address);
+
+        verifyTokens[index].token = token;
+
+        //console.log("Cserélve!", verifyTokens);
+    } else {
+        const token = jwt.sign({ email: user.email_address }, process.env.JWT_SECRET, { expiresIn: "15m" });
+        verifyTokens.push({ "token": token, "email": user.email_address });
+
+        //console.log("Új felvéve!", verifyTokens)
+    }
+
+    const token = verifyTokens.find(x => x.email == user.email_address);
+
+
 
 
     const transporter = nodemailer.createTransport({
@@ -63,96 +84,107 @@ const passEmailSend = async (req, res)=>{
         port: process.env.SMTP_PORT,
         secure: true,
         auth: {
-          user: process.env.EMAIL_ADDRESS,
-          pass: process.env.EMAIL_PASSWORD
+            user: process.env.EMAIL_ADDRESS,
+            pass: process.env.EMAIL_PASSWORD
         },
-        tls:{
-          rejectUnauthorized: false,
+        tls: {
+            rejectUnauthorized: false,
         }
-      })
-    
-      const mailOptions = {
+    })
+
+    const mailOptions = {
         from: process.env.EMAIL_ADDRESS,
         to: user.email_address,
         subject: "Jelszó visszaállítás",
-        text: `Szia! Az alábbi link 15 percig érvényes, így újra kell kérned, ha lejár. Ezen a linken tudod a jelszavadat visszaállítani: ${process.env.VITE_PASS_RESET_URL}?token=${token}`,
+        text: `Szia! Az alábbi link 15 percig érvényes, így újra kell kérned, ha lejár. Ezen a linken tudod a jelszavadat visszaállítani: ${process.env.VITE_PASS_RESET_URL}?token=${token.token}`,
         html: `
         <h1>Jelszó visszaállítás</h1>
         <p>Szia! Az alábbi link 15 percig érvényes, így újra kell kérned, ha lejár.</p>
         <p>Ezen a linken tudod a jelszavadat visszaállítani:</p>
-        <p>${process.env.VITE_PASS_RESET_URL}?token=${token}</p>
+        <p>${process.env.VITE_PASS_RESET_URL}?token=${token.token}</p>
         <p>Vedd figyelembe, hogy a fenti link 15 percig érvényes, így újra kell kérned, ha lejár.</p>
         `,
-      };
+    };
 
-      try {
+    try {
+
+
+        const decoded = jwt.verify(token.token, process.env.JWT_SECRET);
+        console.log(Boolean(decoded.email == user.email_address));
 
         await transporter.sendMail(mailOptions);
-        return res.status(200).json({message: "Kiküldtük az e-mailt a megadott címre!"})
-    
-    
-        
-      } catch (error) {
-        return res.status(500).json({message: error.message});
-      }
+        return res.status(200).json({ message: "Kiküldtük az e-mailt a megadott címre!" })
+
+
+
+
+
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
 
 
 };
 
-const passEmailVerify = async (req, res) =>{
+const passEmailVerify = async (req, res) => {
 
-    const {token} = req.body;
-    
-        try {
+    const { token } = req.body;
 
-            const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    try {
 
-            const user =  await prisma.users.findFirst({
-                where: {
-                    email_address: decoded.email
-                }
-            })
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
 
-            return res.status(200).json({verified: true, data: decoded, id: user.id});
 
-          } catch (error) {
-            if (error.name === 'TokenExpiredError') {
-              return res.status(400).json({verified: false, message: 'A token lejárt!'});
-            } else if (error.name === 'JsonWebTokenError') {
-                return res.status(400).json({verified: false, message: 'Érvénytelen token!'});
-            }else {
-              return res.status(500).json('Hiba a token ellenőrzésekor:', error.message);
+        if (!verifyTokens.find(e => e.token == token)) {
+            return res.status(400).json({ verified: false, message: 'A token lejárt!' });
+        }
+
+        const user = await prisma.users.findFirst({
+            where: {
+                email_address: decoded.email
             }
-          }
-    
+        })
+
+        return res.status(200).json({ verified: true, data: decoded, id: user.id });
+
+    } catch (error) {
+        if (error.name === 'TokenExpiredError') {
+            return res.status(400).json({ verified: false, message: 'A token lejárt!' });
+        } else if (error.name === 'JsonWebTokenError') {
+            return res.status(400).json({ verified: false, message: 'Érvénytelen token!' });
+        } else {
+            return res.status(500).json('Hiba a token ellenőrzésekor:', error.message);
+        }
+    }
+
 };
 
 
 //Email verifikációhoz email küldés
 
-const verifyEmailSend = async (req, res)=>{
+const verifyEmailSend = async (req, res) => {
 
-    const {email} = req.body;
+    const { email } = req.body;
 
-    if(!email){
-        return res.status(500).json({message: "Add meg az e-mail címet!"});
+    if (!email) {
+        return res.status(500).json({ message: "Add meg az e-mail címet!" });
     }
 
     //Létezik-e a felhasználó?
 
     const user = await prisma.users.findFirst({
-        where:{
+        where: {
             email_address: email
         }
     });
 
-    if(!user){
-        return res.status(500).json({message: "Ilyen felhasználó nem regisztrált!"});
+    if (!user) {
+        return res.status(500).json({ message: "Ilyen felhasználó nem regisztrált!" });
     }
 
 
-    const token = jwt.sign({email: user.email_address}, process.env.JWT_SECRET, {expiresIn: "15m"});
+    const token = jwt.sign({ email: user.email_address }, process.env.JWT_SECRET, { expiresIn: "15m" });
 
 
     const transporter = nodemailer.createTransport({
@@ -161,15 +193,15 @@ const verifyEmailSend = async (req, res)=>{
         port: process.env.SMTP_PORT,
         secure: true,
         auth: {
-          user: process.env.EMAIL_ADDRESS,
-          pass: process.env.EMAIL_PASSWORD
+            user: process.env.EMAIL_ADDRESS,
+            pass: process.env.EMAIL_PASSWORD
         },
-        tls:{
-          rejectUnauthorized: false,
+        tls: {
+            rejectUnauthorized: false,
         }
-      })
-    
-      const mailOptions = {
+    })
+
+    const mailOptions = {
         from: process.env.EMAIL_ADDRESS,
         to: user.email_address,
         subject: "Regisztráció megerősítő levél",
@@ -181,18 +213,18 @@ const verifyEmailSend = async (req, res)=>{
         <p>${process.env.VITE_EMAIL_VERIFY_URL}?token=${token}</p>
         <p>Vedd figyelembe, hogy a fenti link 15 percig érvényes, így újra kell kérned, ha lejár.</p>
         `,
-      };
+    };
 
-      try {
+    try {
 
         await transporter.sendMail(mailOptions);
-        return res.status(200).json({message: "E-mail címedre megerősítő levelet küldtünk!"})
-    
-    
-        
-      } catch (error) {
-        return res.status(500).json({message: error.message});
-      }
+        return res.status(200).json({ message: "E-mail címedre megerősítő levelet küldtünk!" })
+
+
+
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
 
 
 };
@@ -200,56 +232,56 @@ const verifyEmailSend = async (req, res)=>{
 //Email verifikált függvény hívás
 
 
-const emailVerifiedMod = async (req, res) =>{
+const emailVerifiedMod = async (req, res) => {
 
-    const {token} = req.body;
-    
-        try {
+    const { token } = req.body;
 
-            const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    try {
 
-            const user =  await prisma.users.findFirst({
-                where: {
-                    email_address: decoded.email
-                }
-            })
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-            if(user.status=="active" || user.status=="inactive"){
-                return res.status(400).json({status: user.status, verified: true, message: "Ennek a fióknak megerősítése már van!"});
+        const user = await prisma.users.findFirst({
+            where: {
+                email_address: decoded.email
             }
+        })
 
-            //A megtalált felhasználó adatával módosítunk
-            const modUser = await prisma.users.update({
-                where:{
-                    id: user.id
-                },
-                data:{
-                    status: "active"
-                }
-            });
+        if (user.status == "active" || user.status == "inactive") {
+            return res.status(400).json({ status: user.status, verified: true, message: "Ennek a fióknak megerősítése már van!" });
+        }
 
-            return res.status(200).json({status: user.status, verified: true, message: "A fiók megerősítése sikeres! Bejelentkezhetsz!"});
-
-          } catch (error) {
-
-            if (error.name === 'TokenExpiredError') {
-              return res.status(400).json({verified: false, message: 'A token lejárt!'});
-            } else if (error.name === 'JsonWebTokenError') {
-                return res.status(400).json({verified: false, message: 'Érvénytelen token!'});
-            }else {
-              return res.status(500).json('Hiba a token ellenőrzésekor:', error.message);
+        //A megtalált felhasználó adatával módosítunk
+        const modUser = await prisma.users.update({
+            where: {
+                id: user.id
+            },
+            data: {
+                status: "active"
             }
-          }
-    
+        });
+
+        return res.status(200).json({ status: user.status, verified: true, message: "A fiók megerősítése sikeres! Bejelentkezhetsz!" });
+
+    } catch (error) {
+
+        if (error.name === 'TokenExpiredError') {
+            return res.status(400).json({ verified: false, message: 'A token lejárt!' });
+        } else if (error.name === 'JsonWebTokenError') {
+            return res.status(400).json({ verified: false, message: 'Érvénytelen token!' });
+        } else {
+            return res.status(500).json('Hiba a token ellenőrzésekor:', error.message);
+        }
+    }
+
 };
 
- 
-// Ő itt cron, minden éjfélkor törli automatikusan a "pending" (regisztráció megerősítésre váró) felhasználókat az adatbázisból, hogy ne foglaljanak feleslegesen helyet.
+
+// Ő itt cron, félóránként törli automatikusan a "pending" (regisztráció megerősítésre váró) felhasználókat az adatbázisból, hogy ne foglaljanak feleslegesen helyet.
 cron.schedule('*/30 * * * *', async () => {
     try {
 
         const delPicLinks = await prisma.$queryRaw
-        `
+            `
         DELETE FROM pl USING picture_links pl, users u WHERE pl.uer_id = (SELECT id FROM users WHERE status="pending")
         `;
 
@@ -260,9 +292,9 @@ cron.schedule('*/30 * * * *', async () => {
         });
 
         return console.log("A megerősítésre váró fiókok törlésre kerültek!")
-        
+
     } catch (error) {
-        return console.log({error: error})
+        return console.log({ error: error })
     }
 })
 
@@ -270,7 +302,7 @@ cron.schedule('*/30 * * * *', async () => {
 const userList = async (req, res) => {
     try {
         const users = await prisma.users.findMany({
-            select:{
+            select: {
                 id: true,
                 discord_name: true,
                 inviteable: true,
@@ -305,7 +337,7 @@ const userSearchByName = async (req, res) => {
                     contains: usr_name
                 }
             },
-            select:{
+            select: {
                 id: true,
                 inviteable: true,
                 discord_name: true,
@@ -326,8 +358,38 @@ const userSearchByName = async (req, res) => {
     }
 }
 
+const userProfileSearchByName = async (req, res) => {
+    const { usr_name } = req.params;
+
+    if (!usr_name) return res.status(400).json({ message: "Hiányos adatok!" });
+
+    try {
+        const user = await prisma.users.findFirst({
+            where: {
+                usr_name: usr_name
+            },
+            select: {
+                id: true,
+                inviteable: true,
+                full_name: true,
+                usr_name: true,
+                date_of_birth: true,
+                school: true,
+                clss: true,
+                status: true,
+                email_address: true,
+                phone_num: true,
+            }
+        });
+        if (!user || usr_name === "") return res.status(404).json({ message: "Nincs ilyen felhasználó!" });
+        else return res.status(200).json(user);
+    } catch (error) {
+        return res.status(500).json(error);
+    }
+}
+
 const userUpdate = async (req, res) => {
-    const { id, full_name, new_usr_name, usr_name, paswrd, new_paswrd, school, new_email_address, phone_num, status, discord_name } = req.body;
+    const { id, full_name, new_usr_name, usr_name, paswrd, new_paswrd, school, new_email_address, phone_num, status, discord_name, inviteable, clss } = req.body;
     try {
 
         let date = new Date();
@@ -359,31 +421,53 @@ const userUpdate = async (req, res) => {
         //Megadott adatok vizsgálata és update
 
 
-        //Egyéb adat módosítás esetén:
 
-        // if(!new_email_address && !paswrd && !new_usr_name && !usr_name){
+        //Meghívhatóság módosítás esetén: (azért kell ez, mert a felhasználó mindentől függetlenül beállíthatja ezt)
 
+        // if(inviteable && id){
 
         //     const modUser = await prisma.users.update({
         //         where: {
         //             id: id
         //         },
         //         data: {
-        //             full_name: full_name,
-        //             school: school,
-        //             phone_num: phone_num,
-        //             status: status,
-        //             discord_name: discord_name
+        //             inviteable: inviteable
         //         }
 
         //     });
-        //     return res.status(200).json({ message: "Sikeres adatfrissítés!" });
+        //     return res.status(200).json({ message: "A meghívhatóságod sikeresen beállítottad!" });
+
         // }
 
 
-        //Email módosítás esetén:
+        //Egyéb adat módosítás esetén:
 
-        if (((new_email_address && paswrd) && !new_usr_name && !new_paswrd)) {
+        if (!new_email_address && !paswrd && !new_usr_name && !usr_name && !new_paswrd) {
+
+
+            const modUser = await prisma.users.update({
+                where: {
+                    id: id
+                },
+                data: {
+                    full_name: full_name,
+                    school: school,
+                    phone_num: phone_num,
+                    status: status,
+                    discord_name: discord_name,
+                    inviteable: inviteable,
+                    clss: clss
+
+                }
+
+            });
+            return res.status(200).json({ message: "Sikeres adatfrissítés!" });
+        }
+
+
+        //Email módosítás esetén: előző -> (((new_email_address && paswrd) && !new_usr_name && !new_paswrd))
+
+        if (((new_email_address) && !new_usr_name && !new_paswrd)) {
 
 
             if (validalasFuggveny(res, [
@@ -397,9 +481,11 @@ const userUpdate = async (req, res) => {
             let trim_email = new_email_address.replaceAll(" ", "");
 
 
-            if (!bcrypt.compareSync(paswrd, user.paswrd)) {
-                return res.status(400).json({ message: "A jelszó nem megfelelő!" });
-            }
+            //Ha a jelszó kell, akkor ezt ki kell kommentelni
+
+            // if (!bcrypt.compareSync(paswrd, user.paswrd)) {
+            //     return res.status(400).json({ message: "A jelszó nem megfelelő!" });
+            // }
 
             console.log(new Date(new Date(date).setMonth(date.getMonth() - 1)));
             if (date > new Date(new Date(user.email_last_mod_date).setMonth(user.email_last_mod_date.getMonth() + 1))) {
@@ -420,7 +506,7 @@ const userUpdate = async (req, res) => {
                     }
 
                 });
-                return res.status(200).json({ message: "Sikeres adatfrissítés!" });
+                return res.status(200).json({ message: "Sikeres email frissítés!" });
 
 
 
@@ -433,9 +519,9 @@ const userUpdate = async (req, res) => {
         }
 
 
-        //Felhasználónév esetén:
+        //Felhasználónév esetén: előző -> ((usr_name && new_usr_name && paswrd) && !new_email_address && !new_paswrd)
 
-        if ((usr_name && new_usr_name && paswrd) && !new_email_address && !new_paswrd) {
+        if ((usr_name && new_usr_name) && !new_email_address && !new_paswrd) {
 
             if (validalasFuggveny(res, [
                 { condition: /@/.test(new_usr_name), message: "A felhasználó név nem tartalmazhat '@' jelet!" },
@@ -447,7 +533,7 @@ const userUpdate = async (req, res) => {
 
             if (user.usna_mod_num_remain > 0 && user.usna_last_mod_date < date) {
 
-                const modUser = await prisma.user.update({
+                const modUser = await prisma.users.update({
                     where: {
                         id: id
                     },
@@ -462,7 +548,7 @@ const userUpdate = async (req, res) => {
                         status: status
                     }
                 });
-                return res.status(200).json({ message: `Sikeres adatfrissítés! Remaining: ${user.usna_mod_num_remain}` });
+                return res.status(200).json({ message: `Sikeres felhasználónév frissítés! Hátralévő módosítások száma: ${user.usna_mod_num_remain - 1}` });
             } else
                 if (user.usna_mod_num_remain == 0 && !(date > new Date(new Date(user.email_last_mod_date).setMonth(user.email_last_mod_date.getMonth() + 3)))) {
 
@@ -473,7 +559,7 @@ const userUpdate = async (req, res) => {
                 }
         }
 
-       
+
         //Jelszó esetén:
 
         if ((id && new_paswrd) || ((paswrd && new_paswrd)) && !new_email_address && !usr_name) {
@@ -482,9 +568,9 @@ const userUpdate = async (req, res) => {
             //console.log({ encrypted: bcrypt.compareSync(paswrd, user.paswrd) == bcrypt.compareSync(new_paswrd, user.paswrd) ? "true" : "false" })
 
 
-            
 
-            if(paswrd && new_paswrd){
+
+            if (paswrd && new_paswrd) {
 
                 if (paswrd == new_paswrd) {
                     return res.status(400).json({ message: "Ugyanazt a jelszót nem adhatod meg!" });
@@ -492,16 +578,16 @@ const userUpdate = async (req, res) => {
 
                 if (bcrypt.compareSync(paswrd, user.paswrd) == bcrypt.compareSync(new_paswrd, user.paswrd)) {
                     return res.status(400).json({ message: "Ugyanazt a jelszót nem adhatod meg!" });
-    
+
                 }
-    
+
                 if (!bcrypt.compareSync(paswrd, user.paswrd)) {
                     return res.status(400).json({ message: "Nem megfelelő jelszó!" });
                 }
 
             }
-            
-            
+
+
 
 
 
@@ -540,7 +626,7 @@ const userUpdate = async (req, res) => {
                     status: status
                 }
             });
-            return res.status(200).json({ message: "Sikeres adatfrissítés!" });
+            return res.status(200).json({ message: "Sikeres jelszó megváltoztatás!" });
 
 
 
@@ -754,11 +840,11 @@ const userLogin = async (req, res) => {
         if (!userL) {
             return res.status(400).json({ message: "Nincs ilyen felhasználó!" });
         }
-        if(userL.status=="pending"){
+        if (userL.status == "pending") {
             return res.status(400).json({ message: "A fiókod nincs megerősítve!" })
         }
-        if(userL.status=="banned"){
-            return res.status(400).json({message: "A fiókod tiltásra került! :("})
+        if (userL.status == "banned") {
+            return res.status(400).json({ message: "A fiókod tiltásra került! :(" })
         }
 
         //!bcrypt.compare(paswrd, user.paswrd)
@@ -791,16 +877,16 @@ const userLogin = async (req, res) => {
 
 const userLogout = async (req, res) => {
 
-    
-    
+
+
     res.clearCookie('tokenU', {
         secure: true,
         httpOnly: true,
         sameSite: 'none',
-        path:'/'
+        path: '/'
     });
-    
-    
+
+
     res.status(200).json({ message: "Kijelentkezve." });
 }
 
@@ -824,7 +910,7 @@ const protected = async (req, res) => {
 
 
 const isAuthenticated = async (req, res) => {
-    res.json({ "authenticated": true, user: req.user});
+    res.json({ "authenticated": true, user: req.user });
 };
 
 const userGetPicturePath = async (req, res) => {
@@ -836,22 +922,22 @@ const userGetPicturePath = async (req, res) => {
             where: {
                 uer_id: Number(uer_id)
             }
-        })        
+        })
 
         if (!uerPic || !uerPic.uer_id) {
             return res.status(400).json({ message: "Nincs ilyen felhasználó!" });
         }
-         
+
         const picPath = await prisma.pictures.findUnique({
             where: {
                 id: uerPic.pte_id
             }
         });
-        
+
         if (!picPath) {
             return res.status(400).json({ message: "Nincs ilyen kép!" });
         }
-        
+
         return res.status(200).json(picPath.img_path);
     }
 
@@ -875,5 +961,6 @@ module.exports = {
     passEmailSend,
     passEmailVerify,
     verifyEmailSend,
-    emailVerifiedMod
+    emailVerifiedMod,
+    userProfileSearchByName
 }

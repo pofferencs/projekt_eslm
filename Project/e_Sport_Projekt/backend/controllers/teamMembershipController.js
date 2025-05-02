@@ -75,8 +75,44 @@ const teamMembershipInsert = async (req, res)=>{
     }
 }
 
+// Route to fetch active team members
+const activeMembersList =  async (req, res) => {
+    const { team_id } = req.params;
+
+    try {
+        const activeMembers = await prisma.team_Memberships.findMany({
+            where: {
+                tem_id: Number(team_id),
+                status: "active" // Filter for active members
+            },
+            include: {
+                user: true // Include user data in the response
+            }
+        });
+
+        if (!activeMembers || activeMembers.length === 0) {
+            return res.status(404).json({ message: "Nincs aktív tag a csapatban!" });
+        }
+
+        // Return the active members' data
+        const membersData = activeMembers.map(member => ({
+            id: member.user.id,
+            full_name: member.user.full_name,
+            usr_name: member.user.usr_name,
+            discord_name: member.user.discord_name,
+        }));
+
+        return res.status(200).json(membersData);
+
+    } catch (error) {
+        return res.status(500).json({ message: "Hiba történt", error });
+    }
+};
+
+
 module.exports = {
     teamMembershipList,
     teamMembershipUpdate,
-    teamMembershipInsert
+    teamMembershipInsert,
+    activeMembersList
 }

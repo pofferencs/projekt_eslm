@@ -8,14 +8,16 @@ const { matchInsert } = require('../controllers/matchController');
 const { teamMembershipInsert } = require('../controllers/teamMembershipController');
 const { teamInsert } = require('../controllers/teamController');
 const { tournamentInsert } = require('../controllers/tournamentController');
+const { pictureInsert, upload } = require('../controllers/pictureController')
 
 
-router.post('/application',applicationInsert);
-router.post('/event',eventInsert);
-router.post('/game',gameInsert);
+router.post('/application', applicationInsert);
+router.post('/event', eventInsert);
+router.post('/game', gameInsert);
 router.post('/match', matchInsert);
-router.post('/teammembership',teamMembershipInsert);
-router.post('/team',teamInsert);
+router.post('/teammembership', teamMembershipInsert);
+router.post('/team', teamInsert);
 router.post('/tournament', tournamentInsert);
+router.post('/upload', upload.single('image'), pictureInsert)
 
 module.exports = router;
