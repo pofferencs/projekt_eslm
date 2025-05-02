@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import TeamSchema from "../schemas/TeamSchema";
 
@@ -6,24 +6,32 @@ function TeamSearch() {
   const [searchInput, setSearchInput] = useState("");
   const [result, setResult] = useState([]);
 
+  // Keresés és csapatok listázása
   const onSubmit = (e) => {
     e.preventDefault();
 
+    let url = `${import.meta.env.VITE_BASE_URL}/list/team`;
+
+    // Ha van kereső input, akkor hozzáadjuk a keresési paramétert
     if (searchInput !== "") {
-      fetch(`${import.meta.env.VITE_BASE_URL}/list/tenamesearch/${searchInput}`, {
-        method: "GET",
-        headers: {
-          "Content-type": "application/json",
-        },
-      })
-        .then((res) => res.json())
-        .then((data) => setResult(data))
-        .catch((err) => toast.error("Hiba történt a keresés során."));
-    } else {
-      setResult([]);
+      url += `?search=${searchInput}`;
     }
+
+    // Fetch kérés a backend felé
+    fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-type": "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setResult(data); // Eredmények frissítése
+      })
+      .catch((err) => toast.error("Hiba történt a keresés során.")); // Hiba esetén
   };
 
+  // Keresési input kezelése
   const handleChange = (e) => {
     setSearchInput(e.target.value);
   };
@@ -39,10 +47,7 @@ function TeamSearch() {
         <form onSubmit={onSubmit}>
           <div className="grid grid-cols-6 gap-4">
             <div className="col-start-1 col-end-5">
-              <label
-                htmlFor="teamname"
-                className="block text-sm/6 font-medium text-indigo-600"
-              >
+              <label htmlFor="teamname" className="block text-sm/6 font-medium text-indigo-600">
                 Csapatnév
               </label>
               <input
@@ -68,11 +73,12 @@ function TeamSearch() {
         </form>
       </div>
 
+      {/* Találatok megjelenítése */}
       <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 justify-items-center gap-5 mb-10 mt-20">
         {result.length > 0 ? (
           result.map((team) => <TeamSchema key={team.id} team={team} />)
         ) : (
-          <p className="text-gray-400 mt-4">Nincs találat.</p>
+          <p>{result.message}</p>
         )}
       </div>
     </div>
