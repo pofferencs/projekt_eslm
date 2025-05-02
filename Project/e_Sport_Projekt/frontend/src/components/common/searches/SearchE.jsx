@@ -105,13 +105,13 @@ function SearchE() {
         </form>
       </div>
 
-      <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 justify-items-center gap-5 mb-10 mt-20">
-        {filteredEvents.length > 0 ? (
-          filteredEvents.map((event) => (
+      <div className={`grid ${events.length === 1 ? 'lg:grid-cols-1' : 'lg:grid-cols-3'} md:grid-cols-2 sm:grid-cols-1 justify-items-center gap-5 mb-10 mt-10`} >
+        {events.length > 0 ? (
+          events.map((event) => (
             <EventSchema key={event.id} event={event} />
           ))
         ) : (
-          <p className="text-white">Nincs megjeleníthető esemény.</p>
+          <p>{events.message}</p>
         )}
       </div>
     </div>
