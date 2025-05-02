@@ -1,87 +1,82 @@
 import { useState } from "react";
-import { toast } from "react-toastify";
-import Footer from "../Footer";
+import { toast, ToastContainer } from "react-toastify";
+import TeamSchema from "../schemas/TeamSchema";
 
-function SearchTe() {
+function TeamSearch() {
   const [searchInput, setSearchInput] = useState("");
   const [result, setResult] = useState([]);
 
   const onSubmit = (e) => {
     e.preventDefault();
 
-    if(searchInput!=""){
+    if (searchInput !== "") {
       fetch(`${import.meta.env.VITE_BASE_URL}/list/tenamesearch/${searchInput}`, {
         method: "GET",
         headers: {
           "Content-type": "application/json",
         },
       })
-        .then(console.log(searchInput))
         .then((res) => res.json())
-        .then((adat) => setResult(adat))
-        .catch((err) => toast.error(err));
-  
-      console.log(result);
-    }else{
+        .then((data) => setResult(data))
+        .catch((err) => toast.error("Hiba történt a keresés során."));
+    } else {
       setResult([]);
     }
   };
 
-  const writeData = (e) => {
+  const handleChange = (e) => {
     setSearchInput(e.target.value);
-
-    console.log("Input mező>>>" + searchInput);
   };
 
   return (
     <div className="flex flex-col min-h-screen">
+      <ToastContainer />
       <h2 className="mt-10 text-center text-4xl font-bold tracking-tight text-indigo-600">
         Csapat kereső
       </h2>
+
       <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
         <form onSubmit={onSubmit}>
-          <label
-            htmlFor="team"
-            className="block text-sm/6 font-medium text-indigo-600"
-          >
-            Csapat teljes neve
-          </label>
+          <div className="grid grid-cols-6 gap-4">
+            <div className="col-start-1 col-end-5">
+              <label
+                htmlFor="teamname"
+                className="block text-sm/6 font-medium text-indigo-600"
+              >
+                Csapatnév
+              </label>
+              <input
+                type="text"
+                name="teamname"
+                id="teamname"
+                autoComplete="off"
+                value={searchInput}
+                onChange={handleChange}
+                className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+              />
+            </div>
 
-          <div className="mt-2">
-            <input
-              type="text"
-              name="team"
-              id="team"
-              autoComplete="team"
-              value={searchInput}
-              onChange={writeData}
-              className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
-            />
-          </div>
-          <div>
-            <button
-              type="submit"
-              className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-            >
-              Keresés
-            </button>
+            <div className="col-start-5 col-end-7 flex items-end">
+              <button
+                type="submit"
+                className="w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              >
+                Keresés
+              </button>
+            </div>
           </div>
         </form>
       </div>
 
-      <div className="m-5 h-screen">
+      <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 justify-items-center gap-5 mb-10 mt-20">
         {result.length > 0 ? (
-          result.map((team, i) => (
-            <div key={i}>
-              <p>{team.full_name}</p>
-            </div>
-          ))
+          result.map((team) => <TeamSchema key={team.id} team={team} />)
         ) : (
-          <p>{result.message}</p>
+          <p className="text-gray-400 mt-4">Nincs találat.</p>
         )}
       </div>
     </div>
   );
 }
 
-export default SearchTe;
+export default TeamSearch;
