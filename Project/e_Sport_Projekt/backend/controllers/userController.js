@@ -54,10 +54,7 @@ const passEmailSend = async (req, res) => {
     if (!user) {
         return res.status(500).json({ message: "Ilyen felhasználó nem regisztrált!" });
     }
-
-    //TODO: Itt elágazásba azt, hogy cseréljük a tokent egy adott emailnél
-
-    console.log(verifyTokens);
+    
 
     if (verifyTokens.find(x => x.email == user.email_address)) {
         const token = jwt.sign({ email: user.email_address }, process.env.JWT_SECRET, { expiresIn: "15m" });
@@ -74,9 +71,6 @@ const passEmailSend = async (req, res) => {
     }
 
     const token = verifyTokens.find(x => x.email == user.email_address);
-
-
-
 
     const transporter = nodemailer.createTransport({
         host: process.env.SMTP_HOST,
@@ -291,7 +285,7 @@ cron.schedule('*/30 * * * *', async () => {
             }
         });
 
-        return console.log("A megerősítésre váró fiókok törlésre kerültek!")
+        return console.log("A megerősítésre váró fiókok törlésre kerültek! (Felhasználók)")
 
     } catch (error) {
         return console.log({ error: error })
@@ -467,7 +461,7 @@ const userUpdate = async (req, res) => {
 
         //Email módosítás esetén: előző -> (((new_email_address && paswrd) && !new_usr_name && !new_paswrd))
 
-        if (((new_email_address) && !new_usr_name && !new_paswrd)) {
+        if (((new_email_address && paswrd) && !new_usr_name && !new_paswrd)) {
 
 
             if (validalasFuggveny(res, [
@@ -521,7 +515,7 @@ const userUpdate = async (req, res) => {
 
         //Felhasználónév esetén: előző -> ((usr_name && new_usr_name && paswrd) && !new_email_address && !new_paswrd)
 
-        if ((usr_name && new_usr_name) && !new_email_address && !new_paswrd) {
+        if ((usr_name && new_usr_name && paswrd) && !new_email_address && !new_paswrd) {
 
             if (validalasFuggveny(res, [
                 { condition: /@/.test(new_usr_name), message: "A felhasználó név nem tartalmazhat '@' jelet!" },
