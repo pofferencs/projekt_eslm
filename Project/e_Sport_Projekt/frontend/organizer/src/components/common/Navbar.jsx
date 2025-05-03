@@ -67,7 +67,14 @@ function Navbar() {
               <div className="hidden sm:ml-6 md:block">
                 <div className="flex space-x-4">
                   <Link to="/" className="rounded-md bg-gray-900 px-3 py-2 text-sm font-medium text-white">Főoldal</Link>
-                  <Link to="/events" className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Események</Link>
+                  {
+                    (isAuthenticated)? (
+                      <Link to="/game" className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Játékok kezelése</Link>
+                    ):(
+                      <p></p>
+                    )
+                  }
+                  
 
                 <div className='dropdown'>
                   <div tabIndex={0} role='button' className='rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white'>Keresők...</div>

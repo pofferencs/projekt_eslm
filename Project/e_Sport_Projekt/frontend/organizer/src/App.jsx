@@ -22,6 +22,12 @@ import OrganizerEmailVerify from "./components/organizer/OrganizerEmailVerify";
 import Main from "./components/loggedout/Main";
 import { UserProvider } from "../../user/src/context/UserContext";
 import UserProfile from "./components/user/UserProfile";
+import NewEvent from "./components/organizer/Organizing/NewEvent";
+import NewTournament from "./components/organizer/Organizing/NewTournament";
+import Event from "./components/organizer/Organizing/Event";
+import Tournament from "./components/organizer/Organizing/Tournament";
+import Game from "./components/organizer/Organizing/Game";
+import NewGame from "./components/organizer/Organizing/NewGame";
 
 function App() {
   const isAuthenticated = useContext(OrganizerContext);
@@ -47,6 +53,15 @@ function App() {
             <Route path="/event-search" element={<SearchE />} />
             <Route path="/organizer/profile/:name" element={<OrganizerProfile />} />
             <Route path="/user/profile/:name" element={<UserProfile />} />
+
+            {/* Organizer rész */}
+            <Route path="/new-event" element={<NewEvent/>} />
+            <Route path="/new-tournament" element={<NewTournament />} />
+            <Route path="/event/:id" element={<Event />} />
+            <Route path="/tournament/:id" element={<Tournament />} />
+            <Route path="/game" element={<Game />} />
+            <Route path="/new-game" element={<NewGame />} />
+
             
           </Routes>
         </div>
