@@ -1,12 +1,12 @@
 import { useLocation, useNavigate, useParams } from "react-router-dom"
 import Logo from "../../assets/logo.png";
 import { useContext, useEffect, useState } from "react";
-import UserContext from "../../context/OrganizerContext";
 import { toast } from "react-toastify";
+import OrganizerContext from "../../context/OrganizerContext";
 
 function OrganizerPassReset() {
 
-    const {isAuthenticated} = useContext(UserContext);
+    const {isAuthenticated} = useContext(OrganizerContext);
     const navigate = useNavigate();
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
@@ -30,7 +30,7 @@ function OrganizerPassReset() {
 
         if(!token == ""){
 
-            fetch(`${import.meta.env.VITE_BASE_URL}/user/passemail-verify`,{
+            fetch(`${import.meta.env.VITE_BASE_URL}/organizer/passemail-verify`,{
                 method: "POST",
                 headers: { "Content-type": "application/json" },
                 body: JSON.stringify({
@@ -67,7 +67,7 @@ function OrganizerPassReset() {
     const kuldesEmail = (formData, method) => {
         
         console.log(formData)
-        fetch(`${import.meta.env.VITE_BASE_URL}/user/password-reset`,{
+        fetch(`${import.meta.env.VITE_BASE_URL}/organizer/password-reset`,{
             method: method,
             headers: { "Content-type": "application/json" },
             body: JSON.stringify(formData),
@@ -87,7 +87,7 @@ function OrganizerPassReset() {
 
         if(pass == passAgain){
 
-            fetch(`${import.meta.env.VITE_BASE_URL}/update/user`,{
+            fetch(`${import.meta.env.VITE_BASE_URL}/update/organizer`,{
                 method: method,
                 headers: { "Content-type": "application/json" },
                 body: JSON.stringify({

@@ -1,13 +1,13 @@
 import { useLocation, useNavigate, useParams } from "react-router-dom"
 import Logo from "../../assets/logo.png";
 import { useContext, useEffect, useState } from "react";
-import UserContext from "../../context/OrganizerContext";
+import OrganizerContext from "../../context/OrganizerContext";
 import { toast } from "react-toastify";
 
 
 function OrganizerEmailVerify() {
 
-    const {isAuthenticated} = useContext(UserContext);
+    const {isAuthenticated} = useContext(OrganizerContext);
     const navigate = useNavigate();
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
@@ -28,7 +28,7 @@ function OrganizerEmailVerify() {
 
         if(!token == ""){
 
-            fetch(`${import.meta.env.VITE_BASE_URL}/user/email-verify`,{
+            fetch(`${import.meta.env.VITE_BASE_URL}/organizer/email-verify`,{
                 method: "POST",
                 headers: { "Content-type": "application/json" },
                 body: JSON.stringify({

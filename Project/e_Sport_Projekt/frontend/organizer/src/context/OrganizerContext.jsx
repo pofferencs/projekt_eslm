@@ -35,7 +35,7 @@ export const OrganizerProvider = ({children})=>{
             .then(adat => {setOPicPath(adat);})
             .catch(err => {console.log(err)});
 
-        setProfile(auth.user);
+        setProfile(auth.organizer);
         setIsAuthenticated(true);
         setIsLoading(false);
         update();

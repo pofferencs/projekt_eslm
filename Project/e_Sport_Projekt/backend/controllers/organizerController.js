@@ -6,7 +6,6 @@ const { validalasFuggveny, hianyzoAdatFuggveny } = require('../functions/conditi
 const nodemailer = require('nodemailer');
 require('dotenv').config();
 const cron = require('node-cron');
-const { userProfileSearchByName } = require('./userController');
 
 let verifyTokens = [];
 
@@ -893,6 +892,7 @@ module.exports = {
     passEmailSend,
     passEmailVerify,
     organizerSearchByName,
-    organizerGetPicturePath
+    organizerGetPicturePath,
+    organizerProfileSearchByName
     
 }

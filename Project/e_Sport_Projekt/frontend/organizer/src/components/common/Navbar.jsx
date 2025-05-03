@@ -101,7 +101,7 @@ function Navbar() {
                 <ul tabIndex={0} className="dropdown-content bg-slate-500 rounded-box z-1 w-52 p-2 shadow-sm">
                 <p className='flex justify-center text-white font-bold pb-2'>{profile.usr_name}</p>
                   <li>
-                    <Link to={`/profile/${profile.usr_name}`} onClick={()=>{window.scroll(0,0)}} className="block px-4 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white rounded-lg">Profiladatok</Link>
+                    <Link to={`/organizer/profile/${profile.usr_name}`} onClick={()=>{window.scroll(0,0)}} className="block px-4 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white rounded-lg">Profiladatok</Link>
                   </li>
                   
                   {(isAuthenticated) && (

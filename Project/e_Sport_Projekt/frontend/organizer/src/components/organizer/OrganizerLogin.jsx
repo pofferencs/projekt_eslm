@@ -1,12 +1,12 @@
 import { useState, useContext, useEffect } from "react";
-import UserContext from "../../context/OrganizerContext";
 import { useNavigate, Link } from "react-router-dom";
 import Logo from "../../assets/logo.png";
 import { toast } from "react-toastify";
+import OrganizerContext from "../../context/OrganizerContext";
 
 function OrganizerLogin() {
   const navigate = useNavigate();
-  const { isAuthenticated, authStatus, login } = useContext(UserContext);
+  const { isAuthenticated, authStatus, login } = useContext(OrganizerContext);
   const [showPass, isShowPass] = useState(false);
   const [type, setType] = useState('password');
 
