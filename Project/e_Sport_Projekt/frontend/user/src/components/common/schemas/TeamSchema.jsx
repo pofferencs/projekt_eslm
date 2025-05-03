@@ -37,12 +37,12 @@ function TeamSchema({ team }) {
                     <img className="w-10 h-10 rounded-full drop-shadow-lg object-cover border-2 border-purple-900" src={import.meta.env.VITE_BASE_URL + `${import.meta.env.VITE_BASE_PIC}${teamPicPath}`} alt="Team Profile" />
                 </div>
 
-                <div className="flex justify-evenly">
+                <div className="flex justify-evenly border-t border-white my-2 pt-2">
                     <p className="drop-shadow-lg text-blue-200 font-extrabold">Rövid név:</p>
                     <p className="drop-shadow-lg">{`[ ${team.short_name} ]`}</p>
                 </div>
 
-                <div className="flex justify-evenly">
+                <div className="flex justify-evenly border-t border-white my-2 pt-2">
                     <p className="drop-shadow-lg text-blue-200 font-extrabold">Csapat tagjai:</p>
                     <div>
                         {teamMembers.length === 0 ? (

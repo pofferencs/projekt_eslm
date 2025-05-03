@@ -109,7 +109,7 @@ function EventSchema({ event }) {
                 </div>
 
 
-                <div className="flex justify-evenly">
+                <div className="flex justify-evenly border-t border-white my-2 pt-2">
                     <p className="drop-shadow-lg text-stone-300 font-extrabold">Kezdés:</p>
                     <div>
                         {
@@ -147,7 +147,7 @@ function EventSchema({ event }) {
                     </div>
                 </div>
 
-                <div className="flex justify-evenly">
+                <div className="flex justify-evenly border-t border-white my-2 pt-2">
                     <p className="drop-shadow-lg text-stone-300 font-extrabold">Vége:</p>
                     {
                         (statusCheckResult == "started")
@@ -186,7 +186,7 @@ function EventSchema({ event }) {
 
                 </div>
 
-                <div className="flex justify-evenly">
+                <div className="flex justify-evenly border-t border-white my-2 pt-2">
                     <p className="drop-shadow-lg text-stone-300 font-extrabold flex-none">Hely:</p>
                     <p className="drop-shadow-lg ml-10">{event.place}</p>
 
