@@ -9,7 +9,7 @@ const { matchList } = require('../controllers/matchController');
 const { pictureList } = require('../controllers/pictureController');
 const { picture_linkList } = require('../controllers/pictureLinkController');
 const { teamList, teamSearchByName, teamGetPicPath } = require('../controllers/teamController');
-const { teamMembershipList, activeMembersList } = require('../controllers/teamMembershipController');
+const { teamMembershipList, activeMembersList, teamsForPlayer } = require('../controllers/teamMembershipController');
 const { tournamentList, tournamentSearchByName, tournamentSearchByEvent, tournamentGetPicPath } = require('../controllers/tournamentController');
 const { organizerList } = require('../controllers/organizerController');
 
@@ -33,5 +33,6 @@ router.get('/teampic/:team_id', teamGetPicPath);
 router.get('/tournamentpic/:tournament_id', tournamentGetPicPath);
 router.get('/eventpic/:evt_id',eventGetPicPath);
 router.get('/team/:team_id/members', activeMembersList)
+router.get('/userteammemberships/:uer_id',teamsForPlayer);
 
 module.exports = router;

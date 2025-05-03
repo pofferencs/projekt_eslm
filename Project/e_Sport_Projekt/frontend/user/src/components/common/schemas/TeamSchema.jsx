@@ -13,21 +13,23 @@ function TeamSchema({ team }) {
             .catch(error => console.log(error));
     }, [team?.id]);
 
-    // Fetch active team members
+    // Fetch team members + captain
     useEffect(() => {
         fetch(`${import.meta.env.VITE_BASE_URL}/list/team/${team.id}/members`)
             .then(res => res.json())
             .then(members => {
                 if (Array.isArray(members)) {
-                    setTeamMembers(members);
+                    // Válaszd külön a kapitányt (creator_id) és rendezd előre
+                    const captain = members.find(m => m.id === team.creator_id);
+                    const others = members.filter(m => m.id !== team.creator_id);
+                    setTeamMembers(captain ? [captain, ...others] : members);
                 } else {
-                    setTeamMembers([]); // vagy logolod az üzenetet
+                    setTeamMembers([]);
                     console.warn("Hibás válasz:", members);
                 }
             })
             .catch(error => console.log(error));
-    }, [team?.id]);
-
+    }, [team?.id, team?.creator_id]);
 
     return (
         <div className="card bg-neutral drop-shadow-lg text-stone-300 w-96 bg-gradient-to-br inline-block from-purple-900 to-orange-300">
@@ -48,10 +50,10 @@ function TeamSchema({ team }) {
                         {teamMembers.length === 0 ? (
                             <p className="text-rose-700 italic underline drop-shadow-lg">Nincsenek aktív tagok</p>
                         ) : (
-                            teamMembers.map(member => (
-                                <div key={member.id} className="drop-shadow-lg text-purple-800 hover:text-blue-200">
+                            teamMembers.map((member, index) => (
+                                <div key={member.id} className="drop-shadow-lg text-purple-800 hover:text-blue-200 flex items-center gap-1">
                                     <Link to={`/profile/${member.usr_name}`}>
-                                        {member.usr_name}
+                                        {index === 0 && member.id === team.creator_id ? `${member.usr_name} 👑 ` : `${member.usr_name} `}
                                     </Link>
                                 </div>
                             ))
