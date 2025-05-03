@@ -89,12 +89,12 @@ const passEmailSend = async (req, res) => {
         from: process.env.EMAIL_ADDRESS,
         to: organizer.email_address,
         subject: "Jelszó visszaállítás",
-        text: `Szia! Az alábbi link 15 percig érvényes, így újra kell kérned, ha lejár. Ezen a linken tudod a jelszavadat visszaállítani: ${process.env.VITE_PASS_RESET_URL}?token=${token.token}`,
+        text: `Szia! Az alábbi link 15 percig érvényes, így újra kell kérned, ha lejár. Ezen a linken tudod a jelszavadat visszaállítani: ${process.env.VITE_ORG_PASS_RESET_URL}?token=${token.token}`,
         html: `
         <h1>Jelszó visszaállítás</h1>
         <p>Szia! Az alábbi link 15 percig érvényes, így újra kell kérned, ha lejár.</p>
         <p>Ezen a linken tudod a jelszavadat visszaállítani:</p>
-        <p>${process.env.VITE_PASS_RESET_URL}?token=${token.token}</p>
+        <p>${process.env.VITE_ORG_PASS_RESET_URL}?token=${token.token}</p>
         <p>Vedd figyelembe, hogy a fenti link 15 percig érvényes, így újra kell kérned, ha lejár.</p>
         `,
     };
@@ -198,12 +198,12 @@ const verifyEmailSend = async (req, res) => {
         from: process.env.EMAIL_ADDRESS,
         to: organizers.email_address,
         subject: "Regisztráció megerősítő levél",
-        text: `Szia! Az alábbi link 15 percig érvényes, így újra kell kérned, ha lejár. Ezen a linken tudod a regisztrációd megerősíteni: ${process.env.VITE_EMAIL_VERIFY_URL}?token=${token}`,
+        text: `Szia! Az alábbi link 15 percig érvényes, így újra kell kérned, ha lejár. Ezen a linken tudod a regisztrációd megerősíteni: ${process.env.VITE_ORG_EMAIL_VERIFY_URL}?token=${token}`,
         html: `
         <h1>Regisztráció megerősítő levél</h1>
         <p>Szia! Az alábbi link 15 percig érvényes, így újra kell kérned, ha lejár.</p>
         <p>Ezen a linken tudod a regisztrációd megerősíteni:</p>
-        <p>${process.env.VITE_EMAIL_VERIFY_URL}?token=${token}</p>
+        <p>${process.env.VITE_ORG_EMAIL_VERIFY_URL}?token=${token}</p>
         <p>Vedd figyelembe, hogy a fenti link 15 percig érvényes, így újra kell kérned, ha lejár.</p>
         `,
     };
@@ -275,10 +275,10 @@ cron.schedule('*/30 * * * *', async () => {
 
         const delPicLinks = await prisma.$queryRaw
             `
-        DELETE FROM pl USING picture_links pl, users u WHERE pl.uer_id = (SELECT id FROM users WHERE status="pending")
+        DELETE FROM pl USING picture_links pl, organizers o WHERE pl.ogr_id = (SELECT id FROM organizers WHERE status="pending")
         `;
 
-        const delPendingUsers = await prisma.organizers.deleteMany({
+        const delPendingOrganizers = await prisma.organizers.deleteMany({
             where: {
                 status: "pending"
             }
@@ -524,22 +524,28 @@ const organizerUpdate = async (req, res) => {
         //Jelszó esetén:
         if((id && new_paswrd) || ((paswrd && new_paswrd)) && !new_email_address && !usr_name){
 
-            console.log({encrypted: paswrd == new_paswrd ? "true" : "false"})
-            console.log({encrypted: bcrypt.compareSync(paswrd, organizer.paswrd) == bcrypt.compareSync(new_paswrd, organizer.paswrd) ? "true" : "false"})
+            // console.log({encrypted: paswrd == new_paswrd ? "true" : "false"})
+            // console.log({encrypted: bcrypt.compareSync(paswrd, organizer.paswrd) == bcrypt.compareSync(new_paswrd, organizer.paswrd) ? "true" : "false"})
             
-
             if(paswrd == new_paswrd){
-                return res.status(400).json({message: "Ugyanazt a jelszót nem adhatod meg!"});
+
+                if(paswrd == new_paswrd){
+                    return res.status(400).json({message: "Ugyanazt a jelszót nem adhatod meg!"});
+                }
+    
+                if(bcrypt.compareSync(paswrd, organizer.paswrd) == bcrypt.compareSync(new_paswrd, organizer.paswrd)){
+                    return res.status(400).json({message: "Ugyanazt a jelszót nem adhatod meg!"});
+    
+                }   
+    
+                if(!bcrypt.compareSync(paswrd, organizer.paswrd)){
+                    return res.status(400).json({message: "Nem megfelelő jelszó!"});
+                }
+
+
             }
 
-            if(bcrypt.compareSync(paswrd, organizer.paswrd) == bcrypt.compareSync(new_paswrd, organizer.paswrd)){
-                return res.status(400).json({message: "Ugyanazt a jelszót nem adhatod meg!"});
-
-            }   
-
-            if(!bcrypt.compareSync(paswrd, organizer.paswrd)){
-                return res.status(400).json({message: "Nem megfelelő jelszó!"});
-            }
+            
             
 
             
@@ -550,20 +556,20 @@ const organizerUpdate = async (req, res) => {
             const validCharsRegex = /^[a-zA-Z0-9*@_]*$/;
 
             if (validalasFuggveny(res, [
-                { condition: paswrd.length < 8, message: "A jelszónak minimum 8 karakter hosszúnak kell lennie!" },
-                { condition: !/[A-Z]/.test(paswrd), message: "Egy nagybetűt meg kell adni a jelszónál!" },
-                { condition: !/[a-z]/.test(paswrd), message: "Kisbetűket meg kell adnod a jelszónál!" },
-                { condition: !/[0-9]/.test(paswrd), message: "A jelszónak tartalmaznia kell számot!" },
-                { condition: !specChars.test(paswrd), message: "A jelszónak tartalmaznia kell különleges karaktereket! ('*', '@', '_')" },
-                { condition: /^[*@_]/.test(paswrd), message: "Különleges karakterekkel nem kezdődhet a jelszó!" },
-                { condition: ekezetesRegex.test(paswrd), message: "Csak az angol ABC betűi elfogadottak a jelszónál, ékezetek nem!" },
-                { condition: !validCharsRegex.test(paswrd), message: "A jelszónak csak angol ABC betűi és az engedélyezett karakterek (számok, '*', '@', '_') tartalmazhatók!" }
+                { condition: new_paswrd.length < 8, message: "A jelszónak minimum 8 karakter hosszúnak kell lennie!" },
+                { condition: !/[A-Z]/.test(new_paswrd), message: "Egy nagybetűt meg kell adni a jelszónál!" },
+                { condition: !/[a-z]/.test(new_paswrd), message: "Kisbetűket meg kell adnod a jelszónál!" },
+                { condition: !/[0-9]/.test(new_paswrd), message: "A jelszónak tartalmaznia kell számot!" },
+                { condition: !specChars.test(new_paswrd), message: "A jelszónak tartalmaznia kell különleges karaktereket! ('*', '@', '_')" },
+                { condition: /^[*@_]/.test(new_paswrd), message: "Különleges karakterekkel nem kezdődhet a jelszó!" },
+                { condition: ekezetesRegex.test(new_paswrd), message: "Csak az angol ABC betűi elfogadottak a jelszónál, ékezetek nem!" },
+                { condition: !validCharsRegex.test(new_paswrd), message: "A jelszónak csak angol ABC betűi és az engedélyezett karakterek (számok, '*', '@', '_') tartalmazhatók!" }
 
             ])) {
                 return;
             };
 
-            const hashedPass = await bcrypt.hash(paswrd, 10);
+            const hashedPass = await bcrypt.hash(new_paswrd, 10);
         
             const modOrganizer = await prisma.organizers.update({
                 where: {
@@ -647,13 +653,14 @@ const organizerReg = async (req, res) => {
         });
 
         if (validalasFuggveny(res, [
-            { condition: !/^[A-ZÁÉÍÓÖŐÚÜŰ][a-záéíóöőúüű]{1,}(?:[-][A-ZÁÉÍÓÖŐÚÜŰ][a-záéíóöőúüű]{1,})*(\s+[A-ZÁÉÍÓÖŐÚÜŰ][a-záéíóöőúüű]{1,}(?:[-][A-ZÁÉÍÓÖŐÚÜŰ][a-záéíóöőúüű]{1,})*)+$/.test(full_name), message : "Hibás névmegadás!"},
-            { condition: full_name.length > 64, message: "Túl hosszú név (max 64 karakter)!"},
+            { condition: !/^[A-ZÁÉÍÓÖŐÚÜŰ][a-záéíóöőúüű]{1,}(?:[-][A-ZÁÉÍÓÖŐÚÜŰ][a-záéíóöőúüű]{1,})*(\s+[A-ZÁÉÍÓÖŐÚÜŰ][a-záéíóöőúüű]{1,}(?:[-][A-ZÁÉÍÓÖŐÚÜŰ][a-záéíóöőúüű]{1,})*)+$/.test(full_name), message: "Hibás névmegadás!" },
+            { condition: full_name.length > 64, message: "Túl hosszú név (max 64 karakter)!" },
+            { condition: /@/.test(usr_name), message: "A felhasználó név nem tartalmazhat '@' jelet!" },
             { condition: /[0-9]/.test(usr_name.charAt(0)), message: "Számmal nem kezdődhet a felhasználónév!" },
             { condition: organizernameCheck, message: "A felhasználónév foglalt!" },
-            { condition: omIdCheck, message: "Ezzel az OM-számmal regisztráltak már!"},
+            { condition: omIdCheck, message: "Ezzel az OM-számmal regisztráltak már!" },
             { condition: teamNameCheck, message: "A felhasználónév, amit megadtál, megegyezik egy csapat teljes nevével. Adj meg újat!" },
-            { condition: usr_name.length < 3 || usr_name.length > 17, message:  "Minimum 3, maximum 16 karakterből állhat a felhasználóneved!" }
+            { condition: usr_name.length < 3 || usr_name.length > 17, message: "Minimum 3, maximum 16 karakterből állhat a felhasználóneved!" }
 
         ])) {
             return;
@@ -726,7 +733,7 @@ const organizerReg = async (req, res) => {
                 email_last_mod_date: mail_last_mod_date,
                 phone_num: phone_num,
                 om_identifier: om_identifier,
-                status: "active"
+                status: "pending"
             }
         })
 

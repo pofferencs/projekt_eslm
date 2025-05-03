@@ -166,7 +166,7 @@ function OrganizerPassReset() {
 
     ):(
 
-        <section className="bg-gray-900 min-h-screen flex flex-col items-center px-6 py-10">
+        <section className="bg-zinc-900 min-h-screen flex flex-col items-center px-6 py-10">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
         <img className="mx-auto h-20 w-auto" src={Logo} alt="Logo" />
           <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-indigo-700">
@@ -181,7 +181,7 @@ function OrganizerPassReset() {
         </div>
         {
             (isEmail == true) ? (
-                <div className="w-full rounded-lg shadow-lg md:mt-6 sm:max-w-2xl xl:p-0 bg-gray-800 dark:border-gray-700">
+                <div className="w-full rounded-lg shadow-lg md:mt-6 sm:max-w-2xl xl:p-0 bg-zinc-800 dark:border-zinc-700">
         <button className="btn mt-4 ml-4 bg-indigo-600 text-white hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" onClick={()=>{navigate('/login')}}>
             <img src="https://www.svgrepo.com/show/500472/back.svg" className="h-5"/>
         </button>
@@ -214,7 +214,7 @@ function OrganizerPassReset() {
                       formData.email_address
                     }
                     onChange={writeDataEmail}
-                    className="block w-full h-12 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm px-3 py-1.5 text-base outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+                    className="block w-full h-12 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-zinc-700 border-zinc-600 text-white shadow-sm px-3 py-1.5 text-base outline-1 -outline-offset-1 outline-zinc-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
                   />
                 </div>
               </div>
@@ -237,7 +237,7 @@ function OrganizerPassReset() {
                 ):(
 
 
-                    <div className="w-full rounded-lg shadow-lg md:mt-6 sm:max-w-2xl xl:p-0 bg-gray-800 dark:border-gray-700">
+                    <div className="w-full rounded-lg shadow-lg md:mt-6 sm:max-w-2xl xl:p-0 bg-zinc-800 dark:border-zinc-700">
         <div className="p-8 md:p-10">
             <h2 className="text-2xl text-center font-bold">Kérjük, add meg az új jelszót!</h2>
 
@@ -266,7 +266,7 @@ function OrganizerPassReset() {
                       passData.pass
                     }
                     onChange={writeDataPass}
-                    className="block w-full h-12 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm px-3 py-1.5 text-base outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+                    className="block w-full h-12 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-zinc-700 border-zinc-600 text-white shadow-sm px-3 py-1.5 text-base outline-1 -outline-offset-1 outline-zinc-300 placeholder:text-zinc-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
                   />
                 </div>
               </div>
@@ -289,7 +289,7 @@ function OrganizerPassReset() {
                       passData.passAgain
                     }
                     onChange={writeDataPass}
-                    className="block w-full h-12 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm px-3 py-1.5 text-base outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+                    className="block w-full h-12 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-zinc-700 border-zinc-600 text-white shadow-sm px-3 py-1.5 text-base outline-1 -outline-offset-1 outline-zinc-300 placeholder:text-zinc-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
                   />
                 </div>
               </div>
