@@ -58,7 +58,7 @@ function TournamentSchema({ tournament, limit }) {
         // Külön kell kezelni a jelentkezési időszakot (apn_start és apn_end)
         if (field === "apn_start" || field === "apn_end") {
             if (now < start) return "text-yellow-400"; // Jelentkezés még nem indult
-            if (now >= start && now <= end) return "text-green-400"; // Jelentkezés folyamatban
+            if (now >= start && now <= end) return "text-yellow-400"; // Jelentkezés folyamatban
             return "text-red-400"; // Jelentkezés lejárt
         }
 
