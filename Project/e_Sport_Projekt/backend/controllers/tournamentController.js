@@ -363,7 +363,7 @@ module.exports = {
     tournamentUpdate,
     tournamentDelete,
     tournamentInsert,
-    tournamentGetPicPath
+    tournamentGetPicPath,
     tournamentSearchByName,
     tournamentSearchByEvent
 }

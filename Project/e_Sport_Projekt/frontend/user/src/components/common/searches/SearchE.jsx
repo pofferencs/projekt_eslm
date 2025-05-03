@@ -6,7 +6,7 @@ function SearchE() {
   const [events, setEvents] = useState([]);
   const [filteredEvents, setFilteredEvents] = useState([]);
   const [statusFilter, setStatusFilter] = useState("all");
-  const [limit, setLimit] = useState(3);
+  const [limit, setLimit] = useState(0);
   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
@@ -41,7 +41,12 @@ function SearchE() {
       );
     }
 
-    setFilteredEvents(filtered.slice(0, limit));
+    if (limit > 0) {
+      setFilteredEvents(filtered.slice(0, limit));
+    } else {
+      setFilteredEvents(filtered);
+    }
+
   }, [events, statusFilter, limit, searchTerm]);
 
   return (
@@ -104,12 +109,16 @@ function SearchE() {
               <select
                 id="limit"
                 value={limit}
-                onChange={(e) => setLimit(parseInt(e.target.value))}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  setLimit(value == 0 ? Infinity : parseInt(value));
+                }}
                 className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
               >
-                {[3, 6, 9, 12].map((num) => (
+                <option value={0}>Összes</option>
+                {[1, 2, 3, 4, 5, 10, 30, 50, 70, 100].map((num) => (
                   <option key={num} value={num}>
-                    {num} esemény
+                    {num} verseny
                   </option>
                 ))}
               </select>
