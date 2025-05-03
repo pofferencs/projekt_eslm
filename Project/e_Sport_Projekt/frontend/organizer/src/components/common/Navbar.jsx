@@ -1,18 +1,17 @@
 import { Link, useNavigate } from 'react-router-dom';
-import UserContext from '../../context/UserContext';
 import { useContext, useEffect, useState } from 'react';
 import Logo from '../../assets/logo.png';
 import { toast } from 'react-toastify';
+import OrganizerContext from '../../context/OrganizerContext';
 
 function Navbar() {
   // Állapotok a mobil és profil menü megnyitásához
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
-  const [picPath, setPicPath] = useState("");
   const navigate = useNavigate();
    
 
-  const { logout, isAuthenticated, authStatus, update, pageRefresh, profile } = useContext(UserContext);
+  const { logout, isAuthenticated, authStatus, update, pageRefresh, profile, oPicPath } = useContext(OrganizerContext);
   
   useEffect(()=>{
 
@@ -22,14 +21,7 @@ function Navbar() {
 
   useEffect(()=>{
 
-    
-    fetch(`${import.meta.env.VITE_BASE_URL}/user/userpic/${profile.id}`)
-            .then(res => res.json())
-            .then(adat => setPicPath(adat))
-            .catch(err => {console.log(err)});
             //console.log("refreshed navbar")
-  
-
 
     const interval = setInterval(() => {
       authStatus();
@@ -41,7 +33,7 @@ function Navbar() {
 
   return (
     <div>
-      <nav className="bg-gray-800">
+      <nav className="bg-zinc-800">
         <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
           <div className="relative flex h-16 items-center justify-between">
             {/* Mobil menü gomb */}
@@ -98,8 +90,8 @@ function Navbar() {
                 <div className="dropdown dropdown-bottom dropdown-left">
                 <div tabIndex={0} role="button">
                 {
-                      (picPath != undefined)? (
-                        <img className="w-10 h-10 rounded-full object-cover" src={`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_BASE_PIC}${picPath}`} alt={profile.usr_name} />
+                      (oPicPath != undefined)? (
+                        <img className="w-10 h-10 rounded-full object-cover" src={`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_BASE_PIC}${oPicPath}`} alt={profile.usr_name} />
                       ):
                       (
                         <></>
@@ -109,11 +101,9 @@ function Navbar() {
                 <ul tabIndex={0} className="dropdown-content bg-slate-500 rounded-box z-1 w-52 p-2 shadow-sm">
                 <p className='flex justify-center text-white font-bold pb-2'>{profile.usr_name}</p>
                   <li>
-                    <Link to={`/profile/${profile.usr_name}`} onClick={()=>{window.scroll(0,0)}} className="block px-4 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white rounded-lg">Profiladatok</Link>
+                    <Link to={`/organizer/profile/${profile.usr_name}`} onClick={()=>{window.scroll(0,0)}} className="block px-4 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white rounded-lg">Profiladatok</Link>
                   </li>
-                  <li>
-                    <Link to="/teams" className="block px-4 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white rounded-lg">Csapataim</Link>
-                  </li>
+                  
                   {(isAuthenticated) && (
                         <li><button onClick={() => { toast.success("Kijelentkeztél! Oldalfrissítés 5 másodperc múlva!"); logout(); setTimeout(()=>{navigate('/'); pageRefresh()},5000) }} className="block px-4 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white w-full text-start rounded-lg">Kijelentkezés</button></li>
                       )}

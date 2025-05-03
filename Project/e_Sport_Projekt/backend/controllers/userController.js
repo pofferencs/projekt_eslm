@@ -54,10 +54,7 @@ const passEmailSend = async (req, res) => {
     if (!user) {
         return res.status(500).json({ message: "Ilyen felhasználó nem regisztrált!" });
     }
-
-    //TODO: Itt elágazásba azt, hogy cseréljük a tokent egy adott emailnél
-
-    console.log(verifyTokens);
+    
 
     if (verifyTokens.find(x => x.email == user.email_address)) {
         const token = jwt.sign({ email: user.email_address }, process.env.JWT_SECRET, { expiresIn: "15m" });
@@ -74,9 +71,6 @@ const passEmailSend = async (req, res) => {
     }
 
     const token = verifyTokens.find(x => x.email == user.email_address);
-
-
-
 
     const transporter = nodemailer.createTransport({
         host: process.env.SMTP_HOST,
@@ -96,12 +90,12 @@ const passEmailSend = async (req, res) => {
         from: process.env.EMAIL_ADDRESS,
         to: user.email_address,
         subject: "Jelszó visszaállítás",
-        text: `Szia! Az alábbi link 15 percig érvényes, így újra kell kérned, ha lejár. Ezen a linken tudod a jelszavadat visszaállítani: ${process.env.VITE_PASS_RESET_URL}?token=${token.token}`,
+        text: `Szia! Az alábbi link 15 percig érvényes, így újra kell kérned, ha lejár. Ezen a linken tudod a jelszavadat visszaállítani: ${process.env.VITE_USR_PASS_RESET_URL}?token=${token.token}`,
         html: `
         <h1>Jelszó visszaállítás</h1>
         <p>Szia! Az alábbi link 15 percig érvényes, így újra kell kérned, ha lejár.</p>
         <p>Ezen a linken tudod a jelszavadat visszaállítani:</p>
-        <p>${process.env.VITE_PASS_RESET_URL}?token=${token.token}</p>
+        <p>${process.env.VITE_USR_PASS_RESET_URL}?token=${token.token}</p>
         <p>Vedd figyelembe, hogy a fenti link 15 percig érvényes, így újra kell kérned, ha lejár.</p>
         `,
     };
@@ -205,12 +199,12 @@ const verifyEmailSend = async (req, res) => {
         from: process.env.EMAIL_ADDRESS,
         to: user.email_address,
         subject: "Regisztráció megerősítő levél",
-        text: `Szia! Az alábbi link 15 percig érvényes, így újra kell kérned, ha lejár. Ezen a linken tudod a regisztrációd megerősíteni: ${process.env.VITE_EMAIL_VERIFY_URL}?token=${token}`,
+        text: `Szia! Az alábbi link 15 percig érvényes, így újra kell kérned, ha lejár. Ezen a linken tudod a regisztrációd megerősíteni: ${process.env.VITE_USR_EMAIL_VERIFY_URL}?token=${token}`,
         html: `
         <h1>Regisztráció megerősítő levél</h1>
         <p>Szia! Az alábbi link 15 percig érvényes, így újra kell kérned, ha lejár.</p>
         <p>Ezen a linken tudod a regisztrációd megerősíteni:</p>
-        <p>${process.env.VITE_EMAIL_VERIFY_URL}?token=${token}</p>
+        <p>${process.env.VITE_USR_EMAIL_VERIFY_URL}?token=${token}</p>
         <p>Vedd figyelembe, hogy a fenti link 15 percig érvényes, így újra kell kérned, ha lejár.</p>
         `,
     };
@@ -291,7 +285,7 @@ cron.schedule('*/30 * * * *', async () => {
             }
         });
 
-        return console.log("A megerősítésre váró fiókok törlésre kerültek!")
+        return console.log("A megerősítésre váró fiókok törlésre kerültek! (Felhasználók)")
 
     } catch (error) {
         return console.log({ error: error })
@@ -467,7 +461,7 @@ const userUpdate = async (req, res) => {
 
         //Email módosítás esetén: előző -> (((new_email_address && paswrd) && !new_usr_name && !new_paswrd))
 
-        if (((new_email_address) && !new_usr_name && !new_paswrd)) {
+        if (((new_email_address && paswrd) && !new_usr_name && !new_paswrd)) {
 
 
             if (validalasFuggveny(res, [
@@ -521,7 +515,7 @@ const userUpdate = async (req, res) => {
 
         //Felhasználónév esetén: előző -> ((usr_name && new_usr_name && paswrd) && !new_email_address && !new_paswrd)
 
-        if ((usr_name && new_usr_name) && !new_email_address && !new_paswrd) {
+        if ((usr_name && new_usr_name && paswrd) && !new_email_address && !new_paswrd) {
 
             if (validalasFuggveny(res, [
                 { condition: /@/.test(new_usr_name), message: "A felhasználó név nem tartalmazhat '@' jelet!" },
@@ -695,6 +689,7 @@ const userReg = async (req, res) => {
             { condition: omIdCheck, message: "Ezzel az OM-számmal regisztráltak már!" },
             { condition: teamNameCheck, message: "A felhasználónév, amit megadtál, megegyezik egy csapat teljes nevével. Adj meg újat!" },
             { condition: usr_name.length < 3 || usr_name.length > 17, message: "Minimum 3, maximum 16 karakterből állhat a felhasználóneved!" }
+            
 
         ])) {
             return;

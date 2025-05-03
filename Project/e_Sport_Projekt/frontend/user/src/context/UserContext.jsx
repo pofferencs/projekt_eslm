@@ -12,10 +12,10 @@ export const UserProvider = ({children})=>{
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [profile, setProfile] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [uPicPath, setUPicPath] = useState("");
+
 
   const authStatus = async () =>{
-  
-    
 
     await fetch(`${import.meta.env.VITE_BASE_URL}/user/auth`,{
       method: 'GET',
@@ -27,7 +27,14 @@ export const UserProvider = ({children})=>{
     .then(res=> res.json())
     .then(auth=>{
       if(auth.authenticated){
-        
+
+
+        fetch(`${import.meta.env.VITE_BASE_URL}/user/userpic/${profile.id}`,
+        )
+            .then(res => res.json())
+            .then(adat => {setUPicPath(adat);})
+            .catch(err => {console.log(err)});
+
         setProfile(auth.user);
         setIsAuthenticated(true);
         setIsLoading(false);
@@ -113,6 +120,8 @@ export const UserProvider = ({children})=>{
     profile,
     isLoading,
     setIsLoading,
+    uPicPath,
+    setUPicPath,
   }}>{children}</UserContext.Provider>
 }
 
