@@ -2,40 +2,38 @@ import { useEffect, useState } from "react";
 
 function TournamentSchema({ tournament }) {
   const [tournamentPicPath, setTournamentPicPath] = useState("");
+  const [countdownField, setCountdownField] = useState(null);
   const [timeLeft, setTimeLeft] = useState(null);
-  const [activeCountdownField, setActiveCountdownField] = useState(null);
 
   useEffect(() => {
     const updateCountdown = () => {
       const now = new Date().getTime();
+      const targets = [
+        { field: "apn_end", time: new Date(tournament.apn_end).getTime() },
+        { field: "start_date", time: new Date(tournament.start_date).getTime() },
+        { field: "end_date", time: new Date(tournament.end_date).getTime() },
+      ];
 
-      const getTimeLeft = (target) => {
-        const diff = target - now;
-        return {
-          days: Math.max(0, Math.floor(diff / (1000 * 60 * 60 * 24))),
-          hours: Math.max(0, Math.floor((diff / (1000 * 60 * 60)) % 24)),
-          minutes: Math.max(0, Math.floor((diff / (1000 * 60)) % 60)),
-          seconds: Math.max(0, Math.floor((diff / 1000) % 60)),
-        };
-      };
+      let nextTarget = null;
+      for (let target of targets) {
+        if (now < target.time) {
+          nextTarget = target;
+          break;
+        }
+      }
 
-      const applyStart = new Date(tournament.apn_start).getTime();
-      const applyEnd = new Date(tournament.apn_end).getTime();
-      const start = new Date(tournament.start_date).getTime();
-      const end = new Date(tournament.end_date).getTime();
-
-      if (now >= applyStart && now < applyEnd) {
-        setTimeLeft(getTimeLeft(applyEnd));
-        setActiveCountdownField("apn_end");
-      } else if (now >= applyEnd && now < start) {
-        setTimeLeft(getTimeLeft(start));
-        setActiveCountdownField("start_date");
-      } else if (now >= start && now < end) {
-        setTimeLeft(getTimeLeft(end));
-        setActiveCountdownField("end_date");
+      if (nextTarget) {
+        setCountdownField(nextTarget.field);
+        const diff = nextTarget.time - now;
+        setTimeLeft({
+          days: Math.floor(diff / (1000 * 60 * 60 * 24)),
+          hours: Math.floor((diff / (1000 * 60 * 60)) % 24),
+          minutes: Math.floor((diff / (1000 * 60)) % 60),
+          seconds: Math.floor((diff / 1000) % 60),
+        });
       } else {
+        setCountdownField(null);
         setTimeLeft(null);
-        setActiveCountdownField(null);
       }
     };
 
@@ -45,17 +43,25 @@ function TournamentSchema({ tournament }) {
   }, [tournament]);
 
   useEffect(() => {
-    fetch(
-      `${import.meta.env.VITE_BASE_URL}/list/tournamentpic/${tournament.id}`
-    )
+    fetch(`${import.meta.env.VITE_BASE_URL}/list/tournamentpic/${tournament.id}`)
       .then((res) => res.json())
       .then((pic) => setTournamentPicPath(pic))
       .catch(() => setTournamentPicPath("/default_tournament_image.png"));
-  }, [tournament?.id]);
+  }, [tournament.id]);
+
+  const getDateColor = (field) => {
+    const now = new Date().getTime();
+    const date = new Date(tournament[field]).getTime();
+  
+    if (date < now) return "text-red-400"; // múltbeli dátum
+    if (date > now) return "text-green-400"; // jövőbeli dátum
+    return "text-white"; // pontosan most (ritka eset)
+  };
 
   const renderRow = (label, field) => {
     const date = tournament[field];
-    const showCountdown = activeCountdownField === field;
+    const showCountdown = countdownField === field;
+    const colorClass = getDateColor(field);
 
     return (
       <div className="flex justify-evenly items-center">
@@ -63,7 +69,7 @@ function TournamentSchema({ tournament }) {
         {showCountdown && timeLeft ? (
           <CountdownDisplay time={timeLeft} />
         ) : (
-          <p className="text-stone-200 italic">{formatDate(date)}</p>
+          <p className={`italic ${colorClass}`}>{formatDate(date)}</p>
         )}
       </div>
     );
@@ -72,7 +78,7 @@ function TournamentSchema({ tournament }) {
   return (
     <div className="card bg-neutral drop-shadow-lg text-blue-200 w-96 bg-gradient-to-br inline-block from-indigo-950 to-slate-500">
       <div className="card-body items-left text-left">
-        {/* Név + kép */}
+        {/* Név és kép */}
         <div className="flex justify-between">
           <h2 className="card-title drop-shadow-lg">{tournament.name}</h2>
           <img
@@ -86,36 +92,46 @@ function TournamentSchema({ tournament }) {
           />
         </div>
 
-        {/* VONAL 1 - Név után */}
-        <hr className="my-2 border-white" />
+        <div className="border-t border-white my-2" />
 
-        {/* Jelentkezés kezdete / vége */}
+        {/* Jelentkezés kezdete, vége */}
         {renderRow("Jelentkezés kezdete:", "apn_start")}
         {renderRow("Jelentkezés vége:", "apn_end")}
 
-        {/* VONAL 2 - Jelentkezések után */}
-        <hr className="my-2 border-white" />
+        <div className="border-t border-white my-2" />
 
-        {/* Kezdés / vége */}
-        {renderRow("Kezdés:", "start_date")}
-        {renderRow("Vége:", "end_date")}
+        {/* Verseny kezdete, vége */}
+        {renderRow("Verseny kezdete:", "start_date")}
+        {renderRow("Verseny vége:", "end_date")}
 
-        {/* VONAL 3 - Időpontok után */}
-        <hr className="my-2 border-white" />
+        <div className="border-t border-white my-2" />
 
-        {/* Helyszín */}
+        {/* Game mode */}
         <div className="flex justify-evenly">
-          <p className="drop-shadow-lg text-stone-300 font-extrabold flex-none">
-            Hely:
-          </p>
-          <p className="drop-shadow-lg ml-10">{tournament.place}</p>
+          <p className="drop-shadow-lg text-stone-300 font-extrabold flex-none">Játékmód:</p>
+          <p className="drop-shadow-lg ml-7">{tournament.game_mode}</p>
         </div>
 
-        {/* Leírás */}
+        {/* Max jelentkezők */}
         <div className="flex justify-evenly">
           <p className="drop-shadow-lg text-stone-300 font-extrabold flex-none">
-            Leírás:
+            Max. jelentkezők:
           </p>
+          <p className="drop-shadow-lg ml-7">{tournament.max_participant}</p>
+        </div>
+
+        {/* Jelenlegi jelentkezők */}
+        <div className="flex justify-evenly">
+          <p className="drop-shadow-lg text-stone-300 font-extrabold flex-none">
+            Jelentkezők:
+          </p>
+          <p className="drop-shadow-lg ml-7">{tournament.num_participant}</p>
+        </div>
+
+        
+        {/* Leírás */}
+        <div className="flex justify-evenly">
+          <p className="drop-shadow-lg text-stone-300 font-extrabold flex-none">Leírás:</p>
           <p className="drop-shadow-lg ml-7">{tournament.details}</p>
         </div>
       </div>
