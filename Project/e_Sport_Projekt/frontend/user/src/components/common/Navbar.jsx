@@ -128,9 +128,7 @@ function Navbar() {
             <div className="space-y-1 px-2 pt-2 pb-3">
               <Link to="/" className="block rounded-md bg-gray-900 px-3 py-2 text-base font-medium text-white">Főoldal</Link>
               <Link to="/events" className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Események</Link>
-              {
-                isAuthenticated && (<Link to="/player-search" className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Játékos kereső</Link>)
-              }              
+              <Link to="/player-search" className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Játékos kereső</Link>
               <Link to="/team-search" className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Csapat kereső</Link>
               <Link to="/tournament-search" className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Verseny kereső</Link>
               <Link to="/event-search" className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Esemény kereső</Link>
