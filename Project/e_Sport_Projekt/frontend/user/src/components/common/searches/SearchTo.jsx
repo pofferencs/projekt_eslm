@@ -6,7 +6,7 @@ function SearchTo() {
   const [tournaments, setTournaments] = useState([]);
   const [filteredTournaments, setFilteredTournaments] = useState([]);
   const [statusFilter, setStatusFilter] = useState("all");
-  const [limit, setLimit] = useState(3);
+  const [limit, setLimit] = useState(0);
   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
@@ -39,8 +39,14 @@ function SearchTo() {
       filtered = filtered.filter((t) => t.name?.toLowerCase().includes(lower));
     }
 
-    setFilteredTournaments(filtered.slice(0, limit));
-  }, [tournaments, statusFilter, limit, searchTerm]);
+    // Frissítjük a listát a limit értékének megfelelően
+    if (limit > 0) {
+      setFilteredTournaments(filtered.slice(0, limit)); // ha a limit > 0, akkor a limitált számú elemet jelenítjük meg
+    } else {
+      setFilteredTournaments(filtered); // ha nincs limit (0 vagy Infinity), akkor az összes verseny jelenik meg
+    }
+}, [tournaments, statusFilter, limit, searchTerm]);
+
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -95,11 +101,11 @@ function SearchTo() {
                 value={limit}
                 onChange={(e) => {
                   const value = e.target.value;
-                  setLimit(value === "all" ? Infinity : parseInt(value));
+                  setLimit(value == 0 ? Infinity : parseInt(value));
                 }}
                 className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
               >
-                <option value="all">Összes verseny</option>
+                <option value={0}>Összes</option>
                 {[1, 2, 3, 4, 5, 10, 30, 50, 70, 100].map((num) => (
                   <option key={num} value={num}>
                     {num} verseny
