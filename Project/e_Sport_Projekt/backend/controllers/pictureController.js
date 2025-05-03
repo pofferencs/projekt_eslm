@@ -59,9 +59,11 @@ const pictureInsert = async (req, res) => {
 
         if (!type || !id) return res.status(400).json({ message: "Hiányzó típus vagy azonosító." });
 
-        if(type=="user"){
+        
             // Ha törölni akarják a képet
         if (deleteImage) {
+
+            if(type=="user"){
             const existingLink = await prisma.picture_Links.findFirst({
                 where: { uer_id: parseInt(id) }
             });
@@ -98,11 +100,11 @@ const pictureInsert = async (req, res) => {
                     pte_id: defaultPicture.id,
                 },
             });
-        }else if(type == "organizer"){
-
-
+        }
             // Ha törölni akarják a képet
         if (deleteImage) {
+
+            if(type == "organizer"){
             const existingLink = await prisma.picture_Links.findFirst({
                 where: { ogr_id: parseInt(id) }
             });
