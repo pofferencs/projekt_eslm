@@ -95,14 +95,14 @@ function OrganizerLogin() {
 
   return (
     
-      <section className="bg-gray-900 min-h-screen flex flex-col items-center px-6 py-10">
+      <section className="bg-zinc-900 min-h-screen flex flex-col items-center px-6 py-10">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
         <img className="mx-auto h-20 w-auto" src={Logo} alt="Logo" />
           <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-indigo-700">
             Bejelentkezés
           </h2>
         </div>
-        <div className="w-full rounded-lg shadow-lg md:mt-6 sm:max-w-2xl p-6 bg-gray-800 dark:border-gray-700">
+        <div className="w-full rounded-lg shadow-lg md:mt-6 sm:max-w-2xl p-6 bg-zinc-800 dark:border-zinc-700">
           <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
             <form
               onSubmit={onSubmit}
@@ -129,7 +129,7 @@ function OrganizerLogin() {
                       formDataEmail.email_address || formDataUsername.usr_name
                     }
                     onChange={writeData}
-                    className="block w-full h-12 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm px-3 py-1.5 text-base outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+                    className="block w-full h-12 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-zinc-700 border-zinc-600 text-white shadow-sm px-3 py-1.5 text-base outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
                   />
                 </div>
               </div>
@@ -162,14 +162,14 @@ function OrganizerLogin() {
                     required
                     value={formDataUsername.paswrd && formDataEmail.paswrd}
                     onChange={writeData}
-                    className="block w-full h-12 border rounded-r-none border-r-0 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm px-3 py-1.5 text-base outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+                    className="block w-full h-12 border rounded-r-none border-r-0 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-zinc-700 border-zinc-600 text-white shadow-sm px-3 py-1.5 text-base outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
                   />
                   {
                     (!showPass) ? (
-                      <button className="btn border border-l-0 bg-gray-700 border-gray-600 hover:bg-gray-500 active:bg-gray-400 rounded-l-none" type="button" onClick={()=>{showHidePass(); setType('text')}}><img className="w-5" src="https://www.svgrepo.com/show/522528/eye.svg"/></button>
+                      <button className="btn border border-l-0 bg-zinc-700 border-zinc-600 hover:bg-zinc-500 active:bg-zinc-400 rounded-l-none" type="button" onClick={()=>{showHidePass(); setType('text')}}><img className="w-5" src="https://www.svgrepo.com/show/522528/eye.svg"/></button>
                     ):
                     (
-                      <button className="btn border border-l-0 bg-gray-700 border-gray-600 hover:bg-gray-500 active:bg-gray-400 rounded-l-none" type="button" onClick={()=>{showHidePass(); setType('password')}}><img className="w-5" src="https://www.svgrepo.com/show/522530/eye-off.svg"/></button>
+                      <button className="btn border border-l-0 bg-zinc-700 border-zinc-600 hover:bg-zinc-500 active:bg-zinc-400 rounded-l-none" type="button" onClick={()=>{showHidePass(); setType('password')}}><img className="w-5" src="https://www.svgrepo.com/show/522530/eye-off.svg"/></button>
                     )
                   }
                 </div>
@@ -185,7 +185,7 @@ function OrganizerLogin() {
               </div>
             </form>
 
-            <p className="mt-10 text-center text-sm/6 text-gray-400 font-bold">
+            <p className="mt-10 text-center text-sm/6 text-zinc-400 font-bold">
               Nincs még fiókod?
               <Link
                 to="/register"

@@ -64,7 +64,7 @@ function OrganizerEmailVerify() {
     
         ):(
             
-            <section className="bg-gray-900 min-h-screen flex flex-col items-center px-6 py-10">
+            <section className="bg-zinc-900 min-h-screen flex flex-col items-center px-6 py-10">
                     <div className="sm:mx-auto sm:w-full sm:max-w-sm">
                     <img className="mx-auto h-20 w-auto" src={Logo} alt="Logo" />
                       <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-indigo-700">
