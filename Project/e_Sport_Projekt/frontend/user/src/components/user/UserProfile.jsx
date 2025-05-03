@@ -263,13 +263,13 @@ function UserProfile() {
     
   };
 
-  const deleteImage = async (id) => {
+  const deleteImage = async (id, type) => {
 
     
     fetch(`${import.meta.env.VITE_BASE_URL}/delete/picture`, {
         method: "DELETE",
         headers: { "Content-type": "application/json" },
-        body: JSON.stringify({id: id})
+        body: JSON.stringify({id: id, type: type})
       })
       .then(async res=>{
         const data = await res.json();
@@ -511,7 +511,7 @@ function UserProfile() {
                               <form onSubmit={onSubmit}>
                                 <div className="flex flex-wrap gap-2">
                                   <button className="btn mt-3 text-white" type="submit">Módosítás</button>
-                                  <button className="btn mt-3 text-white" type="button" onClick={()=> { deleteImage(profile.id); authStatus() }} >Fénykép törlés</button>
+                                  <button className="btn mt-3 text-white" type="button" onClick={()=> { deleteImage(profile.id, "user"); authStatus() }} >Fénykép törlés</button>
 
                                   <button className="btn mt-3 text-white" type="button" onClick={() => { setIsForm(false); setDisabled(true); formReset() }}>Mégse</button>
 
