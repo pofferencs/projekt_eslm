@@ -12,7 +12,38 @@ const tournamentList = async (req, res) => {
     }
 };
 
-const torunamentSearchByName = async (req,res) =>{
+const tournamentSearchByEvent = async (req, res) =>{
+
+    const {name} = req.body;
+
+    if(!name) return res.status(400).json({message: "Hiányos adatok!"});
+
+    try {
+
+        const tournaments = await prisma.tournaments.findMany({
+            where:{
+                event:{
+                    name: name
+                }
+            }
+        })
+
+        if(tournaments.length == 0 || name == "") return res.status(400).json({message : "Nincs ilyen verseny!"});
+        else return res.status(200).json(tournaments);
+
+
+        
+    } catch (error) {
+        return res.status(500).json(error);
+    }
+
+
+
+}
+
+
+
+const tournamentSearchByName = async (req,res) =>{
 
     const { name } = req.params;
 
@@ -332,6 +363,7 @@ module.exports = {
     tournamentUpdate,
     tournamentDelete,
     tournamentInsert,
-    torunamentSearchByName,
     tournamentGetPicPath
+    tournamentSearchByName,
+    tournamentSearchByEvent
 }
