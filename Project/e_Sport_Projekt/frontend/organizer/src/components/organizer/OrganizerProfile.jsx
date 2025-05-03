@@ -4,7 +4,7 @@ import UserContext from "../../context/OrganizerContext";
 import { toast } from "react-toastify";
 
 
-function UserProfile() {
+function OrganizerProfile() {
 
   const { name } = useParams();
   const { isAuthenticated, profile, isLoading, setIsLoading, authStatus, uPicPath, update, refresh, setUPicPath } = useContext(UserContext);
@@ -634,4 +634,4 @@ function UserProfile() {
   )
 }
 
-export default UserProfile
+export default OrganizerProfile

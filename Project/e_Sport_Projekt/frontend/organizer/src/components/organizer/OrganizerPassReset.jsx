@@ -4,7 +4,7 @@ import { useContext, useEffect, useState } from "react";
 import UserContext from "../../context/OrganizerContext";
 import { toast } from "react-toastify";
 
-function UserPassReset() {
+function OrganizerPassReset() {
 
     const {isAuthenticated} = useContext(UserContext);
     const navigate = useNavigate();
@@ -325,4 +325,4 @@ function UserPassReset() {
   )
 }
 
-export default UserPassReset
+export default OrganizerPassReset

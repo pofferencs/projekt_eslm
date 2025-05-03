@@ -1,8 +1,8 @@
 import { Link, useNavigate } from 'react-router-dom';
-import UserContext from '../../context/OrganizerContext';
 import { useContext, useEffect, useState } from 'react';
 import Logo from '../../assets/logo.png';
 import { toast } from 'react-toastify';
+import OrganizerContext from '../../context/OrganizerContext';
 
 function Navbar() {
   // Állapotok a mobil és profil menü megnyitásához
@@ -11,7 +11,7 @@ function Navbar() {
   const navigate = useNavigate();
    
 
-  const { logout, isAuthenticated, authStatus, update, pageRefresh, profile, uPicPath } = useContext(UserContext);
+  const { logout, isAuthenticated, authStatus, update, pageRefresh, profile, oPicPath } = useContext(OrganizerContext);
   
   useEffect(()=>{
 
@@ -90,8 +90,8 @@ function Navbar() {
                 <div className="dropdown dropdown-bottom dropdown-left">
                 <div tabIndex={0} role="button">
                 {
-                      (uPicPath != undefined)? (
-                        <img className="w-10 h-10 rounded-full object-cover" src={`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_BASE_PIC}${uPicPath}`} alt={profile.usr_name} />
+                      (oPicPath != undefined)? (
+                        <img className="w-10 h-10 rounded-full object-cover" src={`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_BASE_PIC}${oPicPath}`} alt={profile.usr_name} />
                       ):
                       (
                         <></>
@@ -103,9 +103,7 @@ function Navbar() {
                   <li>
                     <Link to={`/profile/${profile.usr_name}`} onClick={()=>{window.scroll(0,0)}} className="block px-4 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white rounded-lg">Profiladatok</Link>
                   </li>
-                  <li>
-                    <Link to="/teams" className="block px-4 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white rounded-lg">Csapataim</Link>
-                  </li>
+                  
                   {(isAuthenticated) && (
                         <li><button onClick={() => { toast.success("Kijelentkeztél! Oldalfrissítés 5 másodperc múlva!"); logout(); setTimeout(()=>{navigate('/'); pageRefresh()},5000) }} className="block px-4 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white w-full text-start rounded-lg">Kijelentkezés</button></li>
                       )}

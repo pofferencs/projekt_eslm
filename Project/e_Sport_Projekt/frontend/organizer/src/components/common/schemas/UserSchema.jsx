@@ -1,12 +1,13 @@
 import { useContext, useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom";
-import UserContext from "../../../context/OrganizerContext";
+import OrganizerContext from "../../../context/OrganizerContext";
+import UserContext from "../../../../../user/src/context/UserContext";
 
 
 function UserSchema({ user }) {
     const navigate = useNavigate();
     const [userPicPath, setUserPicPath] = useState("https://images.unsplash.com/photo-1472099645785-5658abf4ff4e")
-    const { isAuthenticated, profile } = useContext(UserContext);
+    const { isAuthenticated, profile } = useContext(OrganizerContext);
 
     useEffect(() => {
         fetch(`${import.meta.env.VITE_BASE_URL}/user/userpic/${user.id}`)

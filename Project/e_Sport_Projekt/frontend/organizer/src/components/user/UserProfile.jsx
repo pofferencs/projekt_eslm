@@ -1,13 +1,13 @@
 import { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom"
-import UserContext from "../../context/OrganizerContext";
+import OrganizerContext from "../../context/OrganizerContext";
 import { toast } from "react-toastify";
 
 
 function UserProfile() {
 
   const { name } = useParams();
-  const { isAuthenticated, profile, isLoading, setIsLoading, authStatus, uPicPath, update, refresh, setUPicPath } = useContext(UserContext);
+  const { isAuthenticated, profile, isLoading, setIsLoading, authStatus, uPicPath, update, refresh, setOPicPath } = useContext(OrganizerContext);
   const [profileAdat, setProfileAdat] = useState({});
   const [picPath, setPicPath] = useState("");
   const [isForm, setIsForm] = useState(false);

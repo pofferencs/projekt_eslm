@@ -1,14 +1,14 @@
 import { useContext, useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import UserSchema from "../schemas/UserSchema";
-import UserContext from "../../../context/OrganizerContext";
 import { useNavigate } from "react-router-dom";
+import OrganizerContext from "../../../context/OrganizerContext";
 
 
 function SearchU() {
   const [searchInput, setSearchInput] = useState("");
   const [result, setResult] = useState([]);
-  const { isAuthenticated } = useContext(UserContext);
+  const { isAuthenticated } = useContext(OrganizerContext);
   const navigate = useNavigate();
 
 

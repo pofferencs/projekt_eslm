@@ -5,7 +5,7 @@ import UserContext from "../../context/OrganizerContext";
 import { toast } from "react-toastify";
 
 
-function UserEmailVerify() {
+function OrganizerEmailVerify() {
 
     const {isAuthenticated} = useContext(UserContext);
     const navigate = useNavigate();
@@ -80,4 +80,4 @@ function UserEmailVerify() {
   )
 }
 
-export default UserEmailVerify
+export default OrganizerEmailVerify

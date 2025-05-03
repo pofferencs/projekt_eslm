@@ -3,21 +3,21 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 
-const UserContext = createContext();
+const OrganizerContext = createContext();
 
-export const UserProvider = ({children})=>{
+export const OrganizerProvider = ({children})=>{
 
   const navigate = useNavigate();
   const [refresh, setRefresh] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [profile, setProfile] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [uPicPath, setUPicPath] = useState("");
+  const [oPicPath, setOPicPath] = useState("");
 
 
   const authStatus = async () =>{
 
-    await fetch(`${import.meta.env.VITE_BASE_URL}/user/auth`,{
+    await fetch(`${import.meta.env.VITE_BASE_URL}/organizer/auth`,{
       method: 'GET',
       credentials: 'include',
       headers:{
@@ -29,10 +29,10 @@ export const UserProvider = ({children})=>{
       if(auth.authenticated){
 
 
-        fetch(`${import.meta.env.VITE_BASE_URL}/user/userpic/${profile.id}`,
+        fetch(`${import.meta.env.VITE_BASE_URL}/organizer/organizerpic/${profile.id}`,
         )
             .then(res => res.json())
-            .then(adat => {setUPicPath(adat);})
+            .then(adat => {setOPicPath(adat);})
             .catch(err => {console.log(err)});
 
         setProfile(auth.user);
@@ -65,7 +65,7 @@ export const UserProvider = ({children})=>{
 
   const logout = async () =>{
    
-    await fetch(`${import.meta.env.VITE_BASE_URL}/user/logout`,{
+    await fetch(`${import.meta.env.VITE_BASE_URL}/organizer/logout`,{
      method: 'POST',
      credentials: 'include',
      headers: {
@@ -82,7 +82,7 @@ export const UserProvider = ({children})=>{
 
 
   const login = async (formData, method) => {
-    await fetch(`${import.meta.env.VITE_BASE_URL}/user/login`, {
+    await fetch(`${import.meta.env.VITE_BASE_URL}/organizer/login`, {
       method: method,
       credentials: 'include',
       headers: { "Content-type": "application/json" },
@@ -109,7 +109,7 @@ export const UserProvider = ({children})=>{
 
 
 
-  return<UserContext.Provider value={{
+  return<OrganizerContext.Provider value={{
     refresh,
     update,
     logout,
@@ -120,9 +120,10 @@ export const UserProvider = ({children})=>{
     profile,
     isLoading,
     setIsLoading,
-    uPicPath,
-    setUPicPath,
-  }}>{children}</UserContext.Provider>
+    oPicPath,
+    setOPicPath,
+    
+  }}>{children}</OrganizerContext.Provider>
 }
 
-export default UserContext;
+export default OrganizerContext;

@@ -4,7 +4,7 @@ import { useNavigate, Link } from "react-router-dom";
 import Logo from "../../assets/logo.png";
 import { toast } from "react-toastify";
 
-function UserLogin() {
+function OrganizerLogin() {
   const navigate = useNavigate();
   const { isAuthenticated, authStatus, login } = useContext(UserContext);
   const [showPass, isShowPass] = useState(false);
@@ -202,4 +202,4 @@ function UserLogin() {
   );
 }
 
-export default UserLogin;
+export default OrganizerLogin;

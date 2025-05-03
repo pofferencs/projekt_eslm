@@ -20,6 +20,8 @@ import { ToastContainer } from "react-toastify";
 import OrganizerPassReset from "./components/organizer/OrganizerPassReset";
 import OrganizerEmailVerify from "./components/organizer/OrganizerEmailVerify";
 import Main from "./components/loggedout/Main";
+import { UserProvider } from "../../user/src/context/UserContext";
+import UserProfile from "./components/user/UserProfile";
 
 function App() {
   const isAuthenticated = useContext(OrganizerContext);
@@ -28,6 +30,7 @@ function App() {
     
       <BrowserRouter>
       <OrganizerProvider>
+        <UserProvider>
         <Navbar />
         <ToastContainer autoClose={3000} />
         <div className="flex flex-col min-h-screen">
@@ -42,11 +45,13 @@ function App() {
             <Route path="/team-search" element={<SearchTe />} />
             <Route path="/tournament-search" element={<SearchTo />} />
             <Route path="/event-search" element={<SearchE />} />
-            <Route path="/profile/:name" element={<OrganizerProfile />} />
+            <Route path="/organizer/profile/:name" element={<OrganizerProfile />} />
+            <Route path="/user/profile/:name" element={<UserProfile />} />
             
           </Routes>
         </div>
         <Footer />
+        </UserProvider>
         </OrganizerProvider>
       </BrowserRouter>
     
