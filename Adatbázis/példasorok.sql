@@ -47,12 +47,11 @@ INSERT INTO `tournaments` (`id`, `name`, `num_participant`, `team_num`, `start_d
 (5, 'Global Challenge', 32, 8, '2024-11-05 08:00:00', '2024-11-10 22:00:00', 'Single Elimination', 128, '2024-10-01 00:00:00', '2024-10-30 23:59:59', 'Global esports challenge', 5, 5);
 
 INSERT INTO `pictures` (`id`, `img_path`) VALUES
-(1, '/user/1.png'),
-(2, '/user/2.png'),
-(3, '/team/1.png'),
-(4, '/event/1.png'),
-(5, '/tournament/1.png'),
-(6, '/organizer/1.png');
+(1, '/user/user_0.png'),
+(3, '/team/team_0.png'),
+(4, '/event/0.png'),
+(5, '/tournament/0.png'),
+(6, '/organizer/organizer_0.png');
 
 INSERT INTO `team_memberships` (`status`, `uer_id`, `tem_id`) VALUES
 ('active', 1, 1),

@@ -111,7 +111,6 @@ const protectOgr = async (req, res, next) =>{
                     email_address: true,
                     phone_num: true,
                     om_identifier: true,
-                    discord_name: true
 
                 }
             });

@@ -2,19 +2,377 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
-const { hianyzoAdatFuggveny, validalasFuggveny } = require('../functions/conditions');
+const { validalasFuggveny, hianyzoAdatFuggveny } = require('../functions/conditions');
+const nodemailer = require('nodemailer');
+require('dotenv').config();
+const cron = require('node-cron');
+
+let verifyTokens = [];
+
+
+// const passch = async (paswrd)=>{
+
+//     const hashedPass = await bcrypt.hash(paswrd, 10);
+//     console.log(hashedPass)
+//     const nemtitkos = "$2a$10$tRn.12E7m4FSl22.NbeQp.rNMaqlSdwQjupC0Zkolk.oSD3AMUz.S"
+//     console.log(bcrypt.compareSync(paswrd, nemtitkos))
+// }
+
+// passch("Titkosjelszo1@")
+
+
+// //Példa tokenizálásra
+// const signing = (adat)=>{
+
+
+//     const token = jwt.sign(adat, process.env.JWT_SECRET, {expiresIn: '2m'});
+//     console.log(token);
+
+// }
+
+// //signing({email: "emailecske@gmail.com", jelszo: "Nagyontitkosjelszo1@"})
+
+
+//Email küldés jelszó visszaállításra
+const passEmailSend = async (req, res) => {
+
+    const { email } = req.body;
+
+    if (!email) {
+        return res.status(500).json({ message: "Add meg az e-mail címet!" });
+    }
+
+    //Létezik-e a felhasználó?
+
+    const organizer = await prisma.organizers.findFirst({
+        where: {
+            email_address: email
+        }
+    });
+
+    if (!organizer) {
+        return res.status(500).json({ message: "Ilyen felhasználó nem regisztrált!" });
+    }
+    
+
+    if (verifyTokens.find(x => x.email == organizer.email_address)) {
+        const token = jwt.sign({ email: organizer.email_address }, process.env.JWT_SECRET, { expiresIn: "15m" });
+        const index = verifyTokens.findIndex(x => x.email == organizer.email_address);
+
+        verifyTokens[index].token = token;
+
+        //console.log("Cserélve!", verifyTokens);
+    } else {
+        const token = jwt.sign({ email: organizer.email_address }, process.env.JWT_SECRET, { expiresIn: "15m" });
+        verifyTokens.push({ "token": token, "email": organizer.email_address });
+
+        //console.log("Új felvéve!", verifyTokens)
+    }
+
+    const token = verifyTokens.find(x => x.email == organizer.email_address);
+
+    const transporter = nodemailer.createTransport({
+        host: process.env.SMTP_HOST,
+        service: process.env.SMTP_SERVICE,
+        port: process.env.SMTP_PORT,
+        secure: true,
+        auth: {
+            user: process.env.EMAIL_ADDRESS,
+            pass: process.env.EMAIL_PASSWORD
+        },
+        tls: {
+            rejectUnauthorized: false,
+        }
+    })
+
+    const mailOptions = {
+        from: process.env.EMAIL_ADDRESS,
+        to: organizer.email_address,
+        subject: "Jelszó visszaállítás",
+        text: `Szia! Az alábbi link 15 percig érvényes, így újra kell kérned, ha lejár. Ezen a linken tudod a jelszavadat visszaállítani: ${process.env.VITE_PASS_RESET_URL}?token=${token.token}`,
+        html: `
+        <h1>Jelszó visszaállítás</h1>
+        <p>Szia! Az alábbi link 15 percig érvényes, így újra kell kérned, ha lejár.</p>
+        <p>Ezen a linken tudod a jelszavadat visszaállítani:</p>
+        <p>${process.env.VITE_PASS_RESET_URL}?token=${token.token}</p>
+        <p>Vedd figyelembe, hogy a fenti link 15 percig érvényes, így újra kell kérned, ha lejár.</p>
+        `,
+    };
+
+    try {
+
+
+        const decoded = jwt.verify(token.token, process.env.JWT_SECRET);
+        console.log(Boolean(decoded.email == organizer.email_address));
+
+        await transporter.sendMail(mailOptions);
+        return res.status(200).json({ message: "Kiküldtük az e-mailt a megadott címre!" })
+
+
+
+
+
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
+
+
+};
+
+const passEmailVerify = async (req, res) => {
+
+    const { token } = req.body;
+
+    try {
+
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+
+
+        if (!verifyTokens.find(e => e.token == token)) {
+            return res.status(400).json({ verified: false, message: 'A token lejárt!' });
+        }
+
+        const organizer = await prisma.organizers.findFirst({
+            where: {
+                email_address: decoded.email
+            }
+        })
+
+        return res.status(200).json({ verified: true, data: decoded, id: organizer.id });
+
+    } catch (error) {
+        if (error.name === 'TokenExpiredError') {
+            return res.status(400).json({ verified: false, message: 'A token lejárt!' });
+        } else if (error.name === 'JsonWebTokenError') {
+            return res.status(400).json({ verified: false, message: 'Érvénytelen token!' });
+        } else {
+            return res.status(500).json('Hiba a token ellenőrzésekor:', error.message);
+        }
+    }
+
+};
+
+
+//Email verifikációhoz email küldés
+
+const verifyEmailSend = async (req, res) => {
+
+    const { email } = req.body;
+
+    if (!email) {
+        return res.status(500).json({ message: "Add meg az e-mail címet!" });
+    }
+
+    //Létezik-e a felhasználó?
+
+    const organizers = await prisma.organizers.findFirst({
+        where: {
+            email_address: email
+        }
+    });
+
+    if (!organizers) {
+        return res.status(500).json({ message: "Ilyen felhasználó nem regisztrált!" });
+    }
+
+
+    const token = jwt.sign({ email: organizers.email_address }, process.env.JWT_SECRET, { expiresIn: "15m" });
+
+
+    const transporter = nodemailer.createTransport({
+        host: process.env.SMTP_HOST,
+        service: process.env.SMTP_SERVICE,
+        port: process.env.SMTP_PORT,
+        secure: true,
+        auth: {
+            user: process.env.EMAIL_ADDRESS,
+            pass: process.env.EMAIL_PASSWORD
+        },
+        tls: {
+            rejectUnauthorized: false,
+        }
+    })
+
+    const mailOptions = {
+        from: process.env.EMAIL_ADDRESS,
+        to: organizers.email_address,
+        subject: "Regisztráció megerősítő levél",
+        text: `Szia! Az alábbi link 15 percig érvényes, így újra kell kérned, ha lejár. Ezen a linken tudod a regisztrációd megerősíteni: ${process.env.VITE_EMAIL_VERIFY_URL}?token=${token}`,
+        html: `
+        <h1>Regisztráció megerősítő levél</h1>
+        <p>Szia! Az alábbi link 15 percig érvényes, így újra kell kérned, ha lejár.</p>
+        <p>Ezen a linken tudod a regisztrációd megerősíteni:</p>
+        <p>${process.env.VITE_EMAIL_VERIFY_URL}?token=${token}</p>
+        <p>Vedd figyelembe, hogy a fenti link 15 percig érvényes, így újra kell kérned, ha lejár.</p>
+        `,
+    };
+
+    try {
+
+        await transporter.sendMail(mailOptions);
+        return res.status(200).json({ message: "E-mail címedre megerősítő levelet küldtünk!" })
+
+
+
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
+
+
+};
+
+//Email verifikált függvény hívás
+
+
+const emailVerifiedMod = async (req, res) => {
+
+    const { token } = req.body;
+
+    try {
+
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+        const organizers = await prisma.organizers.findFirst({
+            where: {
+                email_address: decoded.email
+            }
+        })
+
+        if (organizers.status == "active" || organizers.status == "inactive") {
+            return res.status(400).json({ status: organizers.status, verified: true, message: "Ennek a fióknak megerősítése már van!" });
+        }
+
+        //A megtalált felhasználó adatával módosítunk
+        const modOrganizer = await prisma.organizers.update({
+            where: {
+                id: organizers.id
+            },
+            data: {
+                status: "active"
+            }
+        });
+
+        return res.status(200).json({ status: organizers.status, verified: true, message: "A fiók megerősítése sikeres! Bejelentkezhetsz!" });
+
+    } catch (error) {
+
+        if (error.name === 'TokenExpiredError') {
+            return res.status(400).json({ verified: false, message: 'A token lejárt!' });
+        } else if (error.name === 'JsonWebTokenError') {
+            return res.status(400).json({ verified: false, message: 'Érvénytelen token!' });
+        } else {
+            return res.status(500).json('Hiba a token ellenőrzésekor:', error.message);
+        }
+    }
+
+};
+
+
+// Ő itt cron, félóránként törli automatikusan a "pending" (regisztráció megerősítésre váró) felhasználókat az adatbázisból, hogy ne foglaljanak feleslegesen helyet.
+cron.schedule('*/30 * * * *', async () => {
+    try {
+
+        const delPicLinks = await prisma.$queryRaw
+            `
+        DELETE FROM pl USING picture_links pl, users u WHERE pl.uer_id = (SELECT id FROM users WHERE status="pending")
+        `;
+
+        const delPendingUsers = await prisma.organizers.deleteMany({
+            where: {
+                status: "pending"
+            }
+        });
+
+        return console.log("A megerősítésre váró fiókok törlésre kerültek! (Szervezők)")
+
+    } catch (error) {
+        return console.log({ error: error })
+    }
+})
 
 
 
 const organizerList = async (req, res) => {
     try {
-        const organizers = await prisma.organizers.findMany();
-        res.status(200).json(organizers);
+        const organizers = await prisma.organizers.findMany({
+            select: {
+                id: true,
+                discord_name: true,
+                inviteable: true,
+                full_name: true,
+                usr_name: true,
+                date_of_birth: true,
+                school: true,
+                status: true,
+                email_address: true,
+                phone_num: true,
+            }
+        });
+        return res.status(200).json(organizers);
 
     }
     catch (error) {
         console.log(error);
-        res.status(500).json({ message: "Hiba a fetch során!" })
+        return res.status(500).json({ message: "Hiba a fetch során!" })
+    }
+}
+
+const organizerSearchByName = async (req, res) => {
+    const { usr_name } = req.params;
+
+    if (!usr_name) return res.status(400).json({ message: "Hiányos adatok!" });
+
+    try {
+        const organizer = await prisma.organizers.findMany({
+            where: {
+                usr_name: {
+                    contains: usr_name
+                }
+            },
+            select: {
+                id: true,
+                full_name: true,
+                usr_name: true,
+                date_of_birth: true,
+                school: true,
+                status: true,
+                email_address: true,
+                phone_num: true,
+            }
+        });
+        if (organizer.length == 0 || usr_name == "") return res.status(400).json({ message: "Nincs ilyen szervező!" });
+        else return res.status(200).json(organizer);
+    } catch (error) {
+        return res.status(500).json(error);
+    }
+}
+
+const organizerProfileSearchByName = async (req, res) => {
+    const { usr_name } = req.params;
+
+    if (!usr_name) return res.status(400).json({ message: "Hiányos adatok!" });
+
+    try {
+        const organizer = await prisma.organizers.findFirst({
+            where: {
+                usr_name: usr_name
+            },
+            select: {
+                id: true,
+                full_name: true,
+                usr_name: true,
+                date_of_birth: true,
+                school: true,
+                status: true,
+                email_address: true,
+                phone_num: true,
+            }
+        });
+        if (!organizer || usr_name === "") return res.status(404).json({ message: "Nincs ilyen szervező!" });
+        else return res.status(200).json(organizer);
+    } catch (error) {
+        return res.status(500).json(error);
     }
 }
 
@@ -49,6 +407,27 @@ const organizerUpdate = async (req, res) => {
 
 
     //Megadott adatok vizsgálata és update
+
+    //Egyéb adat módosítás esetén:
+
+    if (!new_email_address && !paswrd && !new_usr_name && !usr_name && !new_paswrd) {
+
+
+        const modOrganizer = await prisma.organizers.update({
+            where: {
+                id: id
+            },
+            data: {
+                full_name: full_name,
+                school: school,
+                phone_num: phone_num,
+                status: status
+
+            }
+
+        });
+        return res.status(200).json({ message: "Sikeres adatfrissítés!" });
+    }
 
         //Email módosítás esetén:
 
@@ -107,6 +486,7 @@ const organizerUpdate = async (req, res) => {
         if((usr_name && new_usr_name && paswrd) && !new_email_address && !new_paswrd){
 
             if(validalasFuggveny(res, [
+                { condition: /@/.test(new_usr_name), message: "A felhasználó név nem tartalmazhat '@' jelet!" },
                 { condition: usrnameCheck, message: "Másnak is ez a neve! Adj meg újat!"}
                 
             ]))
@@ -142,7 +522,7 @@ const organizerUpdate = async (req, res) => {
         }
 
         //Jelszó esetén:
-        if((paswrd && new_paswrd) && !new_email_address && !usr_name){
+        if((id && new_paswrd) || ((paswrd && new_paswrd)) && !new_email_address && !usr_name){
 
             console.log({encrypted: paswrd == new_paswrd ? "true" : "false"})
             console.log({encrypted: bcrypt.compareSync(paswrd, organizer.paswrd) == bcrypt.compareSync(new_paswrd, organizer.paswrd) ? "true" : "false"})
@@ -351,16 +731,16 @@ const organizerReg = async (req, res) => {
         })
 
         //Süti
-        const token = tokenGen(neworganizer.id);
+        // const token = tokenGen(neworganizer.id);
 
-        res.cookie('tokenO', token, {
-            secure: true,
-            httpOnly: true,
-            sameSite: 'none',
-            maxAge: 360000
-        });
+        // res.cookie('tokenO', token, {
+        //     secure: true,
+        //     httpOnly: true,
+        //     sameSite: 'none',
+        //     maxAge: 360000
+        // });
 
-        console.log(`${neworganizer.usr_name} (ID: ${neworganizer.id}) tokenje: ${token}`);
+        // console.log(`${neworganizer.usr_name} (ID: ${neworganizer.id}) tokenje: ${token}`);
 
         //kép hozzárendelés a fiókhoz
         const newPicLink = await prisma.picture_Links.create({
@@ -419,7 +799,9 @@ const organizerLogin = async (req, res) => {
             secure: true,
             httpOnly: true,
             sameSite: 'none',
-            maxAge: 360000
+            maxAge: 3600000 //60 perc
+            //maxAge: 360000 //6 perc
+            //maxAge: 120000 //2 perc
         });
 
         return res.status(200).json(token);
@@ -435,7 +817,8 @@ const organizerLogout = async (req, res) => {
     res.clearCookie('tokenO', {
         httpOnly: true,
         secure: true,
-        sameSite: 'none'
+        sameSite: 'none',
+        path: '/'
     });
     res.status(200).json({ message: "Kijelentkezve." });
 }
@@ -448,7 +831,9 @@ const protected = async (req, res) => {
         secure: true,
         httpOnly: true,
         sameSite: 'none',
-        maxAge: 360000
+        maxAge: 3600000 //60 perc
+        //maxAge: 360000 //6 perc
+        //maxAge: 120000 //2 perc
     });
 
     res.json(token);
@@ -459,6 +844,40 @@ const isAuthenticated = async (req, res) => {
     res.json({ "authenticated": true, organizer: req.organizer });
 };
 
+const organizerGetPicturePath = async (req, res) => {
+    const { ogr_id } = req.params;
+
+    try {
+
+        const ogrPic = await prisma.picture_Links.findFirst({
+            where: {
+                ogr_id: Number(ogr_id)
+            }
+        })
+
+        if (!ogrPic || !ogrPic.ogr_id) {
+            return res.status(400).json({ message: "Nincs ilyen felhasználó!" });
+        }
+
+        const picPath = await prisma.pictures.findUnique({
+            where: {
+                id: ogrPic.pte_id
+            }
+        });
+
+        if (!picPath) {
+            return res.status(400).json({ message: "Nincs ilyen kép!" });
+        }
+
+        return res.status(200).json(picPath.img_path);
+    }
+
+    catch (error) {
+        return res.status(500).json(error)
+
+    }
+}
+
 
 module.exports = {
     organizerList,
@@ -467,5 +886,13 @@ module.exports = {
     organizerReg,
     protected,
     isAuthenticated,
-    organizerLogout
+    organizerLogout,
+    emailVerifiedMod,
+    verifyEmailSend,
+    passEmailSend,
+    passEmailVerify,
+    organizerSearchByName,
+    organizerGetPicturePath,
+    organizerProfileSearchByName
+    
 }
