@@ -188,7 +188,7 @@ function EventSchema({ event }) {
 
                 </div>
 
-                <div className="flex justify-evenly border-t border-white my-2 pt-">
+                <div className="flex justify-evenly border-t border-white my-2 pt-2">
                     <p className="drop-shadow-lg text-stone-300 font-extrabold flex-none">Hely:</p>
                     <p className="drop-shadow-lg ml-10">{event.place}</p>
 
@@ -216,7 +216,7 @@ function EventSchema({ event }) {
                 </div>
 
 
-                <div className="flex flex-wrap gap-2 justify-center">
+                <div className="flex flex-wrap gap-2 justify-center border-t border-white my-2 pt-4">
                     <button
                         className="btn btn-sm btn-outline btn-accent"
                         onClick={() => setShowFull((prev) => !prev)}
