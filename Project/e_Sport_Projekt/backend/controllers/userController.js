@@ -321,36 +321,70 @@ const userList = async (req, res) => {
 
 const userSearchByName = async (req, res) => {
     const { usr_name } = req.params;
-
-    if (!usr_name) return res.status(400).json({ message: "Hiányos adatok!" });
-
-    try {
-        const user = await prisma.users.findMany({
-            where: {
-                usr_name: {
-                    contains: usr_name
-                }
-            },
-            select: {
-                id: true,
-                inviteable: true,
-                discord_name: true,
-                full_name: true,
-                usr_name: true,
-                date_of_birth: true,
-                school: true,
-                clss: true,
-                status: true,
-                email_address: true,
-                phone_num: true,
-            }
-        });
-        if (user.length == 0 || usr_name == "") return res.status(400).json({ message: "Nincs ilyen felhasználó!" });
-        else return res.status(200).json(user);
-    } catch (error) {
-        return res.status(500).json(error);
+    const { status, classNum, classLetter } = req.query;
+  
+    if (!usr_name) return res.status(400).json({ message: "Hiányos név!" });
+  
+    const filters = {
+      usr_name: {
+        contains: usr_name,
+      },
+    };
+  
+    // Osztály szűrés
+    if (classNum && classLetter) {
+      // Ha mindkettő van, összefűzzük
+      filters.clss = `${classNum}${classLetter.toUpperCase()}`;
+    } else if (classNum) {
+      // Ha csak a szám van, akkor csak a számot keressük
+      filters.clss = {
+        startsWith: classNum,
+      };
+    } else if (classLetter) {
+      // Ha csak a betű van, akkor csak a betűt keressük
+      filters.clss = {
+        endsWith: classLetter.toUpperCase(),
+      };
     }
-}
+  
+    // Státusz szűrés
+    if (status && status !== "all") {
+      filters.status = status;
+    }
+  
+    try {
+      const users = await prisma.users.findMany({
+        where: filters,
+        select: {
+          id: true,
+          inviteable: true,
+          discord_name: true,
+          full_name: true,
+          usr_name: true,
+          date_of_birth: true,
+          school: true,
+          clss: true,
+          status: true,
+          email_address: true,
+          phone_num: true,
+        },
+      });
+  
+      if (!users || users.length === 0) {
+        return res.status(404).json({ message: "Nincs ilyen felhasználó!" });
+      }
+  
+      return res.status(200).json(users);
+    } catch (error) {
+      console.error("Prisma error:", error);
+      return res.status(500).json({ message: "Szerverhiba!", error });
+    }
+  };
+  
+  
+  
+  
+  
 
 const userProfileSearchByName = async (req, res) => {
     const { usr_name } = req.params;
