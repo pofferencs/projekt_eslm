@@ -312,11 +312,6 @@ function UserProfile() {
                             (profileAdat.inviteable == true && profileAdat.status == "active") ? (
                               <div>
                                 <p className="text-green-500 text-lg">Meghívható</p>
-                                {(isAuthenticated == true && profileAdat.status == "active") ? (
-                                  <button className="btn mt-3 text-white">Meghívás csapatba</button>
-                                ) : (
-                                  <p></p>
-                                )}
                               </div>
                             ) :
                               (profileAdat.inviteable == false || (profileAdat.status == "inactive" || profileAdat.status == "banned")) ? (
@@ -493,17 +488,11 @@ function UserProfile() {
                                 (profile.inviteable == true) ? (
                                   <div className="flex flex-row items-center gap-5">
                                     <p className="text-green-500 text-lg">Meghívható</p>
-                                    <button className="btn mt-3 bg-red-600 border-none hover:bg-red-800 text-white w-fit" onClick={() => inviteableModify(false)}>
-                                      <img className="h-5" src="https://www.svgrepo.com/show/456677/envelope-xmark.svg" />
-                                    </button>
                                   </div>
                                 ) :
                                   (profile.inviteable == false) ? (
                                     <div className="flex flex-row items-center gap-5">
                                       <p className="text-red-500 text-lg">Nem meghívható</p>
-                                      <button className="btn mt-3 bg-green-600 border-none hover:bg-green-800 text-white w-fit" onClick={() => inviteableModify(true)}>
-                                        <img className="h-5" src="https://www.svgrepo.com/show/456671/envelope-check.svg" />
-                                      </button>
                                     </div>
 
                                   ) : (<p>{/*ez itt egy üres sor, amivel megakadályozzuk, hogy a komponens betöltődésekor ne jelenjen még meg semmi, hanem majd akkor, ha lesz is adat*/}</p>)

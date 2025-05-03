@@ -30,7 +30,7 @@ function UserSchema({ user }) {
                     <p className={`drop-shadow-lg font-extrabold ml-2 ${user.status == "inactive" || user.status == "banned" ? "text-red-500" : "text-green-500"}`}>
                         {user.status}
                     </p>
-                    <img className="w-10 h-10 rounded-full drop-shadow-lg object-cover" src={import.meta.env.VITE_BASE_URL + `${import.meta.env.VITE_BASE_PIC}${userPicPath}`} alt={`${user.usr_name} profilképe`} title={`${user.usr_name} profilképe`} onClick={() => { navigate(`/profile/${user.usr_name}`); window.scroll(0, 0) }} />
+                    <img className="w-10 h-10 rounded-full drop-shadow-lg object-cover" src={import.meta.env.VITE_BASE_URL + `${import.meta.env.VITE_BASE_PIC}${userPicPath}`} alt={`${user.usr_name} profilképe`} title={`${user.usr_name} profilképe`} onClick={() => { navigate(`/user/profile/${user.usr_name}`); window.scroll(0, 0) }} />
 
                 </div>
 
@@ -58,11 +58,11 @@ function UserSchema({ user }) {
                     {
                         ((user.status == "inactive" || user.inviteable === false)) ? (
 
-                            <button className="btn btn-ghost" onClick={() => { navigate(`/profile/${user.usr_name}`); window.scroll(0, 0) }}>További adatok...</button>) :
+                            <button className="btn btn-ghost" onClick={() => { navigate(`/user/profile/${user.usr_name}`); window.scroll(0, 0) }}>További adatok...</button>) :
 
                             (
                                 <>
-                                    <button className="btn btn-ghost" onClick={() => { navigate(`/profile/${user.usr_name}`); window.scroll(0, 0) }}>További adatok...</button>
+                                    <button className="btn btn-ghost" onClick={() => { navigate(`/user/profile/${user.usr_name}`); window.scroll(0, 0) }}>További adatok...</button>
                                     {
                                         (isAuthenticated && user.inviteable === true && user.usr_name != profile.usr_name) ?
 
