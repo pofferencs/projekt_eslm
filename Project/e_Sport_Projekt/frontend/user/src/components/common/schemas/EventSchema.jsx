@@ -93,16 +93,16 @@ function EventSchema({ event }) {
                     <p className={`drop-shadow-lg font-extrabold ml-2 ${statusCheckResult == "ended" ? "text-red-500" : (statusCheckResult == "started" ? "text-green-500" : "text-blue-400")}`}>
                         {
                             (statusCheckResult == "ended")
-                            ?
-                            ("Véget ért")
-                            :
-                            (
-                                (statusCheckResult == "started")
                                 ?
-                                ("Elkezdődött")
+                                ("Véget ért")
                                 :
-                                ("Nem megkezdett")
-                            )
+                                (
+                                    (statusCheckResult == "started")
+                                        ?
+                                        ("Elkezdődött")
+                                        :
+                                        ("Nem megkezdett")
+                                )
                         }
                     </p>
                     <img className="w-10 h-10 rounded-full drop-shadow-lg object-cover" src={import.meta.env.VITE_BASE_URL + `${import.meta.env.VITE_BASE_PIC}${eventPicPath}`} alt="User Profile" />
@@ -189,7 +189,9 @@ function EventSchema({ event }) {
                 <div className="flex justify-evenly">
                     <p className="drop-shadow-lg text-stone-300 font-extrabold flex-none">Hely:</p>
                     <p className="drop-shadow-lg ml-10">{event.place}</p>
+
                 </div>
+                
 
                 <div className="flex justify-evenly">
                     <p className="drop-shadow-lg text-stone-300 font-extrabold flex-none">Leírás:</p>
