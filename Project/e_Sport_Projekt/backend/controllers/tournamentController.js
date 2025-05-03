@@ -295,10 +295,43 @@ const tournamentInsert = async (req, res) => {
 
 }
 
+const tournamentGetPicPath = async (req,res)=>{
+    const { tournament_id } = req.params;
+
+    try {
+        const tournamentPic = await prisma.picture_Links.findFirst({
+            where: {
+                tnt_id: Number(tournament_id)
+            }
+        });
+
+        if (!tournamentPic || !tournamentPic.tnt_id) {
+            return res.status(400).json({ message: "Nincs ilyen verseny!" });
+        }
+
+        const picPath = await prisma.pictures.findUnique({
+            where: {
+                id: tournamentPic.pte_id
+            }
+        });
+
+        if (!picPath) {
+            return res.status(400).json({ message: "Nincs ilyen kép!" });
+        }
+
+        return res.status(200).json(picPath.img_path);
+
+    } catch (error) {
+        return res.status(500).json(error);
+    }
+
+}
+
 module.exports = {
     tournamentList,
     tournamentUpdate,
     tournamentDelete,
     tournamentInsert,
-    torunamentSearchByName
+    torunamentSearchByName,
+    tournamentGetPicPath
 }
