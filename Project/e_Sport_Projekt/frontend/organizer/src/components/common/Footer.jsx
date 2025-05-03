@@ -8,7 +8,7 @@ import { FaLocationDot, FaPhone } from "react-icons/fa6";
 
 function Footer() {
   return (
-    <footer className="footer sm:footer-horizontal bg-base-200 text-base-content p-10 mt-auto">
+    <footer className="footer sm:footer-horizontal bg-zinc-800 text-base-content p-10 mt-auto">
       <aside>
         <a
           className="btn-link text-indigo-600 hover:no-underline hover:text-amber-600 flex no-underline items-center space-x-3"

@@ -90,12 +90,12 @@ const passEmailSend = async (req, res) => {
         from: process.env.EMAIL_ADDRESS,
         to: user.email_address,
         subject: "Jelszó visszaállítás",
-        text: `Szia! Az alábbi link 15 percig érvényes, így újra kell kérned, ha lejár. Ezen a linken tudod a jelszavadat visszaállítani: ${process.env.VITE_PASS_RESET_URL}?token=${token.token}`,
+        text: `Szia! Az alábbi link 15 percig érvényes, így újra kell kérned, ha lejár. Ezen a linken tudod a jelszavadat visszaállítani: ${process.env.VITE_USR_PASS_RESET_URL}?token=${token.token}`,
         html: `
         <h1>Jelszó visszaállítás</h1>
         <p>Szia! Az alábbi link 15 percig érvényes, így újra kell kérned, ha lejár.</p>
         <p>Ezen a linken tudod a jelszavadat visszaállítani:</p>
-        <p>${process.env.VITE_PASS_RESET_URL}?token=${token.token}</p>
+        <p>${process.env.VITE_USR_PASS_RESET_URL}?token=${token.token}</p>
         <p>Vedd figyelembe, hogy a fenti link 15 percig érvényes, így újra kell kérned, ha lejár.</p>
         `,
     };
@@ -199,12 +199,12 @@ const verifyEmailSend = async (req, res) => {
         from: process.env.EMAIL_ADDRESS,
         to: user.email_address,
         subject: "Regisztráció megerősítő levél",
-        text: `Szia! Az alábbi link 15 percig érvényes, így újra kell kérned, ha lejár. Ezen a linken tudod a regisztrációd megerősíteni: ${process.env.VITE_EMAIL_VERIFY_URL}?token=${token}`,
+        text: `Szia! Az alábbi link 15 percig érvényes, így újra kell kérned, ha lejár. Ezen a linken tudod a regisztrációd megerősíteni: ${process.env.VITE_USR_EMAIL_VERIFY_URL}?token=${token}`,
         html: `
         <h1>Regisztráció megerősítő levél</h1>
         <p>Szia! Az alábbi link 15 percig érvényes, így újra kell kérned, ha lejár.</p>
         <p>Ezen a linken tudod a regisztrációd megerősíteni:</p>
-        <p>${process.env.VITE_EMAIL_VERIFY_URL}?token=${token}</p>
+        <p>${process.env.VITE_USR_EMAIL_VERIFY_URL}?token=${token}</p>
         <p>Vedd figyelembe, hogy a fenti link 15 percig érvényes, így újra kell kérned, ha lejár.</p>
         `,
     };
@@ -689,6 +689,7 @@ const userReg = async (req, res) => {
             { condition: omIdCheck, message: "Ezzel az OM-számmal regisztráltak már!" },
             { condition: teamNameCheck, message: "A felhasználónév, amit megadtál, megegyezik egy csapat teljes nevével. Adj meg újat!" },
             { condition: usr_name.length < 3 || usr_name.length > 17, message: "Minimum 3, maximum 16 karakterből állhat a felhasználóneved!" }
+            
 
         ])) {
             return;
