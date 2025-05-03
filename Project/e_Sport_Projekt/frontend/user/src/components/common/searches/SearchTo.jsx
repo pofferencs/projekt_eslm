@@ -15,8 +15,8 @@ function SearchTo() {
       .then((data) => {
         const now = new Date().getTime();
         const withStatus = data.map((tournament) => {
-          const start = new Date(tournament.registration_start).getTime();
-          const end = new Date(tournament.registration_end).getTime();
+          const start = new Date(tournament.apn_start).getTime();
+          const end = new Date(tournament.apn_end).getTime();
 
           if (now < start) return { ...tournament, status: "not_started" };
           if (now >= start && now < end) return { ...tournament, status: "started" };
@@ -93,16 +93,21 @@ function SearchTo() {
               <select
                 id="limit"
                 value={limit}
-                onChange={(e) => setLimit(parseInt(e.target.value))}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  setLimit(value === "all" ? Infinity : parseInt(value));
+                }}
                 className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
               >
-                {[3, 6, 9, 12].map((num) => (
+                <option value="all">Összes verseny</option>
+                {[1, 2, 3, 4, 5, 10, 30, 50, 70, 100].map((num) => (
                   <option key={num} value={num}>
                     {num} verseny
                   </option>
                 ))}
               </select>
             </div>
+
 
             {/* Alaphelyzet gomb */}
             <div className="col-start-1 col-end-7">

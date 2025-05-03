@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-function TournamentSchema({ tournament }) {
+function TournamentSchema({ tournament, limit }) {
   const [tournamentPicPath, setTournamentPicPath] = useState("");
   const [countdownField, setCountdownField] = useState(null);
   const [timeLeft, setTimeLeft] = useState(null);
@@ -9,6 +9,7 @@ function TournamentSchema({ tournament }) {
     const updateCountdown = () => {
       const now = new Date().getTime();
       const targets = [
+        { field: "apn_start", time: new Date(tournament.apn_start).getTime() },
         { field: "apn_end", time: new Date(tournament.apn_end).getTime() },
         { field: "start_date", time: new Date(tournament.start_date).getTime() },
         { field: "end_date", time: new Date(tournament.end_date).getTime() },
@@ -51,11 +52,18 @@ function TournamentSchema({ tournament }) {
 
   const getDateColor = (field) => {
     const now = new Date().getTime();
+    const start = new Date(tournament.apn_start).getTime();
+    const end = new Date(tournament.apn_end).getTime();
+
+    if (field === "apn_start") {
+      if (now < start) return "text-yellow-400"; // még nem kezdődött el
+      return "text-green-400"; // már elindult
+    }
+
     const date = new Date(tournament[field]).getTime();
-  
-    if (date < now) return "text-red-400"; // múltbeli dátum
-    if (date > now) return "text-green-400"; // jövőbeli dátum
-    return "text-white"; // pontosan most (ritka eset)
+    if (date < now) return "text-red-400";
+    if (date > now) return "text-green-400";
+    return "text-white";
   };
 
   const renderRow = (label, field) => {
@@ -78,7 +86,6 @@ function TournamentSchema({ tournament }) {
   return (
     <div className="card bg-neutral drop-shadow-lg text-blue-200 w-96 bg-gradient-to-br inline-block from-indigo-950 to-slate-500">
       <div className="card-body items-left text-left">
-        {/* Név és kép */}
         <div className="flex justify-between">
           <h2 className="card-title drop-shadow-lg">{tournament.name}</h2>
           <img
@@ -94,25 +101,21 @@ function TournamentSchema({ tournament }) {
 
         <div className="border-t border-white my-2" />
 
-        {/* Jelentkezés kezdete, vége */}
         {renderRow("Jelentkezés kezdete:", "apn_start")}
         {renderRow("Jelentkezés vége:", "apn_end")}
 
         <div className="border-t border-white my-2" />
 
-        {/* Verseny kezdete, vége */}
         {renderRow("Verseny kezdete:", "start_date")}
         {renderRow("Verseny vége:", "end_date")}
 
         <div className="border-t border-white my-2" />
 
-        {/* Game mode */}
         <div className="flex justify-evenly">
           <p className="drop-shadow-lg text-stone-300 font-extrabold flex-none">Játékmód:</p>
           <p className="drop-shadow-lg ml-7">{tournament.game_mode}</p>
         </div>
 
-        {/* Max jelentkezők */}
         <div className="flex justify-evenly">
           <p className="drop-shadow-lg text-stone-300 font-extrabold flex-none">
             Max. jelentkezők:
@@ -120,7 +123,6 @@ function TournamentSchema({ tournament }) {
           <p className="drop-shadow-lg ml-7">{tournament.max_participant}</p>
         </div>
 
-        {/* Jelenlegi jelentkezők */}
         <div className="flex justify-evenly">
           <p className="drop-shadow-lg text-stone-300 font-extrabold flex-none">
             Jelentkezők:
@@ -128,8 +130,6 @@ function TournamentSchema({ tournament }) {
           <p className="drop-shadow-lg ml-7">{tournament.num_participant}</p>
         </div>
 
-        
-        {/* Leírás */}
         <div className="flex justify-evenly">
           <p className="drop-shadow-lg text-stone-300 font-extrabold flex-none">Leírás:</p>
           <p className="drop-shadow-lg ml-7">{tournament.details}</p>
@@ -142,7 +142,7 @@ function TournamentSchema({ tournament }) {
 function CountdownDisplay({ time }) {
   return (
     <div className="grid grid-flow-col gap-1 text-center auto-cols-max">
-      {["days", "hours", "minutes", "seconds"].map((unit) => (
+      {"days|hours|minutes|seconds".split("|").map((unit) => (
         <div
           key={unit}
           className="flex flex-col p-2 bg-blue-300 text-indigo-950 rounded-box"
