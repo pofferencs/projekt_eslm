@@ -10,7 +10,7 @@ const { pictureList } = require('../controllers/pictureController');
 const { picture_linkList } = require('../controllers/pictureLinkController');
 const { teamList, teamSearchByName, teamGetPicPath } = require('../controllers/teamController');
 const { teamMembershipList, activeMembersList } = require('../controllers/teamMembershipController');
-const { tournamentList, tournamentSearchByName, tournamentSearchByEvent } = require('../controllers/tournamentController');
+const { tournamentList, tournamentSearchByName, tournamentSearchByEvent, tournamentGetPicPath } = require('../controllers/tournamentController');
 const { organizerList } = require('../controllers/organizerController');
 
 router.get('/user', userList); 
@@ -30,6 +30,7 @@ router.get('/unamesearch/:usr_name', userSearchByName);
 router.get('/tonamesearch/:name', tournamentSearchByName);
 router.get('/tenamesearch/:full_name', teamSearchByName);
 router.get('/teampic/:team_id', teamGetPicPath);
+router.get('/tournamentpic/:tournament_id', tournamentGetPicPath);
 router.get('/eventpic/:evt_id',eventGetPicPath);
 router.get('/team/:team_id/members', activeMembersList)
 
