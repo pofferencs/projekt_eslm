@@ -11,6 +11,7 @@ function Tournament() {
   const [tournament, setTournament] = useState([]);
   const [event, setEvent] = useState([]);
   const [game, setGame] = useState([]);
+  const [gameName, setGameName] = useState("");
   const [isloading, setIsLoading] = useState(true);
   const [organizer, setOrganizer] = useState([]);
   const [picPath, setPicPath] = useState("");
@@ -62,7 +63,7 @@ function Tournament() {
                   .then(adat=> {
                       setGame(
                         adat.find((x)=>x.id == tournament.gae_id)
-                      ); setIsLoading(false)
+                      ); setIsLoading(false); 
                   }
                 )
               )})
@@ -78,12 +79,10 @@ function Tournament() {
     
     
         })
-        .catch(err=> alert(err));
-    
-        console.log(event)
-    
+        .catch(err=> alert(err));  
       
 
+        console.log(event, game.name)
 
     },[isloading])
   
@@ -354,14 +353,14 @@ function Tournament() {
                           <label className="block text-sm font-medium text-white">
                             Esemény
                           </label>
-                          <input id="start_date" type="text" disabled value={event.name} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-gray-400 shadow-sm" />
+                          <input id="event" type="text" disabled value={event.name} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-gray-400 shadow-sm" />
                         </div>
 
                         <div>
                           <label className="block text-sm font-medium text-white">
                             Játék
                           </label>
-                          <input id="start_date" type="text" disabled value={(!game)?(<p></p>):(<>{game.name}</>)} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-gray-400 shadow-sm" />
+                          <input id="game" type="text" disabled value={game.name} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-gray-400 shadow-sm" />
                         </div>
 
                         <div>
@@ -506,14 +505,14 @@ function Tournament() {
                           <label className="block text-sm font-medium text-white">
                             Esemény
                           </label>
-                          <input id="start_date" type="text" disabled value={event.name} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-gray-400 shadow-sm" />
+                          <input id="event" type="text" disabled value={event.name} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-gray-400 shadow-sm" />
                         </div>
 
                         <div>
                           <label className="block text-sm font-medium text-white">
                             Játék
                           </label>
-                          <input id="start_date" type="text" disabled value={(!game)?(<p></p>):(<>{game.name}</>)} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-gray-400 shadow-sm" />
+                          <input id="game" type="text" disabled value={game.name} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-gray-400 shadow-sm" />
                         </div>
 
                         <div>
