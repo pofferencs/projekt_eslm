@@ -22,6 +22,7 @@ const eventList = async (req, res) => {
 
         try {
 
+            //itt valamiért azt írja, hogy "id is missing", de lefut attól függetlenül
             const event = await prisma.events.findFirst({
                 where: {
                     id: parseInt(id)

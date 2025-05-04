@@ -10,7 +10,7 @@ const { pictureList } = require('../controllers/pictureController');
 const { picture_linkList } = require('../controllers/pictureLinkController');
 const { teamList, teamSearchByName, teamGetPicPath } = require('../controllers/teamController');
 const { teamMembershipList, activeMembersList } = require('../controllers/teamMembershipController');
-const { tournamentList, tournamentSearchByName, tournamentSearchByEvent, tournamentGetPicPath } = require('../controllers/tournamentController');
+const { tournamentList, tournamentSearchByName, tournamentSearchByEvent, tournamentGetPicPath, tntSearchById } = require('../controllers/tournamentController');
 const { organizerList, organizerSearchById } = require('../controllers/organizerController');
 
 router.get('/user', userList); 
@@ -25,6 +25,7 @@ router.get('/picturelink', picture_linkList);
 router.get('/team', teamList);
 router.get('/teamMembership', teamMembershipList);
 router.get('/tournament', tournamentList) /*Verseny*/
+router.post('/tntsearchid/:id', tntSearchById);
 router.post('/tournamentbyeventname', tournamentSearchByEvent);
 router.get('/organizer',organizerList);
 router.post('/organizerid', organizerSearchById);

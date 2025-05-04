@@ -201,6 +201,12 @@ function TournamentSchema({ tournament, limit }) {
                             >
                                 Esemény részletei
                             </button>
+                            <button
+                                className="btn btn-sm btn-outline btn-info"
+                                onClick={() => navigate(`/tournament/${tournament.id}`)}
+                            >
+                                Verseny részletei
+                            </button>
                         </div>)
                         :
                         (<div className="flex flex-wrap gap-2 justify-center">
@@ -215,6 +221,12 @@ function TournamentSchema({ tournament, limit }) {
                                 onClick={() => {navigate(`/event/${tournament.evt_id}`); window.scrollTo(0,0)}}
                             >
                                 Esemény részletei
+                            </button>
+                            <button
+                                className="btn btn-sm btn-outline btn-info"
+                                onClick={() => navigate(`/tournament/${tournament.id}`)}
+                            >
+                                Verseny részletei
                             </button>
                         </div>)
                 }

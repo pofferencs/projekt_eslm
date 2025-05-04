@@ -156,7 +156,7 @@ const pictureInsert = async (req, res) => {
             });
 
 
-            if (!oldPicture || oldPicture.id === 1) {
+            if (!oldPicture || oldPicture.id === 4) {
                 return res.status(400).json({ message: "Az alapértelmezett kép nem törölhető." });
             }
 
@@ -196,7 +196,7 @@ const pictureInsert = async (req, res) => {
             });
 
 
-            if (!oldPicture || oldPicture.id === 1) {
+            if (!oldPicture || oldPicture.id === 5) {
                 return res.status(400).json({ message: "Az alapértelmezett kép nem törölhető." });
             }
 
@@ -236,7 +236,7 @@ const pictureInsert = async (req, res) => {
             });
 
 
-            if (!oldPicture || oldPicture.id === 1) {
+            if (!oldPicture || oldPicture.id === 3) {
                 return res.status(400).json({ message: "Az alapértelmezett kép nem törölhető." });
             }
 

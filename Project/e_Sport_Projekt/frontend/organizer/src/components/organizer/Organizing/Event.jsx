@@ -335,7 +335,7 @@ const sendImage = async (file, type, id) => {
                     </h2>
                   <div className="p-8 md:p-10">
                     <div className="flex flex-row justify-center">
-                      <button className="btn mt-3 mb-10 text-white w-52">Új verseny felvétele</button>
+                      <button onClick={()=> navigate('/new-tournament')} className="btn mt-3 mb-10 text-white w-52">Új verseny felvétele</button>
                     </div>
 
                      <div className="flex flex-col">
