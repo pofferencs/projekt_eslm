@@ -212,7 +212,7 @@ function TournamentSchema({ tournament, limit }) {
                             </button>
                             <button
                                 className="btn btn-sm btn-outline btn-info"
-                                onClick={() => navigate(`/event/${tournament.evt_id}`)}
+                                onClick={() => {navigate(`/event/${tournament.evt_id}`); window.scrollTo(0,0)}}
                             >
                                 Esemény részletei
                             </button>

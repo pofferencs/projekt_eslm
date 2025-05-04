@@ -108,7 +108,7 @@ const pictureInsert = async (req, res) => {
             });
 
             if (!existingLink) {
-                return res.status(404).json({ message: "Nincs kép a felhasználóhoz rendelve." });
+                return res.status(404).json({ message: "Nincs kép a szervezőhöz rendelve." });
             }
 
             const oldPicture = await prisma.pictures.findUnique({
@@ -188,7 +188,7 @@ const pictureInsert = async (req, res) => {
             });
 
             if (!existingLink) {
-                return res.status(404).json({ message: "Nincs kép az eseményhez rendelve." });
+                return res.status(404).json({ message: "Nincs kép a versenyhez rendelve." });
             }
 
             const oldPicture = await prisma.pictures.findUnique({
@@ -216,6 +216,46 @@ const pictureInsert = async (req, res) => {
             await prisma.picture_Links.create({
                 data: {
                     tnt_id: parseInt(id),
+                    pte_id: defaultPicture.id,
+                },
+            });
+
+        }
+
+        if(type == "team"){
+            const existingLink = await prisma.picture_Links.findFirst({
+                where: { tem_id: parseInt(id) }
+            });
+
+            if (!existingLink) {
+                return res.status(404).json({ message: "Nincs kép a csapathoz rendelve." });
+            }
+
+            const oldPicture = await prisma.pictures.findUnique({
+                where: { id: existingLink.pte_id }
+            });
+
+
+            if (!oldPicture || oldPicture.id === 1) {
+                return res.status(400).json({ message: "Az alapértelmezett kép nem törölhető." });
+            }
+
+            const oldFilePath = path.join(__dirname, `../assets${oldPicture.img_path}`);
+            if (fs.existsSync(oldFilePath)) {
+                fs.unlinkSync(oldFilePath);
+            }
+
+            await prisma.picture_Links.delete({
+                where: { tem_id: parseInt(id) },
+            });
+
+            const defaultPicture = await prisma.pictures.findUnique({
+                where: { id: 6 },
+            });
+
+            await prisma.picture_Links.create({
+                data: {
+                    tem_id: parseInt(id),
                     pte_id: defaultPicture.id,
                 },
             });
@@ -410,7 +450,7 @@ const pictureInsert = async (req, res) => {
                         where: { id: existingLink.pte_id }
                     });
     
-                    if (oldPicture && oldPicture.id !== 6) {
+                    if (oldPicture && oldPicture.id !== 4) {
                         const oldFilePath = path.join(__dirname, `../assets/pictures${oldPicture.img_path}`);
                         if (fs.existsSync(oldFilePath)) {
                             fs.unlinkSync(oldFilePath);
@@ -436,14 +476,14 @@ const pictureInsert = async (req, res) => {
                         //fs.rmSync(oldFilePath, {force: true});
     
     
-                    }else if(oldPicture && oldPicture.id == 6){
+                    }else if(oldPicture && oldPicture.id == 4){
                         const oldFilePath = path.join(__dirname, `../assets/pictures/${oldPicture.img_path}`);
                         if (fs.existsSync(oldFilePath)) {
                             //fs.unlinkSync(oldFilePath);
                         }
     
                         await prisma.picture_Links.delete({
-                            where: { ogr_id: parseInt(id), 
+                            where: { evt_id: parseInt(id), 
                                 id_pte_id: {
                                     id: existingLink.id,
                                     pte_id: oldPicture.id
@@ -462,7 +502,7 @@ const pictureInsert = async (req, res) => {
     
                 await prisma.picture_Links.create({
                     data: {
-                        ogr_id: parseInt(id),
+                        evt_id: parseInt(id),
                         pte_id: newPicture.id,
                     },
                 });
@@ -487,7 +527,7 @@ const pictureInsert = async (req, res) => {
                         where: { id: existingLink.pte_id }
                     });
     
-                    if (oldPicture && oldPicture.id !== 6) {
+                    if (oldPicture && oldPicture.id !== 5) {
                         const oldFilePath = path.join(__dirname, `../assets/pictures${oldPicture.img_path}`);
                         if (fs.existsSync(oldFilePath)) {
                             fs.unlinkSync(oldFilePath);
@@ -513,7 +553,7 @@ const pictureInsert = async (req, res) => {
                         //fs.rmSync(oldFilePath, {force: true});
     
     
-                    }else if(oldPicture && oldPicture.id == 6){
+                    }else if(oldPicture && oldPicture.id == 5){
                         const oldFilePath = path.join(__dirname, `../assets/pictures/${oldPicture.img_path}`);
                         if (fs.existsSync(oldFilePath)) {
                             //fs.unlinkSync(oldFilePath);
@@ -539,7 +579,7 @@ const pictureInsert = async (req, res) => {
     
                 await prisma.picture_Links.create({
                     data: {
-                        ogr_id: parseInt(id),
+                        tnt_id: parseInt(id),
                         pte_id: newPicture.id,
                     },
                 });
@@ -562,7 +602,7 @@ const pictureInsert = async (req, res) => {
                         where: { id: existingLink.pte_id }
                     });
     
-                    if (oldPicture && oldPicture.id !== 6) {
+                    if (oldPicture && oldPicture.id !== 3) {
                         const oldFilePath = path.join(__dirname, `../assets/pictures${oldPicture.img_path}`);
                         if (fs.existsSync(oldFilePath)) {
                             fs.unlinkSync(oldFilePath);
@@ -588,7 +628,7 @@ const pictureInsert = async (req, res) => {
                         //fs.rmSync(oldFilePath, {force: true});
     
     
-                    }else if(oldPicture && oldPicture.id == 6){
+                    }else if(oldPicture && oldPicture.id == 3){
                         const oldFilePath = path.join(__dirname, `../assets/pictures/${oldPicture.img_path}`);
                         if (fs.existsSync(oldFilePath)) {
                             //fs.unlinkSync(oldFilePath);
@@ -840,7 +880,7 @@ const pictureDelete = async (req, res) => {
                 return res.status(200).json({ message: "Kép sikeresen törölve, visszaállítva az alapértelmezett kép!" });
             }
         } else {
-            return res.status(404).json({ message: "A szervezőhöz nem tartozik kép." });
+            return res.status(404).json({ message: "Az eseményhez nem tartozik kép." });
         }
 
 
@@ -921,7 +961,7 @@ const pictureDelete = async (req, res) => {
 
             // Ha nincs beállított kép, akkor csak visszaállítjuk az alapértelmezettet
         const existingLink = await prisma.picture_Links.findFirst({
-            where: { ogr_id: id }
+            where: { tem_id: id }
         });
 
         if (existingLink) {

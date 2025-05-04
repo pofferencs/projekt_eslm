@@ -21,6 +21,8 @@ function Event() {
   
   useEffect(()=>{
 
+    window.scroll(0,0)
+
     fetch(`${import.meta.env.VITE_BASE_URL}/list/event/${id}`,{
       method: "GET",
       headers: { "Content-type": "application/json" },
@@ -63,12 +65,6 @@ function Event() {
       }).then(res=>res.json())
       .then(adat=> {setTournaments(adat); setIsLoading(false);})
       .catch(err=>alert(err));
-
-      console.log(tournaments)
-
-
-      // 
-
 
 
     })
@@ -337,7 +333,7 @@ const sendImage = async (file, type, id) => {
                               <form onSubmit={onSubmit}>
                                 <div className="flex flex-wrap gap-2">
                                   <button className="btn mt-3 text-white" type="submit">Módosítás</button>
-                                  <button className="btn mt-3 text-white" type="button" onClick={()=> { deleteImage(profile.id, "event"); authStatus() }} >Fénykép törlés</button>
+                                  <button className="btn mt-3 text-white" type="button" onClick={()=> { deleteImage(event.id, "event"); authStatus() }} >Fénykép törlés</button>
 
                                   <button className="btn mt-3 text-white" type="button" onClick={() => { setIsForm(false); setDisabled(true); formReset() }}>Mégse</button>
 
