@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom"
 import UserContext from "../../context/UserContext";
 import { toast } from "react-toastify";
+import TeamSchema from "../common/schemas/TeamSchema";
 
 
 function UserProfile() {
@@ -15,6 +16,45 @@ function UserProfile() {
   const [emailDisabled, setEmailDisabled] = useState(false);
   const navigate = useNavigate();
   const [pfpFile, setPfpFile] = useState({});
+  const [teams, setTeams] = useState([]);
+
+  useEffect(() => {
+    if (!name) return;
+
+    setIsLoading(true);
+
+    fetch(`${import.meta.env.VITE_BASE_URL}/list/userteammemberships/${name}`, {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+    })
+      .then(res => res.json())
+      .then(async (csapatok) => {
+        if (Array.isArray(csapatok)) {
+          // Lekérjük minden csapat tagjait
+          const csapatokTagokkal = await Promise.all(csapatok.map(async (team) => {
+            try {
+              const res = await fetch(`${import.meta.env.VITE_BASE_URL}/list/team/${team.id}/members`);
+              const members = await res.json();
+              return { ...team, members };
+            } catch (err) {
+              console.error("Hiba a tagok lekérésekor:", err);
+              return { ...team, members: [] };
+            }
+          }));
+
+          setTeams(csapatokTagokkal);
+        } else {
+          toast.error("Nem találhatók csapatok.");
+          setTeams([]);
+        }
+      })
+      .catch(err => {
+        console.error("Hiba történt:", err);
+        toast.error("Hiba a csapatok lekérése során.");
+      })
+      .finally(() => setIsLoading(false));
+  }, [name]);
+
 
   let formObj = {
     full_name: "", //megvan
@@ -66,7 +106,7 @@ function UserProfile() {
               fetch(`${import.meta.env.VITE_BASE_URL}/user/userpic/${adat.id}`,
               )
                 .then(res => res.json())
-                .then(adat => { setPicPath(adat); setIsLoading(false); setFormData(profile); console.log(adat)})
+                .then(adat => { setPicPath(adat); setIsLoading(false); setFormData(profile); console.log(adat) })
                 .catch(err => { console.log(err) })
             )
 
@@ -78,8 +118,38 @@ function UserProfile() {
 
     }
 
+    // fetch(`${import.meta.env.VITE_BASE_URL}/list//userteammemberships/${name}`,{
+    //   method:"GET",
+    //   headers:{'Content-type':"application/json"}
+    // })
+    // .then(res=>res.json())
+    // .then(adat=>{setTeams(adat),
+    //   fetch(`${import.meta.env.VITE_BASE_URL}/list/team/${team.id}/members`,{
+    //     method:"GET",
+    //     headers:{'Content-type':"application/json"}
+    //   })
+    // })
+    // .then(res=>res.json())
+    // .then(adat=>setTeam(adat))
+    // .catch(err=>alert(err))
+    //   ,setIsLoading(false)})
+    // .catch(err=>alert(err));
 
-  }, [isAuthenticated]);
+    // teams.map((team)=>{
+    //   fetch(`${import.meta.env.VITE_BASE_URL}/list/team/${team.id}/members`,{
+    //     method:"GET",
+    //     headers:{'Content-type':"application/json"}
+    //   })
+    // })
+    // .then(res=>res.json())
+    // .then(adat=>setTeam(adat))
+    // .catch(err=>alert(err));
+
+
+
+
+
+  }, [isAuthenticated, name]);
 
   // useEffect(() => {
 
@@ -239,53 +309,59 @@ function UserProfile() {
   const sendImage = async (file, type, id) => {
     const formData = new FormData();
     formData.append("image", file);
-    formData.append("type", type);  // pl. 'user'
-    formData.append("id", id);      // pl. 0
-  
+    formData.append("type", type); // pl. 'user'
+    formData.append("id", id);     // pl. 0
+
     try {
       const res = await fetch(`${import.meta.env.VITE_BASE_URL}/insert/upload`, {
         method: "POST",
         body: formData
       });
-  
+
       const data = await res.json();
-  
+
       if (!res.ok) {
-        toast.error(data.message || "Hiba történt");
+        // Ha a fájl túl nagy (413), vagy más hiba van
+        const errorMsg = data?.error || data?.message || "Ismeretlen hiba történt a feltöltés során.";
+
+        if (res.status === 413) {
+          toast.error("Túl nagy fájl: Maximum 2 MB és 512x512 felbontás engedélyezett.");
+        } else {
+          toast.error(errorMsg);
+        }
       } else {
-        toast.success(data.message);
-        authStatus();
+        toast.success(data.message || "Feltöltés sikeres!");
+        authStatus(); // frissítjük a képet
       }
     } catch (error) {
-      alert("Hiba a feltöltés során: " + error.message);
+      toast.error("Hiba a kép feltöltése során: " + error.message);
     }
-
-    
   };
+
 
   const deleteImage = async (id, type) => {
 
-    
+
     fetch(`${import.meta.env.VITE_BASE_URL}/delete/picture`, {
-        method: "DELETE",
-        headers: { "Content-type": "application/json" },
-        body: JSON.stringify({id: id, type: type})
-      })
-      .then(async res=>{
+      method: "DELETE",
+      headers: { "Content-type": "application/json" },
+      body: JSON.stringify({ id: id, type: type })
+    })
+      .then(async res => {
         const data = await res.json();
-  
-      if (!res.ok) {
-        toast.error(data.message || "Hiba történt");
-      } else {
-        toast.success(data.message);
-      }
+
+        if (!res.ok) {
+          toast.error(data.message || "Hiba történt");
+        } else {
+          toast.success(data.message);
+        }
       })
-      .catch(err=>alert(err));
-  
-      
-    
+      .catch(err => alert(err));
+
+
+
   };
-  
+
 
 
 
@@ -358,6 +434,19 @@ function UserProfile() {
                         </div>
                       </dl>
                     </div>
+                    {isLoading ? (
+                      <p>Loading...</p>
+                    ) : (
+                      teams.length > 0 ? (
+                        <div className="grid lg:grid-cols-2 md:grid-cols-1 sm:grid-cols-1 justify-items-center m-5">
+                          {teams.map((team) => (
+                            <TeamSchema key={team.id} team={team} />
+                          ))}
+                        </div>
+                      ) : (
+                        <p className="text-center text-gray-500 mt-10">Nem tagja egy csapatnak sem.</p>
+                      )
+                    )}
                   </div>
                 </div>
               </>
@@ -511,7 +600,7 @@ function UserProfile() {
                               <form onSubmit={onSubmit}>
                                 <div className="flex flex-wrap gap-2">
                                   <button className="btn mt-3 text-white" type="submit">Módosítás</button>
-                                  <button className="btn mt-3 text-white" type="button" onClick={()=> { deleteImage(profile.id, "user"); authStatus() }} >Fénykép törlés</button>
+                                  <button className="btn mt-3 text-white" type="button" onClick={() => { deleteImage(profile.id, "user"); authStatus() }} >Fénykép törlés</button>
 
                                   <button className="btn mt-3 text-white" type="button" onClick={() => { setIsForm(false); setDisabled(true); formReset() }}>Mégse</button>
 
@@ -531,10 +620,29 @@ function UserProfile() {
                                     type="file"
                                     onChange={(e) => {
                                       const file = e.target.files[0];
-                                      setPfpFile(file);
+                                      if (file) {
+                                        if (file.size > 2 * 1024 * 1024) {
+                                          toast.error("A kiválasztott fájl túl nagy. Legfeljebb 2 MB lehet.");
+                                          return;
+                                        }
+
+                                        const reader = new FileReader();
+                                        reader.onload = (event) => {
+                                          const img = new Image();
+                                          img.onload = () => {
+                                            if (img.width > 512 || img.height > 512) {
+                                              toast.error("A kép túl nagy felbontású. Maximum 512x512 engedélyezett.");
+                                            } else {
+                                              setPfpFile(file); // csak ha minden OK
+                                            }
+                                          };
+                                          img.src = event.target.result;
+                                        };
+                                        reader.readAsDataURL(file);
+                                      }
                                     }}
                                   />
-                                  <button className="btn mt-3 text-white" type="button" onClick={()=>{sendImage(pfpFile, "user", profileAdat.id); }}>Feltöltés</button>
+                                  <button className="btn mt-3 text-white" type="button" onClick={() => { sendImage(pfpFile, "user", profileAdat.id); }}>Feltöltés</button>
                                 </div>
                               </form>
 
