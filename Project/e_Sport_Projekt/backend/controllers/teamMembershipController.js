@@ -63,7 +63,7 @@ const teamMembershipInsert = async (req, res) => {
         try {
             const teamMembership = await prisma.team_Memberships.create({
                 data: {
-                    status: "inactive",
+                    status: "pending",
                     uer_id: uer_id,
                     tem_id: tem_id
                 }
