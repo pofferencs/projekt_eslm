@@ -36,10 +36,36 @@ const tournamentSearchByEvent = async (req, res) =>{
     } catch (error) {
         return res.status(500).json(error);
     }
-
-
-
 }
+
+const tntSearchById = async (req, res) =>{
+
+        const { id } = req.params;
+
+        if(!id){
+            return res.status(400).json({message: "Hiányos adat!"});
+        }
+
+        try {
+
+            const tournament = await prisma.tournaments.findFirst({
+                where: {
+                    id: parseInt(id)
+                }
+            });
+
+
+            if(!tournament) return res.status(400).json({message : "Nincs ilyen verseny!"});
+            else return res.status(200).json(tournament);
+
+
+            
+        } catch (error) {
+            console.log(error);
+            return res.status(500).json({ message: "Hiba a fetch során!" });            
+        }
+
+    };
 
 
 
@@ -365,5 +391,6 @@ module.exports = {
     tournamentInsert,
     tournamentGetPicPath,
     tournamentSearchByName,
-    tournamentSearchByEvent
+    tournamentSearchByEvent,
+    tntSearchById
 }

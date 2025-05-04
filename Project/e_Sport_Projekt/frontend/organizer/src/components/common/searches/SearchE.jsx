@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import EventSchema from "../schemas/EventSchema";
+import { Navigate, useNavigate } from "react-router-dom";
 
 function SearchE() {
   const [events, setEvents] = useState([]);
@@ -8,6 +9,7 @@ function SearchE() {
   const [statusFilter, setStatusFilter] = useState("all");
   const [limit, setLimit] = useState(3);
   const [searchTerm, setSearchTerm] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetch(`${import.meta.env.VITE_BASE_URL}/list/event`)
@@ -50,7 +52,13 @@ function SearchE() {
         Esemény szűrő
       </h2>
 
-      <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+
+      <div className="flex flex-row justify-center mt-10 mb-1">
+        <button onClick={()=>{navigate('/new-event')}} className="btn rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Új esemény</button>
+      </div>
+
+      <div className="mt-5 sm:mx-auto sm:w-full sm:max-w-sm">
+        
         <form>
           <div className="grid grid-cols-6 gap-4">
 
