@@ -63,7 +63,7 @@ const teamMembershipInsert = async (req, res) => {
         try {
             const teamMembership = await prisma.team_Memberships.create({
                 data: {
-                    status: "inactive",
+                    status: "pending",
                     uer_id: uer_id,
                     tem_id: tem_id
                 }
@@ -151,6 +151,33 @@ const teamsForPlayer = async (req, res) => {
     }
 };
 
+const teamMembershipDelete = async (req, res) => {
+    const { user_id, team_id } = req.body;
+
+    if (!user_id || !team_id) {
+        return res.status(400).json({ message: "Nincs ilyen játékos, ilyen csapatban!" })
+    }
+
+    try {
+        const existMembership = await prisma.team_Memberships.delete({
+            where: {
+                uer_id_tem_id: {
+                    uer_id: user_id,
+                    tem_id: team_id,
+                }
+            }
+        })
+
+        return res.status(200).json({message: "Sikeres kilépés a cspatból!"})
+
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ message: "Hiba a fetch során!" })
+    }
+
+
+}
+
 
 
 module.exports = {
@@ -158,5 +185,6 @@ module.exports = {
     teamMembershipUpdate,
     teamMembershipInsert,
     activeMembersList,
-    teamsForPlayer
+    teamsForPlayer,
+    teamMembershipDelete
 }

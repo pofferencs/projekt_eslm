@@ -20,16 +20,18 @@ import { ToastContainer } from "react-toastify";
 import UserPassReset from "./components/user/UserPassReset";
 import UserEmailVerify from "./components/user/UserEmailVerify";
 import Main from "./components/loggedout/Main";
+import UserTeams from "./components/user/UserTeams";
 import UserTeamMemberships from "./components/user/UserTeamMemberships";
 import Event from "./components/common/Event";
 import Tournament from "./components/common/Tournament";
+
 
 function App() {
   const isAuthenticated = useContext(UserContext);
 
   return (
-    
-      <BrowserRouter>
+
+    <BrowserRouter>
       <UserProvider>
         <Navbar />
         <ToastContainer autoClose={3000} />
@@ -37,6 +39,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Main />} />
             <Route path="*" element={<Navigate to="/" />} />
+            <Route path="/myteams" element={<UserTeams />} />
             <Route path="/register" element={<Register />} />
             <Route path="/login" element={<UserLogin />} />
             <Route path="/password-reset" element={<UserPassReset />} />
@@ -45,7 +48,6 @@ function App() {
             <Route path="/team-search" element={<SearchTe />} />
             <Route path="/tournament-search" element={<SearchTo />} />
             <Route path="/event-search" element={<SearchE />} />
-            <Route path="/userteammemberships/:user_name" element={<UserTeamMemberships />} />
             <Route path="/profile/:name" element={<UserProfile />} />
             <Route path="/event/:id" element={<Event />} />
             <Route path="/tournament/:id" element={<Tournament />} />
@@ -53,9 +55,9 @@ function App() {
           </Routes>
         </div>
         <Footer />
-        </UserProvider>
-      </BrowserRouter>
-    
+      </UserProvider>
+    </BrowserRouter>
+
   );
 }
 
