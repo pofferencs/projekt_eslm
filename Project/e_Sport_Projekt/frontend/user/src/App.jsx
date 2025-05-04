@@ -21,6 +21,8 @@ import UserPassReset from "./components/user/UserPassReset";
 import UserEmailVerify from "./components/user/UserEmailVerify";
 import Main from "./components/loggedout/Main";
 import UserTeamMemberships from "./components/user/UserTeamMemberships";
+import Event from "./components/common/Event";
+import Tournament from "./components/common/Tournament";
 
 function App() {
   const isAuthenticated = useContext(UserContext);
@@ -45,6 +47,8 @@ function App() {
             <Route path="/event-search" element={<SearchE />} />
             <Route path="/userteammemberships/:user_name" element={<UserTeamMemberships />} />
             <Route path="/profile/:name" element={<UserProfile />} />
+            <Route path="/event/:id" element={<Event />} />
+            <Route path="/tournament/:id" element={<Tournament />} />
             
           </Routes>
         </div>

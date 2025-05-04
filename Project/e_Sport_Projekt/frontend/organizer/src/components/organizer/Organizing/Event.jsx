@@ -28,7 +28,13 @@ function Event() {
       method: "GET",
       headers: { "Content-type": "application/json" },
     }).then(res=>res.json())
-    .then(adat=> {setEvent(adat); setIsLoading(false); setFormData(adat);
+    .then(adat=> {
+      
+      if(adat.message){
+        navigate('/');
+      }
+      
+      setEvent(adat); setIsLoading(false); setFormData(adat);
 
       setPicPath(
         fetch(`${import.meta.env.VITE_BASE_URL}/list/eventpic/${event.id}`,{
@@ -333,6 +339,8 @@ const sendImage = async (file, type, id) => {
                     <h2 className="mt-10 text-center text-4xl font-bold tracking-tight text-indigo-600">
                           Az esemény versenyei
                     </h2>
+
+                    <div className="mx-auto mt-5 h-1 w-[60%] bg-gradient-to-r from-indigo-500 to-amber-500 rounded-full" />
                   <div className="p-8 md:p-10">
                     <div className="flex flex-row justify-center">
                       <button onClick={()=> navigate('/new-tournament')} className="btn mt-3 mb-10 text-white w-52">Új verseny felvétele</button>
@@ -348,7 +356,7 @@ const sendImage = async (file, type, id) => {
                           
                           ))
                           ):(
-                            <p>Nincsenek még versenyek!</p>
+                            <p className="text-center text-gray-500 mt-10">Nincsenek még versenyek!</p>
                           )
                         }
                       </div>
@@ -476,6 +484,8 @@ const sendImage = async (file, type, id) => {
                       <h2 className="mt-10 text-center text-4xl font-bold tracking-tight text-indigo-600">
                         Az esemény versenyei
                       </h2>
+
+                      <div className="mx-auto mt-5 h-1 w-[60%] bg-gradient-to-r from-indigo-500 to-amber-500 rounded-full" />
                   <div className="p-8 md:p-10">
                     <div className="flex flex-row justify-center">
                       <button onClick={()=>{navigate('/new-tournament')}} className="btn mt-3 mb-10 text-white w-52">Új verseny felvétele</button>
@@ -491,7 +501,7 @@ const sendImage = async (file, type, id) => {
                           
                           ))
                           ):(
-                            <p>Nincsenek még versenyek!</p>
+                            <p className="text-center text-gray-500 mt-10">Nincsenek még versenyek!</p>
                           )
                         }
                       </div>
@@ -593,6 +603,8 @@ const sendImage = async (file, type, id) => {
                     <h2 className="mt-10 text-center text-4xl font-bold tracking-tight text-indigo-600">
                       Az esemény versenyei
                     </h2>
+
+                    <div className="mx-auto mt-5 h-1 w-[60%] bg-gradient-to-r from-indigo-500 to-amber-500 rounded-full" />
                       
                   <div className="p-8 md:p-10">
 
@@ -606,7 +618,7 @@ const sendImage = async (file, type, id) => {
                           
                           ))
                           ):(
-                            <p>Nincsenek még versenyek!</p>
+                            <p className="text-gray-500 mt-10">Nincsenek még versenyek!</p>
                           )
                         }
                       </div>

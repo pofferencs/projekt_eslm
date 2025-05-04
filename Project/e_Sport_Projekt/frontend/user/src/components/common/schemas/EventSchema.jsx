@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function EventSchema({ event }) {
     const [showFull, setShowFull] = useState(false);
+    const navigate = useNavigate();
 
 
     function formatDate(date) {
@@ -225,9 +227,9 @@ function EventSchema({ event }) {
                     </button>
                     <button
                         className="btn btn-sm btn-outline btn-info"
-                        onClick={() => navigate(`/event/tournaments/${event.event_id}`)}
+                        onClick={() => navigate(`/event/${event.id}`)}
                     >
-                        Eseményhez tartozó versenyek
+                        Eseményhez részletei
                     </button>
                 </div>
 

@@ -197,9 +197,15 @@ function TournamentSchema({ tournament, limit }) {
                             </button>
                             <button
                                 className="btn btn-sm btn-outline btn-info"
-                                onClick={() => navigate(`/event/${tournament.event_id}`)}
+                                onClick={() => navigate(`/event/${tournament.evt_id}`)}
                             >
                                 Esemény részletei
+                            </button>
+                            <button
+                                className="btn btn-sm btn-outline btn-info"
+                                onClick={() => navigate(`/tournament/${tournament.id}`)}
+                            >
+                                Verseny részletei
                             </button>
                         </div>)
                         :
@@ -212,9 +218,15 @@ function TournamentSchema({ tournament, limit }) {
                             </button>
                             <button
                                 className="btn btn-sm btn-outline btn-info"
-                                onClick={() => navigate(`/event/${tournament.event_id}`)}
+                                onClick={() => navigate(`/event/${tournament.evt_id}`)}
                             >
                                 Esemény részletei
+                            </button>
+                            <button
+                                className="btn btn-sm btn-outline btn-info"
+                                onClick={() => navigate(`/tournament/${tournament.id}`)}
+                            >
+                                Verseny részletei
                             </button>
                             <button
                                 className="btn btn-sm btn-outline btn-success"
