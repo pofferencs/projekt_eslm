@@ -12,26 +12,58 @@ const teamList = async (req, res) => {
     }
 }
 
-const teamSearchByName = async (req,res) =>{
-
-    const {full_name} =req.params;
-
-    if(!full_name) return res.status(400).json({message: "Hiányos adatok!"});
-
-    try {
-        const team = await prisma.teams.findMany({
-            where: {
-                full_name:{
-                    contains: full_name
-                }
-            }
-        });
-        if(team.length == 0 || full_name == "") return res.status(400).json({message : "Nincs ilyen csapat!"});
-        else return res.status(200).json(team);
-    } catch (error) {
-        return res.status(500).json(error);
+const teamSearchByName = async (req, res) => {
+    const { full_name } = req.params;
+  
+    if (!full_name) {
+      return res.status(400).json({ message: "Hiányos adatok!" });
     }
-}
+  
+    try {
+      // 1. Csapatok keresése név alapján
+      const teams = await prisma.teams.findMany({
+        where: {
+          full_name: {
+            contains: full_name,
+            lte: "insensitive"
+          }
+        }
+      });
+  
+      if (teams.length === 0) {
+        return res.status(404).json({ message: "Nincs ilyen csapat!" });
+      }
+  
+      // 2. Kapitány adatok lekérése minden csapat creator_id alapján
+      const result = await Promise.all(
+        teams.map(async (team) => {
+          const captain = await prisma.users.findUnique({
+            where: { id: team.creator_id },
+            select: {
+              id: true,
+              full_name: true,
+              usr_name: true,
+              discord_name: true,
+              email_address: true
+            }
+          });
+  
+          return {
+            ...team,
+            captain
+          };
+        })
+      );
+  
+      return res.status(200).json(result);
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ message: "Hiba történt", error });
+    }
+  };
+  
+
+
 
 const teamUpdate = async (req, res) => {
     const { id, short_name, full_name, creator_id } = req.body;
@@ -68,7 +100,7 @@ const teamUpdate = async (req, res) => {
 const teamInsert = async (req, res) => {
     const { short_name, full_name, creator_id } = req.body;
 
-    if(!short_name || !full_name || !creator_id){
+    if (!short_name || !full_name || !creator_id) {
         return res.status(400).json({ message: "Hiányos adatok!" });
     }
 
@@ -77,10 +109,10 @@ const teamInsert = async (req, res) => {
             full_name: full_name
         }
     })
-    
-    if(full_name.length > 16 || full_name.length < 3){
+
+    if (full_name.length > 16 || full_name.length < 3) {
         return res.status(400).json({ message: "Túl hosszú vagy rövid csapatnevet adtál meg! (Minimum 3, maximum 16 karakter!)" });
-    }    
+    }
 
     if (existingTeam) {
         return res.status(400).json({ message: "Ez a csapatnév foglalt!" })
@@ -128,7 +160,7 @@ const teamDelete = async (req, res) => {
     }
 }
 
-const teamGetPicPath = async (req,res)=>{
+const teamGetPicPath = async (req, res) => {
     const { team_id } = req.params;
 
     try {

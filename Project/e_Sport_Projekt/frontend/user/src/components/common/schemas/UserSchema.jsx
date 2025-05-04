@@ -33,7 +33,7 @@ function UserSchema({ user }) {
 
                 </div>
 
-                <div className="flex justify-evenly">
+                <div className="flex justify-evenly border-t border-white my-2 pt-2">
                     {
                         ((user.status == "inactive" || user.status == "banned") || user.inviteable === false)
                             ?
@@ -43,7 +43,7 @@ function UserSchema({ user }) {
                     }
                 </div>
 
-                <div className="flex justify-evenly">
+                <div className="flex justify-evenly border-t border-white my-2 pt-2">
                     <p className="drop-shadow-lg text-yellow-400 font-semibold flex-none">Iskola:</p>
                     <p className="drop-shadow-lg ml-2">{user.school}</p>
                 </div>
@@ -53,7 +53,7 @@ function UserSchema({ user }) {
                     <p className="drop-shadow-lg ml-2">{user.clss}</p>
                 </div>
 
-                <div className="card-actions justify-start drop-shadow-lg">
+                <div className="card-actions justify-start drop-shadow-lg border-t border-white my-2 pt-2">
                     {
                         ((user.status == "inactive" || user.inviteable === false)) ? (
 

@@ -12,6 +12,70 @@ const eventList = async (req, res) => {
     }
 }
 
+    const eventSearchById = async (req, res) =>{
+
+        const { id } = req.params;
+
+        if(!id){
+            return res.status(400).json({message: "Hiányos adat!"});
+        }
+
+        try {
+
+            //itt valamiért azt írja, hogy "id is missing", de lefut attól függetlenül
+            const event = await prisma.events.findFirst({
+                where: {
+                    id: parseInt(id)
+                }
+            });
+
+
+            if(!event) return res.status(400).json({message : "Nincs ilyen esemény!"});
+            else return res.status(200).json(event);
+
+
+            
+        } catch (error) {
+            console.log(error);
+            return res.status(500).json({ message: "Hiba a fetch során!" });            
+        }
+
+    };
+
+
+    const eventSearchByOrganizer = async (req, res) =>{
+
+        const {id} = req.body;
+
+        if(!id){
+            return res.status(400).json({message: "Hiányos adat!"});
+        }
+
+        try {
+
+            const events = await prisma.events.findMany({
+                where: {
+                    ogr_id: id
+                }
+            })
+
+
+            if(!events){
+                return res.status(400).json({message: "Ez a szervező nem hozott létre eseményt!"});
+            }
+
+
+            return res.status(200).json(events);
+
+            
+        } catch (error) {
+            return res.status(500).json(error);
+        }
+
+
+    };
+
+
     const eventSearchByName = async (req, res) =>{
         const { name } = req.params;
 
@@ -36,10 +100,10 @@ const eventList = async (req, res) => {
     }
 
 const eventUpdate = async (req, res) => {
-    const { id, name, start_date, end_date, place, details } = req.body;
+    const { id, name, start_date, end_date, place, details, ogr_id } = req.body;
 
 
-    if(!id || !name || !place || !details || !start_date || !end_date){
+    if(!id || !name || !place || !details || !start_date || !end_date ){
         return res.status(400).json({message: "Hiányos adatok!"});
     }
     
@@ -80,9 +144,9 @@ const eventUpdate = async (req, res) => {
 }
 
 const eventInsert = async (req, res) => {
-    const { name, place, details, start_date, end_date } = req.body;
+    const { name, place, details, start_date, end_date, ogr_id } = req.body;
 
-    if(!name || !place || !details || !start_date || !end_date){
+    if(!name || !place || !details || !start_date || !end_date || !ogr_id){
         return res.status(400).json({message: "Hiányos adatok!"});
     }
 
@@ -135,7 +199,8 @@ const eventInsert = async (req, res) => {
                 start_date: startDate,
                 end_date: endDate,
                 place: place,
-                details: details
+                details: details,
+                ogr_id: ogr_id
             }
         });
 
@@ -248,5 +313,7 @@ module.exports = {
     eventInsert,
     eventDelete,
     eventSearchByName,
-    eventGetPicPath
+    eventGetPicPath,
+    eventSearchById,
+    eventSearchByOrganizer
 }

@@ -298,8 +298,6 @@ const organizerList = async (req, res) => {
         const organizers = await prisma.organizers.findMany({
             select: {
                 id: true,
-                discord_name: true,
-                inviteable: true,
                 full_name: true,
                 usr_name: true,
                 date_of_birth: true,
@@ -347,6 +345,43 @@ const organizerSearchByName = async (req, res) => {
         return res.status(500).json(error);
     }
 }
+
+const organizerSearchById = async (req, res) => {
+
+    const { id } = req.body;
+
+    if(!id){
+        return res.status(400).json({message: "Hiányos adatok!"});
+    }
+
+    try {
+
+        const organizer = await prisma.organizers.findFirst({
+            where: {
+                id: id
+            },
+            select: {
+                id: true,
+                full_name: true,
+
+            }
+        })
+
+        if(!organizer){
+            return res.status(400).json({message: "Nincs ilyen szervező!"});
+        }
+
+        return res.status(200).json(organizer)
+
+    } catch (error) {
+        return res.status(500).json(error);
+    }
+
+
+    
+    
+}
+
 
 const organizerProfileSearchByName = async (req, res) => {
     const { usr_name } = req.params;
@@ -900,6 +935,7 @@ module.exports = {
     passEmailVerify,
     organizerSearchByName,
     organizerGetPicturePath,
-    organizerProfileSearchByName
+    organizerProfileSearchByName,
+    organizerSearchById
     
 }

@@ -1,12 +1,15 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import EventSchema from "../schemas/EventSchema";
+import { Navigate, useNavigate } from "react-router-dom";
 
 function SearchE() {
   const [events, setEvents] = useState([]);
   const [filteredEvents, setFilteredEvents] = useState([]);
   const [statusFilter, setStatusFilter] = useState("all");
   const [limit, setLimit] = useState(3);
+  const [searchTerm, setSearchTerm] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetch(`${import.meta.env.VITE_BASE_URL}/list/event`)
@@ -23,7 +26,7 @@ function SearchE() {
         });
         setEvents(withStatus);
       })
-      .catch((err) => toast.error("Hiba történt az események betöltésekor"));
+      .catch(() => toast.error("Hiba történt az események betöltésekor"));
   }, []);
 
   useEffect(() => {
@@ -33,8 +36,15 @@ function SearchE() {
       filtered = filtered.filter((e) => e.status === statusFilter);
     }
 
+    if (searchTerm.trim() !== "") {
+      const lower = searchTerm.toLowerCase();
+      filtered = filtered.filter((e) =>
+        e.name?.toLowerCase().includes(lower)
+      );
+    }
+
     setFilteredEvents(filtered.slice(0, limit));
-  }, [events, statusFilter, limit]);
+  }, [events, statusFilter, limit, searchTerm]);
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -42,9 +52,33 @@ function SearchE() {
         Esemény szűrő
       </h2>
 
-      <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+
+      <div className="flex flex-row justify-center mt-10 mb-1">
+        <button onClick={()=>{navigate('/new-event')}} className="btn rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Új esemény</button>
+      </div>
+
+      <div className="mt-5 sm:mx-auto sm:w-full sm:max-w-sm">
+        
         <form>
           <div className="grid grid-cols-6 gap-4">
+
+            {/* Kereső input */}
+            <div className="col-start-1 col-end-7">
+              <label
+                htmlFor="search"
+                className="block text-sm/6 font-medium text-indigo-600"
+              >
+                Keresés név alapján
+              </label>
+              <input
+                type="text"
+                id="search"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                placeholder="Pl. II. Trefort E-sport"
+                className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+              />
+            </div>
 
             {/* Státusz szűrő */}
             <div className="col-start-1 col-end-4">
@@ -89,12 +123,14 @@ function SearchE() {
               </select>
             </div>
 
+            {/* Alaphelyzet gomb */}
             <div className="col-start-1 col-end-7">
               <button
                 type="button"
                 onClick={() => {
                   setStatusFilter("all");
                   setLimit(3);
+                  setSearchTerm("");
                 }}
                 className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
               >
@@ -105,13 +141,13 @@ function SearchE() {
         </form>
       </div>
 
-      <div className={`grid ${events.length === 1 ? 'lg:grid-cols-1' : 'lg:grid-cols-3'} md:grid-cols-2 sm:grid-cols-1 justify-items-center gap-5 mb-10 mt-10`} >
-        {events.length > 0 ? (
-          events.map((event) => (
+      <div className={`grid ${filteredEvents.length === 1 ? 'lg:grid-cols-1' : 'lg:grid-cols-3'} md:grid-cols-2 sm:grid-cols-1 justify-items-center gap-5 mb-10 mt-10`}>
+        {filteredEvents.length > 0 ? (
+          filteredEvents.map((event) => (
             <EventSchema key={event.id} event={event} />
           ))
         ) : (
-          <p>{events.message}</p>
+          <p>Nincs találat a megadott szűrőkkel.</p>
         )}
       </div>
     </div>
