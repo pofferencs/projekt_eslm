@@ -10,14 +10,9 @@ function TeamSearch() {
   const onSubmit = (e) => {
     e.preventDefault();
 
-    let url = `${import.meta.env.VITE_BASE_URL}/list/tenamesearch`;
+    let url = `${import.meta.env.VITE_BASE_URL}/list/tenamesearch/${searchInput}`;
 
-    // Ha van kereső input, akkor hozzáadjuk a keresési paramétert
-    if (searchInput !== "") {
-      url += `/${searchInput}`;
-    }
 
-    // Fetch kérés a backend felé
     fetch(url, {
       method: "GET",
       headers: {
@@ -26,12 +21,11 @@ function TeamSearch() {
     })
       .then((res) => res.json())
       .then((data) => {
-        setResult(data); // Eredmények frissítése
+        setResult(data); 
       })
-      .catch((err) => toast.error("Hiba történt a keresés során.")); // Hiba esetén
+      .catch((err) => toast.error("Hiba történt a keresés során."));
   };
 
-  // Keresési input kezelése
   const handleChange = (e) => {
     setSearchInput(e.target.value);
   };
