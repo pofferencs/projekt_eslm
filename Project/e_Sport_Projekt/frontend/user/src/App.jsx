@@ -43,7 +43,7 @@ function App() {
             <Route path="/team-search" element={<SearchTe />} />
             <Route path="/tournament-search" element={<SearchTo />} />
             <Route path="/event-search" element={<SearchE />} />
-            <Route path="/userteammemberships" element={<UserTeamMemberships />} />
+            <Route path="/userteammemberships/:user_name" element={<UserTeamMemberships />} />
             <Route path="/profile/:name" element={<UserProfile />} />
             
           </Routes>

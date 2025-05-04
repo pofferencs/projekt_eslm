@@ -111,12 +111,22 @@ const activeMembersList = async (req, res) => {
 
 // Route to fetch all teams where a user is an active member
 const teamsForPlayer = async (req, res) => {
-    const { user_id } = req.params;
+    const { user_name } = req.params;
 
     try {
+        // 1. Felhasználó ID lekérdezése user_name alapján
+        const user = await prisma.users.findFirst({
+            where: { usr_name: user_name }
+        });
+
+        if (!user) {
+            return res.status(404).json({ message: "Nincs ilyen nevű felhasználó." });
+        }
+
+        // 2. Aktív csapat tagságok keresése user_id alapján
         const activeMemberships = await prisma.team_Memberships.findMany({
             where: {
-                uer_id: Number(user_id),
+                uer_id: user.id,
                 status: "active"
             },
             include: {
@@ -128,14 +138,19 @@ const teamsForPlayer = async (req, res) => {
             return res.status(404).json({ message: "A felhasználó nem aktív tag egyetlen csapatban sem." });
         }
 
-        // Visszaadjuk az összes csapat teljes adatait
+        // 3. Csapatok kilistázása
         const teams = activeMemberships.map(membership => membership.team);
 
         return res.status(200).json(teams);
+
     } catch (error) {
-        return res.status(500).json({ message: "Hiba történt a csapatok lekérdezése során.", error });
+        return res.status(500).json({
+            message: "Hiba történt a csapatok lekérdezése során.",
+            error: error.message
+        });
     }
 };
+
 
 
 module.exports = {

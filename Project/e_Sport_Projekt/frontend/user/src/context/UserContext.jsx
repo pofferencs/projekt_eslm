@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 
 const UserContext = createContext();
 
-export const UserProvider = ({children})=>{
+export const UserProvider = ({ children }) => {
 
   const navigate = useNavigate();
   const [refresh, setRefresh] = useState(false);
@@ -15,69 +15,61 @@ export const UserProvider = ({children})=>{
   const [uPicPath, setUPicPath] = useState("");
 
 
-  const authStatus = async () =>{
+  const authStatus = async () => {
 
-    await fetch(`${import.meta.env.VITE_BASE_URL}/user/auth`,{
+    await fetch(`${import.meta.env.VITE_BASE_URL}/user/auth`, {
       method: 'GET',
       credentials: 'include',
-      headers:{
-        "Content-Type":"application/json"
+      headers: {
+        "Content-Type": "application/json"
       }
     })
-    .then(res=> res.json())
-    .then(auth=>{
-      if(auth.authenticated){
+      .then(res => res.json())
+      .then(auth => {
+        if (auth.authenticated) {
+          setProfile(auth.user); // Ez menti el a profil infót
+          setIsAuthenticated(true);
+          setIsLoading(false);
+          update();
 
-
-        fetch(`${import.meta.env.VITE_BASE_URL}/user/userpic/${profile.id}`,
-        )
+          // FONTOS: Itt ne a profile.id-t használd, hanem auth.user.id-t közvetlenül
+          fetch(`${import.meta.env.VITE_BASE_URL}/user/userpic/${auth.user.id}`)
             .then(res => res.json())
-            .then(adat => {setUPicPath(adat);})
-            .catch(err => {console.log(err)});
+            .then(adat => setUPicPath(adat))
+            .catch(err => console.log(err));
+        } else {
+          setIsAuthenticated(false);
+          setIsLoading(false);
+          logout();
+          update();
+        }
+      })
 
-        setProfile(auth.user);
-        setIsAuthenticated(true);
-        setIsLoading(false);
-        update();
-        
-    
-        
-      } else {
-        
-        setIsAuthenticated(false);
-        setIsLoading(false);
-        logout();
-        update();
-       
+      .catch(err => { console.log(err); setIsAuthenticated(false); setIsLoading(false); logout(); update(); });
+
+
+
+  }
+
+  const update = () => {
+    setRefresh(prev => !prev);
+  }
+
+  const logout = async () => {
+
+    await fetch(`${import.meta.env.VITE_BASE_URL}/user/logout`, {
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        "Content-Type": "application/json"
       }
-      
-      
     })
-    .catch(err=>{console.log(err); setIsAuthenticated(false); setIsLoading(false); logout(); update();});
-   
-    
-    
-  }
+      .then(res => {
 
-  const update = ()=>{
-    setRefresh(prev=>!prev);
-  }
-
-  const logout = async () =>{
-   
-    await fetch(`${import.meta.env.VITE_BASE_URL}/user/logout`,{
-     method: 'POST',
-     credentials: 'include',
-     headers: {
-      "Content-Type": "application/json"
-     } 
-    })
-    .then(res=>{
-      
-      return res.json();
-    })
-    .then(data=> {setIsAuthenticated(false); setIsLoading(false); update(); })
-    .catch(err=>{alert(err)});
+        return res.json();
+      })
+      .then(data => { setIsAuthenticated(false); setIsLoading(false); update(); })
+      .catch(err => { alert(err) });
   }
 
 
@@ -92,8 +84,8 @@ export const UserProvider = ({children})=>{
       .then(token => {
         if (!token.message) {
           toast.success('Sikeres belépés! Oldalfrissítés 5 másodperc múlva!');
-          setTimeout(()=>{navigate('/'); pageRefresh()},5000)
-          
+          setTimeout(() => { navigate('/'); pageRefresh() }, 5000)
+
         } else {
           toast.error(token.message);
         }
@@ -102,14 +94,14 @@ export const UserProvider = ({children})=>{
 
   }
 
-  const pageRefresh = () =>{
+  const pageRefresh = () => {
     window.location.reload();
-    window.scroll(0,0);
+    window.scroll(0, 0);
   }
 
 
 
-  return<UserContext.Provider value={{
+  return <UserContext.Provider value={{
     refresh,
     update,
     logout,
