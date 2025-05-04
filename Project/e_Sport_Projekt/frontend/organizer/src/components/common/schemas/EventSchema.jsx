@@ -1,4 +1,7 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import OrganizerContext from "../../../context/OrganizerContext";
+import { useNavigate } from "react-router-dom";
+
 
 function EventSchema({ event }) {
 
@@ -14,6 +17,8 @@ function EventSchema({ event }) {
         }).format(date).replace(/\./g, ".").trim();
     }
 
+    const {isAuthenticated, profile} = useContext(OrganizerContext);
+    const navigate = useNavigate();
     const [eventPicPath, setEventPicPath] = useState("");
 
     const [timeLeftToStart, setTimeLeftToStart] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
@@ -195,6 +200,15 @@ function EventSchema({ event }) {
                     <p className="drop-shadow-lg text-stone-300 font-extrabold flex-none">Leírás:</p>
                     <p className="drop-shadow-lg ml-7">{event.details}</p>
                 </div>
+
+                    {
+                        (event.ogr_id == profile.id)?(
+                            <div className="flex flex-row justify-center mt-3">
+                                <button className="btn btn-sm btn-outline btn-info" onClick={()=>{navigate(`/event/${event.id}`)}}>Esemény szerkesztése</button>
+                            </div>
+                        ):(<p></p>)
+                    }
+                
             </div>
         </div>
     );

@@ -349,20 +349,6 @@ function OrganizerProfile() {
                         </div>
                       </div>
 
-                      {/* <button disabled={emailDisabled} className="btn mt-3 text-white w-52" onClick={()=> {kuldesEmail(profile.email_address, "POST"); setEmailDisabled(true)}}>Jelszó módosítás</button> */}
-
-                      {/* <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt className="text-sm text-white font-bold">
-                        Születési dátum
-                    </dt>
-                    <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                    {
-                    (<p>{dateFormat(profile.date_of_birth)}</p>)
-                    }
-                    </dd>
-                </div> */}
-
-
                       <div className="w-full mx-auto rounded-lg shadow-lg md:mt-6 md:max-w-full sm:max-w-4xl xl:p-0 bg-gray-800 dark:border-gray-700">
                         <div className="p-8 md:p-10">
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
