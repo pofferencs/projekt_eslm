@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
 import UserContext from "../../../context/UserContext";
 import DeleteModal from "../../modals/DeleteModal";
@@ -11,6 +11,9 @@ function TeamSchema({ team }) {
     const [teamPicPath, setTeamPicPath] = useState("");
     const [teamMembers, setTeamMembers] = useState([]);
     const [showModal, setShowModal] = useState(false);
+
+    const location = useLocation();
+    const isProfilePage = location.pathname.startsWith("/profile");
 
     // Team pic fetch
     useEffect(() => {
@@ -115,29 +118,31 @@ function TeamSchema({ team }) {
                     </div>
                 </div>
 
-                {/* Vonal alatti gomb */}
-                <div className="border-t border-white pt-2 mt-2 flex justify-end gap-2">
-                    {profile.id === team.creator_id ? (
-                        <button className="btn btn-sm btn-warning">Módosítás</button>
-                    ) : (
-                        <button
-                            className="btn btn-sm btn-error"
-                            onClick={() => setShowModal(true)}
-                        >
-                            Kilépés
-                        </button>
-                    )}
-                </div>
-            </div>
+                {!isProfilePage && (
+                    <div className="border-t border-white pt-2 mt-2 flex justify-end gap-2">
+                        {profile.id === team.creator_id ? (
+                            <button className="btn btn-sm btn-warning">Módosítás</button>
+                        ) : (
+                            <button
+                                className="btn btn-sm btn-error"
+                                onClick={() => setShowModal(true)}
+                            >
+                                Kilépés
+                            </button>
+                        )}
+                    </div>
+                )}
 
-            {/* Kilépés megerősítő modal */}
-            <DeleteModal
-                show={showModal}
-                onClose={() => setShowModal(false)}
-                onConfirm={handleLeaveTeam}
-            />
+                {/* Kilépés megerősítő modal */}
+                <DeleteModal
+                    show={showModal}
+                    onClose={() => setShowModal(false)}
+                    onConfirm={handleLeaveTeam}
+                />
+            </div>
         </div>
     );
 }
 
 export default TeamSchema;
+

@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { useLocation, useNavigate, useParams } from "react-router-dom"
+import { useLocation, useNavigate, useParams, Link } from "react-router-dom"
 import UserContext from "../../context/UserContext";
 import { toast } from "react-toastify";
 import TeamSchema from "../common/schemas/TeamSchema";
@@ -32,9 +32,9 @@ function UserProfile() {
 
   useEffect(() => {
     if (!name || !profile) return;
-  
+
     setIsLoading(true);
-  
+
     fetch(`${import.meta.env.VITE_BASE_URL}/list/userteammemberships/${name}`, {
       method: "GET",
       headers: { "Content-Type": "application/json" },
@@ -43,11 +43,11 @@ function UserProfile() {
       .then(async (csapatok) => {
         if (Array.isArray(csapatok)) {
           const csakSajatProfil = isAuthenticated && profile.usr_name === name;
-  
+
           const csapatokSzurt = csakSajatProfil
             ? csapatok.filter(team => team.creator_id === profile.id)
             : csapatok;
-  
+
           const csapatokTagokkal = await Promise.all(
             csapatokSzurt.map(async (team) => {
               try {
@@ -60,7 +60,7 @@ function UserProfile() {
               }
             })
           );
-  
+
           setTeams(csapatokTagokkal);
         } else {
           toast.error("Nem találhatók csapatok.");
@@ -73,8 +73,8 @@ function UserProfile() {
       })
       .finally(() => setIsLoading(false));
   }, [name, profile, isAuthenticated]);
-  
-  
+
+
 
 
 
@@ -601,9 +601,26 @@ function UserProfile() {
                   </div>
                     <div className="w-full mb-10 mx-auto rounded-lg shadow-lg md:mt-6 md:max-w-full sm:max-w-4xl xl:p-0 bg-gray-800 dark:border-gray-700 pt-10">
                       <h2 id="myteams" className="mt-10 block text-center text-4xl font-bold text-indigo-500 p-5">
-                        Csapatok, amelyeknek <span className="bg-gradient-to-tr from-indigo-500 to-amber-500 text-transparent bg-clip-text">vezetője vagy</span> 
+                        Csapatok, amelyeknek <span className="bg-gradient-to-tr from-indigo-500 to-amber-500 text-transparent bg-clip-text">vezetője vagy</span>
                       </h2>
                       <div className="mx-auto mt-2 h-1 w-[60%] bg-gradient-to-r from-indigo-500 to-amber-500 rounded-full" />
+                      <div className="flex justify-center mt-8">
+                        <Link
+                          to="/myteams"
+                          onClick={() => window.scroll(0, 0)}
+                          className="px-6 py-2 font-semibold rounded-md shadow transition-all duration-500
+             bg-gradient-to-tr from-indigo-500 to-amber-500 
+             bg-clip-text text-transparent
+             border-2 border-dashed 
+             hover:border-solid 
+             hover:bg-gradient-to-l hover:from-amber-500 hover:to-indigo-500"
+                          style={{
+                            borderImage: "linear-gradient(to right, #6366f1, #f59e0b) 2 border-dashed hover:border-solid"
+                          }}
+                        >
+                          Csapat menedzsment
+                        </Link>
+                      </div>
                       <div className="p-8 md:p-10">
                         {isLoading ? (
                           <p className="text-center text-white">Loading...</p>
@@ -792,7 +809,7 @@ function UserProfile() {
 
                       <div className="w-full mb-10 mx-auto rounded-lg shadow-lg md:mt-6 md:max-w-full sm:max-w-4xl xl:p-0 bg-gray-800 dark:border-gray-700 pt-10">
                         <h2 id="myteams" className="mt-10 block text-center text-4xl font-bold text-indigo-500 p-5">
-                          Csapatok, amelyeknek <span className="bg-gradient-to-tr from-indigo-500 to-amber-500 text-transparent bg-clip-text">vezetője vagy</span> 
+                          Csapatok, amelyeknek <span className="bg-gradient-to-tr from-indigo-500 to-amber-500 text-transparent bg-clip-text">vezetője vagy</span>
                         </h2>
                         <div className="mx-auto mt-2 h-1 w-[60%] bg-gradient-to-r from-indigo-500 to-amber-500 rounded-full" />
                         <div className="p-8 md:p-10">
@@ -820,7 +837,7 @@ function UserProfile() {
               )
           }
 
-        </div>
+        </div >
       )
   )
 }
