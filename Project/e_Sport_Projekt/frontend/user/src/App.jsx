@@ -20,7 +20,7 @@ import { ToastContainer } from "react-toastify";
 import UserPassReset from "./components/user/UserPassReset";
 import UserEmailVerify from "./components/user/UserEmailVerify";
 import Main from "./components/loggedout/Main";
-import UserTeamMemberships from "./components/user/UserTeamMemberships";
+import UserTeams from "./components/user/UserTeams";
 
 function App() {
   const isAuthenticated = useContext(UserContext);
@@ -35,7 +35,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Main />} />
             <Route path="*" element={<Navigate to="/" />} />
-            <Route path="/myteams" element={<UserTeamMemberships />} />
+            <Route path="/myteams" element={<UserTeams />} />
             <Route path="/register" element={<Register />} />
             <Route path="/login" element={<UserLogin />} />
             <Route path="/password-reset" element={<UserPassReset />} />
