@@ -22,6 +22,7 @@ function Event() {
   useEffect(()=>{
 
     window.scroll(0,0)
+    setDisabled(true);
 
     fetch(`${import.meta.env.VITE_BASE_URL}/list/event/${id}`,{
       method: "GET",
@@ -116,7 +117,7 @@ function Event() {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    
+    modify('PATCH', formData);
   };
 
   const writeData = (e) => {
@@ -182,7 +183,58 @@ const sendImage = async (file, type, id) => {
 
 
 
+  const modify = (method, formData) => {
 
+    console.log(formData)
+
+    fetch(`${import.meta.env.VITE_BASE_URL}/update/event`, {
+      method: method,
+      headers: { "Content-type": "application/json" },
+      body: JSON.stringify(formData),
+    })
+      .then(async (res) => {
+        const data = await res.json();
+        if (!res.ok) {
+
+          toast.error(data.message);
+        } else {
+          toast.success(data.message);
+          authStatus();
+          setIsForm(false);
+          setIsLoading(true);
+          
+
+        }
+
+      }).catch(err => alert(err));
+
+  };
+
+
+  const torles = (method, id) => {
+
+    fetch(`${import.meta.env.VITE_BASE_URL}/delete/event`, {
+      method: method,
+      headers: { "Content-type": "application/json" },
+      body: JSON.stringify({id: id}),
+    })
+      .then(async (res) => {
+        const data = await res.json();
+        if (!res.ok) {
+
+          toast.error(data.message);
+        } else {
+          toast.success(data.message);
+          authStatus();
+          navigate('/');
+          
+
+        }
+
+      }).catch(err => alert(err));
+
+  };
+  
 
 
 
@@ -219,6 +271,7 @@ const sendImage = async (file, type, id) => {
 
                         <div className="flex flex-col">
                           <button className="btn mt-3 text-white w-52" onClick={() => {setIsForm(true); setDisabled(false);}}>Adatok módosítása</button>
+                          <button className="btn mt-3 bg-red-600 hover:bg-red-700 text-white w-52" onClick={() => {torles('DELETE', event.id)}}>Törlés</button>
 
                         </div>
                       </div>
@@ -372,28 +425,28 @@ const sendImage = async (file, type, id) => {
                         <div className="p-8 md:p-10">
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-                            <div>
+                            <div key={'name'}>
                               <label className="block text-sm font-medium text-white">
                                 Név
                               </label>
                               <input id="name" type="text" disabled={disabled} onChange={writeData} value={formData.name} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm" />
                             </div>
 
-                            <div>
+                            <div key={'place'}>
                               <label className="block text-sm font-medium text-white">
                                 Hely
                               </label>
                               <input id="place" type="text" disabled={disabled} onChange={writeData} value={formData.place} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm" />
                             </div>
 
-                            <div>
+                            <div key={'start_date'}>
                               <label className="block text-sm font-medium text-white">
                                 Kezdés
                               </label>
                               <input id="start_date" type="date" disabled={disabled} onChange={writeData} value={dateFormat(formData.start_date)} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm" />
                             </div>
 
-                            <div>
+                            <div key={'end_date'}>
                               <label className="block text-sm font-medium text-white">
                                 Vége
                               </label>
@@ -404,15 +457,15 @@ const sendImage = async (file, type, id) => {
                               <label className="block text-sm font-medium text-white">
                                 Szervező
                               </label>
-                              <input id="school" type="text" disabled value={organizer.full_name} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-gray-400 shadow-sm" />
+                              <input type="text" disabled value={organizer.full_name} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-gray-400 shadow-sm" />
                             </div>
 
                           </div>
-                          <div className="mt-6">
+                          <div key={'details'} className="mt-6">
                               <label className="block text-sm font-medium text-white">
                                 Leírás
                               </label>
-                              <input type="text" disabled={disabled} onChange={writeData} value={formData.details} className="mt-1 block w-full h-auto hyphens-auto px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm" />
+                              <input id="details" type="text" disabled={disabled} onChange={writeData} value={formData.details} className="mt-1 block w-full h-auto hyphens-auto px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm" />
                             </div>
                         </div>
                       </div>

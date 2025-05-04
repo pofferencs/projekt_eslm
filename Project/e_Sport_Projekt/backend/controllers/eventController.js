@@ -68,10 +68,10 @@ const eventList = async (req, res) => {
     }
 
 const eventUpdate = async (req, res) => {
-    const { id, name, start_date, end_date, place, details } = req.body;
+    const { id, name, start_date, end_date, place, details, ogr_id } = req.body;
 
 
-    if(!id || !name || !place || !details || !start_date || !end_date){
+    if(!id || !name || !place || !details || !start_date || !end_date ){
         return res.status(400).json({message: "Hiányos adatok!"});
     }
     
@@ -112,9 +112,9 @@ const eventUpdate = async (req, res) => {
 }
 
 const eventInsert = async (req, res) => {
-    const { name, place, details, start_date, end_date } = req.body;
+    const { name, place, details, start_date, end_date, ogr_id } = req.body;
 
-    if(!name || !place || !details || !start_date || !end_date){
+    if(!name || !place || !details || !start_date || !end_date || !ogr_id){
         return res.status(400).json({message: "Hiányos adatok!"});
     }
 
@@ -167,7 +167,8 @@ const eventInsert = async (req, res) => {
                 start_date: startDate,
                 end_date: endDate,
                 place: place,
-                details: details
+                details: details,
+                ogr_id: ogr_id
             }
         });
 
