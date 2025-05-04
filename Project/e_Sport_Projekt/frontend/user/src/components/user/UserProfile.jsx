@@ -118,37 +118,6 @@ function UserProfile() {
 
     }
 
-    // fetch(`${import.meta.env.VITE_BASE_URL}/list//userteammemberships/${name}`,{
-    //   method:"GET",
-    //   headers:{'Content-type':"application/json"}
-    // })
-    // .then(res=>res.json())
-    // .then(adat=>{setTeams(adat),
-    //   fetch(`${import.meta.env.VITE_BASE_URL}/list/team/${team.id}/members`,{
-    //     method:"GET",
-    //     headers:{'Content-type':"application/json"}
-    //   })
-    // })
-    // .then(res=>res.json())
-    // .then(adat=>setTeam(adat))
-    // .catch(err=>alert(err))
-    //   ,setIsLoading(false)})
-    // .catch(err=>alert(err));
-
-    // teams.map((team)=>{
-    //   fetch(`${import.meta.env.VITE_BASE_URL}/list/team/${team.id}/members`,{
-    //     method:"GET",
-    //     headers:{'Content-type':"application/json"}
-    //   })
-    // })
-    // .then(res=>res.json())
-    // .then(adat=>setTeam(adat))
-    // .catch(err=>alert(err));
-
-
-
-
-
   }, [isAuthenticated, name]);
 
   // useEffect(() => {
@@ -434,21 +403,33 @@ function UserProfile() {
                         </div>
                       </dl>
                     </div>
+                  </div>
+                </div>
+
+                <div className="w-full mb-10 mx-auto rounded-lg shadow-lg md:mt-6 md:max-w-full sm:max-w-4xl xl:p-0 bg-gray-800 dark:border-gray-700 pt-10">
+                  <h2 className="mt-10 block text-center text-4xl font-bold text-indigo-500 p-5">
+                    Csapatok, amelyeknek <span className="bg-gradient-to-tr from-indigo-500 to-amber-500 text-transparent bg-clip-text">{profileAdat.usr_name}</span> tagja
+                  </h2>
+                  <div className="mx-auto mt-2 h-1 w-[60%] bg-gradient-to-r from-indigo-500 to-amber-500 rounded-full" />
+                  <div className="p-8 md:p-10">
                     {isLoading ? (
-                      <p>Loading...</p>
+                      <p className="text-center text-white">Loading...</p>
                     ) : (
-                      teams.length > 0 ? (
-                        <div className="grid lg:grid-cols-2 md:grid-cols-1 sm:grid-cols-1 justify-items-center m-5">
-                          {teams.map((team) => (
-                            <TeamSchema key={team.id} team={team} />
-                          ))}
-                        </div>
-                      ) : (
-                        <p className="text-center text-gray-500 mt-10">Nem tagja egy csapatnak sem.</p>
-                      )
+                      <>
+                        {teams.length > 0 ? (
+                          <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 justify-items-center mt-10">
+                            {teams.map((team) => (
+                              <TeamSchema key={team.id} team={team} />
+                            ))}
+                          </div>
+                        ) : (
+                          <p className="text-center text-gray-500 mt-10">Nem tagja egy csapatnak sem.</p>
+                        )}
+                      </>
                     )}
                   </div>
                 </div>
+
               </>
             ) :
               (
