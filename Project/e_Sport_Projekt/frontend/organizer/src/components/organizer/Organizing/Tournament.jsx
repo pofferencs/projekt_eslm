@@ -25,8 +25,7 @@ function Tournament() {
   useEffect(()=>{
   
       window.scroll(0,0)
-      setDisabled(true);
-  
+      setDisabled(true);  
       
 
         fetch(`${import.meta.env.VITE_BASE_URL}/list/tntsearchid/${id}`,{
@@ -105,16 +104,32 @@ function Tournament() {
     const [formData, setFormData] = useState(formObj);
     
     const dateFormat = (date) => {
-  
+    
       if (date != undefined) {
-        const [ev, honap, nap] = date.split('T')[0].split('-')
-  
-        return `${ev}-${honap}-${nap}`;
+        const localDate = new Date(date);
+        const ev = localDate.getFullYear();
+        const honap = String(localDate.getMonth() + 1).padStart(2, '0');
+        const nap = String(localDate.getDate()).padStart(2, '0');
+        const ora = String(localDate.getHours()).padStart(2, '0');
+        const perc = String(localDate.getMinutes()).padStart(2, '0');
+    
+        return `${ev}-${honap}-${nap}T${ora}:${perc}`;
       } else {
         return ``;
       }
-  
-    }
+    };
+
+    const formatDateTime = (dateTime) => {
+      if (dateTime) {
+        const [date, time] = dateTime.split('T'); // Szétválasztjuk a dátumot és az időt
+        const [ev, honap, nap] = date.split('-'); // A dátumot év, hónap, nap részekre bontjuk
+        const [ora, perc] = time.split(':'); // Az időt óra és perc részekre bontjuk
+    
+        return `${ev}. ${honap}. ${nap}. ${ora}:${perc}`; // Formázott visszatérési érték
+      } else {
+        return '';
+      }
+    };
   
   
     const onSubmit = (e) => {
@@ -320,27 +335,27 @@ function Tournament() {
                           <label className="block text-sm font-medium text-white">
                             Verseny kezdete(*)
                           </label>
-                          <input id="start_date" type="date" disabled={disabled} value={dateFormat(formData.start_date)} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-gray-400 shadow-sm" />
+                          <input id="start_date" type="datetime-local" disabled={disabled} value={dateFormat(formData.start_date)} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-gray-400 shadow-sm" />
                         </div>
 
                         <div>
                           <label className="block text-sm font-medium text-white">
                             Verseny vége(*)
                           </label>
-                          <input id="end_date" type="date" disabled={disabled} value={dateFormat(formData.end_date)} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-gray-400 shadow-sm" />
+                          <input id="end_date" type="datetime-local" disabled={disabled} value={dateFormat(formData.end_date)} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-gray-400 shadow-sm" />
                         </div>
                         
                         <div>
                           <label className="block text-sm font-medium text-white">
                             Jelentkezés kezdete(*)
                           </label>
-                          <input id="apn_start" type="date" disabled={disabled} value={dateFormat(formData.apn_start)} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-gray-400 shadow-sm" />
+                          <input id="apn_start" type="datetime-local" disabled={disabled} value={dateFormat(formData.apn_start)} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-gray-400 shadow-sm" />
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-white">
                             Jelentkezés vége(*)
                           </label>
-                          <input id="apn_end" type="date" disabled={disabled} value={dateFormat(formData.apn_end)} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-gray-400 shadow-sm" />
+                          <input id="apn_end" type="datetime-local" disabled={disabled} value={dateFormat(formData.apn_end)} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-gray-400 shadow-sm" />
                         </div>
 
                         <div>
@@ -360,7 +375,7 @@ function Tournament() {
                           <label className="block text-sm font-medium text-white">
                             Játék
                           </label>
-                          <input id="game" type="text" disabled value={game.name} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-gray-400 shadow-sm" />
+                          <input id="game" type="text" disabled value={(!game)?(<></>):(game.name)} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-gray-400 shadow-sm" />
                         </div>
 
                         <div>
@@ -472,27 +487,27 @@ function Tournament() {
                           <label className="block text-sm font-medium text-white">
                             Verseny kezdete(*)
                           </label>
-                          <input id="start_date" type="date" disabled={disabled} onChange={writeData} value={dateFormat(formData.start_date)} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm" />
+                          <input id="start_date" type="datetime-local" disabled={disabled} onChange={writeData} value={dateFormat(formData.start_date)} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm" />
                         </div>
 
                         <div>
                           <label className="block text-sm font-medium text-white">
                             Verseny vége(*)
                           </label>
-                          <input id="end_date" type="date" disabled={disabled} onChange={writeData} value={dateFormat(formData.end_date)} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm" />
+                          <input id="end_date" type="datetime-local" disabled={disabled} onChange={writeData} value={dateFormat(formData.end_date)} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm" />
                         </div>
                         
                         <div>
                           <label className="block text-sm font-medium text-white">
                             Jelentkezés kezdete(*)
                           </label>
-                          <input id="apn_start" type="date" disabled={disabled} onChange={writeData} value={dateFormat(formData.apn_start)} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm" />
+                          <input id="apn_start" type="datetime-local" disabled={disabled} onChange={writeData} value={dateFormat(formData.apn_start)} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm" />
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-white">
                             Jelentkezés vége(*)
                           </label>
-                          <input id="apn_end" type="date" disabled={disabled} onChange={writeData} value={dateFormat(formData.apn_end)} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm" />
+                          <input id="apn_end" type="datetime-local" disabled={disabled} onChange={writeData} value={dateFormat(formData.apn_end)} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm" />
                         </div>
 
                         <div>
@@ -512,7 +527,7 @@ function Tournament() {
                           <label className="block text-sm font-medium text-white">
                             Játék
                           </label>
-                          <input id="game" type="text" disabled value={game.name} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-gray-400 shadow-sm" />
+                          <input id="game" type="text" disabled value={(!game)?(<></>):(game.name)} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-gray-400 shadow-sm" />
                         </div>
 
                         <div>
@@ -585,7 +600,7 @@ function Tournament() {
                             Verseny kezdete
                           </dt>
                           <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                            <p>{dateFormat(tournament.start_date)}</p>
+                            <p>{formatDateTime(tournament.start_date)}</p>
                           </dd>
                         </div>
                         <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
@@ -593,7 +608,7 @@ function Tournament() {
                           Verseny vége
                           </dt>
                           <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                            <p>{dateFormat(tournament.end_date)}</p>
+                            <p>{formatDateTime(tournament.end_date)}</p>
                           </dd>
                         </div>
                         <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
@@ -601,7 +616,7 @@ function Tournament() {
                             Jelentkezés kezdete
                           </dt>
                           <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                            <p>{dateFormat(tournament.apn_start)}</p>
+                            <p>{formatDateTime(tournament.apn_start)}</p>
                           </dd>
                         </div>
                         <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
@@ -609,7 +624,7 @@ function Tournament() {
                             Jelentkezés vége
                           </dt>
                           <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                            <p>{dateFormat(tournament.apn_end)}</p>
+                            <p>{formatDateTime(tournament.apn_end)}</p>
                           </dd>
                         </div>
                         <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">

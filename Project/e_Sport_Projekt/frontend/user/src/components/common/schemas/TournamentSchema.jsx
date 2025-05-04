@@ -253,7 +253,7 @@ function CountdownDisplay({ time }) {
                             ? "óra"
                             : unit === "minutes"
                                 ? "perc"
-                                : "másodperc"}
+                                : "mp"}
                 </div>
             ))}
         </div>
