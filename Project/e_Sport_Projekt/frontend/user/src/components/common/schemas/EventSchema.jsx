@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 
 function EventSchema({ event }) {
+    const [showFull, setShowFull] = useState(false);
+
 
     function formatDate(date) {
         return new Intl.DateTimeFormat('hu-HU', {
@@ -191,14 +193,46 @@ function EventSchema({ event }) {
                     <p className="drop-shadow-lg ml-10">{event.place}</p>
 
                 </div>
-                
 
                 <div className="flex justify-evenly">
-                    <p className="drop-shadow-lg text-stone-300 font-extrabold flex-none">Leírás:</p>
-                    <p className="drop-shadow-lg ml-7">{event.details}</p>
+                    <p className="drop-shadow-lg text-stone-300 font-extrabold flex-none">
+                        Információ:
+                    </p>
+                    <p
+                        className={`ml-7 drop-shadow-lg inline-block max-w-xs overflow-hidden ${!showFull ? "whitespace-nowrap" : ""}`}
+                        style={
+                            !showFull
+                                ? {
+                                    WebkitMaskImage: "linear-gradient(to left, transparent, black 40%)",
+                                    maskImage: "linear-gradient(to left, transparent, black 40%)",
+                                    WebkitMaskSize: "100% 100%",
+                                    maskSize: "100% 100%",
+                                }
+                                : {}
+                        }
+                    >
+                        {event.details}
+                    </p>
                 </div>
+
+
+                <div className="flex flex-wrap gap-2 justify-center border-t border-white my-2 pt-4">
+                    <button
+                        className="btn btn-sm btn-outline btn-accent"
+                        onClick={() => setShowFull((prev) => !prev)}
+                    >
+                        {showFull ? "Rövid info" : "Teljes info"}
+                    </button>
+                    <button
+                        className="btn btn-sm btn-outline btn-info"
+                        onClick={() => navigate(`/event/tournaments/${event.event_id}`)}
+                    >
+                        Eseményhez tartozó versenyek
+                    </button>
+                </div>
+
             </div>
-        </div>
+        </div >
     );
 }
 
