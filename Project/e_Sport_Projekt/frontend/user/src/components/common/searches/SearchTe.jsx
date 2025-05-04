@@ -10,11 +10,11 @@ function TeamSearch() {
   const onSubmit = (e) => {
     e.preventDefault();
 
-    let url = `${import.meta.env.VITE_BASE_URL}/list/team`;
+    let url = `${import.meta.env.VITE_BASE_URL}/list/tenamesearch`;
 
     // Ha van kereső input, akkor hozzáadjuk a keresési paramétert
     if (searchInput !== "") {
-      url += `?search=${searchInput}`;
+      url += `/${searchInput}`;
     }
 
     // Fetch kérés a backend felé

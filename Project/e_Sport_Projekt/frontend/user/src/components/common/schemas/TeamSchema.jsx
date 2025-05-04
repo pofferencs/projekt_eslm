@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
 import UserContext from "../../../context/UserContext";
 import DeleteModal from "../../modals/DeleteModal";
@@ -8,12 +8,15 @@ import DeleteModal from "../../modals/DeleteModal";
 function TeamSchema({ team }) {
     const { profile } = useContext(UserContext);
 
+    const navigate = useNavigate();
+
     const [teamPicPath, setTeamPicPath] = useState("");
     const [teamMembers, setTeamMembers] = useState([]);
     const [showModal, setShowModal] = useState(false);
 
     const location = useLocation();
     const isProfilePage = location.pathname.startsWith("/profile");
+    const teamSearchPage = location.pathname.startsWith("/team-search");
 
     // Team pic fetch
     useEffect(() => {
@@ -99,7 +102,7 @@ function TeamSchema({ team }) {
                                     key={member.id}
                                     className="drop-shadow-lg text-purple-800 hover:text-blue-200 flex items-center gap-1"
                                 >
-                                    <Link>
+                                    <Link to={`/profile/${member.usr_name}`}>
                                         {member.usr_name}
                                         {index === 0 && member.id === team.creator_id && (
                                             <svg
@@ -118,10 +121,10 @@ function TeamSchema({ team }) {
                     </div>
                 </div>
 
-                {!isProfilePage && (
+                {!isProfilePage && !teamSearchPage &&(
                     <div className="border-t border-white pt-2 mt-2 flex justify-end gap-2">
                         {profile.id === team.creator_id ? (
-                            <button className="btn btn-sm btn-warning">Módosítás</button>
+                            <button className="btn btn-sm btn-warning" onClick={()=>navigate('/teamedit')}>Módosítás</button>
                         ) : (
                             <button
                                 className="btn btn-sm btn-error"
