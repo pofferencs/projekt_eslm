@@ -31,10 +31,10 @@ function UserProfile() {
   }, [location]);
 
   useEffect(() => {
-    if (!name) return;
-
+    if (!name || !profile) return;
+  
     setIsLoading(true);
-
+  
     fetch(`${import.meta.env.VITE_BASE_URL}/list/userteammemberships/${name}`, {
       method: "GET",
       headers: { "Content-Type": "application/json" },
@@ -42,18 +42,25 @@ function UserProfile() {
       .then(res => res.json())
       .then(async (csapatok) => {
         if (Array.isArray(csapatok)) {
-          // Lekérjük minden csapat tagjait
-          const csapatokTagokkal = await Promise.all(csapatok.map(async (team) => {
-            try {
-              const res = await fetch(`${import.meta.env.VITE_BASE_URL}/list/team/${team.id}/members`);
-              const members = await res.json();
-              return { ...team, members };
-            } catch (err) {
-              console.error("Hiba a tagok lekérésekor:", err);
-              return { ...team, members: [] };
-            }
-          }));
-
+          const csakSajatProfil = isAuthenticated && profile.usr_name === name;
+  
+          const csapatokSzurt = csakSajatProfil
+            ? csapatok.filter(team => team.creator_id === profile.id)
+            : csapatok;
+  
+          const csapatokTagokkal = await Promise.all(
+            csapatokSzurt.map(async (team) => {
+              try {
+                const res = await fetch(`${import.meta.env.VITE_BASE_URL}/list/team/${team.id}/members`);
+                const members = await res.json();
+                return { ...team, members };
+              } catch (err) {
+                console.error("Hiba a tagok lekérésekor:", err);
+                return { ...team, members: [] };
+              }
+            })
+          );
+  
           setTeams(csapatokTagokkal);
         } else {
           toast.error("Nem találhatók csapatok.");
@@ -65,7 +72,10 @@ function UserProfile() {
         toast.error("Hiba a csapatok lekérése során.");
       })
       .finally(() => setIsLoading(false));
-  }, [name]);
+  }, [name, profile, isAuthenticated]);
+  
+  
+
 
 
   let formObj = {
@@ -591,7 +601,7 @@ function UserProfile() {
                   </div>
                     <div className="w-full mb-10 mx-auto rounded-lg shadow-lg md:mt-6 md:max-w-full sm:max-w-4xl xl:p-0 bg-gray-800 dark:border-gray-700 pt-10">
                       <h2 id="myteams" className="mt-10 block text-center text-4xl font-bold text-indigo-500 p-5">
-                        Csapatok, amelyeknek <span className="bg-gradient-to-tr from-indigo-500 to-amber-500 text-transparent bg-clip-text">{profileAdat.usr_name}</span> tagja
+                        Csapatok, amelyeknek <span className="bg-gradient-to-tr from-indigo-500 to-amber-500 text-transparent bg-clip-text">vezetője vagy</span> 
                       </h2>
                       <div className="mx-auto mt-2 h-1 w-[60%] bg-gradient-to-r from-indigo-500 to-amber-500 rounded-full" />
                       <div className="p-8 md:p-10">
@@ -782,7 +792,7 @@ function UserProfile() {
 
                       <div className="w-full mb-10 mx-auto rounded-lg shadow-lg md:mt-6 md:max-w-full sm:max-w-4xl xl:p-0 bg-gray-800 dark:border-gray-700 pt-10">
                         <h2 id="myteams" className="mt-10 block text-center text-4xl font-bold text-indigo-500 p-5">
-                          Csapatok, amelyeknek <span className="bg-gradient-to-tr from-indigo-500 to-amber-500 text-transparent bg-clip-text">{profileAdat.usr_name}</span> tagja
+                          Csapatok, amelyeknek <span className="bg-gradient-to-tr from-indigo-500 to-amber-500 text-transparent bg-clip-text">vezetője vagy</span> 
                         </h2>
                         <div className="mx-auto mt-2 h-1 w-[60%] bg-gradient-to-r from-indigo-500 to-amber-500 rounded-full" />
                         <div className="p-8 md:p-10">
