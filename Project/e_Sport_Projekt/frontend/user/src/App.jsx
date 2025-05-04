@@ -26,8 +26,8 @@ function App() {
   const isAuthenticated = useContext(UserContext);
 
   return (
-    
-      <BrowserRouter>
+
+    <BrowserRouter>
       <UserProvider>
         <Navbar />
         <ToastContainer autoClose={3000} />
@@ -35,6 +35,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Main />} />
             <Route path="*" element={<Navigate to="/" />} />
+            <Route path="/myteams" element={<UserTeamMemberships />} />
             <Route path="/register" element={<Register />} />
             <Route path="/login" element={<UserLogin />} />
             <Route path="/password-reset" element={<UserPassReset />} />
@@ -43,15 +44,14 @@ function App() {
             <Route path="/team-search" element={<SearchTe />} />
             <Route path="/tournament-search" element={<SearchTo />} />
             <Route path="/event-search" element={<SearchE />} />
-            <Route path="/userteammemberships/:user_name" element={<UserTeamMemberships />} />
             <Route path="/profile/:name" element={<UserProfile />} />
-            
+
           </Routes>
         </div>
         <Footer />
-        </UserProvider>
-      </BrowserRouter>
-    
+      </UserProvider>
+    </BrowserRouter>
+
   );
 }
 
