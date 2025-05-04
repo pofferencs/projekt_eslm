@@ -11,7 +11,7 @@ const { picture_linkUpdate } = require('../controllers/pictureLinkController');
 const { teamUpdate } = require('../controllers/teamController');
 const { teamMembershipUpdate } = require('../controllers/teamMembershipController');
 const { tournamentUpdate } = require('../controllers/tournamentController');
-const { organizerUpdate } = require('../controllers/organizerController');
+const { organizerUpdate, userBanByOrg } = require('../controllers/organizerController');
 
 router.patch('/user', userUpdate);
 router.patch('/application', applicationUpdate);
@@ -24,5 +24,6 @@ router.patch('/team', teamUpdate);
 router.patch('/teamMembership', teamMembershipUpdate);
 router.patch('/tournament', tournamentUpdate)
 router.patch('/organizer',organizerUpdate);
+router.patch('/banuser', userBanByOrg);
 
 module.exports = router;

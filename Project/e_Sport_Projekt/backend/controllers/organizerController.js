@@ -920,6 +920,67 @@ const organizerGetPicturePath = async (req, res) => {
     }
 }
 
+    const userBanByOrg = async (req, res) => {
+
+        const { uer_id, uer_status } = req.body;
+
+        let tmp_status;
+        let end_message;
+        let tmp_inviteable;
+
+        if(!uer_status){
+            return res.status(400).json({message: "Hiányos adat!"});
+        }
+
+        if(uer_status == "active" || uer_status == "inactive"){
+            tmp_status = "banned";
+            end_message = "Játékos kitiltva!"
+            tmp_inviteable = false;
+            
+        }
+
+        if(uer_status == "banned"){
+            tmp_status = "active";
+            end_message = "Játékos kitiltása feloldva!"
+            tmp_inviteable = false;
+        }
+
+        try {
+
+            const user = await prisma.users.findFirst({
+                where: {
+                    id: uer_id
+                }
+            });
+
+            if(!user){
+                return res.status(400).json({message: "Nincs ilyen játékos!"});
+            }
+
+
+            const modUserStatus = await prisma.users.update({
+                where: {
+                    id: uer_id
+                },
+                data: {
+                    status: tmp_status,
+                    inviteable: false
+                }
+            });
+
+            
+
+            return res.status(200).json({message: end_message})
+
+
+            
+        } catch (error) {
+            return res.status(500).json(error);
+        }
+
+
+    }
+
 
 module.exports = {
     organizerList,
@@ -936,6 +997,7 @@ module.exports = {
     organizerSearchByName,
     organizerGetPicturePath,
     organizerProfileSearchByName,
-    organizerSearchById
+    organizerSearchById,
+    userBanByOrg
     
 }

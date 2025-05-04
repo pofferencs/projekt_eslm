@@ -63,7 +63,7 @@ function UserProfile() {
   
           setTeams(csapatokTagokkal);
         } else {
-          toast.error("Nem találhatók csapatok.");
+          // toast.error("Nem találhatók csapatok.");
           setTeams([]);
         }
       })

@@ -407,6 +407,8 @@ const userProfileSearchByName = async (req, res) => {
                 status: true,
                 email_address: true,
                 phone_num: true,
+                om_identifier: true,
+                discord_name: true
             }
         });
         if (!user || usr_name === "") return res.status(404).json({ message: "Nincs ilyen felhasználó!" });

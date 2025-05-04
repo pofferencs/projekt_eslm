@@ -32,15 +32,11 @@ function Tournament() {
           method: "POST",
           headers: { "Content-type": "application/json" },
         }).then(res=>res.json())
-        
         .then(adat=> {
-
           if(adat.message){
             navigate('/');
           }
-          
           setTournament(adat); setIsLoading(false); setFormData(adat); 
-
           setPicPath(
             fetch(`${import.meta.env.VITE_BASE_URL}/list/tournamentpic/${id}`,{
               method: "GET",
@@ -68,19 +64,12 @@ function Tournament() {
               )})
               .catch(err=>alert(err))
             )
-
-
             })
             .catch(err=> alert(err))
           );
-    
-          
-    
-    
         })
         .catch(err=> alert(err));  
-      
-
+        
         console.log(event, game.name)
 
     },[isloading])
