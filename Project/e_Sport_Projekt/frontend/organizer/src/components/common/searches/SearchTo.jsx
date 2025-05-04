@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import TournamentSchema from "../schemas/TournamentSchema"; // ezt neked kell megírnod hasonlóan az EventSchema-hoz
+import { useNavigate } from "react-router-dom";
 
 function SearchTo() {
   const [tournaments, setTournaments] = useState([]);
@@ -8,6 +9,7 @@ function SearchTo() {
   const [statusFilter, setStatusFilter] = useState("all");
   const [limit, setLimit] = useState(0);
   const [searchTerm, setSearchTerm] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetch(`${import.meta.env.VITE_BASE_URL}/list/tournament`)
@@ -53,6 +55,10 @@ function SearchTo() {
       <h2 className="mt-10 text-center text-4xl font-bold tracking-tight text-indigo-600">
         Verseny szűrő
       </h2>
+
+      <div className="flex flex-row justify-center mt-10 mb-1">
+        <button onClick={()=>{navigate('/new-tournament')}} className="btn rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Új verseny</button>
+      </div>
 
       <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
         <form>

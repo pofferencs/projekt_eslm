@@ -39,10 +39,41 @@ const eventList = async (req, res) => {
             return res.status(500).json({ message: "Hiba a fetch során!" });            
         }
 
+    };
 
+
+    const eventSearchByOrganizer = async (req, res) =>{
+
+        const {id} = req.body;
+
+        if(!id){
+            return res.status(400).json({message: "Hiányos adat!"});
+        }
+
+        try {
+
+            const events = await prisma.events.findMany({
+                where: {
+                    ogr_id: id
+                }
+            })
+
+
+            if(!events){
+                return res.status(400).json({message: "Ez a szervező nem hozott létre eseményt!"});
+            }
+
+
+            return res.status(200).json(events);
+
+            
+        } catch (error) {
+            return res.status(500).json(error);
+        }
 
 
     };
+
 
     const eventSearchByName = async (req, res) =>{
         const { name } = req.params;
@@ -282,5 +313,6 @@ module.exports = {
     eventDelete,
     eventSearchByName,
     eventGetPicPath,
-    eventSearchById
+    eventSearchById,
+    eventSearchByOrganizer
 }

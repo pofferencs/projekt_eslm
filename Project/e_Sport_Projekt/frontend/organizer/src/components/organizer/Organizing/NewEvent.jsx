@@ -96,12 +96,6 @@ function NewEvent() {
                             <div className="pl-14">
                               <p className="text-3xl pb-2 text-indigo-500 font-bold">{"Esemény felvitele"}</p>
                               
-                              
-                             
-                              
-
-
-
                             </div>
                           </div>
                         </div>
@@ -115,35 +109,35 @@ function NewEvent() {
                           
                             <div key={'name'}>
                               <label className="block text-sm font-medium text-white">
-                                Név
+                                Név(*)
                               </label>
                               <input id="name" type="text" onChange={writeData} value={formData.name} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm" />
                             </div>
 
                             <div key={'place'}>
                               <label className="block text-sm font-medium text-white">
-                                Hely
+                                Hely(*)
                               </label>
                               <input id="place" onChange={writeData} type="text" value={formData.place} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm" />
                             </div>
 
                             <div key={'start_date'}>
                               <label className="block text-sm font-medium text-white">
-                                Kezdés
+                                Kezdés(*)
                               </label>
                               <input id="start_date" onChange={writeData} type="date" value={dateFormat(formData.start_date)} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm" />
                             </div>
 
                             <div key={'end_date'}>
                               <label className="block text-sm font-medium text-white">
-                                Vége
+                                Vége(*)
                               </label>
                               <input id="end_date" onChange={writeData} type="date" value={dateFormat(formData.end_date)} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm" />
                             </div>
                             
                             <div>
                               <label className="block text-sm font-medium text-white">
-                                Szervező
+                                Szervező(*)
                               </label>
                               <input type="text" disabled value={profile.full_name} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-gray-400 shadow-sm" />
                             </div>
