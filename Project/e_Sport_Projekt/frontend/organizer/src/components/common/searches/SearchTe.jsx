@@ -6,15 +6,13 @@ function TeamSearch() {
   const [searchInput, setSearchInput] = useState("");
   const [result, setResult] = useState([]);
 
-  // Keresés és csapatok listázása
-  const onSubmit = (e) => {
-    e.preventDefault();
+  const teamKereso = (input) => {
 
     let url = `${import.meta.env.VITE_BASE_URL}/list/team`;
 
     // Ha van kereső input, akkor hozzáadjuk a keresési paramétert
-    if (searchInput !== "") {
-      url += `?search=${searchInput}`;
+    if (input) {
+      url = `${import.meta.env.VITE_BASE_URL}/list/tenamesearch/${input}`
     }
 
     // Fetch kérés a backend felé
@@ -29,6 +27,14 @@ function TeamSearch() {
         setResult(data); // Eredmények frissítése
       })
       .catch((err) => toast.error("Hiba történt a keresés során.")); // Hiba esetén
+  }
+
+
+  // Keresés és csapatok listázása
+  const onSubmit = (e) => {
+    e.preventDefault();
+    teamKereso(searchInput);
+    
   };
 
   // Keresési input kezelése

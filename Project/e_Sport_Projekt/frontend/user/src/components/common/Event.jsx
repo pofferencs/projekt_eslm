@@ -87,17 +87,17 @@ function Event() {
 
 
 
-      const dateFormat = (date) => {
-
-        if (date != undefined) {
-          const [ev, honap, nap] = date.split('T')[0].split('-')
-    
-          return `${ev}-${honap}-${nap}`;
+      const dateFormat = (dateTime) => {
+        if (dateTime) {
+          const [date, time] = dateTime.split('T'); // Szétválasztjuk a dátumot és az időt
+          const [ev, honap, nap] = date.split('-'); // A dátumot év, hónap, nap részekre bontjuk
+          const [ora, perc] = time.split(':'); // Az időt óra és perc részekre bontjuk
+      
+          return `${ev}. ${honap}. ${nap}. ${ora}:${perc}`; // Formázott visszatérési érték
         } else {
-          return ``;
+          return '';
         }
-    
-      }
+      };
 
 
 
