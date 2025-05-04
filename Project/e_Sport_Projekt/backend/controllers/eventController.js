@@ -207,7 +207,7 @@ const eventInsert = async (req, res) => {
         const picLink = await prisma.picture_Links.create({
             data: {
                 evt_id: event.id,
-                pte_id: 5
+                pte_id: 4
             }
         });
 

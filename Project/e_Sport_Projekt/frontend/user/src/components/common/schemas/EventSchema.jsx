@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function EventSchema({ event }) {
     const [showFull, setShowFull] = useState(false);
+    const navigate = useNavigate();
 
 
     function formatDate(date) {
@@ -160,25 +162,25 @@ function EventSchema({ event }) {
                                         <span className="countdown font-mono text-2xl" aria-label={`${timeLeftToEnd.days} days`}>
                                             {timeLeftToEnd.days}
                                         </span>
-                                        days
+                                        nap
                                     </div>
                                     <div className="flex flex-col p-2 rounded-box bg-red-300 text-indigo-950">
                                         <span className="countdown font-mono text-2xl" aria-label={`${timeLeftToEnd.hours} hours`}>
                                             {timeLeftToEnd.hours}
                                         </span>
-                                        hours
+                                        óra
                                     </div>
                                     <div className="flex flex-col p-2 rounded-box bg-red-300 text-indigo-950">
                                         <span className="countdown font-mono text-2xl" aria-label={`${timeLeftToEnd.minutes} minutes`}>
                                             {timeLeftToEnd.minutes}
                                         </span>
-                                        min
+                                        perc
                                     </div>
                                     <div className="flex flex-col p-2 rounded-box bg-red-300 text-indigo-950">
                                         <span className="countdown font-mono text-2xl" aria-label={`${timeLeftToEnd.seconds} seconds`}>
                                             {timeLeftToEnd.seconds}
                                         </span>
-                                        sec
+                                        mp
                                     </div>
                                 </div>
                             </div>)
@@ -225,9 +227,9 @@ function EventSchema({ event }) {
                     </button>
                     <button
                         className="btn btn-sm btn-outline btn-info"
-                        onClick={() => navigate(`/event/tournaments/${event.event_id}`)}
+                        onClick={() => navigate(`/event/${event.id}`)}
                     >
-                        Eseményhez tartozó versenyek
+                        Eseményhez részletei
                     </button>
                 </div>
 
