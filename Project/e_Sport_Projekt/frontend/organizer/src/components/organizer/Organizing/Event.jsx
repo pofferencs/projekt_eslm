@@ -148,6 +148,7 @@ const sendImage = async (file, type, id) => {
       } else {
         toast.success(data.message);
         authStatus();
+        setIsLoading(true);
       }
     } catch (error) {
       alert("Hiba a feltöltés során: " + error.message);
@@ -333,7 +334,7 @@ const sendImage = async (file, type, id) => {
                               <form onSubmit={onSubmit}>
                                 <div className="flex flex-wrap gap-2">
                                   <button className="btn mt-3 text-white" type="submit">Módosítás</button>
-                                  <button className="btn mt-3 text-white" type="button" onClick={()=> { deleteImage(event.id, "event"); authStatus() }} >Fénykép törlés</button>
+                                  <button className="btn mt-3 text-white" type="button" onClick={()=> { deleteImage(event.id, "event"); authStatus(); setIsLoading(true); }} >Fénykép törlés</button>
 
                                   <button className="btn mt-3 text-white" type="button" onClick={() => { setIsForm(false); setDisabled(true); formReset() }}>Mégse</button>
 
