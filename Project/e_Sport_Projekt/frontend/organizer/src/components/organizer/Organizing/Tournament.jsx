@@ -19,6 +19,7 @@ function Tournament() {
   const [isValami, setIsValami] = useState(true);
   const [isForm, setIsForm] = useState(false);
   const [pfpFile, setPfpFile] = useState({});
+  const [detailsNum, setDetailsNum] = useState(0);
   const navigate = useNavigate();
 
 
@@ -37,6 +38,7 @@ function Tournament() {
             navigate('/');
           }
           setTournament(adat); setIsLoading(false); setFormData(adat); 
+          setDetailsNum(adat.details.length);
           setPicPath(
             fetch(`${import.meta.env.VITE_BASE_URL}/list/tournamentpic/${id}`,{
               method: "GET",
@@ -259,8 +261,14 @@ function Tournament() {
   };
 
 
+  
 
-
+  const handleInput = () => {
+    const textarea = document.getElementById('details');
+    textarea.style.height = "auto";
+    textarea.style.height = `${textarea.scrollHeight}px`;
+    setDetailsNum(textarea.value.length)
+  };
 
 
   return (
@@ -387,7 +395,7 @@ function Tournament() {
                           <label className="block text-sm font-medium text-white">
                             Leírás
                           </label>
-                          <input type="text" disabled={disabled} value={formData.details} className="mt-1 block w-full hyphens-auto px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-gray-400 shadow-sm" />
+                          <textarea id="details" type="text" disabled={disabled} value={formData.details} className="mt-1 block w-full hyphens-auto px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-gray-400 shadow-sm" />
                         </div>
                     </div>
                   </div>
@@ -469,7 +477,7 @@ function Tournament() {
                           <label className="block text-sm font-medium text-white">
                             Résztvevők száma(*)
                           </label>
-                          <input id="place" type="number" disabled={disabled} onChange={writeData} value={formData.num_participant} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm" />
+                          <input id="num_participant" type="number" max={formData.max_participant} disabled={disabled} onChange={writeData} value={formData.num_participant} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm" />
                         </div>
 
                         <div>
@@ -537,9 +545,9 @@ function Tournament() {
                       
                       <div className="mt-6">
                           <label className="block text-sm font-medium text-white">
-                            Leírás
+                          {`Leírás (${detailsNum}/512)`}
                           </label>
-                          <input type="text" disabled={disabled} onChange={writeData} value={formData.details} className="mt-1 block w-full hyphens-auto px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm" />
+                          <textarea maxLength={512} id="details" type="text" onInput={handleInput} disabled={disabled} onChange={writeData} value={formData.details} className="mt-1 block w-full hyphens-auto px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm" />
                         </div>
                     </div>
                   </div>
@@ -662,7 +670,7 @@ function Tournament() {
                           <dt className="text-sm text-white font-bold">
                             Leírás
                           </dt>
-                          <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                          <dd className="mt-1 text-sm text-white sm:mt-0 sm:col-span-2">
                             <p>{tournament.details}</p>
                           </dd>
                         </div>

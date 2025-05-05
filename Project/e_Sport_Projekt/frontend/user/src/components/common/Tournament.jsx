@@ -118,7 +118,7 @@ function Tournament() {
                           <dt className="text-sm text-white font-bold">
                             Név
                           </dt>
-                          <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                          <dd className="mt-1 text-sm text-white sm:mt-0 sm:col-span-2">
                             <p>{tournament.name}</p>
                           </dd>
                         </div>
@@ -126,7 +126,7 @@ function Tournament() {
                           <dt className="text-sm text-white font-bold">
                             Résztvevők száma
                           </dt>
-                          <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                          <dd className="mt-1 text-sm text-white sm:mt-0 sm:col-span-2">
                             <p>{tournament.num_participant}</p>
                           </dd>
                         </div>
@@ -134,7 +134,7 @@ function Tournament() {
                           <dt className="text-sm text-white font-bold">
                             Verseny kezdete
                           </dt>
-                          <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                          <dd className="mt-1 text-sm text-white sm:mt-0 sm:col-span-2">
                             <p>{dateFormat(tournament.start_date)}</p>
                           </dd>
                         </div>
@@ -142,7 +142,7 @@ function Tournament() {
                           <dt className="text-sm text-white font-bold">
                           Verseny vége
                           </dt>
-                          <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                          <dd className="mt-1 text-sm text-white sm:mt-0 sm:col-span-2">
                             <p>{dateFormat(tournament.end_date)}</p>
                           </dd>
                         </div>
@@ -150,7 +150,7 @@ function Tournament() {
                           <dt className="text-sm text-white font-bold">
                             Jelentkezés kezdete
                           </dt>
-                          <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                          <dd className="mt-1 text-sm text-white sm:mt-0 sm:col-span-2">
                             <p>{dateFormat(tournament.apn_start)}</p>
                           </dd>
                         </div>
@@ -158,7 +158,7 @@ function Tournament() {
                           <dt className="text-sm text-white font-bold">
                             Jelentkezés vége
                           </dt>
-                          <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                          <dd className="mt-1 text-sm text-white sm:mt-0 sm:col-span-2">
                             <p>{dateFormat(tournament.apn_end)}</p>
                           </dd>
                         </div>
@@ -166,7 +166,7 @@ function Tournament() {
                           <dt className="text-sm text-white font-bold">
                             Maximális résztvevők száma
                           </dt>
-                          <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                          <dd className="mt-1 text-sm text-white sm:mt-0 sm:col-span-2">
                             <p>{tournament.max_participant}</p>
                           </dd>
                         </div>
@@ -174,7 +174,7 @@ function Tournament() {
                           <dt className="text-sm text-white font-bold">
                             Esemény
                           </dt>
-                          <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                          <dd className="mt-1 text-sm text-white sm:mt-0 sm:col-span-2">
                             <p>{event.name}</p>
                           </dd>
                         </div>
@@ -182,7 +182,7 @@ function Tournament() {
                           <dt className="text-sm text-white font-bold">
                             Játék
                           </dt>
-                          <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                          <dd className="mt-1 text-sm text-white sm:mt-0 sm:col-span-2">
                             <p>{
                               (!game)?(<p></p>):(<>{game.name}</>)
                               }</p>
@@ -192,7 +192,7 @@ function Tournament() {
                           <dt className="text-sm text-white font-bold">
                             Játékmód
                           </dt>
-                          <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                          <dd className="mt-1 text-sm text-white sm:mt-0 sm:col-span-2">
                             <p>{tournament.game_mode}</p>
                           </dd>
                         </div>
@@ -200,7 +200,7 @@ function Tournament() {
                           <dt className="text-sm text-white font-bold">
                             Csapatok száma
                           </dt>
-                          <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                          <dd className="mt-1 text-sm text-white sm:mt-0 sm:col-span-2">
                             <p>{tournament.team_num}</p>
                           </dd>
                         </div>
@@ -208,7 +208,7 @@ function Tournament() {
                           <dt className="text-sm text-white font-bold">
                             Leírás
                           </dt>
-                          <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                          <dd className="mt-1 text-sm text-white sm:mt-0 sm:col-span-2">
                             <p>{tournament.details}</p>
                           </dd>
                         </div>
