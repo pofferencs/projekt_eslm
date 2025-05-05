@@ -1,8 +1,7 @@
-import { useContext, useEffect } from "react"
+import { useContext, useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 import UserContext from "../../context/UserContext"
 import { toast } from "react-toastify";
-import { useState } from "react";
 
 function TeamEdit() {
     const navigate = useNavigate()
