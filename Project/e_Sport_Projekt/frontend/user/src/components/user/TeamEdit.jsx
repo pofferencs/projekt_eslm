@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 function TeamEdit() {
     const navigate = useNavigate()
     const { isAuthenticated } = useContext(UserContext);
-    const [teamData, setTeamData] = useState({})
+    const [teamData, setTeamData] = useState([])
     const {id} = useParams();
 
 
