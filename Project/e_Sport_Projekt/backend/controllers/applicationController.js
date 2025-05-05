@@ -162,8 +162,16 @@ const applicationDelete = async (req, res) => {
                 where: {
                     tnt_id: parseInt(tnt_id),
                     status: "approved"
+                },
+                include:{
+                    team: true
                 }
             });
+
+
+            
+
+
 
 
             if(applications.length==0){
@@ -176,7 +184,7 @@ const applicationDelete = async (req, res) => {
 
             
         } catch (error) {
-            res.status(500).json({ message: "Hiba a törlés során!" });
+            res.status(500).json(error.message);
         }
 
     }
@@ -210,7 +218,10 @@ const applicationDelete = async (req, res) => {
             const applications = await prisma.applications.findMany({
                 where: {
                     tnt_id: parseInt(tnt_id),
-                    status: "pending"
+                    status: "approved"
+                },
+                include:{
+                    team: true
                 }
             });
 
