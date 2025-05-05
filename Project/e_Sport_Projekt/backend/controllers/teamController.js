@@ -192,11 +192,58 @@ const teamGetPicPath = async (req, res) => {
 
 }
 
+const teamSearchByID = async (req, res) => {
+    const { id } = req.params;
+  
+    if (!id) {
+      return res.status(400).json({ message: "Hiányos adatok!" });
+    }
+  
+    try {
+      const teams = await prisma.teams.findFirst({
+        where: {
+          id : id
+        }
+      });
+  
+      if (teams.length === 0) {
+        return res.status(404).json({ message: "Nincs ilyen csapat!" });
+      }
+  
+      // 2. Kapitány adatok lekérése minden csapat creator_id alapján
+      const result = await Promise.all(
+        teams.map(async (team) => {
+          const captain = await prisma.users.findUnique({
+            where: { id: team.creator_id },
+            select: {
+              id: true,
+              full_name: true,
+              usr_name: true,
+              discord_name: true,
+              email_address: true
+            }
+          });
+  
+          return {
+            ...team,
+            captain
+          };
+        })
+      );
+  
+      return res.status(200).json(result);
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ message: "Hiba történt", error });
+    }
+  };
+
 module.exports = {
     teamList,
     teamUpdate,
     teamInsert,
     teamDelete,
     teamSearchByName,
-    teamGetPicPath
+    teamGetPicPath,
+    teamSearchByID
 }

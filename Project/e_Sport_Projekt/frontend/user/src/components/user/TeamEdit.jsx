@@ -1,34 +1,39 @@
-import { useContext, useEffect } from "react"
-import { useNavigate, useLocation, useParams } from "react-router-dom"
+import { useContext, useEffect, useState } from "react"
+import { useNavigate, useParams } from "react-router-dom"
 import UserContext from "../../context/UserContext"
-import { useState } from "react";
-
+import { toast } from "react-toastify";
 
 function TeamEdit() {
-    const { id } = useParams();
-    const {isAuthenticated, refresh} = useContext(UserContext)
-    
+    const navigate = useNavigate()
+    const { isAuthenticated } = useContext(UserContext);
+    const [teamData, setTeamData] = useState({})
+    const {id} = useParams();
 
-    const [isLoading, setIsLoading] = useState(true);
-    const navigate = useNavigate();
 
-    useEffect(()=>{
-
-      
-      
-        if(!isAuthenticated){
+    useEffect(() => {
+        if (!isAuthenticated) {
             navigate('/')
         }
 
-        setIsLoading(false)
-        
-        console.log(id)
+        fetch(`${import.meta.env.VITE_BASE_URL}/list/teamsearchbyid/${id}`, {
+            method: "GET",
+            headers: { "Content-Type": "application/json" }
+        })
+            .then(res => res.json())
+            .then(adat => setTeamData(adat))
+            .catch(err => toast(err));
 
-    },[isLoading])
-    
-  return (
-    <div>TeamEdit</div>
-  )
+
+    }, [isAuthenticated, id])
+
+    return (
+        <>
+            <p>{teamData.full_name}</p>
+            <p>{teamData.short_name}</p>
+            <p>{teamData.creatort_id}</p>
+        </>
+
+    )
 }
 
 export default TeamEdit
