@@ -157,6 +157,19 @@ const teamDelete = async (req, res) => {
   const { id } = req.body;
 
   try {
+
+    const picture_link = await prisma.picture_Links.delete({
+      where:{
+        tem_id: id
+      }
+    })
+
+    const membership = await prisma.team_Memberships.delete({
+      where: {
+        tem_id: id
+      }
+    })
+
     const team = await prisma.teams.delete({
       where: {
         id: id

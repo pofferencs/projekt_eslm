@@ -198,6 +198,30 @@ function TeamEdit() {
             .catch(err => alert(err));
     }
 
+    const deleteTeam = (method)=>{
+        fetch(`${import.meta.env.VITE_BASE_URL}/delete/team`, {
+            method: method,
+            headers: { "Content-type": "application/json" },
+            body: JSON.stringify({ id: teamFormData.id })
+        })
+            .then(async res => {
+                const data = await res.json();
+
+                if (!res.ok) {
+                    toast.error(data.message || "Hiba történt, csak akkor törölhetsz csapatot, ha már csak te vagy benne és nem veszel részt versenyen!");
+                } else {
+                    toast.success(data.message);
+                }
+            })
+            .catch(err => alert(err));
+            setTimeout(() => {
+                navigate("/myteams");
+              }, 1500);
+    }
+    const onSubmitDelete = () => {
+        deleteTeam("DELETE");
+    }
+
 
     const onSubmitKick = (e) => {
         e.preventDefault();
@@ -233,7 +257,9 @@ function TeamEdit() {
                                                     >
                                                         Adatok módosítása
                                                     </button>
+                                                    
                                                 </div>
+                                                <button className="btn mt-3 bg-red-800 text-white" onClick={()=>onSubmitDelete()}>Csapat törlése</button>
                                             </div>
                                         </div>
                                     </div>
@@ -304,6 +330,7 @@ function TeamEdit() {
                                                         </div>
 
                                                     </form>
+                                                    
                                                     {/* Fénykép feltöltés */}
                                                     <form encType="multipart/form-data">
                                                         <div className="mt-3">
