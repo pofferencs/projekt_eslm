@@ -162,8 +162,8 @@ const teamMembershipDelete = async (req, res) => {
         const existMembership = await prisma.team_Memberships.delete({
             where: {
                 uer_id_tem_id: {
-                    uer_id: user_id,
-                    tem_id: team_id,
+                    uer_id: Number(user_id),
+                    tem_id: Number(team_id),
                 }
             }
         })

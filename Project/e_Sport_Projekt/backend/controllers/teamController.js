@@ -223,7 +223,7 @@ const teamSearchByID = async (req, res) => {
       });
   
       const result = {
-        ...team,
+        team,
         captain
       };
   
