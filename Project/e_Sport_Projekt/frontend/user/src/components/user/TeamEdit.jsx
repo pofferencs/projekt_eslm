@@ -8,13 +8,13 @@ function TeamEdit() {
     const { isAuthenticated, isLoading, setIsLoading } = useContext(UserContext);
     const [teamData, setTeamData] = useState({})
     const [teamMembers, setTeamMembers] = useState([]);
-    const [selectedMemberID, setSelectedMemberID] = useState("");
     const [teamPicPath, setTeamPicPath] = useState("");
     const { id } = useParams();
     const [isFormTeam, setIsFormTeam] = useState(false);
     const [isFormMember, setIsFormMember] = useState(false);
     const [disabled, setDisabled] = useState(true);
     const [tpFile, setTpFile] = useState({});
+    const [selectedMemberId, setSelectedMemberId] = useState(null);
 
 
 
@@ -69,15 +69,15 @@ function TeamEdit() {
                         short_name: adat.team.short_name,
                         creator_id: adat.captain.id
                     });
-                        fetch(`${import.meta.env.VITE_BASE_URL}/list/teampic/${id}`,)
-                            .then(res => res.json())
-                            .then(pic => setTeamPicPath(pic))
-                            .catch(error => { console.log(error) })
-                    
+                    fetch(`${import.meta.env.VITE_BASE_URL}/list/teampic/${id}`,)
+                        .then(res => res.json())
+                        .then(pic => setTeamPicPath(pic))
+                        .catch(error => { console.log(error) })
+
 
                     fetch(`${import.meta.env.VITE_BASE_URL}/list/team/${id}/members`)
                         .then(res => res.json())
-                        .then(data => setTeamMembers(data))
+                        .then(data => setTeamMembers(data), console.log(teamMembers))
                         .catch(error => console.log(error));
 
                 } else {
@@ -86,6 +86,7 @@ function TeamEdit() {
             })
             .catch(err => toast(err))
             .finally(() => setIsLoading(false))
+
 
 
 
@@ -99,32 +100,8 @@ function TeamEdit() {
             short_name: teamFormData.short_name,
             creator_id: teamFormData.creator_id
         };
-    
+
         fetch(`${import.meta.env.VITE_BASE_URL}/update/team`, {
-            method: method,
-            headers: { "Content-type": "application/json" },
-            body: JSON.stringify(sendingObj)
-        })
-        .then(async (res) => {
-            const data = await res.json();
-            if (!res.ok) {
-                toast.error(data.message);
-            } else {
-                toast.success(data.message);
-                setIsFormTeam(false);
-            }
-        })
-        .catch(err => alert(err));
-    };
-    
-
-    const memberShipModify = (method) => {
-        let sendingObj = {
-            user_id: selectedMemberID.id,
-            team_id: teamData?.team?.id ?? ""
-        }
-
-        fetch(`${import.meta.env.VITE_BASE_URL}/update/teamMembership`, {
             method: method,
             headers: { "Content-type": "application/json" },
             body: JSON.stringify(sendingObj)
@@ -136,6 +113,7 @@ function TeamEdit() {
                 } else {
                     toast.success(data.message);
                     setIsFormTeam(false);
+                    navigate('/myteams',window.scroll(0,0))
                 }
             })
             .catch(err => alert(err));
@@ -146,21 +124,8 @@ function TeamEdit() {
         teamModify("PATCH");
     }
 
-    const onSubmitMembership = (e) => {
-        e.preventDefault();
-        memberShipModify("PATCH");
-    }
-
     const writeDataTeam = (e) => {
         setTeamFormData((prevState) => ({
-            ...prevState,
-            [e.target.id]: e.target.value,
-        }));
-    };
-    
-
-    const writeDataMember = (e) => {
-        setMemberShipFormData((prevState) => ({
             ...prevState,
             [e.target.id]: e.target.value,
         }));
@@ -215,6 +180,30 @@ function TeamEdit() {
             })
             .catch(err => alert(err));
     };
+
+    const kickPlayer = (method) => {
+        fetch(`${import.meta.env.VITE_BASE_URL}/delete/teammembership`, {
+            method: method,
+            headers: { "Content-type": "application/json" },
+            body: JSON.stringify({ user_id: selectedMemberId, team_id: teamFormData.id })
+        })
+            .then(async res => {
+                const data = await res.json();
+
+                if (!res.ok) {
+                    toast.error(data.message || "Hiba történt");
+                } else {
+                    toast.success(data.message);
+                }
+            })
+            .catch(err => alert(err));
+    }
+
+
+    const onSubmitKick = (e) => {
+        e.preventDefault();
+        kickPlayer("DELETE");
+    }
 
     return (
 
@@ -361,22 +350,87 @@ function TeamEdit() {
 
                                                     <div key={"short_name"}>
                                                         <label className="block text-sm font-medium text-white">
-                                                            Csapat tag
+                                                            Csapat rövid neve
                                                         </label>
                                                         <input id="short_name" type="text" disabled={disabled} onChange={writeDataTeam} value={teamFormData.short_name} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm" />
+                                                    </div>
+
+                                                    <div className="mt-4">
+                                                        <label className="block text-sm font-medium text-white">Új csapatkapitány</label>
+                                                        <select
+                                                            value={teamFormData.creator_id}
+                                                            onChange={(e) => setTeamFormData({ ...teamFormData, creator_id: e.target.value })}
+                                                            className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-gray-400 shadow-sm"
+                                                        >
+                                                            <option value="">Válassz csapattagot...</option>
+                                                            {teamMembers.map((member) => (
+                                                                <option key={member.id} value={member.id}>
+                                                                    {member.usr_name}
+                                                                </option>
+                                                            ))}
+                                                        </select>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
+
+                                    <>
+                                        <h2>{teamData.full_name}</h2>
+                                        <p>Rövid név: {teamData.short_name}</p>
+                                        <p>Kapitány: {teamData.captain.usr_name}</p>
+
+                                        <div className="members-list">
+                                            <h3>Csapattagok:</h3>
+                                            {teamMembers.map((member) => (
+                                                <div key={member.id} className="member-item">
+                                                    <span>{member.usr_name}</span>
+                                                    <button
+                                                        onClick={() => setSelectedMemberId(member.id)}
+                                                        className={`select-btn ${selectedMemberId === member.id ? "selected" : ""
+                                                            }`}
+                                                    >
+                                                        {selectedMemberId === member.id ? "Kiválasztva" : "Kiválaszt"}
+                                                    </button>
+                                                </div>
+                                            ))}
+                                        </div>
+
+                                        {selectedMemberId && (
+                                            <div className="delete-section">
+                                                <p>
+                                                    Biztosan törölni szeretnéd a(z){" "}
+                                                    {teamMembers.find((m) => m.id === selectedMemberId)?.usr_name}{" "}
+                                                    felhasználót a csapatból?
+                                                </p>
+                                                <button
+                                                    onClick={onSubmitKick}
+                                                    className="delete-btn"
+                                                >
+                                                    Törlés
+                                                </button>
+                                                <button
+                                                    onClick={() => setSelectedMemberId(null)}
+                                                    className="cancel-btn"
+                                                >
+                                                    Mégse
+                                                </button>
+                                            </div>
+                                        )}
+                                    </>
                                 </div>
-                            ) : (!isFormTeam && isFormMember) (
-                                <p>Tagság módosítás</p>
+
+
+                            ) : (
+                                <p></p>
+
+
+
                             )
                         )
 
                 }
-            </div>
+            </div >
         )
     )
 

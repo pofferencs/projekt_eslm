@@ -87,7 +87,7 @@ const teamUpdate = async (req, res) => {
       data: {
         full_name: full_name,
         short_name: short_name,
-        creator_id: creator_id
+        creator_id: Number(creator_id)
       }
     });
 
