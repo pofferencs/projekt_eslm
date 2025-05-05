@@ -8,13 +8,13 @@ function TeamEdit() {
     const { isAuthenticated, isLoading, setIsLoading } = useContext(UserContext);
     const [teamData, setTeamData] = useState({})
     const [teamMembers, setTeamMembers] = useState([]);
-    const [selectedMemberID, setSelectedMemberID] = useState("");
     const [teamPicPath, setTeamPicPath] = useState("");
     const { id } = useParams();
     const [isFormTeam, setIsFormTeam] = useState(false);
     const [isFormMember, setIsFormMember] = useState(false);
     const [disabled, setDisabled] = useState(true);
     const [tpFile, setTpFile] = useState({});
+    const [selectedMemberId, setSelectedMemberId] = useState(null);
 
 
 
@@ -70,15 +70,15 @@ function TeamEdit() {
                         short_name: adat.team.short_name,
                         creator_id: adat.captain.id
                     });
-                        fetch(`${import.meta.env.VITE_BASE_URL}/list/teampic/${id}`,)
-                            .then(res => res.json())
-                            .then(pic => setTeamPicPath(pic))
-                            .catch(error => { console.log(error) })
-                    
+                    fetch(`${import.meta.env.VITE_BASE_URL}/list/teampic/${id}`,)
+                        .then(res => res.json())
+                        .then(pic => setTeamPicPath(pic))
+                        .catch(error => { console.log(error) })
+
 
                     fetch(`${import.meta.env.VITE_BASE_URL}/list/team/${id}/members`)
                         .then(res => res.json())
-                        .then(data => setTeamMembers(data))
+                        .then(data => setTeamMembers(data), console.log(teamMembers))
                         .catch(error => console.log(error));
 
                 } else {
@@ -88,9 +88,9 @@ function TeamEdit() {
             .catch(err => toast(err))
             .finally(() => setIsLoading(false))
 
-            console.log(teamData)
+        console.log(teamData)
 
-    }, [isAuthenticated])
+    }, [isAuthenticated, id])
 
     const teamModify = (method) => {
         const sendingObj = {
@@ -99,32 +99,8 @@ function TeamEdit() {
             short_name: teamFormData.short_name,
             creator_id: teamFormData.creator_id
         };
-    
+
         fetch(`${import.meta.env.VITE_BASE_URL}/update/team`, {
-            method: method,
-            headers: { "Content-type": "application/json" },
-            body: JSON.stringify(sendingObj)
-        })
-        .then(async (res) => {
-            const data = await res.json();
-            if (!res.ok) {
-                toast.error(data.message);
-            } else {
-                toast.success(data.message);
-                setIsFormTeam(false);
-            }
-        })
-        .catch(err => alert(err));
-    };
-    
-
-    const memberShipModify = (method) => {
-        let sendingObj = {
-            user_id: selectedMemberID.id,
-            team_id: teamData?.team?.id ?? ""
-        }
-
-        fetch(`${import.meta.env.VITE_BASE_URL}/update/teamMembership`, {
             method: method,
             headers: { "Content-type": "application/json" },
             body: JSON.stringify(sendingObj)
@@ -136,6 +112,7 @@ function TeamEdit() {
                 } else {
                     toast.success(data.message);
                     setIsFormTeam(false);
+                    navigate('/myteams', window.scroll(0, 0))
                 }
             })
             .catch(err => alert(err));
@@ -146,21 +123,8 @@ function TeamEdit() {
         teamModify("PATCH");
     }
 
-    const onSubmitMembership = (e) => {
-        e.preventDefault();
-        memberShipModify("PATCH");
-    }
-
     const writeDataTeam = (e) => {
         setTeamFormData((prevState) => ({
-            ...prevState,
-            [e.target.id]: e.target.value,
-        }));
-    };
-    
-
-    const writeDataMember = (e) => {
-        setMemberShipFormData((prevState) => ({
             ...prevState,
             [e.target.id]: e.target.value,
         }));
@@ -215,6 +179,30 @@ function TeamEdit() {
             })
             .catch(err => alert(err));
     };
+
+    const kickPlayer = (method) => {
+        fetch(`${import.meta.env.VITE_BASE_URL}/delete/teammembership`, {
+            method: method,
+            headers: { "Content-type": "application/json" },
+            body: JSON.stringify({ user_id: selectedMemberId, team_id: teamFormData.id })
+        })
+            .then(async res => {
+                const data = await res.json();
+
+                if (!res.ok) {
+                    toast.error(data.message || "Hiba történt");
+                } else {
+                    toast.success(data.message);
+                }
+            })
+            .catch(err => alert(err));
+    }
+
+
+    const onSubmitKick = (e) => {
+        e.preventDefault();
+        kickPlayer("DELETE");
+    }
 
     return (
 
@@ -274,6 +262,20 @@ function TeamEdit() {
                                                     value={teamFormData.short_name}
                                                     className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-gray-400 shadow-sm"
                                                 />
+                                            </div>
+
+                                            <div className="members-list flex flex-col items-left">
+                                            <label className="block text-sm font-medium text-white">Csapat tagok</label>
+                                                {teamMembers.map((member) => (
+                                                    <div key={member.id} className="member-item">
+                                                        <input
+                                                            type="text"
+                                                            value={member.usr_name}
+                                                            disabled
+                                                            className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-gray-400 shadow-sm"
+                                                        />
+                                                    </div>
+                                                ))}
                                             </div>
                                         </div>
                                     </div>
@@ -355,27 +357,72 @@ function TeamEdit() {
                                                         <label className="block text-sm font-medium text-white">
                                                             Csapatnév
                                                         </label>
-                                                        <input id="full_name" type="text" disabled={disabled} onChange={writeDataTeam} value={teamFormData.full_name} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm" />
+                                                        <input id="full_name" type="text" maxLength={16} disabled={disabled} onChange={writeDataTeam} value={teamFormData.full_name} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm" />
                                                     </div>
 
                                                     <div key={"short_name"}>
                                                         <label className="block text-sm font-medium text-white">
-                                                            Csapat tag
+                                                            Csapat rövid neve
                                                         </label>
-                                                        <input id="short_name" type="text" disabled={disabled} onChange={writeDataTeam} value={teamFormData.short_name} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm" />
+                                                        <input id="short_name" type="text" maxLength={4} disabled={disabled} onChange={writeDataTeam} value={teamFormData.short_name} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm" />
+                                                    </div>
+
+                                                    <div className="mt-4">
+                                                        <label className="block text-sm font-medium text-white">Új csapatkapitány</label>
+                                                        <select
+                                                            value={teamFormData.creator_id}
+                                                            onChange={(e) => setTeamFormData({ ...teamFormData, creator_id: e.target.value })}
+                                                            className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-gray-400 shadow-sm"
+                                                        >
+                                                            <option value="">Válassz csapattagot...</option>
+                                                            {teamMembers .filter(member => member.id !== teamData.captain.id)
+                                                            .map((member) => (
+                                                                <option key={member.id} value={member.id}>
+                                                                    {member.usr_name}
+                                                                </option>
+                                                            ))}
+                                                        </select>
+                                                    </div>
+                                                    <div className="mt-4">
+                                                        <label className="block text-sm font-medium text-white">Kirúgni kívánt játékos</label>
+                                                        <select
+                                                            value={selectedMemberId}
+                                                            onChange={(e) => setSelectedMemberId(e.target.value)}
+                                                            className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-gray-400 shadow-sm"
+                                                        >
+                                                            <option value="">Válassz egy játékost...</option>
+                                                            {teamMembers
+                                                                .filter(member => member.id !== teamData.captain.id) // Csapatkapitány kizárása
+                                                                .map((member) => (
+                                                                    <option key={member.id} value={member.id}>
+                                                                        {member.usr_name}
+                                                                    </option>
+                                                                ))}
+                                                        </select>
+
+                                                        <button
+                                                            onClick={onSubmitKick}
+                                                            disabled={!selectedMemberId}
+                                                            className={`btn mt-3 ${!selectedMemberId ? 'hidden' : 'bg-red-500 text-white'}`}
+                                                        >
+                                                            Kirúgás
+                                                        </button>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            ) : (!isFormTeam && isFormMember) (
-                                <p>Tagság módosítás</p>
+                            ) : (
+                                <p></p>
+
+
+
                             )
                         )
 
                 }
-            </div>
+            </div >
         )
     )
 

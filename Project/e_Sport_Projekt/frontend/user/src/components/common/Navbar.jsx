@@ -114,6 +114,14 @@ function Navbar() {
                     </li>
                   )}
 
+                  {isAuthenticated && (
+                    <li>
+                      <Link to={`/newteam`} onClick={() => { window.scroll(0, 0) }} className="block px-4 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white rounded-lg">
+                        Új csapat létrehozása
+                      </Link>
+                    </li>
+                  )}
+
                   {(isAuthenticated) && (
                     <li><button onClick={() => { toast.success("Kijelentkeztél! Oldalfrissítés 5 másodperc múlva!"); logout(); setTimeout(() => { navigate('/'); pageRefresh() }, 5000) }} className="block px-4 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white w-full text-start rounded-lg">Kijelentkezés</button></li>
                   )}
