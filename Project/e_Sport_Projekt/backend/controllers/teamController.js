@@ -124,7 +124,7 @@ const teamInsert = async (req, res) => {
         data: {
           short_name: short_name,
           full_name: full_name,
-          creator_id: creator_id
+          creator_id: Number(creator_id)
         }
       });
 
@@ -133,6 +133,14 @@ const teamInsert = async (req, res) => {
         data: {
           tem_id: team.id,
           pte_id: 3 //vagy ami ide jön pteId
+        }
+      })
+
+      const newMembership = await prisma.team_Memberships.create({
+        data:{
+          tem_id: Number(team.id),
+          uer_id: Number(creator_id),
+          status: "active"
         }
       })
 

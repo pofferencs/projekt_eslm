@@ -1,14 +1,17 @@
 import { useContext, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import UserContext from "../../context/UserContext"
+import { toast } from "react-toastify";
 
 function NewTeam() {
     const navigate = useNavigate()
-    const { isAuthenticated, isLoading } = useContext(UserContext);
+    const { isAuthenticated, isLoading, profile } = useContext(UserContext);
 
     const [teamFormData, setTeamFormData] = useState({
         full_name: "",
-        short_name: ""
+        short_name: "",
+        creator_id : profile.id,
+        status: "active"
     });
 
     const writeDataTeam = (e) => {
@@ -18,17 +21,38 @@ function NewTeam() {
         }));
     };
 
-    const onSubmit = (e) => {
+    const onSubmit = async (e) => {
         e.preventDefault();
 
-        // Itt lehetne POST kérés a szerver felé
-        console.log("Új csapat adat:", teamFormData);
+        try {
+            const response = await fetch(`${import.meta.env.VITE_BASE_URL}/insert/team`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(teamFormData)
+            });
 
-        navigate("/myteams"); // Mentés után navigálás
+            if (!response.ok) {
+                console.log(response)
+                throw new Error("Sikertelen csapatlétrehozás");
+            }
+
+            // Opcionálisan visszajelzés
+            // const data = await response.json();
+            // console.log("Létrehozott csapat:", data);
+
+            navigate("/myteams");
+        } catch (error) {
+            console.error("Hiba a csapat létrehozása során:", error);
+            toast("Hiba történt a csapat létrehozásakor.");
+        }
     };
 
+
     const onCancel = () => {
-        setTeamFormData({ full_name: "", short_name: "" });
+        setTeamFormData({ full_name: "", short_name: "",creator_id : profile.id,
+            status: "active" });
         navigate("/");
     };
 
@@ -41,8 +65,8 @@ function NewTeam() {
                     <div className="flex justify-center pb-8 gap-10">
                         <img
                             className="w-56 h-56"
-                            alt="Új csapat profilképe"
-                            title="Új csapat profilképe"
+                            alt="Alap csapat profilképe"
+                            title="Alap csapat profilképe"
                             src={`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_BASE_PIC}/teams/team_0.png`}
                         />
                         <div className="card-title pl-14">
