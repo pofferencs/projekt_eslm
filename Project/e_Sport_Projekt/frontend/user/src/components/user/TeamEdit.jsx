@@ -7,10 +7,13 @@ function TeamEdit() {
     const navigate = useNavigate()
     const { isAuthenticated } = useContext(UserContext);
     const [teamData, setTeamData] = useState({})
+    const [isLoading, setIsLoading] = useState(true);
     const {id} = useParams();
 
 
     useEffect(() => {
+
+
         if (!isAuthenticated) {
             navigate('/')
         }
@@ -20,19 +23,30 @@ function TeamEdit() {
             headers: { "Content-Type": "application/json" }
         })
             .then(res => res.json())
-            .then(adat => setTeamData(adat))
+            .then(adat => {setTeamData(adat); setIsLoading(false);})
             .catch(err => toast(err));
 
 
             console.log(teamData)
 
-    }, [isAuthenticated, id])
+    }, [isAuthenticated])
 
     return (
         <>
-            <p>{teamData.full_name}</p>
-            <p>{teamData.short_name}</p>
-            <p>{teamData.creatort_id}</p>
+            {
+              (isLoading)?(
+                <>
+                
+                </>
+              ):(
+                <>
+                    <p>{teamData.team.full_name}</p>
+                    <p>{teamData.team.short_name}</p>
+                    <p>{teamData.captain.full_name}</p>      
+            
+                </>
+              )
+            }
         </>
 
     )
