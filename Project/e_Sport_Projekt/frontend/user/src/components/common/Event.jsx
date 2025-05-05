@@ -87,17 +87,17 @@ function Event() {
 
 
 
-      const dateFormat = (date) => {
-
-        if (date != undefined) {
-          const [ev, honap, nap] = date.split('T')[0].split('-')
-    
-          return `${ev}-${honap}-${nap}`;
+      const dateFormat = (dateTime) => {
+        if (dateTime) {
+          const [date, time] = dateTime.split('T'); // Szétválasztjuk a dátumot és az időt
+          const [ev, honap, nap] = date.split('-'); // A dátumot év, hónap, nap részekre bontjuk
+          const [ora, perc] = time.split(':'); // Az időt óra és perc részekre bontjuk
+      
+          return `${ev}. ${honap}. ${nap}. ${ora}:${perc}`; // Formázott visszatérési érték
         } else {
-          return ``;
+          return '';
         }
-    
-      }
+      };
 
 
 
@@ -131,7 +131,7 @@ function Event() {
                           <dt className="text-sm text-white font-bold">
                             Név
                           </dt>
-                          <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                          <dd className="mt-1 text-sm text-white sm:mt-0 sm:col-span-2">
                             <p>{event.name}</p>
                           </dd>
                         </div>
@@ -139,7 +139,7 @@ function Event() {
                           <dt className="text-sm text-white font-bold">
                             Hely
                           </dt>
-                          <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                          <dd className="mt-1 text-sm text-white sm:mt-0 sm:col-span-2">
                             <p>{event.place}</p>
                           </dd>
                         </div>
@@ -147,7 +147,7 @@ function Event() {
                           <dt className="text-sm text-white font-bold">
                             Kezdés
                           </dt>
-                          <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                          <dd className="mt-1 text-sm text-white sm:mt-0 sm:col-span-2">
                             <p>{dateFormat(event.start_date)}</p>
                           </dd>
                         </div>
@@ -155,7 +155,7 @@ function Event() {
                           <dt className="text-sm text-white font-bold">
                             Vége
                           </dt>
-                          <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                          <dd className="mt-1 text-sm text-white sm:mt-0 sm:col-span-2">
                             <p>{dateFormat(event.end_date)}</p>
                           </dd>
                         </div>
@@ -163,7 +163,7 @@ function Event() {
                           <dt className="text-sm text-white font-bold">
                             Szervező
                           </dt>
-                          <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                          <dd className="mt-1 text-sm text-white sm:mt-0 sm:col-span-2">
                             <p>{organizer.full_name}</p>
                           </dd>
                         </div>
@@ -171,7 +171,7 @@ function Event() {
                           <dt className="text-sm text-white font-bold">
                             Leírás
                           </dt>
-                          <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                          <dd className="mt-1 text-sm text-white sm:mt-0 sm:col-span-2">
                             <p>{event.details}</p>
                           </dd>
                         </div>

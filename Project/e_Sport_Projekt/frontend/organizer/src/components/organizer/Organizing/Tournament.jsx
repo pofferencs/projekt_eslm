@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 import OrganizerContext from "../../../context/OrganizerContext";
 import { toast } from "react-toastify";
+import ApplicationCard from "./ApplicationCard";
 
 function Tournament() {
 
@@ -9,6 +10,10 @@ function Tournament() {
   const { id } = useParams();
   const {isAuthenticated, authStatus, profile} = useContext(OrganizerContext);
   const [tournament, setTournament] = useState([]);
+  const [pendingApplications, setPendingApplications] = useState([]);
+  const [approvedApplications, setApprovedApplications] = useState([]);
+  const [pendingTeams, setPendingTeams] = useState([]);
+  const [approvedTeams, setApprovedTeams] = useState([]);
   const [event, setEvent] = useState([]);
   const [game, setGame] = useState([]);
   const [gameName, setGameName] = useState("");
@@ -19,6 +24,7 @@ function Tournament() {
   const [isValami, setIsValami] = useState(true);
   const [isForm, setIsForm] = useState(false);
   const [pfpFile, setPfpFile] = useState({});
+  const [detailsNum, setDetailsNum] = useState(0);
   const navigate = useNavigate();
 
 
@@ -32,15 +38,13 @@ function Tournament() {
           method: "POST",
           headers: { "Content-type": "application/json" },
         }).then(res=>res.json())
-        
         .then(adat=> {
-
           if(adat.message){
             navigate('/');
           }
+          setTournament(adat); setFormData(adat); setIsLoading(false);
+          setDetailsNum(adat.details.length);
           
-          setTournament(adat); setIsLoading(false); setFormData(adat); 
-
           setPicPath(
             fetch(`${import.meta.env.VITE_BASE_URL}/list/tournamentpic/${id}`,{
               method: "GET",
@@ -62,28 +66,77 @@ function Tournament() {
                   .then(adat=> {
                       setGame(
                         adat.find((x)=>x.id == tournament.gae_id)
-                      ); setIsLoading(false); 
+                      );  
+                      
+                     
+                        pendingFetch();
+                        approvedFetch();
+                        authStatus()
+                        setIsLoading(false);
+                      
                   }
                 )
               )})
               .catch(err=>alert(err))
             )
-
-
             })
             .catch(err=> alert(err))
           );
-    
-          
-    
-    
         })
         .catch(err=> alert(err));  
-      
 
-        console.log(event, game.name)
+        
+        
 
     },[isloading])
+
+
+    const pendingFetch = () => {
+      let obj = [];
+
+      setPendingApplications([]);
+      
+      fetch(`${import.meta.env.VITE_BASE_URL}/list/pending/${id}`,{
+        method: "GET",
+        headers: { "Content-type": "application/json" },
+      }).then(res=>res.json())
+      .then(adat=>
+        {
+        if(!adat.message){
+          
+          adat.map((x)=>(obj.push(x.team)))
+          setPendingApplications(adat);
+          
+          
+        }
+
+      }).catch(err=>alert(err))
+
+      setPendingTeams(obj);
+    }
+
+    const approvedFetch = () => {
+      let obj = [];
+      setApprovedApplications([]);
+
+
+      fetch(`${import.meta.env.VITE_BASE_URL}/list/approved/${id}`,{
+        method: "GET",
+        headers: { "Content-type": "application/json" },
+      }).then(res=>res.json())
+      .then(adat=>
+        {
+        if(!adat.message){
+          
+          adat.map((x)=>(obj.push(x.team)))
+          setApprovedApplications(adat);
+          
+        }
+
+      }).catch(err=>alert(err))
+
+      setApprovedTeams(obj);
+    }
   
   
     let formObj = {
@@ -270,8 +323,14 @@ function Tournament() {
   };
 
 
+  
 
-
+  const handleInput = () => {
+    const textarea = document.getElementById('details');
+    textarea.style.height = "auto";
+    textarea.style.height = `${textarea.scrollHeight}px`;
+    setDetailsNum(textarea.value.length)
+  };
 
 
   return (
@@ -398,13 +457,68 @@ function Tournament() {
                           <label className="block text-sm font-medium text-white">
                             Leírás
                           </label>
-                          <input type="text" disabled={disabled} value={formData.details} className="mt-1 block w-full hyphens-auto px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-gray-400 shadow-sm" />
+                          <textarea id="details" type="text" disabled={disabled} value={formData.details} className="mt-1 block w-full hyphens-auto px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-gray-400 shadow-sm" />
                         </div>
                     </div>
                   </div>
 
+                  <div className="w-full mb-10 mx-auto rounded-lg shadow-lg md:mt-6 md:max-w-full sm:max-w-4xl xl:p-0 bg-gray-800 dark:border-gray-700 pt-10">
+                    <div className="flex flex-row horizontal justify-center mt-10 gap-5">
+                      <h2 className="text-center text-4xl font-bold tracking-tight text-indigo-600">
+                            Jelentkező csapatok
+                      </h2>
+                      <button  onClick={()=>pendingFetch()} className="btn border-none bg-indigo-600 hover:bg-indigo-800"><img className="h-5" src="https://www.svgrepo.com/show/533694/refresh-ccw.svg"/></button>
+                    </div>
+
+                    <div className="mx-auto mt-5 h-1 w-[60%] bg-gradient-to-r from-indigo-500 to-amber-500 rounded-full" />
+                  <div className="p-8 md:p-10">
+                    
+                     <div className="flex flex-col">
+                      <div className="grid xl:grid-cols-2 md:grid-cols-1 sm:grid-cols-1 gap-12 justify-items-center">
+                        {
+                              pendingApplications.map((application)=>(
+                                <ApplicationCard key={application.id} team={application.team} application={application} />))
+                        }
+                      </div>
+                     </div>
+                    
+                    
+                  </div>
+                </div>
+
+
+                <div className="w-full mb-10 mx-auto rounded-lg shadow-lg md:mt-6 md:max-w-full sm:max-w-4xl xl:p-0 bg-gray-800 dark:border-gray-700 pt-10">
+                <div className="flex flex-row horizontal justify-center mt-10 gap-5">
+                      <h2 className="text-center text-4xl font-bold tracking-tight text-indigo-600">
+                            Jelentkezett csapatok
+                      </h2>
+                      <button onClick={()=>approvedFetch()} className="btn border-none bg-indigo-600 hover:bg-indigo-800"><img className="h-5" src="https://www.svgrepo.com/show/533694/refresh-ccw.svg"/></button>
+                    </div>
+
+                    <div className="mx-auto mt-5 h-1 w-[60%] bg-gradient-to-r from-indigo-500 to-amber-500 rounded-full" />
+                  <div className="p-8 md:p-10">
+                    
+                     <div className="flex flex-col">
+                      <div className="grid xl:grid-cols-2 md:grid-cols-1 sm:grid-cols-1 gap-12 justify-items-center">
+                        {
+                          
+                          approvedApplications.map((application)=>(
+                            <ApplicationCard key={application.id} team={application.team} application={application} />))
+                        
+                        }
+                        
+                      </div>
+                     </div>
+                    
+                    
+                  </div>
+                </div>
+
 
                 </div>
+
+
+                
 
                 
 
@@ -480,7 +594,7 @@ function Tournament() {
                           <label className="block text-sm font-medium text-white">
                             Résztvevők száma(*)
                           </label>
-                          <input id="place" type="number" disabled={disabled} onChange={writeData} value={formData.num_participant} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm" />
+                          <input id="num_participant" type="number" max={formData.max_participant} disabled={disabled} onChange={writeData} value={formData.num_participant} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm" />
                         </div>
 
                         <div>
@@ -548,9 +662,9 @@ function Tournament() {
                       
                       <div className="mt-6">
                           <label className="block text-sm font-medium text-white">
-                            Leírás
+                          {`Leírás (${detailsNum}/512)`}
                           </label>
-                          <input type="text" disabled={disabled} onChange={writeData} value={formData.details} className="mt-1 block w-full hyphens-auto px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm" />
+                          <textarea maxLength={512} id="details" type="text" onInput={handleInput} disabled={disabled} onChange={writeData} value={formData.details} className="mt-1 block w-full hyphens-auto px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm" />
                         </div>
                     </div>
                   </div>
@@ -673,7 +787,7 @@ function Tournament() {
                           <dt className="text-sm text-white font-bold">
                             Leírás
                           </dt>
-                          <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                          <dd className="mt-1 text-sm text-white sm:mt-0 sm:col-span-2">
                             <p>{tournament.details}</p>
                           </dd>
                         </div>
