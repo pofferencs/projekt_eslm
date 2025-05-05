@@ -273,6 +273,18 @@ const applicationDelete = async (req, res) => {
             }
 
 
+            const findApplication = await prisma.applications.findFirst({
+                where: {
+                    tnt_id: parseInt(tnt_id),
+                    tem_id: parseInt(tem_id)
+                }
+            });
+
+            if(findApplication){
+                return res.status(400).json({message: "Ezzel a csapattal már leadtál jelentkezést erre a versenyre!"});
+            }
+
+
             let date = new Date();
 
 
