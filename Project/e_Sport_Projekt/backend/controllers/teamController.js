@@ -25,7 +25,7 @@ const teamSearchByName = async (req, res) => {
       where: {
         full_name: {
           contains: full_name,
-          lte: "insensitive"
+          // lte: "insensitive"
         }
       }
     });
