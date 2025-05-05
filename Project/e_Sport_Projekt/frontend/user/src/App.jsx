@@ -40,7 +40,7 @@ function App() {
             <Route path="/" element={<Main />} />
             <Route path="*" element={<Navigate to="/" />} />
             <Route path="/myteams" element={<UserTeams />} />
-            <Route path="teamedit/:team_id" element={<TeamEdit />} />
+            <Route path="/teamedit/:team_id" element={<TeamEdit />} />
             <Route path="/register" element={<Register />} />
             <Route path="/login" element={<UserLogin />} />
             <Route path="/password-reset" element={<UserPassReset />} />
