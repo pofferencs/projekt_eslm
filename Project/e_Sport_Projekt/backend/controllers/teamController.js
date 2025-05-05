@@ -193,17 +193,16 @@ const teamGetPicPath = async (req, res) => {
 }
 
 const teamSearchByID = async (req, res) => {
-    const { team_id } = req.params;
+    const { id } = req.params;
   
     if (!id) {
       return res.status(400).json({ message: "Hiányos adatok!" });
     }
   
     try {
-      // 1. Csapatok keresése név alapján
       const teams = await prisma.teams.findFirst({
         where: {
-          id : team_id
+          id : id
         }
       });
   

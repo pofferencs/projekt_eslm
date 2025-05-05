@@ -8,7 +8,7 @@ function TeamEdit() {
     const navigate = useNavigate()
     const { isAuthenticated } = useContext(UserContext);
     const [teamData, setTeamData] = useState({})
-    const {team_id} = useParams();
+    const {id} = useParams();
 
 
     useEffect(() => {
@@ -16,7 +16,7 @@ function TeamEdit() {
             navigate('/')
         }
 
-        fetch(`${import.meta.env.VITE_BASE_URL}/list/teamsearchbyid/${team_id}`, {
+        fetch(`${import.meta.env.VITE_BASE_URL}/list/teamsearchbyid/${id}`, {
             method: "GET",
             headers: { "Content-Type": "application/json" }
         })
@@ -25,7 +25,7 @@ function TeamEdit() {
             .catch(err => toast(err));
 
 
-    }, [isAuthenticated, team_id])
+    }, [isAuthenticated, id])
 
     return (
         <>

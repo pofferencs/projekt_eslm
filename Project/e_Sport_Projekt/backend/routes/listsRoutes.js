@@ -41,6 +41,6 @@ router.get('/tournamentpic/:tournament_id', tournamentGetPicPath);
 router.get('/eventpic/:evt_id',eventGetPicPath);
 router.get('/team/:team_id/members', activeMembersList)
 router.get('/userteammemberships/:user_name',teamsForPlayer);
-router.get('/teamsearchbyid/:team_id',teamSearchByID);
+router.get('/teamsearchbyid/:id',teamSearchByID);
 
 module.exports = router;
