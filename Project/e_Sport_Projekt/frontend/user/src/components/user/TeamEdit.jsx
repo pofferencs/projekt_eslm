@@ -35,19 +35,19 @@ function TeamEdit() {
 
     const teamFormReset = () => {
         teamFormObj = {
-            id: teamData.team.id,
+            id: teamData?.team?.id ?? "",
             full_name: teamData.team.full_name,
             short_name: teamData.team.short_name,
             creator_id: teamData.captain.id
         }
 
-        setTeamData(teamFormObj)
+        setTeamFormData(teamFormObj)
     }
 
     const memberFormReset = () => {
         memberShipFormObj = {
             user_id: "",
-            team_id: teamData.team.id
+            team_id: teamData?.team?.id ?? ""
         }
 
         setMemberShipFormData(memberShipFormObj)
@@ -73,12 +73,12 @@ function TeamEdit() {
                         short_name: adat.team.short_name,
                         creator_id: adat.captain.id
                     });
-                    setTeamPicPath(
                         fetch(`${import.meta.env.VITE_BASE_URL}/list/teampic/${id}`,)
                             .then(res => res.json())
                             .then(pic => setTeamPicPath(pic))
                             .catch(error => { console.log(error) })
-                    )
+                    
+
                     fetch(`${import.meta.env.VITE_BASE_URL}/list/team/${id}/members`)
                         .then(res => res.json())
                         .then(data => setTeamMembers(data))
@@ -97,55 +97,35 @@ function TeamEdit() {
     }, [isAuthenticated])
 
     const teamModify = (method) => {
-
-        let sendingObj = {
-
+        const sendingObj = {
+            id: teamFormData.id,
+            full_name: teamFormData.full_name,
+            short_name: teamFormData.short_name,
+            creator_id: teamFormData.creator_id
         };
-
-        if (teamFormData.full_name != teamData.team.full_name) {
-            sendingObj = {
-                id: teamFormData.id,
-                full_name: teamFormData.full_name,
-                short_name: teamData.team.short_name,
-                creator_id: teamData.team.creator_id
-            }
-        } else if (teamFormData.short_name != teamData.team.short_name) {
-            sendingObj = {
-                id: teamFormData.id,
-                full_name: teamData.team.full_name,
-                short_name: teamFormData.short_name,
-                creator_id: teamData.team.creator_id
-            }
-        } else if (teamFormData.creator_id != teamData.team.creator_id) {
-            sendingObj = {
-                id: teamFormData.id,
-                full_name: teamData.team.team.full_name,
-                short_name: teamData.team.short_name,
-                creator_id: teamFormData.creator_id
-            }
-        }
-
+    
         fetch(`${import.meta.env.VITE_BASE_URL}/update/team`, {
             method: method,
             headers: { "Content-type": "application/json" },
             body: JSON.stringify(sendingObj)
         })
-            .then(async (res) => {
-                const data = await res.json();
-                if (!res.ok) {
-                    toast.error(data.message);
-                } else {
-                    toast.success(data.message);
-                    setIsFormTeam(false);
-                }
-            })
-            .catch(err => alert(err));
-    }
+        .then(async (res) => {
+            const data = await res.json();
+            if (!res.ok) {
+                toast.error(data.message);
+            } else {
+                toast.success(data.message);
+                setIsFormTeam(false);
+            }
+        })
+        .catch(err => alert(err));
+    };
+    
 
     const memberShipModify = (method) => {
         let sendingObj = {
             user_id: selectedMemberID.id,
-            team_id: teamData.team.id
+            team_id: teamData?.team?.id ?? ""
         }
 
         fetch(`${import.meta.env.VITE_BASE_URL}/update/teamMembership`, {
@@ -176,14 +156,14 @@ function TeamEdit() {
     }
 
     const writeDataTeam = (e) => {
-        teamFormData((prevState) => ({
+        setTeamData((prevState) => ({
             ...prevState,
             [e.target.id]: e.target.value,
         }));
     };
 
     const writeDataMember = (e) => {
-        memberShipFormData((prevState) => ({
+        setMemberShipFormData((prevState) => ({
             ...prevState,
             [e.target.id]: e.target.value,
         }));
@@ -254,11 +234,11 @@ function TeamEdit() {
                             <div className="m-10 rounded-md bg-gradient-to-br from-indigo-950 to-slate-500 sm:w-[600px] md:w-[800px] lg:w-[1000px] xl:w-[1200px] mx-auto text-primary-content">
                                 <div className="card-body">
                                     <div className="flex justify-center pb-8 gap-10">
-                                        <img className="w-56 h-56" src={`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_BASE_PIC}${teamPicPath}`} alt={`${teamData.short_name} csapat profilképe`} title={`${teamData.short_name} profilképe`} />
+                                        <img className="w-56 h-56" src={`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_BASE_PIC}${teamPicPath}`} alt={`${teamFormData.short_name} csapat profilképe`} title={`${teamData.short_name} profilképe`} />
                                         <div className="card-title">
                                             <div className="pl-14">
-                                                <p className="text-3xl pb-2 text-white">{teamData.full_name}</p>
-                                                <p className="text-xl pb-2 text-gray-400">{`[${teamData.short_name}]`}</p>
+                                                <p className="text-3xl pb-2 text-white">{teamFormData.full_name}</p>
+                                                <p className="text-xl pb-2 text-gray-400">{`[${teamFormData.short_name}]`}</p>
                                                 <div className="flex flex-col">
                                                     <button
                                                         className="btn mt-3 text-white w-52"
@@ -272,28 +252,6 @@ function TeamEdit() {
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-
-
-                                    <div className="border-t border-b border-gray-200 px-4 py-5 sm:p-0">
-                                        <dl className="sm:divide-y sm:divide-gray-200">
-                                            <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                                                <dt className="text-sm text-white font-bold">
-                                                    Csapatnév
-                                                </dt>
-                                                <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                                                    <p>{teamData.full_name}</p>
-                                                </dd>
-                                            </div>
-                                            <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                                                <dt className="text-sm text-white font-bold">
-                                                    Csapat tag
-                                                </dt>
-                                                <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                                                    <p>{teamData.short_name}</p>
-                                                </dd>
-                                            </div>
-                                        </dl>
                                     </div>
                                 </div>
 
@@ -335,8 +293,8 @@ function TeamEdit() {
                                             <img className="w-56 h-56" src={`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_BASE_PIC}${teamPicPath}`} />
                                             <div className="card-title">
                                                 <div className="pl-14">
-                                                    <p className="text-3xl pb-2 text-white">{teamData.full_name}</p>
-                                                    <p className="text-xl pb-2 text-gray-400">{`[${teamData.short_name}]`}</p>
+                                                    <p className="text-3xl pb-2 text-white">{teamFormData.full_name}</p>
+                                                    <p className="text-xl pb-2 text-gray-400">{`[${teamFormData.short_name}]`}</p>
 
                                                     <form onSubmit={onSubmitTeam}>
                                                         <div className="flex flex-wrap gap-2">
@@ -383,7 +341,7 @@ function TeamEdit() {
                                                                     }
                                                                 }}
                                                             />
-                                                            <button className="btn mt-3 text-white" type="button" onClick={() => { sendImage(tpFile, "user", teamData.team.id); }}>Feltöltés</button>
+                                                            <button className="btn mt-3 text-white" type="button" onClick={() => { sendImage(tpFile, "team", teamFormData.id); }}>Feltöltés</button>
                                                         </div>
                                                     </form>
 
