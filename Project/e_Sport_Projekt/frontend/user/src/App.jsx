@@ -21,9 +21,9 @@ import UserPassReset from "./components/user/UserPassReset";
 import UserEmailVerify from "./components/user/UserEmailVerify";
 import Main from "./components/loggedout/Main";
 import UserTeams from "./components/user/UserTeams";
-import UserTeamMemberships from "./components/user/UserTeamMemberships";
 import Event from "./components/common/Event";
 import Tournament from "./components/common/Tournament";
+import TeamEdit from "./components/user/TeamEdit";
 
 
 function App() {
@@ -40,6 +40,7 @@ function App() {
             <Route path="/" element={<Main />} />
             <Route path="*" element={<Navigate to="/" />} />
             <Route path="/myteams" element={<UserTeams />} />
+            <Route path="teamedit/:team_id" element={<TeamEdit />} />
             <Route path="/register" element={<Register />} />
             <Route path="/login" element={<UserLogin />} />
             <Route path="/password-reset" element={<UserPassReset />} />

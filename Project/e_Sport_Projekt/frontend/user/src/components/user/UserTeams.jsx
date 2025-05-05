@@ -1,20 +1,16 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import TeamSchema from "../common/schemas/TeamSchema";
 import UserContext from "../../context/UserContext";
 
 function UserTeams() {
-  const {
-    isAuthenticated,
-    profile,
-    isLoading,
-    setIsLoading,
-  } = useContext(UserContext);
-
+  const { isAuthenticated, profile, isLoading, setIsLoading } = useContext(UserContext);
   const [teams, setTeams] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    // Ha nincs profil, nem megyünk tovább
+    // If no profile, stop further execution
     if (!profile || !profile.usr_name) return;
 
     setIsLoading(true);
@@ -26,7 +22,7 @@ function UserTeams() {
       .then(res => res.json())
       .then(async (csapatok) => {
         if (Array.isArray(csapatok)) {
-          // Minden csapathoz lekérjük a tagokat
+          // Fetch team members for each team
           const csapatokTagokkal = await Promise.all(
             csapatok.map(async (team) => {
               try {
@@ -34,7 +30,7 @@ function UserTeams() {
                 const members = await res.json();
                 return { ...team, members };
               } catch (err) {
-                console.error("Hiba a tagok lekérésekor:", err);
+                console.error("Error fetching members:", err);
                 return { ...team, members: [] };
               }
             })
@@ -42,16 +38,20 @@ function UserTeams() {
 
           setTeams(csapatokTagokkal);
         } else {
-          toast.error("Nem találhatók csapatok.");
+          toast.error("No teams found.");
           setTeams([]);
         }
       })
       .catch(err => {
-        console.error("Hiba történt:", err);
-        toast.error("Hiba a csapatok lekérése során.");
+        console.error("Error occurred:", err);
+        toast.error("Error while fetching teams.");
       })
       .finally(() => setIsLoading(false));
   }, [profile, isAuthenticated]);
+
+  const handleEditTeam = (team) => {
+    navigate('/edit-team', { state: { team } }); // Pass the team data to the edit page
+  };
 
   return (
     <div className="p-8 md:p-10" id="myteams">
@@ -62,12 +62,14 @@ function UserTeams() {
           {teams.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 justify-items-center mt-10">
               {teams.map((team) => (
-                <TeamSchema key={team.id} team={team} />
+                <div key={team.id} onClick={() => handleEditTeam(team)}>
+                  <TeamSchema team={team} />
+                </div>
               ))}
             </div>
           ) : (
             <p className="text-center text-gray-500 mt-10">
-              Nem vagy tagja egy csapatnak sem.
+              Nem vagy egy csapat tagja sem.
             </p>
           )}
         </>
