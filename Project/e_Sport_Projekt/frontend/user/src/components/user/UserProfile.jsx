@@ -223,9 +223,11 @@ function UserProfile() {
           if (usr_modify) {
             navigate(`/profile/${sendingObj.new_usr_name}`)
             authStatus();
+            formReset();
           } else {
             setIsForm(false);
             authStatus();
+            formReset();
           }
 
         }

@@ -109,7 +109,10 @@ function OrganizerProfile() {
       sendingObj = {
         id: profile.id,
         usr_name: profile.usr_name,
-        new_usr_name: formData.usr_name
+        new_usr_name: formData.usr_name,
+        full_name: formData.full_name,
+        school: formData.school,
+        phone_num: formData.phone_num,
       };
       usr_modify = true;
 
@@ -117,7 +120,10 @@ function OrganizerProfile() {
       sendingObj = {
         id: profile.id,
         email_address: profile.email_address,
-        new_email_address: formData.email_address
+        new_email_address: formData.email_address,
+        full_name: formData.full_name,
+        school: formData.school,
+        phone_num: formData.phone_num,
       }
     } else {
       sendingObj = {
@@ -145,9 +151,11 @@ function OrganizerProfile() {
           if (usr_modify) {
             navigate(`/organizer/profile/${sendingObj.new_usr_name}`)
             authStatus();
+            formReset();
           } else {
             setIsForm(false);
             authStatus();
+            formReset();
           }
 
         }
@@ -158,6 +166,7 @@ function OrganizerProfile() {
       setEmailDisabled(true);
       setUsrnameDisabled(true);
       authStatus();
+
 
   };
 
