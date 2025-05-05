@@ -12,6 +12,12 @@ function Tournament() {
     const [isloading, setIsLoading] = useState(true);
     const [organizer, setOrganizer] = useState([]);
     const [picPath, setPicPath] = useState("");
+    const [pendingApplications, setPendingApplications] = useState([]);
+    const [approvedApplications, setApprovedApplications] = useState([]);
+    const [applicationForm, setApplicationForm] = useState(false);
+    const [application, setApplication] = useState([]);
+    const [pendingTeams, setPendingTeams] = useState([]);
+    const [approvedTeams, setApprovedTeams] = useState([]);
     const navigate = useNavigate();
 
 
@@ -82,6 +88,31 @@ function Tournament() {
   },[isloading])
 
 
+  const pendingFetch = () => {
+    let obj = [];
+
+    setPendingApplications([]);
+    
+    fetch(`${import.meta.env.VITE_BASE_URL}/list/pending/${id}`,{
+      method: "GET",
+      headers: { "Content-type": "application/json" },
+    }).then(res=>res.json())
+    .then(adat=>
+      {
+      if(!adat.message){
+        
+        adat.map((x)=>(obj.push(x.team)))
+        setPendingApplications(adat);
+        
+        
+      }
+
+    }).catch(err=>alert(err))
+
+    setPendingTeams(obj);
+  }
+
+
 
   const dateFormat = (dateTime) => {
     if (dateTime) {
@@ -107,6 +138,15 @@ function Tournament() {
                       <div className="card-title">
                         <div className="pl-14">
                           <p className="text-3xl pb-2 text-white">{tournament.name}</p>
+                            {
+                              (application.length == 0)?(
+                                <>nincs</>
+                              ):(
+                                <>asd</>
+                              )
+                            }
+
+                          
                         </div>
                       </div>
                     </div>
