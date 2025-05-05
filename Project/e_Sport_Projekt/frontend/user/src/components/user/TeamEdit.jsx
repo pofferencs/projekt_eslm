@@ -1,21 +1,30 @@
 import { useContext, useEffect } from "react"
-import { Navigate, useLocation, useParams } from "react-router-dom"
+import { useNavigate, useLocation, useParams } from "react-router-dom"
 import UserContext from "../../context/UserContext"
+import { useState } from "react";
 
 
 function TeamEdit() {
-    const {isAuthenticated, isLoading, refresh} = useContext(UserContext)
-    const teamId = useParams();
+    const { id } = useParams();
+    const {isAuthenticated, refresh} = useContext(UserContext)
+    
+
+    const [isLoading, setIsLoading] = useState(true);
+    const navigate = useNavigate();
 
     useEffect(()=>{
+
+      
+      
         if(!isAuthenticated){
-            Navigate('/')
+            navigate('/')
         }
-        
-        
 
+        setIsLoading(false)
+        
+        console.log(id)
 
-    },[teamId, isAuthenticated])
+    },[isLoading])
     
   return (
     <div>TeamEdit</div>
