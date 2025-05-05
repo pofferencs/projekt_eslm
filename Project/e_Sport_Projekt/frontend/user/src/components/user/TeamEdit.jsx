@@ -49,8 +49,9 @@ function TeamEdit() {
         });
     }
 
-
     useEffect(() => {
+
+
         if (!isAuthenticated) {
             navigate('/')
         }
@@ -87,10 +88,9 @@ function TeamEdit() {
             .catch(err => toast(err))
             .finally(() => setIsLoading(false))
 
+            console.log(teamData)
 
-
-
-    }, [isAuthenticated, id])
+    }, [isAuthenticated])
 
     const teamModify = (method) => {
         const sendingObj = {
@@ -217,7 +217,6 @@ function TeamEdit() {
     };
 
     return (
-
 
         (isLoading) ? (
             <>

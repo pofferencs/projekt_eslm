@@ -194,6 +194,7 @@ const teamGetPicPath = async (req, res) => {
 
 }
 
+
 const teamSearchByID = async (req, res) => {
   const { id } = req.params;
 

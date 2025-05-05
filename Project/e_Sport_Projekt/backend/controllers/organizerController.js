@@ -466,7 +466,7 @@ const organizerUpdate = async (req, res) => {
 
         //Email módosítás esetén:
 
-        if(((new_email_address && paswrd) && !new_usr_name && !new_paswrd)){
+        if(((new_email_address) && !new_usr_name && !new_paswrd)){
 
 
             if(validalasFuggveny(res, [
@@ -481,9 +481,9 @@ const organizerUpdate = async (req, res) => {
                 let trim_email = new_email_address.replaceAll(" ", "");
 
 
-                if(!bcrypt.compareSync(paswrd, organizer.paswrd)){
-                    return res.status(400).json({message: "A jelszó nem megfelelő!"});
-                }
+                // if(!bcrypt.compareSync(paswrd, organizer.paswrd)){
+                //     return res.status(400).json({message: "A jelszó nem megfelelő!"});
+                // }
                 
                 console.log(new Date(new Date(date).setMonth(date.getMonth() - 1)));
                 if(date > new Date(new Date(organizer.email_last_mod_date).setMonth(organizer.email_last_mod_date.getMonth() + 1))){
@@ -518,7 +518,7 @@ const organizerUpdate = async (req, res) => {
 
         //Felhasználónév esetén:
 
-        if((usr_name && new_usr_name && paswrd) && !new_email_address && !new_paswrd){
+        if((usr_name && new_usr_name) && !new_email_address && !new_paswrd){
 
             if(validalasFuggveny(res, [
                 { condition: /@/.test(new_usr_name), message: "A felhasználó név nem tartalmazhat '@' jelet!" },
@@ -557,7 +557,7 @@ const organizerUpdate = async (req, res) => {
         }
 
         //Jelszó esetén:
-        if((id && new_paswrd) || ((paswrd && new_paswrd)) && !new_email_address && !usr_name){
+        if((id && new_paswrd) || ((paswrd && new_paswrd)) && !new_email_address && !new_usr_name){
 
             // console.log({encrypted: paswrd == new_paswrd ? "true" : "false"})
             // console.log({encrypted: bcrypt.compareSync(paswrd, organizer.paswrd) == bcrypt.compareSync(new_paswrd, organizer.paswrd) ? "true" : "false"})

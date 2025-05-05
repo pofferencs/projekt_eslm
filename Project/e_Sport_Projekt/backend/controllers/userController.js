@@ -497,7 +497,7 @@ const userUpdate = async (req, res) => {
 
         //Email módosítás esetén: előző -> (((new_email_address && paswrd) && !new_usr_name && !new_paswrd))
 
-        if (((new_email_address && paswrd) && !new_usr_name && !new_paswrd)) {
+        if (((new_email_address) && !new_usr_name && !new_paswrd)) {
 
 
             if (validalasFuggveny(res, [
@@ -551,7 +551,7 @@ const userUpdate = async (req, res) => {
 
         //Felhasználónév esetén: előző -> ((usr_name && new_usr_name && paswrd) && !new_email_address && !new_paswrd)
 
-        if ((usr_name && new_usr_name && paswrd) && !new_email_address && !new_paswrd) {
+        if ((usr_name && new_usr_name) && !new_email_address && !new_paswrd) {
 
             if (validalasFuggveny(res, [
                 { condition: /@/.test(new_usr_name), message: "A felhasználó név nem tartalmazhat '@' jelet!" },
@@ -592,7 +592,7 @@ const userUpdate = async (req, res) => {
 
         //Jelszó esetén:
 
-        if ((id && new_paswrd) || ((paswrd && new_paswrd)) && !new_email_address && !usr_name) {
+        if ((id && new_paswrd) || ((paswrd && new_paswrd)) && !new_email_address && !new_usr_name) {
 
             //console.log({ encrypted: paswrd == new_paswrd ? "true" : "false" })
             //console.log({ encrypted: bcrypt.compareSync(paswrd, user.paswrd) == bcrypt.compareSync(new_paswrd, user.paswrd) ? "true" : "false" })

@@ -171,7 +171,7 @@ function Event() {
                           <dt className="text-sm text-white font-bold">
                             Leírás
                           </dt>
-                          <dd className="mt-1 text-sm text-white sm:mt-0 sm:col-span-2">
+                          <dd className="mt-1 break-words overflow-hidden max-w-full text-sm text-white sm:mt-0 sm:col-span-2">
                             <p>{event.details}</p>
                           </dd>
                         </div>

@@ -209,7 +209,7 @@ function Tournament() {
                             Leírás
                           </dt>
                           <dd className="mt-1 text-sm text-white sm:mt-0 sm:col-span-2">
-                            <p>{tournament.details}</p>
+                            <p className="break-words overflow-hidden max-w-full" >{tournament.details}</p>
                           </dd>
                         </div>
                       </dl>
