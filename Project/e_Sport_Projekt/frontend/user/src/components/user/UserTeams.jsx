@@ -50,7 +50,7 @@ function UserTeams() {
   }, [profile, isAuthenticated]);
 
   const handleEditTeam = (team) => {
-    navigate('/edit-team', { state: { team } }); // Pass the team data to the edit page
+    navigate(`/teamedit/${team.id}`, { state: { team } }); // Pass the team data to the edit page
   };
 
   return (
