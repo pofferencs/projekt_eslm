@@ -578,7 +578,7 @@ const sendImage = async (file, type, id) => {
                           <dt className="text-sm text-white font-bold">
                             Név
                           </dt>
-                          <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                          <dd className="mt-1 text-sm text-white sm:mt-0 sm:col-span-2">
                             <p>{event.name}</p>
                           </dd>
                         </div>
@@ -586,7 +586,7 @@ const sendImage = async (file, type, id) => {
                           <dt className="text-sm text-white font-bold">
                             Hely
                           </dt>
-                          <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                          <dd className="mt-1 text-sm text-white sm:mt-0 sm:col-span-2">
                             <p>{event.place}</p>
                           </dd>
                         </div>
@@ -594,7 +594,7 @@ const sendImage = async (file, type, id) => {
                           <dt className="text-sm text-white font-bold">
                             Kezdés
                           </dt>
-                          <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                          <dd className="mt-1 text-sm text-white sm:mt-0 sm:col-span-2">
                             <p>{formatDateTime(event.start_date)}</p>
                           </dd>
                         </div>
@@ -602,7 +602,7 @@ const sendImage = async (file, type, id) => {
                           <dt className="text-sm text-white font-bold">
                             Vége
                           </dt>
-                          <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                          <dd className="mt-1 text-sm text-white sm:mt-0 sm:col-span-2">
                             <p>{formatDateTime(event.end_date)}</p>
                           </dd>
                         </div>
@@ -610,7 +610,7 @@ const sendImage = async (file, type, id) => {
                           <dt className="text-sm text-white font-bold">
                             Szervező
                           </dt>
-                          <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                          <dd className="mt-1 text-sm text-white sm:mt-0 sm:col-span-2">
                             <p>{organizer.full_name}</p>
                           </dd>
                         </div>
@@ -618,7 +618,7 @@ const sendImage = async (file, type, id) => {
                           <dt className="text-sm text-white font-bold">
                             Leírás
                           </dt>
-                          <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                          <dd className="mt-1 text-sm text-white sm:mt-0 sm:col-span-2">
                             <p>{event.details}</p>
                           </dd>
                         </div>

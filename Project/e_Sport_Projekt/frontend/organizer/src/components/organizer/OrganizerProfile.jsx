@@ -267,7 +267,7 @@ function OrganizerProfile() {
                           <dt className="text-sm text-white font-bold">
                             Teljes név
                           </dt>
-                          <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                          <dd className="mt-1 text-sm text-white sm:mt-0 sm:col-span-2">
                             <p>{profileAdat.full_name}</p>
                           </dd>
                         </div>
@@ -275,7 +275,7 @@ function OrganizerProfile() {
                           <dt className="text-sm text-white font-bold">
                             Iskola
                           </dt>
-                          <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                          <dd className="mt-1 text-sm text-white sm:mt-0 sm:col-span-2">
                             <p>{profileAdat.school}</p>
                           </dd>
                         </div>
