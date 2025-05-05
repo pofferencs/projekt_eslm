@@ -24,6 +24,7 @@ import UserTeams from "./components/user/UserTeams";
 import Event from "./components/common/Event";
 import Tournament from "./components/common/Tournament";
 import TeamEdit from "./components/user/TeamEdit";
+import NewTeam from "./components/user/NewTeam";
 
 
 function App() {
@@ -40,6 +41,7 @@ function App() {
             <Route path="/" element={<Main />} />
             <Route path="*" element={<Navigate to="/" />} />
             <Route path="/myteams" element={<UserTeams />} />
+            <Route path="/newteam" element={<NewTeam />} />
             <Route path="/teamedit/:id" element={<TeamEdit />} />
             <Route path="/register" element={<Register />} />
             <Route path="/login" element={<UserLogin />} />

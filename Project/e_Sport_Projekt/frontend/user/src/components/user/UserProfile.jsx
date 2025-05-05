@@ -583,7 +583,7 @@ function UserProfile() {
                         Csapatok, amelyeknek <span className="bg-gradient-to-tr from-indigo-500 to-amber-500 text-transparent bg-clip-text">vezetője vagy</span>
                       </h2>
                       <div className="mx-auto mt-2 h-1 w-[60%] bg-gradient-to-r from-indigo-500 to-amber-500 rounded-full" />
-                      <div className="flex justify-center mt-8">
+                      <div className="flex justify-center gap-4 mt-8">
                         <Link
                           to="/myteams"
                           onClick={() => window.scroll(0, 0)}
@@ -598,6 +598,22 @@ function UserProfile() {
                           }}
                         >
                           Csapat menedzsment
+                        </Link>
+
+                        <Link
+                          to="/newteam"
+                          onClick={() => window.scroll(0, 0)}
+                          className="px-6 py-2 font-semibold rounded-md shadow transition-all duration-500
+             bg-gradient-to-tr from-indigo-500 to-amber-500 
+             bg-clip-text text-transparent
+             border-2 border-dashed 
+             hover:border-solid 
+             hover:bg-gradient-to-l hover:from-amber-500 hover:to-indigo-500"
+                          style={{
+                            borderImage: "linear-gradient(to right, #6366f1, #f59e0b) 2 border-dashed hover:border-solid"
+                          }}
+                        >
+                          Új csapat létrehozása
                         </Link>
                       </div>
                       <div className="p-8 md:p-10">
