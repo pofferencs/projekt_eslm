@@ -202,39 +202,36 @@ const teamSearchByID = async (req, res) => {
     try {
       const teams = await prisma.teams.findFirst({
         where: {
-          id : id
+          id : parseInt(id)
         }
       });
+
+      console.log(teams)
   
       if (teams.length === 0) {
         return res.status(404).json({ message: "Nincs ilyen csapat!" });
       }
   
       // 2. Kapitány adatok lekérése minden csapat creator_id alapján
-      const result = await Promise.all(
-        teams.map(async (team) => {
+      
           const captain = await prisma.users.findUnique({
-            where: { id: team.creator_id },
-            select: {
+            where: {
+              id: teams.creator_id
+            },
+            select:{
               id: true,
               full_name: true,
               usr_name: true,
               discord_name: true,
               email_address: true
             }
-          });
+          })
   
-          return {
-            ...team,
-            captain
-          };
-        })
-      );
-  
-      return res.status(200).json(result);
+        return res.status(200).json({team: teams, captain: captain});
+
     } catch (error) {
       console.error(error);
-      return res.status(500).json({ message: "Hiba történt", error });
+      return res.status(500).json({ message: "Hiba történt", error: error.message });
     }
   };
 

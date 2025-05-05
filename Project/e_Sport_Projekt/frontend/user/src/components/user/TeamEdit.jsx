@@ -24,6 +24,8 @@ function TeamEdit() {
             .catch(err => toast(err));
 
 
+            console.log(teamData)
+
     }, [isAuthenticated, id])
 
     return (
