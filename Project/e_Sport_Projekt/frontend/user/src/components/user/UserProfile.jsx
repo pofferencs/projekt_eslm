@@ -311,7 +311,6 @@ function UserProfile() {
 
   const deleteImage = async (id, type) => {
 
-
     fetch(`${import.meta.env.VITE_BASE_URL}/delete/picture`, {
       method: "DELETE",
       headers: { "Content-type": "application/json" },
@@ -327,9 +326,6 @@ function UserProfile() {
         }
       })
       .catch(err => alert(err));
-
-
-
   };
 
 
