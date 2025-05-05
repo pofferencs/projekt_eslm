@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const { applicationUpdate } = require('../controllers/applicationController');
+const { applicationUpdate, applicationHandle } = require('../controllers/applicationController');
 const { userUpdate } = require('../controllers/userController');
 const { eventUpdate } = require('../controllers/eventController');
 const { gameUpdate } = require('../controllers/gameController');
@@ -15,6 +15,7 @@ const { organizerUpdate, userBanByOrg } = require('../controllers/organizerContr
 
 router.patch('/user', userUpdate);
 router.patch('/application', applicationUpdate);
+router.patch('/application/handle', applicationHandle);
 router.patch('/event', eventUpdate);
 router.patch('/game', gameUpdate);
 router.patch('/match', matchUpdate);

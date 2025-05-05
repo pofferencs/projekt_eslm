@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const { applicationList } = require('../controllers/applicationController');
+const { applicationList, approvedApplicationsList, pendingApplicationsList } = require('../controllers/applicationController');
 const { userList, userSearchByName } = require('../controllers/userController');
 const { eventList, eventSearchByName, eventGetPicPath, eventSearchById, eventSearchByOrganizer } = require('../controllers/eventController');
 const { gameList } = require('../controllers/gameController');
@@ -15,6 +15,8 @@ const { teamMembershipList, activeMembersList, teamsForPlayer } = require('../co
 
 
 router.get('/user', userList); 
+router.get('/pending/:tnt_id', pendingApplicationsList);
+router.get('/approved/:tnt_id', approvedApplicationsList);
 router.get('/application', applicationList);
 router.get('/event', eventList); /*Esemény*/
 router.get('/event/:id', eventSearchById);
