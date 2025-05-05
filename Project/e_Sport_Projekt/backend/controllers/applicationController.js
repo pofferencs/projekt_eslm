@@ -105,22 +105,17 @@ const applicationInsert = async (req, res) => {
 
 const applicationDelete = async (req, res) => {
 
-    const { tnt_id, uer_id, tem_id } = req.body;
+    const { id } = req.body;
 
-    if(!tnt_id || !uer_id || !tem_id){
-        return res.status(400).json({message: "Hiányos adatok!"});
+    if(!id){
+        return res.status(400).json({message: "Hiányos adat!"});
     }
 
     try {
 
         const applications = await prisma.applications.delete({
             where: {
-                uer_id_tem_id_tnt_id: {
-                    tem_id: parseInt(tem_id),
-                    tnt_id: parseInt(tnt_id),
-                    uer_id: parseInt(uer_id)
-
-                }
+                id: parseInt(id)
             }
         })
         return res.status(200).json({ message: "Sikeres törlés!" })
@@ -218,7 +213,7 @@ const applicationDelete = async (req, res) => {
             const applications = await prisma.applications.findMany({
                 where: {
                     tnt_id: parseInt(tnt_id),
-                    status: "approved"
+                    status: "pending"
                 },
                 include:{
                     team: true
