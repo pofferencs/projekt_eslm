@@ -218,7 +218,7 @@ function TeamEdit() {
                             <div className="m-10 rounded-md bg-gradient-to-br from-indigo-950 to-slate-500 sm:w-[600px] md:w-[800px] lg:w-[1000px] xl:w-[1200px] mx-auto text-primary-content">
                                 <div className="card-body">
                                     <div className="flex justify-center pb-8 gap-10">
-                                        <img className="w-56 h-56" src={`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_BASE_PIC}${teamPicPath}`} alt={`${teamFormData.short_name} csapat profilképe`} title={`${teamData.short_name} profilképe`} />
+                                        <img className="w-56 h-56" src={`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_BASE_PIC}${teamPicPath}`} alt={`${teamFormData.full_name} csapat profilképe`} title={`${teamData.full_name} profilképe`} />
                                         <div className="card-title">
                                             <div className="pl-14">
                                                 <p className="text-3xl pb-2 text-white">{teamFormData.full_name}</p>
@@ -288,7 +288,7 @@ function TeamEdit() {
                                 <div className="m-10 rounded-md bg-gradient-to-br from-indigo-950 to-slate-500 sm:w-[600px] md:w-[800px] lg:w-[1000px] xl:w-[1200px] mx-auto text-primary-content">
                                     <div className="card-body">
                                         <div className="flex justify-center pb-8 gap-10">
-                                            <img className="w-56 h-56" src={`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_BASE_PIC}${teamPicPath}`} />
+                                            <img className="w-56 h-56" alt={`${teamFormData.full_name} csapat profilképe`} title={`${teamFormData.full_name} csapat profilképe`} src={`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_BASE_PIC}${teamPicPath}`} />
                                             <div className="card-title">
                                                 <div className="pl-14">
                                                     <p className="text-3xl pb-2 text-white">{teamFormData.full_name}</p>
