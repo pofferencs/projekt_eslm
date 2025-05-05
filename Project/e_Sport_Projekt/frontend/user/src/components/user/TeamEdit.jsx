@@ -34,23 +34,19 @@ function TeamEdit() {
     const [memberShipFormData, setMemberShipFormData] = useState(memberShipFormObj);
 
     const teamFormReset = () => {
-        teamFormObj = {
+        setTeamFormData({
             id: teamData?.team?.id ?? "",
-            full_name: teamData.team.full_name,
-            short_name: teamData.team.short_name,
-            creator_id: teamData.captain.id
-        }
-
-        setTeamFormData(teamFormObj)
+            full_name: teamData?.team?.full_name ?? "",
+            short_name: teamData?.team?.short_name ?? "",
+            creator_id: teamData?.captain?.id ?? ""
+        });
     }
 
     const memberFormReset = () => {
-        memberShipFormObj = {
+        setMemberShipFormData({
             user_id: "",
             team_id: teamData?.team?.id ?? ""
-        }
-
-        setMemberShipFormData(memberShipFormObj)
+        });
     }
 
 
@@ -94,7 +90,7 @@ function TeamEdit() {
 
 
 
-    }, [isAuthenticated])
+    }, [isAuthenticated, id])
 
     const teamModify = (method) => {
         const sendingObj = {
@@ -156,11 +152,12 @@ function TeamEdit() {
     }
 
     const writeDataTeam = (e) => {
-        setTeamData((prevState) => ({
+        setTeamFormData((prevState) => ({
             ...prevState,
             [e.target.id]: e.target.value,
         }));
     };
+    
 
     const writeDataMember = (e) => {
         setMemberShipFormData((prevState) => ({
@@ -359,14 +356,14 @@ function TeamEdit() {
                                                         <label className="block text-sm font-medium text-white">
                                                             Csapatnév
                                                         </label>
-                                                        <input id="usr_name" type="text" disabled={disabled} onChange={writeDataTeam} value={teamFormData.full_name} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm" />
+                                                        <input id="full_name" type="text" disabled={disabled} onChange={writeDataTeam} value={teamFormData.full_name} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm" />
                                                     </div>
 
                                                     <div key={"short_name"}>
                                                         <label className="block text-sm font-medium text-white">
                                                             Csapat tag
                                                         </label>
-                                                        <input id="full_name" type="text" disabled={disabled} onChange={writeDataTeam} value={teamFormData.short_name} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm" />
+                                                        <input id="short_name" type="text" disabled={disabled} onChange={writeDataTeam} value={teamFormData.short_name} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm" />
                                                     </div>
                                                 </div>
                                             </div>
