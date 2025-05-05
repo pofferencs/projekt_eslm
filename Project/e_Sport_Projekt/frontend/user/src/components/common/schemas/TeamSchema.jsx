@@ -124,7 +124,7 @@ function TeamSchema({ team }) {
                 {!isProfilePage && !teamSearchPage &&(
                     <div className="border-t border-white pt-2 mt-2 flex justify-end gap-2">
                         {profile.id === team.creator_id ? (
-                            <button className="btn btn-sm btn-warning" onClick={()=>navigate(`/teamedit/${team.id}`)}>Módosítás</button>
+                            <button className="btn btn-sm btn-warning" onClick={()=>navigate(`/teamedit/${team.id}`)}>Módosítás {team.id}</button>
                         ) : (
                             <button
                                 className="btn btn-sm btn-error"
