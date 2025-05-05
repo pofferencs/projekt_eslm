@@ -1,7 +1,8 @@
-import { useContext, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import UserContext from "../../context/UserContext"
 import { toast } from "react-toastify";
+
 
 function NewTeam() {
     const navigate = useNavigate()
@@ -10,9 +11,18 @@ function NewTeam() {
     const [teamFormData, setTeamFormData] = useState({
         full_name: "",
         short_name: "",
-        creator_id : profile.id,
         status: "active"
     });
+
+    useEffect(() => {
+        if (!isLoading && profile?.id) {
+            setTeamFormData((prev) => ({
+                ...prev,
+                creator_id: profile.id
+            }));
+        }
+    }, [isLoading, profile]);
+    
 
     const writeDataTeam = (e) => {
         setTeamFormData((prevState) => ({
@@ -45,7 +55,7 @@ function NewTeam() {
             navigate("/myteams");
         } catch (error) {
             console.error("Hiba a csapat létrehozása során:", error);
-            toast("Hiba történt a csapat létrehozásakor.");
+            toast(error.message);
         }
     };
 
@@ -67,7 +77,7 @@ function NewTeam() {
                             className="w-56 h-56"
                             alt="Alap csapat profilképe"
                             title="Alap csapat profilképe"
-                            src={`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_BASE_PIC}/teams/team_0.png`}
+                            src={`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_BASE_PIC}/team/team_0.png`}
                         />
                         <div className="card-title pl-14">
                             <p className="text-3xl pb-2 text-white">{teamFormData.full_name || "Új csapat"}</p>
