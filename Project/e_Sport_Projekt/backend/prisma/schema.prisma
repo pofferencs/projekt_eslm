@@ -25,11 +25,11 @@ model Users {
   status              String             @db.VarChar(12)
   discord_name        String             @db.VarChar(32)
   teamMemberships     Team_Memberships[]
-  applications1       Applications[]     @relation("User1Relation")
-  applications2       Applications[]     @relation("User2Relation")
-  applications3       Applications[]     @relation("User3Relation")
-  applications4       Applications[]     @relation("User4Relation")
-  applications5       Applications[]     @relation("User5Relation")
+  applicationsUser1   Applications[]     @relation("User1Relation")
+  applicationsUser2   Applications[]     @relation("User2Relation")
+  applicationsUser3   Applications[]     @relation("User3Relation")
+  applicationsUser4   Applications[]     @relation("User4Relation")
+  applicationsUser5   Applications[]     @relation("User5Relation")
   pictureLinks        Picture_Links[]
 }
 
@@ -57,8 +57,6 @@ model Teams {
   full_name    String             @db.VarChar(16)
   creator_id   Int
   members      Team_Memberships[]
-  matches1     Matches[]          @relation("Team1Matches")
-  matches2     Matches[]          @relation("Team2Matches")
   applications Applications[]
   pictureLinks Picture_Links[]
 }
@@ -122,25 +120,25 @@ model Team_Memberships {
 }
 
 model Matches {
-  id         Int         @default(autoincrement())
-  status     String      @db.VarChar(12)
-  place      String?     @db.VarChar(255)
-  dte        DateTime?
-  details    String?     @db.VarChar(512)
-  winner     String?     @db.VarChar(16)
-  rslt       String?     @db.VarChar(10)
-  tem1_id    Int
-  tem2_id    Int
-  tnt_id     Int
-  team1      Teams       @relation("Team1Matches", fields: [tem1_id], references: [id], onDelete: Restrict)
-  team2      Teams       @relation("Team2Matches", fields: [tem2_id], references: [id], onDelete: Restrict)
-  tournament Tournaments @relation(fields: [tnt_id], references: [id])
+  id           Int          @default(autoincrement())
+  status       String       @db.VarChar(12)
+  place        String?      @db.VarChar(255)
+  dte          DateTime?
+  details      String?      @db.VarChar(512)
+  winner       String?      @db.VarChar(16)
+  rslt         String?      @db.VarChar(10)
+  apn1_id      Int
+  apn2_id      Int
+  tnt_id       Int
+  application1 Applications @relation("MatchApplication1", fields: [apn1_id], references: [id], onDelete: Restrict)
+  application2 Applications @relation("MatchApplication2", fields: [apn2_id], references: [id], onDelete: Restrict)
+  tournament   Tournaments  @relation(fields: [tnt_id], references: [id])
 
-  @@id([id, tem1_id, tem2_id, tnt_id])
+  @@id([id, apn1_id, apn2_id, tnt_id])
 }
 
 model Applications {
-  id         Int         @default(autoincrement())
+  id         Int         @unique @default(autoincrement())
   dte        DateTime
   status     String      @db.VarChar(12)
   uer1_id    Int?
@@ -157,6 +155,8 @@ model Applications {
   user5      Users?      @relation("User5Relation", fields: [uer5_id], references: [id], onDelete: Restrict)
   team       Teams?      @relation(fields: [tem_id], references: [id], onDelete: Restrict)
   tournament Tournaments @relation(fields: [tnt_id], references: [id], onDelete: Cascade)
+  matchApn1  Matches[]   @relation("MatchApplication1")
+  matchApn2  Matches[]   @relation("MatchApplication2")
 
   @@id([id, tnt_id])
   @@unique([uer1_id, uer2_id, uer3_id, uer4_id, uer5_id, tem_id, tnt_id])
