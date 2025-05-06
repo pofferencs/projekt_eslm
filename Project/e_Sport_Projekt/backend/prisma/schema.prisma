@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -31,24 +25,28 @@ model Users {
   status              String             @db.VarChar(12)
   discord_name        String             @db.VarChar(32)
   teamMemberships     Team_Memberships[]
-  applications        Applications[]
+  applicationsUser1   Applications[]     @relation("User1Relation")
+  applicationsUser2   Applications[]     @relation("User2Relation")
+  applicationsUser3   Applications[]     @relation("User3Relation")
+  applicationsUser4   Applications[]     @relation("User4Relation")
+  applicationsUser5   Applications[]     @relation("User5Relation")
   pictureLinks        Picture_Links[]
 }
 
 model Organizers {
-  id                  Int                @id @default(autoincrement())
-  full_name           String             @db.VarChar(64)
-  usr_name            String             @db.VarChar(16)
+  id                  Int             @id @default(autoincrement())
+  full_name           String          @db.VarChar(64)
+  usr_name            String          @db.VarChar(16)
   usna_last_mod_date  DateTime
   usna_mod_num_remain Int
-  paswrd              String             @db.VarChar(60)
-  date_of_birth       DateTime           @db.Date
-  school              String             @db.VarChar(100)
-  email_address       String             @db.VarChar(64)
+  paswrd              String          @db.VarChar(60)
+  date_of_birth       DateTime        @db.Date
+  school              String          @db.VarChar(100)
+  email_address       String          @db.VarChar(64)
   email_last_mod_date DateTime
-  phone_num           String             @db.VarChar(15)
-  om_identifier       String             @db.VarChar(11)
-  status              String             @db.VarChar(12)
+  phone_num           String          @db.VarChar(15)
+  om_identifier       String          @db.VarChar(11)
+  status              String          @db.VarChar(12)
   pictureLinks        Picture_Links[]
   events              Events[]
 }
@@ -59,8 +57,6 @@ model Teams {
   full_name    String             @db.VarChar(16)
   creator_id   Int
   members      Team_Memberships[]
-  matches1     Matches[]          @relation("Team1Matches")
-  matches2     Matches[]          @relation("Team2Matches")
   applications Applications[]
   pictureLinks Picture_Links[]
 }
@@ -124,35 +120,46 @@ model Team_Memberships {
 }
 
 model Matches {
-  id         Int         @default(autoincrement())
-  status     String      @db.VarChar(12)
-  place      String?     @db.VarChar(255)
-  dte        DateTime?
-  details    String?     @db.VarChar(512)
-  winner     String?     @db.VarChar(16)
-  rslt       String?     @db.VarChar(10)
-  tem1_id    Int
-  tem2_id    Int
-  tnt_id     Int
-  team1      Teams       @relation("Team1Matches", fields: [tem1_id], references: [id], onDelete: Restrict)
-  team2      Teams       @relation("Team2Matches", fields: [tem2_id], references: [id], onDelete: Restrict)
-  tournament Tournaments @relation(fields: [tnt_id], references: [id])
+  id           Int          @default(autoincrement())
+  status       String       @db.VarChar(12)
+  place        String?      @db.VarChar(255)
+  dte          DateTime?
+  details      String?      @db.VarChar(512)
+  winner       String?      @db.VarChar(16)
+  rslt         String?      @db.VarChar(10)
+  apn1_id      Int
+  apn2_id      Int
+  tnt_id       Int
+  application1 Applications @relation("MatchApplication1", fields: [apn1_id], references: [id], onDelete: Restrict)
+  application2 Applications @relation("MatchApplication2", fields: [apn2_id], references: [id], onDelete: Restrict)
+  tournament   Tournaments  @relation(fields: [tnt_id], references: [id])
 
-  @@id([id, tem1_id, tem2_id, tnt_id])
+  @@id([id, apn1_id, apn2_id, tnt_id])
 }
 
 model Applications {
-  id         Int         @id @default(autoincrement())
+  id         Int         @unique @default(autoincrement())
   dte        DateTime
   status     String      @db.VarChar(12)
-  uer_id     Int?
+  uer1_id    Int?
+  uer2_id    Int?
+  uer3_id    Int?
+  uer4_id    Int?
+  uer5_id    Int?
   tem_id     Int?
   tnt_id     Int
-  user       Users?      @relation(fields: [uer_id], references: [id], onDelete: Restrict)
+  user1      Users?      @relation("User1Relation", fields: [uer1_id], references: [id], onDelete: Restrict)
+  user2      Users?      @relation("User2Relation", fields: [uer2_id], references: [id], onDelete: Restrict)
+  user3      Users?      @relation("User3Relation", fields: [uer3_id], references: [id], onDelete: Restrict)
+  user4      Users?      @relation("User4Relation", fields: [uer4_id], references: [id], onDelete: Restrict)
+  user5      Users?      @relation("User5Relation", fields: [uer5_id], references: [id], onDelete: Restrict)
   team       Teams?      @relation(fields: [tem_id], references: [id], onDelete: Restrict)
   tournament Tournaments @relation(fields: [tnt_id], references: [id], onDelete: Cascade)
+  matchApn1  Matches[]   @relation("MatchApplication1")
+  matchApn2  Matches[]   @relation("MatchApplication2")
 
-  @@unique([uer_id, tem_id, tnt_id])
+  @@id([id, tnt_id])
+  @@unique([uer1_id, uer2_id, uer3_id, uer4_id, uer5_id, tem_id, tnt_id])
 }
 
 model Picture_Links {
@@ -168,7 +175,7 @@ model Picture_Links {
   tournament Tournaments? @relation(fields: [tnt_id], references: [id], onDelete: Cascade)
   event      Events?      @relation(fields: [evt_id], references: [id], onDelete: Cascade)
   picture    Pictures     @relation(fields: [pte_id], references: [id])
-  organizers Organizers?   @relation(fields: [ogr_id], references: [id])
+  organizers Organizers?  @relation(fields: [ogr_id], references: [id])
 
   @@id([id, pte_id])
 }
