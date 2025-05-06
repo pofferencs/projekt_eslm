@@ -13,162 +13,139 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Users {
-  id                  Int                @id @default(autoincrement())
-  inviteable          Boolean
-  full_name           String             @db.VarChar(64)
-  usr_name            String             @db.VarChar(16)
-  usna_last_mod_date  DateTime
-  usna_mod_num_remain Int
-  paswrd              String             @db.VarChar(60)
-  date_of_birth       DateTime           @db.Date
-  school              String             @db.VarChar(100)
-  clss                String             @db.VarChar(10)
-  email_address       String             @db.VarChar(64)
-  email_last_mod_date DateTime
-  phone_num           String             @db.VarChar(15)
-  om_identifier       String             @db.VarChar(11)
-  status              String             @db.VarChar(12)
-  discord_name        String             @db.VarChar(32)
-  teamMemberships     Team_Memberships[]
-  applications        Applications[]
-  pictureLinks        Picture_Links[]
+model User {
+id Int @id @default(autoincrement())
+inviteable Boolean
+fullName String @db.VarChar(64)
+usrName String @db.VarChar(16)
+usnaLastModDate DateTime
+usnaModNumRemain Int
+paswrd String @db.VarChar(32)
+dateOfBirth DateTime @db.Date
+school String @db.VarChar(100)
+clss String @db.VarChar(10)
+emailAddress String @db.VarChar(64)
+emailLastModDate DateTime
+phoneNum String @db.VarChar(15)
+omIdentifier String @db.VarChar(11)
+status String @db.VarChar(12)
+discordName String @db.VarChar(32)
+teamMemberships TeamMembership[] @relation("UserTeamMembership")
+applications Application[] @relation("UserApplication")
+pictureLinks PictureLink[] @relation("UserPictureLink")
 }
 
-model Organizers {
-  id                  Int                @id @default(autoincrement())
-  full_name           String             @db.VarChar(64)
-  usr_name            String             @db.VarChar(16)
-  usna_last_mod_date  DateTime
-  usna_mod_num_remain Int
-  paswrd              String             @db.VarChar(60)
-  date_of_birth       DateTime           @db.Date
-  school              String             @db.VarChar(100)
-  email_address       String             @db.VarChar(64)
-  email_last_mod_date DateTime
-  phone_num           String             @db.VarChar(15)
-  om_identifier       String             @db.VarChar(11)
-  status              String             @db.VarChar(12)
-  pictureLinks        Picture_Links[]
-  events              Events[]
+model Team {
+id Int @id @default(autoincrement())
+shortName String @db.VarChar(4)
+fullName String @db.VarChar(16)
+creatorId Int
+teamMemberships TeamMembership[] @relation("TeamMembership")
+applications Application[] @relation("TeamApplication")
+pictureLinks PictureLink[] @relation("TeamPictureLink")
 }
 
-model Teams {
-  id           Int                @id @default(autoincrement())
-  short_name   String             @db.VarChar(4)
-  full_name    String             @db.VarChar(16)
-  creator_id   Int
-  members      Team_Memberships[]
-  matches1     Matches[]          @relation("Team1Matches")
-  matches2     Matches[]          @relation("Team2Matches")
-  applications Applications[]
-  pictureLinks Picture_Links[]
+model Event {
+id Int @id @default(autoincrement())
+name String @db.VarChar(32)
+startDate DateTime
+endDate DateTime
+place String @db.VarChar(255)
+details String? @db.VarChar(512)
+tournaments Tournament[] @relation("EventTournament")
+pictureLinks PictureLink[] @relation("EventPictureLink")
 }
 
-model Events {
-  id           Int             @id @default(autoincrement())
-  name         String          @db.VarChar(32)
-  start_date   DateTime
-  end_date     DateTime
-  place        String          @db.VarChar(255)
-  details      String?         @db.VarChar(512)
-  ogr_id       Int
-  tournaments  Tournaments[]
-  pictureLinks Picture_Links[]
-  organizers   Organizers      @relation(fields: [ogr_id], references: [id])
+model Game {
+id Int @id @default(autoincrement())
+name String @db.VarChar(32)
+tournaments Tournament[] @relation("GameTournament")
 }
 
-model Games {
-  id          Int           @id @default(autoincrement())
-  name        String        @db.VarChar(32)
-  tournaments Tournaments[]
+model Tournament {
+id Int @id @default(autoincrement())
+name String @db.VarChar(32)
+numParticipant Int
+teamNum Int?
+startDate DateTime
+endDate DateTime
+gameMode String @db.VarChar(32)
+maxParticipant Int
+apnStart DateTime
+apnEnd DateTime
+details String? @db.VarChar(512)
+evtId Int
+gaeId Int
+event Event @relation("EventTournament", fields: [evtId], references: [id], onDelete: Cascade)
+game Game @relation("GameTournament", fields: [gaeId], references: [id], onDelete: Cascade)
+matches Match[] @relation("TournamentMatch")
+applications Application[] @relation("TournamentApplication")
 }
 
-model Tournaments {
-  id              Int             @unique @default(autoincrement())
-  name            String          @db.VarChar(32)
-  num_participant Int
-  team_num        Int?
-  start_date      DateTime
-  end_date        DateTime
-  game_mode       String          @db.VarChar(32)
-  max_participant Int
-  apn_start       DateTime
-  apn_end         DateTime
-  details         String?         @db.VarChar(512)
-  evt_id          Int
-  gae_id          Int
-  event           Events          @relation(fields: [evt_id], references: [id], onDelete: Cascade)
-  game            Games           @relation(fields: [gae_id], references: [id], onDelete: Cascade)
-  matches         Matches[]
-  applications    Applications[]
-  Picture_Links   Picture_Links[]
-
-  @@id([id, evt_id, gae_id])
+model Picture {
+id Int @id @default(autoincrement())
+imgPath String @db.VarChar(16384)
+pictureLinks PictureLink[] @relation("PictureLink")
 }
 
-model Pictures {
-  id           Int             @id @default(autoincrement())
-  img_path     String          @db.VarChar(16384)
-  pictureLinks Picture_Links[]
+model TeamMembership {
+status String @db.VarChar(12)
+userId Int
+teamId Int
+user User @relation("UserTeamMembership", fields: [userId], references: [id], onDelete: Restrict)
+team Team @relation("TeamMembership", fields: [teamId], references: [id], onDelete: Restrict)
+@@id([userId, teamId])
 }
 
-model Team_Memberships {
-  status String @db.VarChar(12)
-  uer_id Int
-  tem_id Int
-  user   Users  @relation(fields: [uer_id], references: [id], onDelete: Restrict)
-  team   Teams  @relation(fields: [tem_id], references: [id], onDelete: Restrict)
-
-  @@id([uer_id, tem_id])
+model Match {
+id Int @id @default(autoincrement())
+status String @db.VarChar(12)
+place String? @db.VarChar(255)
+dte DateTime?
+details String? @db.VarChar(512)
+winner String? @db.VarChar(16)
+rslt String? @db.VarChar(10)
+apn1Id Int
+apn2Id Int
+tntId Int
+application1 Application @relation("ApplicationMatch1", fields: [apn1Id], references: [id], onDelete: Restrict)
+application2 Application @relation("ApplicationMatch2", fields: [apn2Id], references: [id], onDelete: Restrict)
+tournament Tournament @relation("TournamentMatch", fields: [tntId], references: [id])
+@@id([id, apn1Id, apn2Id, tntId])
 }
 
-model Matches {
-  id         Int         @default(autoincrement())
-  status     String      @db.VarChar(12)
-  place      String?     @db.VarChar(255)
-  dte        DateTime?
-  details    String?     @db.VarChar(512)
-  winner     String?     @db.VarChar(16)
-  rslt       String?     @db.VarChar(10)
-  tem1_id    Int
-  tem2_id    Int
-  tnt_id     Int
-  team1      Teams       @relation("Team1Matches", fields: [tem1_id], references: [id], onDelete: Restrict)
-  team2      Teams       @relation("Team2Matches", fields: [tem2_id], references: [id], onDelete: Restrict)
-  tournament Tournaments @relation(fields: [tnt_id], references: [id])
-
-  @@id([id, tem1_id, tem2_id, tnt_id])
+model Application {
+id Int @id @default(autoincrement())
+dte DateTime
+status String @db.VarChar(12)
+user1Id Int?
+user2Id Int?
+user3Id Int?
+user4Id Int?
+user5Id Int?
+teamId Int?
+tntId Int
+user1 User? @relation("UserApplication", fields: [user1Id], references: [id], onDelete: Restrict)
+user2 User? @relation("UserApplication", fields: [user2Id], references: [id], onDelete: Restrict)
+user3 User? @relation("UserApplication", fields: [user3Id], references: [id], onDelete: Restrict)
+user4 User? @relation("UserApplication", fields: [user4Id], references: [id], onDelete: Restrict)
+user5 User? @relation("UserApplication", fields: [user5Id], references: [id], onDelete: Restrict)
+team Team? @relation("TeamApplication", fields: [teamId], references: [id], onDelete: Restrict)
+tournament Tournament @relation("TournamentApplication", fields: [tntId], references: [id], onDelete: Cascade)
+@@id([id, tntId])
 }
 
-model Applications {
-  id         Int         @id @default(autoincrement())
-  dte        DateTime
-  status     String      @db.VarChar(12)
-  uer_id     Int?
-  tem_id     Int?
-  tnt_id     Int
-  user       Users?      @relation(fields: [uer_id], references: [id], onDelete: Restrict)
-  team       Teams?      @relation(fields: [tem_id], references: [id], onDelete: Restrict)
-  tournament Tournaments @relation(fields: [tnt_id], references: [id], onDelete: Cascade)
-
-  @@unique([uer_id, tem_id, tnt_id])
-}
-
-model Picture_Links {
-  id         Int          @default(autoincrement())
-  uer_id     Int?
-  tem_id     Int?
-  tnt_id     Int?
-  evt_id     Int?
-  pte_id     Int
-  ogr_id     Int?
-  user       Users?       @relation(fields: [uer_id], references: [id], onDelete: Restrict)
-  team       Teams?       @relation(fields: [tem_id], references: [id], onDelete: Restrict)
-  tournament Tournaments? @relation(fields: [tnt_id], references: [id], onDelete: Cascade)
-  event      Events?      @relation(fields: [evt_id], references: [id], onDelete: Cascade)
-  picture    Pictures     @relation(fields: [pte_id], references: [id])
-  organizers Organizers?   @relation(fields: [ogr_id], references: [id])
-
-  @@id([id, pte_id])
+model PictureLink {
+id Int @id @default(autoincrement())
+userId Int?
+teamId Int?
+tntId Int?
+evtId Int?
+pteId Int
+user User? @relation("UserPictureLink", fields: [userId], references: [id], onDelete: Restrict)
+team Team? @relation("TeamPictureLink", fields: [teamId], references: [id], onDelete: Restrict)
+tournament Tournament? @relation("TournamentPictureLink", fields: [tntId], references: [id], onDelete: Cascade)
+event Event? @relation("EventPictureLink", fields: [evtId], references: [id], onDelete: Cascade)
+picture Picture @relation("PictureLink", fields: [pteId], references: [id])
+@@id([id, pteId])
 }

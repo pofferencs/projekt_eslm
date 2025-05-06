@@ -49,8 +49,8 @@ INSERT INTO `tournaments` (`id`, `name`, `num_participant`, `team_num`, `start_d
 INSERT INTO `pictures` (`id`, `img_path`) VALUES
 (1, '/user/user_0.png'),
 (3, '/team/team_0.png'),
-(4, '/event/0.png'),
-(5, '/tournament/0.png'),
+(4, '/event/event_0.png'),
+(5, '/tournament/tournament_0.png'),
 (6, '/organizer/organizer_0.png');
 
 INSERT INTO `team_memberships` (`status`, `uer_id`, `tem_id`) VALUES
