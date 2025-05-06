@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { useLocation, useNavigate, useParams } from "react-router-dom"
+import { useLocation, useNavigate, useParams, Link } from "react-router-dom"
 import UserContext from "../../context/UserContext";
 import { toast } from "react-toastify";
 import TeamSchema from "../common/schemas/TeamSchema";
@@ -14,7 +14,8 @@ function UserProfile() {
   const [picPath, setPicPath] = useState("");
   const [isForm, setIsForm] = useState(false);
   const [disabled, setDisabled] = useState(true);
-  const [emailDisabled, setEmailDisabled] = useState(false);
+  const [usrnameDisabled, setUsrnameDisabled] = useState(true);
+  const [emailDisabled, setEmailDisabled] = useState(true);
   const navigate = useNavigate();
   const [pfpFile, setPfpFile] = useState({});
   const [teams, setTeams] = useState([]);
@@ -32,9 +33,9 @@ function UserProfile() {
 
   useEffect(() => {
     if (!name || !profile) return;
-  
+
     setIsLoading(true);
-  
+
     fetch(`${import.meta.env.VITE_BASE_URL}/list/userteammemberships/${name}`, {
       method: "GET",
       headers: { "Content-Type": "application/json" },
@@ -43,11 +44,11 @@ function UserProfile() {
       .then(async (csapatok) => {
         if (Array.isArray(csapatok)) {
           const csakSajatProfil = isAuthenticated && profile.usr_name === name;
-  
+
           const csapatokSzurt = csakSajatProfil
             ? csapatok.filter(team => team.creator_id === profile.id)
             : csapatok;
-  
+
           const csapatokTagokkal = await Promise.all(
             csapatokSzurt.map(async (team) => {
               try {
@@ -60,10 +61,10 @@ function UserProfile() {
               }
             })
           );
-  
+
           setTeams(csapatokTagokkal);
         } else {
-          toast.error("Nem találhatók csapatok.");
+          // toast.error("Nem találhatók csapatok.");
           setTeams([]);
         }
       })
@@ -73,8 +74,8 @@ function UserProfile() {
       })
       .finally(() => setIsLoading(false));
   }, [name, profile, isAuthenticated]);
-  
-  
+
+
 
 
 
@@ -142,25 +143,6 @@ function UserProfile() {
 
   }, [isAuthenticated, name]);
 
-  // useEffect(() => {
-
-  //   if (!name) {
-  //     fetch(`${import.meta.env.VITE_BASE_URL}/user/userpic/${profile.id}`)
-  //       .then(res => res.json())
-  //       .then(adat => { setPicPath(adat); setIsLoading(false); })
-  //       .catch(err => { console.log(err) });
-
-  //   }
-
-  //   console.log("refreshed navbar")
-  // }, [isAuthenticated])
-
-  // useEffect(()=>{
-  //   if(isAuthenticated==false && !name){
-  //     navigate('/');
-  //   }
-
-  // },[profileAdat])
 
 
   const dateFormat = (date) => {
@@ -174,28 +156,6 @@ function UserProfile() {
     }
 
   }
-
-
-  //Adatmódosító rész
-
-  const kuldesEmail = (email, method) => {
-
-    fetch(`${import.meta.env.VITE_BASE_URL}/user/password-reset`, {
-      method: method,
-      headers: { "Content-type": "application/json" },
-      body: JSON.stringify({ email: email }),
-    }).then((res) => res.json())
-      .then((token) => {
-        if (!token.ok) {
-
-          toast.success(token.message)
-        }
-      })
-      .catch((err) => alert(err));
-  };
-
-
-
 
   //console.log(formData);
 
@@ -215,7 +175,12 @@ function UserProfile() {
       sendingObj = {
         id: profile.id,
         usr_name: profile.usr_name,
-        new_usr_name: formData.usr_name
+        new_usr_name: formData.usr_name,
+        full_name: formData.full_name,
+        clss: formData.clss,
+        school: formData.school,
+        phone_num: formData.phone_num,
+        discord_name: formData.discord_name
       };
       usr_modify = true;
 
@@ -223,7 +188,12 @@ function UserProfile() {
       sendingObj = {
         id: profile.id,
         email_address: profile.email_address,
-        new_email_address: formData.email_address
+        new_email_address: formData.email_address,
+        full_name: formData.full_name,
+        clss: formData.clss,
+        school: formData.school,
+        phone_num: formData.phone_num,
+        discord_name: formData.discord_name
       }
     } else {
       sendingObj = {
@@ -250,16 +220,25 @@ function UserProfile() {
           toast.error(data.message);
         } else {
           toast.success(data.message);
-          authStatus();
           if (usr_modify) {
             navigate(`/profile/${sendingObj.new_usr_name}`)
+            authStatus();
+            formReset();
           } else {
             setIsForm(false);
+            authStatus();
+            formReset();
           }
 
         }
 
       }).catch(err => alert(err));
+
+
+      setEmailDisabled(true);
+      setUsrnameDisabled(true);
+      authStatus();
+      
 
   };
 
@@ -332,7 +311,6 @@ function UserProfile() {
 
   const deleteImage = async (id, type) => {
 
-
     fetch(`${import.meta.env.VITE_BASE_URL}/delete/picture`, {
       method: "DELETE",
       headers: { "Content-type": "application/json" },
@@ -348,9 +326,6 @@ function UserProfile() {
         }
       })
       .catch(err => alert(err));
-
-
-
   };
 
 
@@ -403,7 +378,7 @@ function UserProfile() {
                           <dt className="text-sm text-white font-bold">
                             Teljes név
                           </dt>
-                          <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                          <dd className="mt-1 text-sm text-white sm:mt-0 sm:col-span-2">
                             <p>{profileAdat.full_name}</p>
                           </dd>
                         </div>
@@ -411,7 +386,7 @@ function UserProfile() {
                           <dt className="text-sm text-white font-bold">
                             Iskola
                           </dt>
-                          <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                          <dd className="mt-1 text-sm text-white sm:mt-0 sm:col-span-2">
                             <p>{profileAdat.school}</p>
                           </dd>
                         </div>
@@ -419,7 +394,7 @@ function UserProfile() {
                           <dt className="text-sm text-white font-bold">
                             Osztály
                           </dt>
-                          <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                          <dd className="mt-1 text-sm text-white sm:mt-0 sm:col-span-2">
                             <p>{profileAdat.clss}</p>
                           </dd>
                         </div>
@@ -491,9 +466,8 @@ function UserProfile() {
                           </div>
                         </div>
                       </div>
-                    </div>
 
-                    <div className="w-full mx-auto rounded-lg shadow-lg md:mt-6 md:max-w-full sm:max-w-4xl xl:p-0 bg-gray-800 dark:border-gray-700">
+                      <div className="w-full mx-auto rounded-lg shadow-lg md:mt-6 md:max-w-full sm:max-w-4xl xl:p-0 bg-gray-800 dark:border-gray-700">
                       <div className="p-8 md:p-10">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                           <div>
@@ -598,12 +572,50 @@ function UserProfile() {
                     </div>
 
 
+                    </div>
+
+                    
+
+
                   </div>
                     <div className="w-full mb-10 mx-auto rounded-lg shadow-lg md:mt-6 md:max-w-full sm:max-w-4xl xl:p-0 bg-gray-800 dark:border-gray-700 pt-10">
                       <h2 id="myteams" className="mt-10 block text-center text-4xl font-bold text-indigo-500 p-5">
-                        Csapatok, amelyeknek <span className="bg-gradient-to-tr from-indigo-500 to-amber-500 text-transparent bg-clip-text">vezetője vagy</span> 
+                        Csapatok, amelyeknek <span className="bg-gradient-to-tr from-indigo-500 to-amber-500 text-transparent bg-clip-text">vezetője vagy</span>
                       </h2>
                       <div className="mx-auto mt-2 h-1 w-[60%] bg-gradient-to-r from-indigo-500 to-amber-500 rounded-full" />
+                      <div className="flex justify-center gap-4 mt-8">
+                        <Link
+                          to="/myteams"
+                          onClick={() => window.scroll(0, 0)}
+                          className="px-6 py-2 font-semibold rounded-md shadow transition-all duration-500
+             bg-gradient-to-tr from-indigo-500 to-amber-500 
+             bg-clip-text text-transparent
+             border-2 border-dashed 
+             hover:border-solid 
+             hover:bg-gradient-to-l hover:from-amber-500 hover:to-indigo-500"
+                          style={{
+                            borderImage: "linear-gradient(to right, #6366f1, #f59e0b) 2 border-dashed hover:border-solid"
+                          }}
+                        >
+                          Csapat menedzsment
+                        </Link>
+
+                        <Link
+                          to="/newteam"
+                          onClick={() => window.scroll(0, 0)}
+                          className="px-6 py-2 font-semibold rounded-md shadow transition-all duration-500
+             bg-gradient-to-tr from-indigo-500 to-amber-500 
+             bg-clip-text text-transparent
+             border-2 border-dashed 
+             hover:border-solid 
+             hover:bg-gradient-to-l hover:from-amber-500 hover:to-indigo-500"
+                          style={{
+                            borderImage: "linear-gradient(to right, #6366f1, #f59e0b) 2 border-dashed hover:border-solid"
+                          }}
+                        >
+                          Új csapat létrehozása
+                        </Link>
+                      </div>
                       <div className="p-8 md:p-10">
                         {isLoading ? (
                           <p className="text-center text-white">Loading...</p>
@@ -718,7 +730,17 @@ function UserProfile() {
                                   <label className="block text-sm font-medium text-white">
                                     Felhasználónév
                                   </label>
-                                  <input id="usr_name" type="text" disabled={disabled} onChange={writeData} value={formData.usr_name} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm" />
+                                  <div className="flex flex-row gap-4 mt-1">
+                                    <input id="usr_name" type="text" disabled={usrnameDisabled} onChange={writeData} value={formData.usr_name} className="block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 disabled:text-gray-400 text-white shadow-sm" />
+                                    <button onClick={()=>{
+                                      if(usrnameDisabled){
+                                        setEmailDisabled(true); setUsrnameDisabled(false); formReset()
+                                      }else{
+                                        setUsrnameDisabled(true); formReset()
+                                      }
+
+                                    }} className="btn bg-indigo-600 hover:bg-indigo-700 border-none"><img src="https://www.svgrepo.com/show/281284/file-files-and-folders.svg" className="h-5"/></button>
+                                  </div>
                                 </div>
 
                                 <div key={"full_name"}>
@@ -739,7 +761,17 @@ function UserProfile() {
                                   <label className="block text-sm font-medium text-white">
                                     E-mail cím
                                   </label>
-                                  <input id="email_address" type="text" disabled={disabled} onChange={writeData} value={formData.email_address} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm" />
+                                  <div className="flex flex-row gap-4 mt-1">
+                                    <input id="email_address" type="text" disabled={emailDisabled} onChange={writeData} value={formData.email_address} className="block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 text-white disabled:text-gray-400 border-gray-600 shadow-sm" />
+                                    <button onClick={()=>{
+                                      if(emailDisabled){
+                                        setUsrnameDisabled(true); setEmailDisabled(false); formReset()
+                                      }else{
+                                        setEmailDisabled(true); formReset()
+                                      }
+
+                                    }} className="btn bg-indigo-600 hover:bg-indigo-700 border-none"><img src="https://www.svgrepo.com/show/281284/file-files-and-folders.svg" className="h-5"/></button>
+                                  </div>
                                 </div>
 
                                 <div key={"phone_num"}>
@@ -792,7 +824,7 @@ function UserProfile() {
 
                       <div className="w-full mb-10 mx-auto rounded-lg shadow-lg md:mt-6 md:max-w-full sm:max-w-4xl xl:p-0 bg-gray-800 dark:border-gray-700 pt-10">
                         <h2 id="myteams" className="mt-10 block text-center text-4xl font-bold text-indigo-500 p-5">
-                          Csapatok, amelyeknek <span className="bg-gradient-to-tr from-indigo-500 to-amber-500 text-transparent bg-clip-text">vezetője vagy</span> 
+                          Csapatok, amelyeknek <span className="bg-gradient-to-tr from-indigo-500 to-amber-500 text-transparent bg-clip-text">vezetője vagy</span>
                         </h2>
                         <div className="mx-auto mt-2 h-1 w-[60%] bg-gradient-to-r from-indigo-500 to-amber-500 rounded-full" />
                         <div className="p-8 md:p-10">
@@ -820,7 +852,7 @@ function UserProfile() {
               )
           }
 
-        </div>
+        </div >
       )
   )
 }

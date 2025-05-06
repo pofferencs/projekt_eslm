@@ -31,9 +31,7 @@ function Game() {
 
   }, [isAuthenticated]);
 
-
-  useEffect(()=>{
-
+  const gameFetch = () =>{
     fetch(`${import.meta.env.VITE_BASE_URL}/list/game`, {
       method: "GET",
       headers: {
@@ -43,6 +41,12 @@ function Game() {
     .then(res=>res.json())
     .then(adat=> {setGames(adat); setLoading(false); setRefresh(false)})
     .catch(err=>alert(err));
+  }
+
+
+  useEffect(()=>{
+
+    gameFetch();
 
   },[refresh]);
 
@@ -69,6 +73,7 @@ function Game() {
           toast.success(data.message);
           authStatus();
           setRefresh(false)
+          gameFetch();
         }
 
       }).catch(err => alert(err));
@@ -104,9 +109,36 @@ function Game() {
 
       }).catch(err => alert(err));
 
+  };
 
-    
 
+  const modify = (id, get, set)=>{
+
+    setRefresh(true);
+
+    fetch(`${import.meta.env.VITE_BASE_URL}/update/game`, {
+      method: "PATCH",
+      headers: { "Content-type": "application/json" },
+      body: JSON.stringify({
+        id: id,
+        name_get: get,
+        name_set: set
+      }
+      ),
+    })
+      .then(async (res) => {
+        const data = await res.json();
+        if (!res.ok) {
+          
+          toast.error(data.message);
+        } else {
+          toast.success(data.message);
+          authStatus();
+          setRefresh(false);
+          document.getElementById(`input-${id}`).value = "";
+        }
+
+      }).catch(err => alert(err));
   };
 
 
@@ -160,11 +192,14 @@ function Game() {
                   id={`input-${x.id}`}
                   type="text"
                   placeholder={x.name}
-                  className="w-72 px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-zinc-700 border-zinc-600 text-gray-400 shadow-sm"
-                  required disabled/>
+                  className="w-72 px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-zinc-700 border-zinc-600 text-white shadow-sm"
+                  required/>
                 
                 </div>
-                  <button onClick={()=>{torles(x.id)}} className="btn bg-indigo-600 text-white font-semibold rounded-md shadow hover:bg-indigo-500 transition duration-200"><img src="https://www.svgrepo.com/show/500534/delete-filled.svg" className="w-5" alt="Törlés"/></button>
+                  <div className="flex flex-row gap-5">
+                    <button id={`btn-mod-${x.id}`} onClick={()=>{modify(x.id, x.name, document.getElementById(`input-${x.id}`).value)}} className="btn bg-indigo-600 text-white font-semibold rounded-md shadow hover:bg-indigo-500 transition duration-200"><img src="https://www.svgrepo.com/show/281284/file-files-and-folders.svg" className="w-6" alt="Átnevezés"/></button>
+                    <button id={`btn-del-${x.id}`} onClick={()=>{torles(x.id)}} className="btn bg-indigo-600 text-white font-semibold rounded-md shadow hover:bg-indigo-500 transition duration-200"><img src="https://www.svgrepo.com/show/500534/delete-filled.svg" className="w-6" alt="Törlés"/></button>
+                  </div>
                 </div>
             ))
         )

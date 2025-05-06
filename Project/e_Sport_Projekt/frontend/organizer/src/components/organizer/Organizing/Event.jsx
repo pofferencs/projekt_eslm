@@ -17,6 +17,7 @@ function Event() {
   const [isForm, setIsForm] = useState(false);
   const [tournaments, setTournaments] = useState([]);
   const [pfpFile, setPfpFile] = useState({});
+  const [detailsNum, setDetailsNum] = useState(0);
   const navigate = useNavigate();
   
   useEffect(()=>{
@@ -28,7 +29,14 @@ function Event() {
       method: "GET",
       headers: { "Content-type": "application/json" },
     }).then(res=>res.json())
-    .then(adat=> {setEvent(adat); setIsLoading(false); setFormData(adat);
+    .then(adat=> {
+      
+      if(adat.message){
+        navigate('/');
+      }
+      
+      setEvent(adat); setIsLoading(false); setFormData(adat);
+      setDetailsNum(adat.details.length);
 
       setPicPath(
         fetch(`${import.meta.env.VITE_BASE_URL}/list/eventpic/${event.id}`,{
@@ -105,14 +113,30 @@ function Event() {
   const dateFormat = (date) => {
 
     if (date != undefined) {
-      const [ev, honap, nap] = date.split('T')[0].split('-')
-
-      return `${ev}-${honap}-${nap}`;
+      const localDate = new Date(date);
+      const ev = localDate.getFullYear();
+      const honap = String(localDate.getMonth() + 1).padStart(2, '0');
+      const nap = String(localDate.getDate()).padStart(2, '0');
+      const ora = String(localDate.getHours()).padStart(2, '0');
+      const perc = String(localDate.getMinutes()).padStart(2, '0');
+  
+      return `${ev}-${honap}-${nap}T${ora}:${perc}`;
     } else {
       return ``;
     }
-
-  }
+  };
+  
+  const formatDateTime = (dateTime) => {
+    if (dateTime) {
+      const [date, time] = dateTime.split('T');
+      const [ev, honap, nap] = date.split('-'); 
+      const [ora, perc] = time.split(':');
+  
+      return `${ev}. ${honap}. ${nap}. ${ora}:${perc}`; // Formázott visszatérési érték
+    } else {
+      return '';
+    }
+  };
 
 
   const onSubmit = (e) => {
@@ -237,6 +261,13 @@ const sendImage = async (file, type, id) => {
   
 
 
+  const handleInput = () => {
+    const textarea = document.getElementById('details');
+    textarea.style.height = "auto";
+    textarea.style.height = `${textarea.scrollHeight}px`;
+  };
+
+
 
 
 
@@ -301,14 +332,14 @@ const sendImage = async (file, type, id) => {
                           <label className="block text-sm font-medium text-white">
                             Kezdés
                           </label>
-                          <input id="start_date" type="date" disabled={disabled} value={dateFormat(formData.start_date)} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-gray-400 shadow-sm" />
+                          <input id="start_date" type="datetime-local" disabled={disabled} value={dateFormat(formData.start_date)} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-gray-400 shadow-sm" />
                         </div>
 
                         <div>
                           <label className="block text-sm font-medium text-white">
                             Vége
                           </label>
-                          <input id="end_date" type="date" disabled={disabled} value={dateFormat(formData.end_date)} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-gray-400 shadow-sm" />
+                          <input id="end_date" type="datetime-local" disabled={disabled} value={dateFormat(formData.end_date)} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-gray-400 shadow-sm" />
                         </div>
                         
                         <div>
@@ -333,6 +364,8 @@ const sendImage = async (file, type, id) => {
                     <h2 className="mt-10 text-center text-4xl font-bold tracking-tight text-indigo-600">
                           Az esemény versenyei
                     </h2>
+
+                    <div className="mx-auto mt-5 h-1 w-[60%] bg-gradient-to-r from-indigo-500 to-amber-500 rounded-full" />
                   <div className="p-8 md:p-10">
                     <div className="flex flex-row justify-center">
                       <button onClick={()=> navigate('/new-tournament')} className="btn mt-3 mb-10 text-white w-52">Új verseny felvétele</button>
@@ -348,7 +381,7 @@ const sendImage = async (file, type, id) => {
                           
                           ))
                           ):(
-                            <p>Nincsenek még versenyek!</p>
+                            <p className="text-center text-gray-500 mt-10">Nincsenek még versenyek!</p>
                           )
                         }
                       </div>
@@ -443,14 +476,14 @@ const sendImage = async (file, type, id) => {
                               <label className="block text-sm font-medium text-white">
                                 Kezdés
                               </label>
-                              <input id="start_date" type="date" disabled={disabled} onChange={writeData} value={dateFormat(formData.start_date)} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm" />
+                              <input id="start_date" type="datetime-local" disabled={disabled} onChange={writeData} value={dateFormat(formData.start_date)} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm" />
                             </div>
 
                             <div key={'end_date'}>
                               <label className="block text-sm font-medium text-white">
                                 Vége
                               </label>
-                              <input id="end_date" type="date" disabled={disabled} onChange={writeData} value={dateFormat(formData.end_date)} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm" />
+                              <input id="end_date" type="datetime-local" disabled={disabled} onChange={writeData} value={dateFormat(formData.end_date)} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm" />
                             </div>
                             
                             <div>
@@ -463,9 +496,10 @@ const sendImage = async (file, type, id) => {
                           </div>
                           <div key={'details'} className="mt-6">
                               <label className="block text-sm font-medium text-white">
-                                Leírás
+                              {`Leírás (${detailsNum}/512)`}
+                              
                               </label>
-                              <input id="details" type="text" disabled={disabled} onChange={writeData} value={formData.details} className="mt-1 block w-full h-auto hyphens-auto px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm" />
+                              <textarea maxLength={512} id="details" type="text" onInput={handleInput} disabled={disabled} onChange={writeData} value={formData.details} className="mt-1 block w-full h-auto hyphens-auto px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm" />
                             </div>
                         </div>
                       </div>
@@ -476,6 +510,8 @@ const sendImage = async (file, type, id) => {
                       <h2 className="mt-10 text-center text-4xl font-bold tracking-tight text-indigo-600">
                         Az esemény versenyei
                       </h2>
+
+                      <div className="mx-auto mt-5 h-1 w-[60%] bg-gradient-to-r from-indigo-500 to-amber-500 rounded-full" />
                   <div className="p-8 md:p-10">
                     <div className="flex flex-row justify-center">
                       <button onClick={()=>{navigate('/new-tournament')}} className="btn mt-3 mb-10 text-white w-52">Új verseny felvétele</button>
@@ -491,7 +527,7 @@ const sendImage = async (file, type, id) => {
                           
                           ))
                           ):(
-                            <p>Nincsenek még versenyek!</p>
+                            <p className="text-center text-gray-500 mt-10">Nincsenek még versenyek!</p>
                           )
                         }
                       </div>
@@ -542,7 +578,7 @@ const sendImage = async (file, type, id) => {
                           <dt className="text-sm text-white font-bold">
                             Név
                           </dt>
-                          <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                          <dd className="mt-1 text-sm text-white sm:mt-0 sm:col-span-2">
                             <p>{event.name}</p>
                           </dd>
                         </div>
@@ -550,7 +586,7 @@ const sendImage = async (file, type, id) => {
                           <dt className="text-sm text-white font-bold">
                             Hely
                           </dt>
-                          <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                          <dd className="mt-1 text-sm text-white sm:mt-0 sm:col-span-2">
                             <p>{event.place}</p>
                           </dd>
                         </div>
@@ -558,23 +594,23 @@ const sendImage = async (file, type, id) => {
                           <dt className="text-sm text-white font-bold">
                             Kezdés
                           </dt>
-                          <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                            <p>{dateFormat(event.start_date)}</p>
+                          <dd className="mt-1 text-sm text-white sm:mt-0 sm:col-span-2">
+                            <p>{formatDateTime(event.start_date)}</p>
                           </dd>
                         </div>
                         <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                           <dt className="text-sm text-white font-bold">
                             Vége
                           </dt>
-                          <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                            <p>{dateFormat(event.end_date)}</p>
+                          <dd className="mt-1 text-sm text-white sm:mt-0 sm:col-span-2">
+                            <p>{formatDateTime(event.end_date)}</p>
                           </dd>
                         </div>
                         <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                           <dt className="text-sm text-white font-bold">
                             Szervező
                           </dt>
-                          <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                          <dd className="mt-1 text-sm text-white sm:mt-0 sm:col-span-2">
                             <p>{organizer.full_name}</p>
                           </dd>
                         </div>
@@ -582,7 +618,7 @@ const sendImage = async (file, type, id) => {
                           <dt className="text-sm text-white font-bold">
                             Leírás
                           </dt>
-                          <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                          <dd className="mt-1 text-sm text-white sm:mt-0 sm:col-span-2">
                             <p>{event.details}</p>
                           </dd>
                         </div>
@@ -593,6 +629,8 @@ const sendImage = async (file, type, id) => {
                     <h2 className="mt-10 text-center text-4xl font-bold tracking-tight text-indigo-600">
                       Az esemény versenyei
                     </h2>
+
+                    <div className="mx-auto mt-5 h-1 w-[60%] bg-gradient-to-r from-indigo-500 to-amber-500 rounded-full" />
                       
                   <div className="p-8 md:p-10">
 
@@ -606,7 +644,7 @@ const sendImage = async (file, type, id) => {
                           
                           ))
                           ):(
-                            <p>Nincsenek még versenyek!</p>
+                            <p className="text-gray-500 mt-10">Nincsenek még versenyek!</p>
                           )
                         }
                       </div>

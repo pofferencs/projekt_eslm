@@ -1,20 +1,22 @@
 const express = require('express');
 const router = express.Router();
 
-const { applicationList } = require('../controllers/applicationController');
+const { applicationList, approvedApplicationsList, pendingApplicationsList } = require('../controllers/applicationController');
 const { userList, userSearchByName } = require('../controllers/userController');
 const { eventList, eventSearchByName, eventGetPicPath, eventSearchById, eventSearchByOrganizer } = require('../controllers/eventController');
 const { gameList } = require('../controllers/gameController');
 const { matchList } = require('../controllers/matchController');
 const { pictureList } = require('../controllers/pictureController');
 const { picture_linkList } = require('../controllers/pictureLinkController');
-const { teamList, teamSearchByName, teamGetPicPath } = require('../controllers/teamController');
+const { teamList, teamSearchByName, teamGetPicPath, teamSearchByID } = require('../controllers/teamController');
 const { tournamentList, tournamentSearchByName, tournamentSearchByEvent, tournamentGetPicPath, tntSearchById } = require('../controllers/tournamentController');
 const { organizerList, organizerSearchById } = require('../controllers/organizerController');
 const { teamMembershipList, activeMembersList, teamsForPlayer } = require('../controllers/teamMembershipController');
 
 
 router.get('/user', userList); 
+router.get('/pending/:tnt_id', pendingApplicationsList);
+router.get('/approved/:tnt_id', approvedApplicationsList);
 router.get('/application', applicationList);
 router.get('/event', eventList); /*Esemény*/
 router.get('/event/:id', eventSearchById);
@@ -39,5 +41,6 @@ router.get('/tournamentpic/:tournament_id', tournamentGetPicPath);
 router.get('/eventpic/:evt_id',eventGetPicPath);
 router.get('/team/:team_id/members', activeMembersList)
 router.get('/userteammemberships/:user_name',teamsForPlayer);
+router.get('/teamsearchbyid/:id',teamSearchByID);
 
 module.exports = router;

@@ -105,23 +105,20 @@ const applicationInsert = async (req, res) => {
 
 const applicationDelete = async (req, res) => {
 
-    const { id, tnt_id } = req.body;
+    const { id } = req.body;
+
+    if(!id){
+        return res.status(400).json({message: "Hiányos adat!"});
+    }
 
     try {
 
-        if(res,"Hiányzó adat(ok)!", id, tnt_id){
-            return;
-        };
-
         const applications = await prisma.applications.delete({
             where: {
-                id_tnt_id: {
-                    id: id,
-                    tnt_id: tnt_id
-                }
+                id: parseInt(id)
             }
         })
-        res.status(200).json({ message: "Sikeres törlés!" })
+        return res.status(200).json({ message: "Sikeres törlés!" })
 
     } catch (err) {
         console.log(err);
@@ -130,9 +127,279 @@ const applicationDelete = async (req, res) => {
 
 }
 
+
+
+    const approvedApplicationsList = async (req, res) => {
+
+        const { tnt_id } = req.params;
+
+
+        if(!tnt_id){
+            return res.status(400).json({message: "Hiányos adat!"});
+        }
+
+        
+        try {
+
+            const tournament = await prisma.tournaments.findFirst({
+                where: {
+                    id: parseInt(tnt_id)
+                }
+            });
+
+
+            if(!tournament){
+                return res.status(400).json({message: "Nincsen ilyen verseny!"});
+            }
+
+
+            const applications = await prisma.applications.findMany({
+                where: {
+                    tnt_id: parseInt(tnt_id),
+                    status: "approved"
+                },
+                include:{
+                    team: true
+                }
+            });
+
+
+            
+
+
+
+
+            if(applications.length==0){
+                return res.status(200).json({message: "Nincs elfogadott jelentkezés a versenyre!"});
+            }
+
+
+            return res.status(200).json(applications);
+
+
+            
+        } catch (error) {
+            res.status(500).json(error.message);
+        }
+
+    }
+
+
+
+    const pendingApplicationsList = async (req, res) => {
+
+        const { tnt_id } = req.params;
+
+
+        if(!tnt_id){
+            return res.status(400).json({message: "Hiányos adat!"});
+        }
+
+        
+        try {
+
+            const tournament = await prisma.tournaments.findFirst({
+                where: {
+                    id: parseInt(tnt_id)
+                }
+            });
+
+
+            if(!tournament){
+                return res.status(400).json({message: "Nincsen ilyen verseny!"});
+            }
+
+
+            const applications = await prisma.applications.findMany({
+                where: {
+                    tnt_id: parseInt(tnt_id),
+                    status: "pending"
+                },
+                include:{
+                    team: true
+                }
+            });
+
+
+            if(applications.length==0){
+                return res.status(200).json({message: "Nincs függőben lévő jelentkezés a versenyre!"});
+            }
+
+
+            return res.status(200).json(applications);
+
+
+            
+        } catch (error) {
+            return res.status(500).json(error.message);
+        }
+
+    }
+
+
+    
+    const applicationSubmit = async (req, res) => {
+
+        const {tnt_id, tem_id} = req.body;
+
+
+        if(!tnt_id || !tem_id){
+            return res.status(400).json({message: "Hiányos adatok!"});
+        }
+
+
+
+        try {
+
+            const team = await prisma.teams.findFirst({
+                where: {
+                    id: parseInt(tem_id)
+                }
+            });
+
+            if(!team){
+                return res.status(400).json({message: "A megadott csapat nem található!"});
+            }
+
+
+            const tournament = await prisma.tournaments.findFirst({
+                where: {
+                    id: parseInt(tnt_id)
+                }
+            });
+
+            if(!tournament){
+                return res.status(400).json({message: "A megadott verseny nem található!"});
+            }
+
+
+            let date = new Date();
+
+
+            const application = await prisma.applications.create({
+                data:{
+                    dte: date,
+                    status: "pending",
+                    tem_id: parseInt(tem_id),
+                    tnt_id: parseInt(tnt_id)
+                }
+            });
+
+
+            return res.status(200).json({message: "A jelentkezést sikeresen leadtad!"});
+
+
+            
+        } catch (error) {
+            return res.status(500).json(error.message);
+        }
+
+    }
+
+
+
+
+
+    const applicationHandle = async (req, res) => {
+
+
+        const {tnt_id, tem_id, new_status, uer_id} = req.body;
+
+        //Az "uer_id" itt a csapatkapitány id-jának kell lennie, és anélkül nem fut le!
+
+        if(!tnt_id || !tem_id || !new_status || !uer_id){
+            return res.status(400).json({message: "Hiányos adatok!"});
+        }
+
+
+
+        try {
+
+            const team = await prisma.teams.findFirst({
+                where: {
+                    id: parseInt(tem_id)
+                }
+            });
+
+            if(!team){
+                return res.status(400).json({message: "A megadott csapat nem található!"});
+            }
+
+
+            const tournament = await prisma.tournaments.findFirst({
+                where: {
+                    id: parseInt(tnt_id)
+                }
+            });
+
+            if(!tournament){
+                return res.status(400).json({message: "A megadott verseny nem található!"});
+            }
+
+            const user = await prisma.users.findFirst({
+                where: {
+                    id: parseInt(uer_id)
+                }
+            });
+
+            if(!user){
+                return res.status(400).json({message: "A megadott felhasználó nem található!"});
+            }
+
+
+            const application = await prisma.applications.update({
+                where:{
+                    uer_id_tem_id_tnt_id: {
+                        tem_id: parseInt(tem_id),
+                        tnt_id: parseInt(tnt_id),
+                        uer_id: parseInt(uer_id)
+                    }
+                },
+                data:{
+                    status: new_status
+                }
+                
+            });
+
+
+            if(new_status == "approved"){
+                return res.status(200).json({message: "Elfogadtad a jelentkezést!"});
+            }
+
+            if(new_status == "rejected"){
+                return res.status(200).json({message: "Elutasítottad a jelentkezést!"});
+            }
+            
+        } catch (error) {
+            return res.status(500).json(error.message);
+        }
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 module.exports = {
     applicationList,
     applicationUpdate,
     applicationInsert,
-    applicationDelete
+    applicationDelete,
+    approvedApplicationsList,
+    pendingApplicationsList,
+    applicationSubmit,
+    applicationHandle
 }

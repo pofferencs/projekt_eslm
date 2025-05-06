@@ -8,6 +8,7 @@ function NewEvent() {
 
   const {isAuthenticated, authStatus, profile} = useContext(OrganizerContext);
   const [isloading, setIsLoading] = useState(true);
+  const [detailsNum, setDetailsNum] = useState(0);
   const navigate = useNavigate();
 
 
@@ -27,16 +28,21 @@ function NewEvent() {
 
 
   const dateFormat = (date) => {
-
+    console.log(date);
+  
     if (date != undefined) {
-      const [ev, honap, nap] = date.split('T')[0].split('-')
-
-      return `${ev}-${honap}-${nap}`;
+      const localDate = new Date(date); // Konvertálás Date objektummá
+      const ev = localDate.getFullYear();
+      const honap = String(localDate.getMonth() + 1).padStart(2, '0'); // Hónap 0-alapú
+      const nap = String(localDate.getDate()).padStart(2, '0');
+      const ora = String(localDate.getHours()).padStart(2, '0');
+      const perc = String(localDate.getMinutes()).padStart(2, '0');
+  
+      return `${ev}-${honap}-${nap}T${ora}:${perc}`;
     } else {
       return ``;
     }
-
-  }
+  };
 
 
   const kuldes = (method, formData) => {
@@ -84,6 +90,14 @@ function NewEvent() {
   };
 
 
+  const handleInput = () => {
+    const textarea = document.getElementById('details');
+    textarea.style.height = "auto";
+    textarea.style.height = `${textarea.scrollHeight}px`;
+    setDetailsNum(textarea.value.length)
+
+  };
+
 
   return (
     <>
@@ -125,14 +139,14 @@ function NewEvent() {
                               <label className="block text-sm font-medium text-white">
                                 Kezdés(*)
                               </label>
-                              <input id="start_date" onChange={writeData} type="date" value={dateFormat(formData.start_date)} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm" />
+                              <input id="start_date" onChange={writeData} type="datetime-local" value={dateFormat(formData.start_date)} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm" />
                             </div>
 
                             <div key={'end_date'}>
                               <label className="block text-sm font-medium text-white">
                                 Vége(*)
                               </label>
-                              <input id="end_date" onChange={writeData} type="date" value={dateFormat(formData.end_date)} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm" />
+                              <input id="end_date" onChange={writeData} type="datetime-local" value={dateFormat(formData.end_date)} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm" />
                             </div>
                             
                             <div>
@@ -145,9 +159,9 @@ function NewEvent() {
                           </div>
                           <div key={'details'} className="mt-6">
                               <label className="block text-sm font-medium text-white">
-                                Leírás
+                                {`Leírás (${detailsNum}/512)`}
                               </label>
-                              <input id="details" type="text" onChange={writeData} value={formData.details} className="mt-1 block w-full h-auto hyphens-auto px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm" />
+                              <textarea maxLength={512} onInput={handleInput} id="details" type="text" onChange={writeData} value={formData.details} className="mt-1 block w-full h-auto hyphens-auto px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm" />
                             </div>
                         </div>
                         <div className="flex flex-row justify-center">

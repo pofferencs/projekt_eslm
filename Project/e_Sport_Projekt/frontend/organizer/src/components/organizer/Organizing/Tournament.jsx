@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 import OrganizerContext from "../../../context/OrganizerContext";
 import { toast } from "react-toastify";
+import ApplicationCard from "./ApplicationCard";
 
 function Tournament() {
 
@@ -9,8 +10,13 @@ function Tournament() {
   const { id } = useParams();
   const {isAuthenticated, authStatus, profile} = useContext(OrganizerContext);
   const [tournament, setTournament] = useState([]);
+  const [pendingApplications, setPendingApplications] = useState([]);
+  const [approvedApplications, setApprovedApplications] = useState([]);
+  const [pendingTeams, setPendingTeams] = useState([]);
+  const [approvedTeams, setApprovedTeams] = useState([]);
   const [event, setEvent] = useState([]);
   const [game, setGame] = useState([]);
+  const [gameName, setGameName] = useState("");
   const [isloading, setIsLoading] = useState(true);
   const [organizer, setOrganizer] = useState([]);
   const [picPath, setPicPath] = useState("");
@@ -18,29 +24,27 @@ function Tournament() {
   const [isValami, setIsValami] = useState(true);
   const [isForm, setIsForm] = useState(false);
   const [pfpFile, setPfpFile] = useState({});
+  const [detailsNum, setDetailsNum] = useState(0);
   const navigate = useNavigate();
 
 
   useEffect(()=>{
   
       window.scroll(0,0)
-      setDisabled(true);
-  
+      setDisabled(true);  
       
 
         fetch(`${import.meta.env.VITE_BASE_URL}/list/tntsearchid/${id}`,{
           method: "POST",
           headers: { "Content-type": "application/json" },
         }).then(res=>res.json())
-        
         .then(adat=> {
-
           if(adat.message){
             navigate('/');
           }
+          setTournament(adat); setFormData(adat); setIsLoading(false);
+          setDetailsNum(adat.details.length);
           
-          setTournament(adat); setIsLoading(false); setFormData(adat); 
-
           setPicPath(
             fetch(`${import.meta.env.VITE_BASE_URL}/list/tournamentpic/${id}`,{
               method: "GET",
@@ -62,30 +66,77 @@ function Tournament() {
                   .then(adat=> {
                       setGame(
                         adat.find((x)=>x.id == tournament.gae_id)
-                      ); setIsLoading(false)
+                      );  
+                      
+                     
+                        pendingFetch();
+                        approvedFetch();
+                        authStatus()
+                        setIsLoading(false);
+                      
                   }
                 )
               )})
               .catch(err=>alert(err))
             )
-
-
             })
             .catch(err=> alert(err))
           );
-    
-          
-    
-    
         })
-        .catch(err=> alert(err));
-    
-        console.log(event)
-    
-      
+        .catch(err=> alert(err));  
 
+        
+        
 
     },[isloading])
+
+
+    const pendingFetch = () => {
+      let obj = [];
+
+      setPendingApplications([]);
+      
+      fetch(`${import.meta.env.VITE_BASE_URL}/list/pending/${id}`,{
+        method: "GET",
+        headers: { "Content-type": "application/json" },
+      }).then(res=>res.json())
+      .then(adat=>
+        {
+        if(!adat.message){
+          
+          adat.map((x)=>(obj.push(x.team)))
+          setPendingApplications(adat);
+          
+          
+        }
+
+      }).catch(err=>alert(err))
+
+      setPendingTeams(obj);
+    }
+
+    const approvedFetch = () => {
+      let obj = [];
+      setApprovedApplications([]);
+
+
+      fetch(`${import.meta.env.VITE_BASE_URL}/list/approved/${id}`,{
+        method: "GET",
+        headers: { "Content-type": "application/json" },
+      }).then(res=>res.json())
+      .then(adat=>
+        {
+        if(!adat.message){
+          
+          adat.map((x)=>(obj.push(x.team)))
+          setApprovedApplications(adat);
+          
+        }
+
+      }).catch(err=>alert(err))
+
+      setApprovedTeams(obj);
+    }
   
   
     let formObj = {
@@ -106,16 +157,32 @@ function Tournament() {
     const [formData, setFormData] = useState(formObj);
     
     const dateFormat = (date) => {
-  
+    
       if (date != undefined) {
-        const [ev, honap, nap] = date.split('T')[0].split('-')
-  
-        return `${ev}-${honap}-${nap}`;
+        const localDate = new Date(date);
+        const ev = localDate.getFullYear();
+        const honap = String(localDate.getMonth() + 1).padStart(2, '0');
+        const nap = String(localDate.getDate()).padStart(2, '0');
+        const ora = String(localDate.getHours()).padStart(2, '0');
+        const perc = String(localDate.getMinutes()).padStart(2, '0');
+    
+        return `${ev}-${honap}-${nap}T${ora}:${perc}`;
       } else {
         return ``;
       }
-  
-    }
+    };
+
+    const formatDateTime = (dateTime) => {
+      if (dateTime) {
+        const [date, time] = dateTime.split('T'); // Szétválasztjuk a dátumot és az időt
+        const [ev, honap, nap] = date.split('-'); // A dátumot év, hónap, nap részekre bontjuk
+        const [ora, perc] = time.split(':'); // Az időt óra és perc részekre bontjuk
+    
+        return `${ev}. ${honap}. ${nap}. ${ora}:${perc}`; // Formázott visszatérési érték
+      } else {
+        return '';
+      }
+    };
   
   
     const onSubmit = (e) => {
@@ -249,15 +316,22 @@ function Tournament() {
       apn_end: tournament.apn_end,
       max_participant: tournament.max_participant,
       game_mode: tournament.game_mode,
-      team_num: tournament.team_num
+      team_num: tournament.team_num,
+      details: tournament.details
     }
 
     setFormData(formObj);
   };
 
 
+  
 
-
+  const handleInput = () => {
+    const textarea = document.getElementById('details');
+    textarea.style.height = "auto";
+    textarea.style.height = `${textarea.scrollHeight}px`;
+    setDetailsNum(textarea.value.length)
+  };
 
 
   return (
@@ -321,27 +395,27 @@ function Tournament() {
                           <label className="block text-sm font-medium text-white">
                             Verseny kezdete(*)
                           </label>
-                          <input id="start_date" type="date" disabled={disabled} value={dateFormat(formData.start_date)} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-gray-400 shadow-sm" />
+                          <input id="start_date" type="datetime-local" disabled={disabled} value={dateFormat(formData.start_date)} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-gray-400 shadow-sm" />
                         </div>
 
                         <div>
                           <label className="block text-sm font-medium text-white">
                             Verseny vége(*)
                           </label>
-                          <input id="end_date" type="date" disabled={disabled} value={dateFormat(formData.end_date)} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-gray-400 shadow-sm" />
+                          <input id="end_date" type="datetime-local" disabled={disabled} value={dateFormat(formData.end_date)} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-gray-400 shadow-sm" />
                         </div>
                         
                         <div>
                           <label className="block text-sm font-medium text-white">
                             Jelentkezés kezdete(*)
                           </label>
-                          <input id="apn_start" type="date" disabled={disabled} value={dateFormat(formData.apn_start)} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-gray-400 shadow-sm" />
+                          <input id="apn_start" type="datetime-local" disabled={disabled} value={dateFormat(formData.apn_start)} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-gray-400 shadow-sm" />
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-white">
                             Jelentkezés vége(*)
                           </label>
-                          <input id="apn_end" type="date" disabled={disabled} value={dateFormat(formData.apn_end)} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-gray-400 shadow-sm" />
+                          <input id="apn_end" type="datetime-local" disabled={disabled} value={dateFormat(formData.apn_end)} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-gray-400 shadow-sm" />
                         </div>
 
                         <div>
@@ -354,14 +428,14 @@ function Tournament() {
                           <label className="block text-sm font-medium text-white">
                             Esemény
                           </label>
-                          <input id="start_date" type="text" disabled value={event.name} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-gray-400 shadow-sm" />
+                          <input id="event" type="text" disabled value={event.name} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-gray-400 shadow-sm" />
                         </div>
 
                         <div>
                           <label className="block text-sm font-medium text-white">
                             Játék
                           </label>
-                          <input id="start_date" type="text" disabled value={(!game)?(<p></p>):(<>{game.name}</>)} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-gray-400 shadow-sm" />
+                          <input id="game" type="text" disabled value={(!game)?(<></>):(game.name)} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-gray-400 shadow-sm" />
                         </div>
 
                         <div>
@@ -384,13 +458,68 @@ function Tournament() {
                           <label className="block text-sm font-medium text-white">
                             Leírás
                           </label>
-                          <input type="text" disabled={disabled} value={formData.details} className="mt-1 block w-full hyphens-auto px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-gray-400 shadow-sm" />
+                          <textarea id="details" type="text" disabled={disabled} value={formData.details} className="mt-1 block w-full hyphens-auto px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-gray-400 shadow-sm" />
                         </div>
                     </div>
                   </div>
 
+                  <div className="w-full mb-10 mx-auto rounded-lg shadow-lg md:mt-6 md:max-w-full sm:max-w-4xl xl:p-0 bg-gray-800 dark:border-gray-700 pt-10">
+                    <div className="flex flex-row horizontal justify-center mt-10 gap-5">
+                      <h2 className="text-center text-4xl font-bold tracking-tight text-indigo-600">
+                            Jelentkező csapatok
+                      </h2>
+                      <button  onClick={()=>pendingFetch()} className="btn border-none bg-indigo-600 hover:bg-indigo-800"><img className="h-5" src="https://www.svgrepo.com/show/533694/refresh-ccw.svg"/></button>
+                    </div>
+
+                    <div className="mx-auto mt-5 h-1 w-[60%] bg-gradient-to-r from-indigo-500 to-amber-500 rounded-full" />
+                  <div className="p-8 md:p-10">
+                    
+                     <div className="flex flex-col">
+                      <div className="grid xl:grid-cols-2 md:grid-cols-1 sm:grid-cols-1 gap-12 justify-items-center">
+                        {
+                              pendingApplications.map((application)=>(
+                                <ApplicationCard key={application.id} team={application.team} application={application} />))
+                        }
+                      </div>
+                     </div>
+                    
+                    
+                  </div>
+                </div>
+
+
+                <div className="w-full mb-10 mx-auto rounded-lg shadow-lg md:mt-6 md:max-w-full sm:max-w-4xl xl:p-0 bg-gray-800 dark:border-gray-700 pt-10">
+                <div className="flex flex-row horizontal justify-center mt-10 gap-5">
+                      <h2 className="text-center text-4xl font-bold tracking-tight text-indigo-600">
+                            Jelentkezett csapatok
+                      </h2>
+                      <button onClick={()=>approvedFetch()} className="btn border-none bg-indigo-600 hover:bg-indigo-800"><img className="h-5" src="https://www.svgrepo.com/show/533694/refresh-ccw.svg"/></button>
+                    </div>
+
+                    <div className="mx-auto mt-5 h-1 w-[60%] bg-gradient-to-r from-indigo-500 to-amber-500 rounded-full" />
+                  <div className="p-8 md:p-10">
+                    
+                     <div className="flex flex-col">
+                      <div className="grid xl:grid-cols-2 md:grid-cols-1 sm:grid-cols-1 gap-12 justify-items-center">
+                        {
+                          
+                          approvedApplications.map((application)=>(
+                            <ApplicationCard key={application.id} team={application.team} application={application} />))
+                        
+                        }
+                        
+                      </div>
+                     </div>
+                    
+                    
+                  </div>
+                </div>
+
 
                 </div>
+
+
+                
 
                 
 
@@ -466,34 +595,34 @@ function Tournament() {
                           <label className="block text-sm font-medium text-white">
                             Résztvevők száma(*)
                           </label>
-                          <input id="place" type="number" disabled={disabled} onChange={writeData} value={formData.num_participant} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm" />
+                          <input id="num_participant" type="number" max={formData.max_participant} disabled={disabled} onChange={writeData} value={formData.num_participant} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm" />
                         </div>
 
                         <div>
                           <label className="block text-sm font-medium text-white">
                             Verseny kezdete(*)
                           </label>
-                          <input id="start_date" type="date" disabled={disabled} onChange={writeData} value={dateFormat(formData.start_date)} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm" />
+                          <input id="start_date" type="datetime-local" disabled={disabled} onChange={writeData} value={dateFormat(formData.start_date)} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm" />
                         </div>
 
                         <div>
                           <label className="block text-sm font-medium text-white">
                             Verseny vége(*)
                           </label>
-                          <input id="end_date" type="date" disabled={disabled} onChange={writeData} value={dateFormat(formData.end_date)} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm" />
+                          <input id="end_date" type="datetime-local" disabled={disabled} onChange={writeData} value={dateFormat(formData.end_date)} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm" />
                         </div>
                         
                         <div>
                           <label className="block text-sm font-medium text-white">
                             Jelentkezés kezdete(*)
                           </label>
-                          <input id="apn_start" type="date" disabled={disabled} onChange={writeData} value={dateFormat(formData.apn_start)} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm" />
+                          <input id="apn_start" type="datetime-local" disabled={disabled} onChange={writeData} value={dateFormat(formData.apn_start)} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm" />
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-white">
                             Jelentkezés vége(*)
                           </label>
-                          <input id="apn_end" type="date" disabled={disabled} onChange={writeData} value={dateFormat(formData.apn_end)} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm" />
+                          <input id="apn_end" type="datetime-local" disabled={disabled} onChange={writeData} value={dateFormat(formData.apn_end)} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm" />
                         </div>
 
                         <div>
@@ -506,14 +635,14 @@ function Tournament() {
                           <label className="block text-sm font-medium text-white">
                             Esemény
                           </label>
-                          <input id="start_date" type="text" disabled value={event.name} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-gray-400 shadow-sm" />
+                          <input id="event" type="text" disabled value={event.name} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-gray-400 shadow-sm" />
                         </div>
 
                         <div>
                           <label className="block text-sm font-medium text-white">
                             Játék
                           </label>
-                          <input id="start_date" type="text" disabled value={(!game)?(<p></p>):(<>{game.name}</>)} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-gray-400 shadow-sm" />
+                          <input id="game" type="text" disabled value={(!game)?(<></>):(game.name)} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-gray-400 shadow-sm" />
                         </div>
 
                         <div>
@@ -534,9 +663,9 @@ function Tournament() {
                       
                       <div className="mt-6">
                           <label className="block text-sm font-medium text-white">
-                            Leírás
+                          {`Leírás (${detailsNum}/512)`}
                           </label>
-                          <input type="text" disabled={disabled} onChange={writeData} value={formData.details} className="mt-1 block w-full hyphens-auto px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm" />
+                          <textarea maxLength={512} id="details" type="text" onInput={handleInput} disabled={disabled} onChange={writeData} value={formData.details} className="mt-1 block w-full hyphens-auto px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm" />
                         </div>
                     </div>
                   </div>
@@ -569,7 +698,7 @@ function Tournament() {
                           <dt className="text-sm text-white font-bold">
                             Név
                           </dt>
-                          <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                          <dd className="mt-1 text-sm text-white sm:mt-0 sm:col-span-2">
                             <p>{tournament.name}</p>
                           </dd>
                         </div>
@@ -577,7 +706,7 @@ function Tournament() {
                           <dt className="text-sm text-white font-bold">
                             Résztvevők száma
                           </dt>
-                          <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                          <dd className="mt-1 text-sm text-white sm:mt-0 sm:col-span-2">
                             <p>{tournament.num_participant}</p>
                           </dd>
                         </div>
@@ -585,39 +714,39 @@ function Tournament() {
                           <dt className="text-sm text-white font-bold">
                             Verseny kezdete
                           </dt>
-                          <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                            <p>{dateFormat(tournament.start_date)}</p>
+                          <dd className="mt-1 text-sm text-white sm:mt-0 sm:col-span-2">
+                            <p>{formatDateTime(tournament.start_date)}</p>
                           </dd>
                         </div>
                         <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                           <dt className="text-sm text-white font-bold">
                           Verseny vége
                           </dt>
-                          <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                            <p>{dateFormat(tournament.end_date)}</p>
+                          <dd className="mt-1 text-sm text-white sm:mt-0 sm:col-span-2">
+                            <p>{formatDateTime(tournament.end_date)}</p>
                           </dd>
                         </div>
                         <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                           <dt className="text-sm text-white font-bold">
                             Jelentkezés kezdete
                           </dt>
-                          <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                            <p>{dateFormat(tournament.apn_start)}</p>
+                          <dd className="mt-1 text-sm text-white sm:mt-0 sm:col-span-2">
+                            <p>{formatDateTime(tournament.apn_start)}</p>
                           </dd>
                         </div>
                         <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                           <dt className="text-sm text-white font-bold">
                             Jelentkezés vége
                           </dt>
-                          <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                            <p>{dateFormat(tournament.apn_end)}</p>
+                          <dd className="mt-1 text-sm text-white sm:mt-0 sm:col-span-2">
+                            <p>{formatDateTime(tournament.apn_end)}</p>
                           </dd>
                         </div>
                         <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                           <dt className="text-sm text-white font-bold">
                             Maximális résztvevők száma
                           </dt>
-                          <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                          <dd className="mt-1 text-sm text-white sm:mt-0 sm:col-span-2">
                             <p>{tournament.max_participant}</p>
                           </dd>
                         </div>
@@ -625,7 +754,7 @@ function Tournament() {
                           <dt className="text-sm text-white font-bold">
                             Esemény
                           </dt>
-                          <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                          <dd className="mt-1 text-sm text-white sm:mt-0 sm:col-span-2">
                             <p>{event.name}</p>
                           </dd>
                         </div>
@@ -633,7 +762,7 @@ function Tournament() {
                           <dt className="text-sm text-white font-bold">
                             Játék
                           </dt>
-                          <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                          <dd className="mt-1 text-sm text-white sm:mt-0 sm:col-span-2">
                             <p>{
                               (!game)?(<p></p>):(<>{game.name}</>)
                               }</p>
@@ -643,7 +772,7 @@ function Tournament() {
                           <dt className="text-sm text-white font-bold">
                             Játékmód
                           </dt>
-                          <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                          <dd className="mt-1 text-sm text-white sm:mt-0 sm:col-span-2">
                             <p>{tournament.game_mode}</p>
                           </dd>
                         </div>
@@ -651,18 +780,20 @@ function Tournament() {
                           <dt className="text-sm text-white font-bold">
                             Csapatok száma
                           </dt>
-                          <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                          <dd className="mt-1 text-sm text-white sm:mt-0 sm:col-span-2">
                             <p>{tournament.team_num}</p>
                           </dd>
                         </div>
+
                         <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                           <dt className="text-sm text-white font-bold">
                             Leírás
                           </dt>
-                          <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                            <p>{tournament.details}</p>
+                          <dd className="mt-1 text-sm text-white sm:mt-0 sm:col-span-2">
+                            <p className="break-words">{tournament.details}</p>
                           </dd>
                         </div>
+                        
                       </dl>
                     </div>
 
