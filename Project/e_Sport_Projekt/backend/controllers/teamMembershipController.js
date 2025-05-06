@@ -190,11 +190,25 @@ const invite = async (req, res) => {
         }
     })
 
-    if (existMembership && existMembership.status == "pending") {
+    
+    const userInviteability = await prisma.users.findFirst({
+        where:{
+            id: user_id
+        },
+        select:{
+            inviteable: true
+        }
+    })
+
+    if (Number(userInviteability.inviteable) === 0 ){
+        return res.status(400).json({ message: "A játékos nem fogad meghívót." })
+    }
+    else if (existMembership && existMembership.status == "pending") {
         return res.status(400).json({ message: "A játékosnak már van elfogadásra váró meghívója a csapatba." })
     } else if (existMembership && existMembership.status == "active") {
         return res.status(400).json({ message: "A játékos már tagja ennek a csapatnak." })
-    } else {
+    }
+    else {
 
         try {
             await prisma.team_Memberships.create({
@@ -246,7 +260,7 @@ const inviteAcceptOrReject = async (req, res) => {
     }
 
     else if (existMembership) {
-        return res.status(400).json({ message: "már tagja vagy ennak a csapatnak." })
+        return res.status(400).json({ message: "Már tagja vagy ennak a csapatnak." })
 
     } else {
 
