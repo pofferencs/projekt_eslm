@@ -198,6 +198,30 @@ function TeamEdit() {
             .catch(err => alert(err));
     }
 
+    const deleteTeam = (method)=>{
+        fetch(`${import.meta.env.VITE_BASE_URL}/delete/team`, {
+            method: method,
+            headers: { "Content-type": "application/json" },
+            body: JSON.stringify({ id: teamFormData.id })
+        })
+            .then(async res => {
+                const data = await res.json();
+
+                if (!res.ok) {
+                    toast.error(data.message || "Hiba történt, csak akkor törölhetsz csapatot, ha már csak te vagy benne és nem veszel részt versenyen!");
+                } else {
+                    toast.success(data.message);
+                }
+            })
+            .catch(err => alert(err));
+            setTimeout(() => {
+                navigate("/myteams");
+              }, 1500);
+    }
+    const onSubmitDelete = () => {
+        deleteTeam("DELETE");
+    }
+
 
     const onSubmitKick = (e) => {
         e.preventDefault();
@@ -218,7 +242,7 @@ function TeamEdit() {
                             <div className="m-10 rounded-md bg-gradient-to-br from-indigo-950 to-slate-500 sm:w-[600px] md:w-[800px] lg:w-[1000px] xl:w-[1200px] mx-auto text-primary-content">
                                 <div className="card-body">
                                     <div className="flex justify-center pb-8 gap-10">
-                                        <img className="w-56 h-56" src={`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_BASE_PIC}${teamPicPath}`} alt={`${teamFormData.short_name} csapat profilképe`} title={`${teamData.short_name} profilképe`} />
+                                        <img className="w-56 h-56" src={`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_BASE_PIC}${teamPicPath}`} alt={`${teamFormData.full_name} csapat profilképe`} title={`${teamData.full_name} profilképe`} />
                                         <div className="card-title">
                                             <div className="pl-14">
                                                 <p className="text-3xl pb-2 text-white">{teamFormData.full_name}</p>
@@ -233,7 +257,9 @@ function TeamEdit() {
                                                     >
                                                         Adatok módosítása
                                                     </button>
+                                                    
                                                 </div>
+                                                <button className="btn mt-3 bg-red-800 text-white" onClick={()=>onSubmitDelete()}>Csapat törlése</button>
                                             </div>
                                         </div>
                                     </div>
@@ -288,7 +314,7 @@ function TeamEdit() {
                                 <div className="m-10 rounded-md bg-gradient-to-br from-indigo-950 to-slate-500 sm:w-[600px] md:w-[800px] lg:w-[1000px] xl:w-[1200px] mx-auto text-primary-content">
                                     <div className="card-body">
                                         <div className="flex justify-center pb-8 gap-10">
-                                            <img className="w-56 h-56" src={`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_BASE_PIC}${teamPicPath}`} />
+                                            <img className="w-56 h-56" alt={`${teamFormData.full_name} csapat profilképe`} title={`${teamFormData.full_name} csapat profilképe`} src={`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_BASE_PIC}${teamPicPath}`} />
                                             <div className="card-title">
                                                 <div className="pl-14">
                                                     <p className="text-3xl pb-2 text-white">{teamFormData.full_name}</p>
@@ -304,6 +330,7 @@ function TeamEdit() {
                                                         </div>
 
                                                     </form>
+                                                    
                                                     {/* Fénykép feltöltés */}
                                                     <form encType="multipart/form-data">
                                                         <div className="mt-3">
