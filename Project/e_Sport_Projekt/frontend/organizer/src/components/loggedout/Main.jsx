@@ -65,7 +65,7 @@ function Main() {
       </div>
 
       <div
-        className={`grid ${events.length === 1 ? 'lg:grid-cols-1' : 'lg:grid-cols-3'} md:grid-cols-2 sm:grid-cols-1 justify-items-center gap-5 mb-10 mt-10`}
+        className={`grid ${events.length === 1 ? 'lg:grid-cols-1' : 'lg:grid-cols-2'} md:grid-cols-2 sm:grid-cols-1 justify-items-center gap-5 mb-10 mt-10`}
       >
         {events.length > 0 ? (
           events.map((event) => (
