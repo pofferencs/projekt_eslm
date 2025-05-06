@@ -1,9 +1,3 @@
-import {
-  FaFacebookF,
-  FaFacebook,
-  FaInstagram,
-  FaInstagramSquare,
-} from "react-icons/fa";
 import { FaLocationDot, FaPhone } from "react-icons/fa6";
 
 function Footer() {
