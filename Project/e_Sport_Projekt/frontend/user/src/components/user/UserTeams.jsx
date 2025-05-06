@@ -38,13 +38,13 @@ function UserTeams() {
 
           setTeams(csapatokTagokkal);
         } else {
-          toast.error("No teams found.");
+          toast.error("Egy csapatban se vagy benne.");
           setTeams([]);
         }
       })
       .catch(err => {
         console.error("Error occurred:", err);
-        toast.error("Error while fetching teams.");
+        toast.error("Hiba az adatok betöltése közben.");
       })
       .finally(() => setIsLoading(false));
   }, [profile, isAuthenticated]);

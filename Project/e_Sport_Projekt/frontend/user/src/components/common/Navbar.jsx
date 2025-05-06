@@ -106,6 +106,10 @@ function Navbar() {
                     <Link to={`/profile/${profile.usr_name}`} onClick={() => { window.scroll(0, 0) }} className="block px-4 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white rounded-lg">Profiladatok</Link>
                   </li>
 
+                  {(isAuthenticated) && (
+                    <Link to="/myinvites" className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Meghívóim</Link>
+                  )}
+
                   {isAuthenticated && (
                     <li>
                       <Link to={`/profile/${profile.usr_name}#myteams`} onClick={() => { window.scroll(0, 0) }} className="block px-4 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white rounded-lg">
@@ -145,6 +149,8 @@ function Navbar() {
               <Link to="/" className="block rounded-md bg-gray-900 px-3 py-2 text-base font-medium text-white">Főoldal</Link>
               {(isAuthenticated) && (
                 <Link to="/myteams" className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Csapattagságaim</Link>
+              )}{(isAuthenticated) && (
+                <Link to="/myinvites" className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Meghívóim</Link>
               )}
               <Link to="/player-search" className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Játékos kereső</Link>
               <Link to="/team-search" className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Csapat kereső</Link>
