@@ -1,4 +1,7 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import OrganizerContext from "../../../context/OrganizerContext";
+import { useNavigate } from "react-router-dom";
+
 
 function EventSchema({ event }) {
 
@@ -14,7 +17,10 @@ function EventSchema({ event }) {
         }).format(date).replace(/\./g, ".").trim();
     }
 
+    const {isAuthenticated, profile} = useContext(OrganizerContext);
+    const navigate = useNavigate();
     const [eventPicPath, setEventPicPath] = useState("");
+    const [showFull, setShowFull] = useState(false);
 
     const [timeLeftToStart, setTimeLeftToStart] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
     const [timeLeftToEnd, setTimeLeftToEnd] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
@@ -109,7 +115,7 @@ function EventSchema({ event }) {
                 </div>
 
 
-                <div className="flex justify-evenly">
+                <div className="flex justify-evenly border-t border-white my-2 pt-2">
                     <p className="drop-shadow-lg text-stone-300 font-extrabold">Kezdés:</p>
                     <div>
                         {
@@ -122,32 +128,32 @@ function EventSchema({ event }) {
                                         <span className="countdown font-mono text-2xl" aria-label={`${timeLeftToStart.days} days`}>
                                             {timeLeftToStart.days}
                                         </span>
-                                        days
+                                        nap
                                     </div>
                                     <div className="flex flex-col p-2 rounded-box bg-red-300 text-indigo-950 ">
                                         <span className="countdown font-mono text-2xl" aria-label={`${timeLeftToStart.hours} hours`}>
                                             {timeLeftToStart.hours}
                                         </span>
-                                        hours
+                                        óra
                                     </div>
                                     <div className="flex flex-col p-2 rounded-box bg-red-300 text-indigo-950">
                                         <span className="countdown font-mono text-2xl" aria-label={`${timeLeftToStart.minutes} minutes`}>
                                             {timeLeftToStart.minutes}
                                         </span>
-                                        min
+                                        perc
                                     </div>
                                     <div className="flex flex-col p-2 rounded-box bg-red-300 text-indigo-950">
                                         <span className="countdown font-mono text-2xl" aria-label={`${timeLeftToStart.seconds} seconds`}>
                                             {timeLeftToStart.seconds}
                                         </span>
-                                        sec
+                                        mp
                                     </div>
                                 </div>)
                         }
                     </div>
                 </div>
 
-                <div className="flex justify-evenly">
+                <div className="flex justify-evenly border-t border-white my-2 pt-2">
                     <p className="drop-shadow-lg text-stone-300 font-extrabold">Vége:</p>
                     {
                         (statusCheckResult == "started")
@@ -186,15 +192,57 @@ function EventSchema({ event }) {
 
                 </div>
 
-                <div className="flex justify-evenly">
+                <div className="flex justify-evenly border-t border-white my-2 pt-2">
                     <p className="drop-shadow-lg text-stone-300 font-extrabold flex-none">Hely:</p>
                     <p className="drop-shadow-lg ml-10">{event.place}</p>
                 </div>
 
                 <div className="flex justify-evenly">
-                    <p className="drop-shadow-lg text-stone-300 font-extrabold flex-none">Leírás:</p>
-                    <p className="drop-shadow-lg ml-7">{event.details}</p>
+                    <p className="drop-shadow-lg text-stone-300 font-extrabold flex-none">Információ:</p>
+                    <p
+                        className={`ml-7 drop-shadow-lg inline-block max-w-xs overflow-hidden ${!showFull ? "whitespace-nowrap" : ""}`}
+                        style={
+                            !showFull
+                                ? {
+                                    WebkitMaskImage: "linear-gradient(to left, transparent, black 40%)",
+                                    maskImage: "linear-gradient(to left, transparent, black 40%)",
+                                    WebkitMaskSize: "100% 100%",
+                                    maskSize: "100% 100%",
+                                }
+                                : {}
+                        }
+                    >
+                        {event.details}
+                    </p>
                 </div>
+
+                <div className="flex flex-wrap gap-2 justify-center border-t border-white my-2 pt-4">
+                    <button
+                        className="btn btn-sm btn-outline btn-accent"
+                        onClick={() => setShowFull((prev) => !prev)}
+                    >
+                        {showFull ? "Rövid info" : "Teljes info"}
+                    </button>
+
+                    {
+                        (event.ogr_id == profile.id)?(
+                            
+                                <button className="btn btn-sm btn-outline btn-info" onClick={()=>{navigate(`/event/${event.id}`)}}>Esemény szerkesztése</button>
+                            
+                        ):(
+
+                        <button
+                        className="btn btn-sm btn-outline btn-info"
+                        onClick={() => navigate(`/event/${event.id}`)}>
+                        Esemény részletei
+                        </button>
+
+
+                        )
+                    }
+                    
+                </div>
+                
             </div>
         </div>
     );

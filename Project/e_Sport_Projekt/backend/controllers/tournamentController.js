@@ -12,7 +12,64 @@ const tournamentList = async (req, res) => {
     }
 };
 
-const torunamentSearchByName = async (req,res) =>{
+const tournamentSearchByEvent = async (req, res) =>{
+
+    const {name} = req.body;
+
+    if(!name) return res.status(400).json({message: "Hiányos adatok!"});
+
+    try {
+
+        const tournaments = await prisma.tournaments.findMany({
+            where:{
+                event:{
+                    name: name
+                }
+            }
+        })
+
+        if(tournaments.length == 0 || name == "") return res.status(400).json({message : "Nincs ilyen verseny!"});
+        else return res.status(200).json(tournaments);
+
+
+        
+    } catch (error) {
+        return res.status(500).json(error);
+    }
+}
+
+const tntSearchById = async (req, res) =>{
+
+        const { id } = req.params;
+
+        if(!id){
+            return res.status(400).json({message: "Hiányos adat!"});
+        }
+
+        try {
+
+            const tournament = await prisma.tournaments.findFirst({
+                where: {
+                    id: parseInt(id)
+                }
+            });
+
+
+            if(!tournament) return res.status(400).json({message : "Nincs ilyen verseny!"});
+            else return res.status(200).json(tournament);
+
+
+            
+        } catch (error) {
+            console.log(error);
+            return res.status(500).json({ message: "Hiba a fetch során!" });            
+        }
+
+    };
+
+
+
+const tournamentSearchByName = async (req,res) =>{
 
     const { name } = req.params;
 
@@ -295,10 +352,45 @@ const tournamentInsert = async (req, res) => {
 
 }
 
+const tournamentGetPicPath = async (req,res)=>{
+    const { tournament_id } = req.params;
+
+    try {
+        const tournamentPic = await prisma.picture_Links.findFirst({
+            where: {
+                tnt_id: Number(tournament_id)
+            }
+        });
+
+        if (!tournamentPic || !tournamentPic.tnt_id) {
+            return res.status(400).json({ message: "Nincs ilyen verseny!" });
+        }
+
+        const picPath = await prisma.pictures.findUnique({
+            where: {
+                id: tournamentPic.pte_id
+            }
+        });
+
+        if (!picPath) {
+            return res.status(400).json({ message: "Nincs ilyen kép!" });
+        }
+
+        return res.status(200).json(picPath.img_path);
+
+    } catch (error) {
+        return res.status(500).json(error);
+    }
+
+}
+
 module.exports = {
     tournamentList,
     tournamentUpdate,
     tournamentDelete,
     tournamentInsert,
-    torunamentSearchByName
+    tournamentGetPicPath,
+    tournamentSearchByName,
+    tournamentSearchByEvent,
+    tntSearchById
 }

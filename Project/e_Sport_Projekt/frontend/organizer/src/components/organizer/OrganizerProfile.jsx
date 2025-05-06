@@ -12,7 +12,8 @@ function OrganizerProfile() {
   const [picPath, setPicPath] = useState("");
   const [isForm, setIsForm] = useState(false);
   const [disabled, setDisabled] = useState(true);
-  const [emailDisabled, setEmailDisabled] = useState(false);
+  const [usrnameDisabled, setUsrnameDisabled] = useState(true);
+  const [emailDisabled, setEmailDisabled] = useState(true);
   const navigate = useNavigate();
   const [pfpFile, setPfpFile] = useState({});
 
@@ -77,27 +78,7 @@ function OrganizerProfile() {
 
   }, [isAuthenticated]);
 
-  // useEffect(() => {
-
-  //   if (!name) {
-  //     fetch(`${import.meta.env.VITE_BASE_URL}/user/userpic/${profile.id}`)
-  //       .then(res => res.json())
-  //       .then(adat => { setPicPath(adat); setIsLoading(false); })
-  //       .catch(err => { console.log(err) });
-
-  //   }
-
-  //   console.log("refreshed navbar")
-  // }, [isAuthenticated])
-
-  // useEffect(()=>{
-  //   if(isAuthenticated==false && !name){
-  //     navigate('/');
-  //   }
-
-  // },[profileAdat])
-
-
+  
   const dateFormat = (date) => {
 
     if (date != undefined) {
@@ -109,28 +90,6 @@ function OrganizerProfile() {
     }
 
   }
-
-
-  //Adatmódosító rész
-
-  const kuldesEmail = (email, method) => {
-
-    fetch(`${import.meta.env.VITE_BASE_URL}/organizer/password-reset`, {
-      method: method,
-      headers: { "Content-type": "application/json" },
-      body: JSON.stringify({ email: email }),
-    }).then((res) => res.json())
-      .then((token) => {
-        if (!token.ok) {
-
-          toast.success(token.message)
-        }
-      })
-      .catch((err) => alert(err));
-  };
-
-
-
 
   //console.log(formData);
 
@@ -150,7 +109,10 @@ function OrganizerProfile() {
       sendingObj = {
         id: profile.id,
         usr_name: profile.usr_name,
-        new_usr_name: formData.usr_name
+        new_usr_name: formData.usr_name,
+        full_name: formData.full_name,
+        school: formData.school,
+        phone_num: formData.phone_num,
       };
       usr_modify = true;
 
@@ -158,7 +120,10 @@ function OrganizerProfile() {
       sendingObj = {
         id: profile.id,
         email_address: profile.email_address,
-        new_email_address: formData.email_address
+        new_email_address: formData.email_address,
+        full_name: formData.full_name,
+        school: formData.school,
+        phone_num: formData.phone_num,
       }
     } else {
       sendingObj = {
@@ -171,7 +136,7 @@ function OrganizerProfile() {
 
 
 
-    fetch(`${import.meta.env.VITE_BASE_URL}/update/user`, {
+    fetch(`${import.meta.env.VITE_BASE_URL}/update/organizer`, {
       method: method,
       headers: { "Content-type": "application/json" },
       body: JSON.stringify(sendingObj),
@@ -183,16 +148,25 @@ function OrganizerProfile() {
           toast.error(data.message);
         } else {
           toast.success(data.message);
-          authStatus();
           if (usr_modify) {
-            navigate(`/profile/${sendingObj.new_usr_name}`)
+            navigate(`/organizer/profile/${sendingObj.new_usr_name}`)
+            authStatus();
+            formReset();
           } else {
             setIsForm(false);
+            authStatus();
+            formReset();
           }
 
         }
 
       }).catch(err => alert(err));
+
+
+      setEmailDisabled(true);
+      setUsrnameDisabled(true);
+      authStatus();
+
 
   };
 
@@ -209,26 +183,6 @@ function OrganizerProfile() {
   };
 
 
-  const inviteableModify = (invBool) => {
-
-    fetch(`${import.meta.env.VITE_BASE_URL}/update/user`, {
-      method: "PATCH",
-      headers: { "Content-type": "application/json" },
-      body: JSON.stringify({ id: profile.id, inviteable: invBool }),
-    })
-      .then(async (res) => {
-        const data = await res.json();
-        if (!res.ok) {
-
-          toast.error(data.message);
-        } else {
-          toast.success(data.message);
-          authStatus();
-        }
-
-      }).catch(err => alert(err));
-
-  }
 
   const sendImage = async (file, type, id) => {
     const formData = new FormData();
@@ -313,7 +267,7 @@ function OrganizerProfile() {
                           <dt className="text-sm text-white font-bold">
                             Teljes név
                           </dt>
-                          <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                          <dd className="mt-1 text-sm text-white sm:mt-0 sm:col-span-2">
                             <p>{profileAdat.full_name}</p>
                           </dd>
                         </div>
@@ -321,7 +275,7 @@ function OrganizerProfile() {
                           <dt className="text-sm text-white font-bold">
                             Iskola
                           </dt>
-                          <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                          <dd className="mt-1 text-sm text-white sm:mt-0 sm:col-span-2">
                             <p>{profileAdat.school}</p>
                           </dd>
                         </div>
@@ -348,20 +302,6 @@ function OrganizerProfile() {
                           </div>
                         </div>
                       </div>
-
-                      {/* <button disabled={emailDisabled} className="btn mt-3 text-white w-52" onClick={()=> {kuldesEmail(profile.email_address, "POST"); setEmailDisabled(true)}}>Jelszó módosítás</button> */}
-
-                      {/* <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt className="text-sm text-white font-bold">
-                        Születési dátum
-                    </dt>
-                    <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                    {
-                    (<p>{dateFormat(profile.date_of_birth)}</p>)
-                    }
-                    </dd>
-                </div> */}
-
 
                       <div className="w-full mx-auto rounded-lg shadow-lg md:mt-6 md:max-w-full sm:max-w-4xl xl:p-0 bg-gray-800 dark:border-gray-700">
                         <div className="p-8 md:p-10">
@@ -474,12 +414,22 @@ function OrganizerProfile() {
                           <div className="p-8 md:p-10">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6" >
 
-                              <div key={"usr_name"}>
-                                <label className="block text-sm font-medium text-white">
-                                  Felhasználónév
-                                </label>
-                                <input id="usr_name" type="text" disabled={disabled} onChange={writeData} value={formData.usr_name} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm" />
-                              </div>
+                            <div key={"usr_name"}>
+                                  <label className="block text-sm font-medium text-white">
+                                    Felhasználónév
+                                  </label>
+                                  <div className="flex flex-row gap-4 mt-1">
+                                    <input id="usr_name" type="text" disabled={usrnameDisabled} onChange={writeData} value={formData.usr_name} className="block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 disabled:text-gray-400 text-white shadow-sm" />
+                                    <button onClick={()=>{
+                                      if(usrnameDisabled){
+                                        setEmailDisabled(true); setUsrnameDisabled(false); formReset()
+                                      }else{
+                                        setUsrnameDisabled(true); formReset()
+                                      }
+
+                                    }} className="btn bg-indigo-600 hover:bg-indigo-700 border-none"><img src="https://www.svgrepo.com/show/281284/file-files-and-folders.svg" className="h-5"/></button>
+                                  </div>
+                                </div>
 
                               <div key={"full_name"}>
                                 <label className="block text-sm font-medium text-white">
@@ -496,11 +446,21 @@ function OrganizerProfile() {
                               </div>
 
                               <div key={"email_address"}>
-                                <label className="block text-sm font-medium text-white">
-                                  E-mail cím
-                                </label>
-                                <input id="email_address" type="text" disabled={disabled} onChange={writeData} value={formData.email_address} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm" />
-                              </div>
+                                  <label className="block text-sm font-medium text-white">
+                                    E-mail cím
+                                  </label>
+                                  <div className="flex flex-row gap-4 mt-1">
+                                    <input id="email_address" type="text" disabled={emailDisabled} onChange={writeData} value={formData.email_address} className="block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 text-white disabled:text-gray-400 border-gray-600 shadow-sm" />
+                                    <button onClick={()=>{
+                                      if(emailDisabled){
+                                        setUsrnameDisabled(true); setEmailDisabled(false); formReset()
+                                      }else{
+                                        setEmailDisabled(true); formReset()
+                                      }
+
+                                    }} className="btn bg-indigo-600 hover:bg-indigo-700 border-none"><img src="https://www.svgrepo.com/show/281284/file-files-and-folders.svg" className="h-5"/></button>
+                                  </div>
+                                </div>
 
                               <div key={"phone_num"}>
                                 <label className="block text-sm font-medium text-white">

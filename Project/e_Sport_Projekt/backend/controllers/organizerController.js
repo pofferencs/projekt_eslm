@@ -298,8 +298,6 @@ const organizerList = async (req, res) => {
         const organizers = await prisma.organizers.findMany({
             select: {
                 id: true,
-                discord_name: true,
-                inviteable: true,
                 full_name: true,
                 usr_name: true,
                 date_of_birth: true,
@@ -347,6 +345,43 @@ const organizerSearchByName = async (req, res) => {
         return res.status(500).json(error);
     }
 }
+
+const organizerSearchById = async (req, res) => {
+
+    const { id } = req.body;
+
+    if(!id){
+        return res.status(400).json({message: "Hiányos adatok!"});
+    }
+
+    try {
+
+        const organizer = await prisma.organizers.findFirst({
+            where: {
+                id: id
+            },
+            select: {
+                id: true,
+                full_name: true,
+
+            }
+        })
+
+        if(!organizer){
+            return res.status(400).json({message: "Nincs ilyen szervező!"});
+        }
+
+        return res.status(200).json(organizer)
+
+    } catch (error) {
+        return res.status(500).json(error);
+    }
+
+
+    
+    
+}
+
 
 const organizerProfileSearchByName = async (req, res) => {
     const { usr_name } = req.params;
@@ -431,7 +466,7 @@ const organizerUpdate = async (req, res) => {
 
         //Email módosítás esetén:
 
-        if(((new_email_address && paswrd) && !new_usr_name && !new_paswrd)){
+        if(((new_email_address) && !new_usr_name && !new_paswrd)){
 
 
             if(validalasFuggveny(res, [
@@ -446,9 +481,9 @@ const organizerUpdate = async (req, res) => {
                 let trim_email = new_email_address.replaceAll(" ", "");
 
 
-                if(!bcrypt.compareSync(paswrd, organizer.paswrd)){
-                    return res.status(400).json({message: "A jelszó nem megfelelő!"});
-                }
+                // if(!bcrypt.compareSync(paswrd, organizer.paswrd)){
+                //     return res.status(400).json({message: "A jelszó nem megfelelő!"});
+                // }
                 
                 console.log(new Date(new Date(date).setMonth(date.getMonth() - 1)));
                 if(date > new Date(new Date(organizer.email_last_mod_date).setMonth(organizer.email_last_mod_date.getMonth() + 1))){
@@ -483,7 +518,7 @@ const organizerUpdate = async (req, res) => {
 
         //Felhasználónév esetén:
 
-        if((usr_name && new_usr_name && paswrd) && !new_email_address && !new_paswrd){
+        if((usr_name && new_usr_name) && !new_email_address && !new_paswrd){
 
             if(validalasFuggveny(res, [
                 { condition: /@/.test(new_usr_name), message: "A felhasználó név nem tartalmazhat '@' jelet!" },
@@ -522,7 +557,7 @@ const organizerUpdate = async (req, res) => {
         }
 
         //Jelszó esetén:
-        if((id && new_paswrd) || ((paswrd && new_paswrd)) && !new_email_address && !usr_name){
+        if((id && new_paswrd) || ((paswrd && new_paswrd)) && !new_email_address && !new_usr_name){
 
             // console.log({encrypted: paswrd == new_paswrd ? "true" : "false"})
             // console.log({encrypted: bcrypt.compareSync(paswrd, organizer.paswrd) == bcrypt.compareSync(new_paswrd, organizer.paswrd) ? "true" : "false"})
@@ -885,6 +920,67 @@ const organizerGetPicturePath = async (req, res) => {
     }
 }
 
+    const userBanByOrg = async (req, res) => {
+
+        const { uer_id, uer_status } = req.body;
+
+        let tmp_status;
+        let end_message;
+        let tmp_inviteable;
+
+        if(!uer_status){
+            return res.status(400).json({message: "Hiányos adat!"});
+        }
+
+        if(uer_status == "active" || uer_status == "inactive"){
+            tmp_status = "banned";
+            end_message = "Játékos kitiltva!"
+            tmp_inviteable = false;
+            
+        }
+
+        if(uer_status == "banned"){
+            tmp_status = "active";
+            end_message = "Játékos kitiltása feloldva!"
+            tmp_inviteable = false;
+        }
+
+        try {
+
+            const user = await prisma.users.findFirst({
+                where: {
+                    id: uer_id
+                }
+            });
+
+            if(!user){
+                return res.status(400).json({message: "Nincs ilyen játékos!"});
+            }
+
+
+            const modUserStatus = await prisma.users.update({
+                where: {
+                    id: uer_id
+                },
+                data: {
+                    status: tmp_status,
+                    inviteable: false
+                }
+            });
+
+            
+
+            return res.status(200).json({message: end_message})
+
+
+            
+        } catch (error) {
+            return res.status(500).json(error);
+        }
+
+
+    }
+
 
 module.exports = {
     organizerList,
@@ -900,6 +996,8 @@ module.exports = {
     passEmailVerify,
     organizerSearchByName,
     organizerGetPicturePath,
-    organizerProfileSearchByName
+    organizerProfileSearchByName,
+    organizerSearchById,
+    userBanByOrg
     
 }

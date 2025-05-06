@@ -2,6 +2,12 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import EventSchema from "../common/schemas/EventSchema";
 import { Link } from "react-router-dom";
+import Hirschmann from "../../assets/sponsores/hirschmann.jpg";
+import Linamar from "../../assets/sponsores/linamar.png";
+import Makroker from "../../assets/sponsores/makroker.png";
+import Stones from "../../assets/sponsores/stones.jpg";
+import TopLaptop from "../../assets/sponsores/topLaptop.png";
+import CarloQuality from '../../assets/sponsores/carloQuality.png'
 
 function Main() {
   const [events, setEvents] = useState([]);
@@ -75,6 +81,22 @@ function Main() {
           <p>{events.message}</p>
         )}
       </div>
+
+      <h2 className="mt-10 mb-5 p-2 underline text-center text-4xl font-bold bg-gradient-to-br from-indigo-500 to-amber-500 inline-block text-transparent bg-clip-text">
+        Támogatóink
+      </h2>
+      <div className="mx-auto mt-2 h-1 w-[100%] bg-gradient-to-r to-indigo-500 from-amber-500 rounded-full" />
+
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-1 bg-white  place-items-center">
+        <img src={CarloQuality} alt="Cario Quality" className="h-25 object-contain" />
+        <img src={Hirschmann} alt="Hirschmann" className="h-27 object-contain" />
+        <img src={Linamar} alt="Linamar" className="h-30 object-contain" />
+        <img src={Makroker} alt="Makroker" className="h-15 mb-5 object-contain" />
+        <img src={Stones} alt="Stones" className="h-24 mb-5 object-contain" />
+        <img src={TopLaptop} alt="Top Laptop" className="h-10 object-contain" />
+      </div>
+      <div className="mx-auto h-1 mb-10 w-[100%] bg-gradient-to-r from-indigo-500 to-amber-500 rounded-full" />
+
 
     </div>
   );

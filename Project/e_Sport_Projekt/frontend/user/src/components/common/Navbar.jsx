@@ -9,19 +9,19 @@ function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
   const navigate = useNavigate();
-   
+
 
   const { logout, isAuthenticated, authStatus, update, pageRefresh, profile, uPicPath } = useContext(UserContext);
-  
-  useEffect(()=>{
+
+  useEffect(() => {
 
     authStatus()
 
-  },[isAuthenticated])
+  }, [isAuthenticated])
 
-  useEffect(()=>{
+  useEffect(() => {
 
-            //console.log("refreshed navbar")
+    //console.log("refreshed navbar")
 
     const interval = setInterval(() => {
       authStatus();
@@ -33,7 +33,7 @@ function Navbar() {
 
   return (
     <div>
-      <nav className="bg-gray-800">
+      <nav className="bg-gray-800 overflow-y-visible">
         <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
           <div className="relative flex h-16 items-center justify-between">
             {/* Mobil menü gomb */}
@@ -67,16 +67,18 @@ function Navbar() {
               <div className="hidden sm:ml-6 md:block">
                 <div className="flex space-x-4">
                   <Link to="/" className="rounded-md bg-gray-900 px-3 py-2 text-sm font-medium text-white">Főoldal</Link>
-                  <Link to="/events" className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Események</Link>
+                  {(isAuthenticated) && (
+                    <Link to="/myteams" className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Csapattagságaim</Link>
+                  )}
 
-                <div className='dropdown'>
-                  <div tabIndex={0} role='button' className='rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white'>Keresők...</div>
-                  <ul tabIndex={0} className='dropdown-content menu bg-slate-500 rounded-box z-1 w-52 p-2 shadow-sm'>
-                  <li><Link to="/player-search" className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Játékos kereső</Link></li>
-                  <li><Link to="/team-search" className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Csapat kereső</Link></li>
-                  <li><Link to="/tournament-search" className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Verseny kereső</Link></li>
-                  <li><Link to="/event-search" className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Esemény kereső</Link></li>
-                  </ul>
+                  <div className='dropdown [z-999]'>
+                    <div tabIndex={0} role='button' className='rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white'>Keresők...</div>
+                    <ul tabIndex={0} className='dropdown-content menu bg-slate-500 rounded-box z-[999] w-52 p-2 shadow-sm'>
+                      <li><Link to="/player-search" className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Játékos kereső</Link></li>
+                      <li><Link to="/team-search" className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Csapat kereső</Link></li>
+                      <li><Link to="/tournament-search" className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Verseny kereső</Link></li>
+                      <li><Link to="/event-search" className="overflow-y-visible y-[999] rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Esemény kereső</Link></li>
+                    </ul>
 
                   </div>
 
@@ -87,30 +89,48 @@ function Navbar() {
 
             {(isAuthenticated) ? (
 
-                <div className="dropdown dropdown-bottom dropdown-left">
+              <div className="dropdown dropdown-bottom dropdown-left">
                 <div tabIndex={0} role="button">
-                {
-                      (uPicPath != undefined)? (
-                        <img className="w-10 h-10 rounded-full object-cover" src={`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_BASE_PIC}${uPicPath}`} alt={profile.usr_name} />
-                      ):
+                  {
+                    (uPicPath != undefined) ? (
+                      <img className="w-10 h-10 rounded-full object-cover" src={`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_BASE_PIC}${uPicPath}`} alt={profile.usr_name} />
+                    ) :
                       (
                         <></>
                       )
-                    }
-                  </div>
-                <ul tabIndex={0} className="dropdown-content bg-slate-500 rounded-box z-1 w-52 p-2 shadow-sm">
-                <p className='flex justify-center text-white font-bold pb-2'>{profile.usr_name}</p>
-                  <li>
-                    <Link to={`/profile/${profile.usr_name}`} onClick={()=>{window.scroll(0,0)}} className="block px-4 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white rounded-lg">Profiladatok</Link>
-                  </li>
-                  <li>
-                    <Link to="/teams" className="block px-4 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white rounded-lg">Csapataim</Link>
-                  </li>
-                  {(isAuthenticated) && (
-                        <li><button onClick={() => { toast.success("Kijelentkeztél! Oldalfrissítés 5 másodperc múlva!"); logout(); setTimeout(()=>{navigate('/'); pageRefresh()},5000) }} className="block px-4 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white w-full text-start rounded-lg">Kijelentkezés</button></li>
-                      )}
-                </ul>
+                  }
                 </div>
+                <ul tabIndex={0} className="dropdown-content bg-slate-500 rounded-box z-[999] w-52 p-2 shadow-sm">
+                  <p className='flex justify-center text-white font-bold pb-2'>{profile.usr_name}</p>
+                  <li>
+                    <Link to={`/profile/${profile.usr_name}`} onClick={() => { window.scroll(0, 0) }} className="block px-4 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white rounded-lg">Profiladatok</Link>
+                  </li>
+
+                  {(isAuthenticated) && (
+                    <Link to="/myinvites" className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Meghívóim</Link>
+                  )}
+
+                  {isAuthenticated && (
+                    <li>
+                      <Link to={`/profile/${profile.usr_name}#myteams`} onClick={() => { window.scroll(0, 0) }} className="block px-4 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white rounded-lg">
+                        Csapataim
+                      </Link>
+                    </li>
+                  )}
+
+                  {isAuthenticated && (
+                    <li>
+                      <Link to={`/newteam`} onClick={() => { window.scroll(0, 0) }} className="block px-4 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white rounded-lg">
+                        Új csapat létrehozása
+                      </Link>
+                    </li>
+                  )}
+
+                  {(isAuthenticated) && (
+                    <li><button onClick={() => { toast.success("Kijelentkeztél! Oldalfrissítés 5 másodperc múlva!"); logout(); setTimeout(() => { navigate('/'); pageRefresh() }, 5000) }} className="block px-4 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white w-full text-start rounded-lg">Kijelentkezés</button></li>
+                  )}
+                </ul>
+              </div>
 
 
             ) : (
@@ -127,10 +147,12 @@ function Navbar() {
           <div className="md:hidden" id="mobile-menu">
             <div className="space-y-1 px-2 pt-2 pb-3">
               <Link to="/" className="block rounded-md bg-gray-900 px-3 py-2 text-base font-medium text-white">Főoldal</Link>
-              <Link to="/events" className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Események</Link>
-              {
-                isAuthenticated && (<Link to="/player-search" className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Játékos kereső</Link>)
-              }              
+              {(isAuthenticated) && (
+                <Link to="/myteams" className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Csapattagságaim</Link>
+              )}{(isAuthenticated) && (
+                <Link to="/myinvites" className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Meghívóim</Link>
+              )}
+              <Link to="/player-search" className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Játékos kereső</Link>
               <Link to="/team-search" className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Csapat kereső</Link>
               <Link to="/tournament-search" className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Verseny kereső</Link>
               <Link to="/event-search" className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Esemény kereső</Link>
