@@ -45,9 +45,9 @@ function UserSchema({ user }) {
                     }
                 </div>
 
-                <div className="flex justify-evenly border-t border-white my-2 pt-2">
+                <div className="flex justify-evenly border-t border-white my-2 pt-2 break-words">
                     <p className="drop-shadow-lg text-yellow-400 font-semibold flex-none">Iskola:</p>
-                    <p className="drop-shadow-lg ml-2">{user.school}</p>
+                    <p className="drop-shadow-lg ml-2 break-words ">{user.school}</p>
                 </div>
 
                 <div className="flex justify-evenly">
