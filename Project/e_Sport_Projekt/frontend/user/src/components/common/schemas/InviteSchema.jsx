@@ -9,7 +9,7 @@ function InviteSchema({ team, creator }) {
 
     const inviteDecideFetch = async (method, decision) => {
 
-        const res = fetch(`${import.meta.env.VITE_BASE_URL}/inviteacceptorreject`, {
+        const res = fetch(`${import.meta.env.VITE_BASE_URL}/insert/inviteacceptorreject`, {
             method: method,
             headers: { "Content-type": "application/json" },
             body: JSON.stringify({
@@ -73,7 +73,7 @@ function InviteSchema({ team, creator }) {
                 </div>
 
                 <div className="flex justify-evenly border-t border-white my-2 pt-2">
-                    <div className="flex justify-end bg-gray-500 space-x-2">
+                    <div className="flex justify-end  space-x-2">
                         <button
                             onClick={() => onSubmit("reject")}
                             className="px-4 py-2 bg-red-600 rounded"
