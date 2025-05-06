@@ -14,9 +14,9 @@ const matchList = async (req, res) => {
 }
 
 const matchUpdate = async (req, res) => {
-    const { id, tem1_id, tem2_id, tnt_id, status, uj_status, place, dte, details, winner, rslt } = req.body;
+    const { id, apn1_id, apn2_id, tnt_id, status, uj_status, place, dte, details, winner, rslt } = req.body;
 
-    if (hianyzoAdatFuggveny(res, "Hiányos adatok!", id, tem1_id, tem2_id, tnt_id)) {
+    if (hianyzoAdatFuggveny(res, "Hiányos adatok!", id, apn1_id, apn2_id, tnt_id)) {
         return;
     }
 
@@ -29,15 +29,15 @@ const matchUpdate = async (req, res) => {
             }
         });
 
-        const team1 = await prisma.teams.findFirst({
+        const apn1 = await prisma.applications.findFirst({
             where: {
-                id: tem1_id
+                id: apn1_id
             }
         });
 
-        const team2 = await prisma.teams.findFirst({
+        const apn2 = await prisma.teams.findFirst({
             where: {
-                id: tem2_id
+                id: apn2_id
             }
         });
 
@@ -64,10 +64,10 @@ const matchUpdate = async (req, res) => {
         if (status != "ended" && status != "started") {
             const match = await prisma.matches.update({
                 where: {
-                    id_tem1_id_tem2_id_tnt_id: {
+                    id_apn1_id_apn2_id_tnt_id: {
                         id: id,
-                        tem1_id: tem1_id,
-                        tem2_id: tem2_id,
+                        apn1_id: apn1_id,
+                        apn2_id: apn2_id,
                         tnt_id: tnt_id
                     },
                     AND: {
@@ -86,10 +86,10 @@ const matchUpdate = async (req, res) => {
         if (status == "ended") {
             const match = await prisma.matches.update({
                 where: {
-                    id_tem1_id_tem2_id_tnt_id: {
+                    id_apn1_id_apn2_id_tnt_id: {
                         id: id,
-                        tem1_id: tem1_id,
-                        tem2_id: tem2_id,
+                        apn1_id: apn1_id,
+                        apn2_id: apn2_id,
                         tnt_id: tnt_id
                     },
                     AND: {
@@ -108,10 +108,10 @@ const matchUpdate = async (req, res) => {
         if (status == "started") {
             const match = await prisma.matches.update({
                 where: {
-                    id_tem1_id_tem2_id_tnt_id: {
+                    id_apn1_id_apn2_id_tnt_id: {
                         id: id,
-                        tem1_id: tem1_id,
-                        tem2_id: tem2_id,
+                        apn1_id: apn1_id,
+                        apn2_id: apn2_id,
                         tnt_id: tnt_id
                     },
                     AND: {
@@ -135,26 +135,26 @@ const matchUpdate = async (req, res) => {
 
 const matchInsert = async (req, res) => {
 
-    const { tem1_id, tem2_id, tnt_id, details } = req.body;
+    const { apn1_id, apn2_id, tnt_id, details } = req.body;
 
     try {
 
-        if (hianyzoAdatFuggveny(res, "Hiányzó adat(ok)!", tem1_id, tem2_id, tnt_id)) {
+        if (hianyzoAdatFuggveny(res, "Hiányzó adat(ok)!", apn1_id, apn2_id, tnt_id)) {
             return;
         };
 
         //Két csapat keresés
         //tem1
-        const team1 = await prisma.teams.findFirst({
+        const apn1 = await prisma.applications.findFirst({
             where: {
-                id: tem1_id
+                id: apn1_id
             }
         });
 
         //tem2
-        const team2 = await prisma.teams.findFirst({
+        const apn2 = await prisma.applications.findFirst({
             where: {
-                id: tem2_id
+                id: apn2_id
             }
         });
         
@@ -166,8 +166,8 @@ const matchInsert = async (req, res) => {
         });
 
         if (validalasFuggveny(res, [
-            { condition: !team1, message: "A csapat nem található! (team1)" },
-            { condition: !team2, message: "A csapat nem található! (team2)" },
+            { condition: !apn1, message: "A csapat nem található! (team1)" },
+            { condition: !apn2, message: "A csapat nem található! (team2)" },
             { condition: !tournament, message: "A verseny nem található!" }
         ])) {
             return;
@@ -177,8 +177,8 @@ const matchInsert = async (req, res) => {
             data: {
                 status: "unstarted",
                 details: details,
-                tem1_id: team1.id,
-                tem2_id: team2.id,
+                apn1_id: apn1.id,
+                apn2_id: apn2.id,
                 tnt_id: tournament.id
             }
         });
