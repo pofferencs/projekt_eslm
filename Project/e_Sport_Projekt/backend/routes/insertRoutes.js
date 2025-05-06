@@ -5,7 +5,7 @@ const { applicationInsert, applicationSubmit } = require('../controllers/applica
 const { eventInsert } = require('../controllers/eventController');
 const { gameInsert } = require('../controllers/gameController');
 const { matchInsert } = require('../controllers/matchController');
-const { teamMembershipInsert } = require('../controllers/teamMembershipController');
+const { teamMembershipInsert, invite,    inviteAcceptOrReject,    myInvites } = require('../controllers/teamMembershipController');
 const { teamInsert } = require('../controllers/teamController');
 const { tournamentInsert } = require('../controllers/tournamentController');
 const { pictureInsert, upload } = require('../controllers/pictureController')
@@ -19,6 +19,11 @@ router.post('/match', matchInsert);
 router.post('/teammembership', teamMembershipInsert);
 router.post('/team', teamInsert);
 router.post('/tournament', tournamentInsert);
-router.post('/upload', upload.single('image'), pictureInsert)
+router.post('/upload', upload.single('image'), pictureInsert);
+
+//invite kezelések
+router.get('/myinvites', myInvites);
+router.post('/invite',invite);
+router.post('/inviteacceptorreject',inviteAcceptOrReject)
 
 module.exports = router;
