@@ -1,6 +1,8 @@
 import { useContext, useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 import UserContext from "../../context/UserContext";
+import { toast } from "react-toastify";
+import ApplicationCard from "../user/ApplicationCard";
 
 function Tournament() {
 
@@ -10,14 +12,12 @@ function Tournament() {
     const [event, setEvent] = useState([]);
     const [game, setGame] = useState([]);
     const [isloading, setIsLoading] = useState(true);
-    const [organizer, setOrganizer] = useState([]);
     const [picPath, setPicPath] = useState("");
-    const [pendingApplications, setPendingApplications] = useState([]);
-    const [approvedApplications, setApprovedApplications] = useState([]);
-    const [applicationForm, setApplicationForm] = useState(false);
-    const [application, setApplication] = useState([]);
-    const [pendingTeams, setPendingTeams] = useState([]);
-    const [approvedTeams, setApprovedTeams] = useState([]);
+    const [applicationsTeam, setApplicationsTeam] = useState([]);
+    const [myTeams, setMyTeams] = useState([]);
+    const [team, setTeam] = useState("");
+    const [canApply, setCanApply] = useState(true);
+    const [isApplication, setIsApplication] = useState(false);
     const navigate = useNavigate();
 
 
@@ -62,7 +62,10 @@ function Tournament() {
                 .then(adat=> {
                     setGame(
                       adat.find((x)=>x.id == tournament.gae_id)
-                    ); setIsLoading(false)
+                    ); applicationsFetch(); 
+                    let today = new Date(Date.now()).toISOString();
+                    setCanApply(Boolean(((today > tournament.apn_start) && (today < tournament.apn_end))));
+                    setIsLoading(false);
                 }
               )
             )})
@@ -80,36 +83,74 @@ function Tournament() {
       })
       .catch(err=> alert(err));
   
-      console.log(event)
-  
-    
-
+      //console.log(event)
 
   },[isloading])
 
 
-  const pendingFetch = () => {
-    let obj = [];
-
-    setPendingApplications([]);
+  const myTeamsFetch = () => {
     
-    fetch(`${import.meta.env.VITE_BASE_URL}/list/pending/${id}`,{
+    fetch(`${import.meta.env.VITE_BASE_URL}/list/myteams/${profile.id}`,{
       method: "GET",
       headers: { "Content-type": "application/json" },
+    })
+    .then(res=>res.json())
+    .then(adat=>{
+      setMyTeams(adat);
+
+    })
+    .catch(err=>alert(err));
+  }
+
+  const applicationSend = (tnt_id, tem_id, uer_id) => {
+
+    fetch(`${import.meta.env.VITE_BASE_URL}/insert/application/submit`,{
+      method: "POST",
+      headers: { "Content-type": "application/json" },
+      body: JSON.stringify({
+        tnt_id: tnt_id,
+        tem_id: tem_id,
+        uer_id: uer_id
+      })
+    })
+    .then(async (res) => {
+          const data = await res.json();
+          if(!res.ok){
+              
+              toast.error(data.message);
+          }else{
+              toast.success(data.message);
+          }
+          })
+          .catch((err) => alert(err));
+  };
+
+
+
+  const applicationsFetch = () => {
+    let obj = [];
+
+
+    fetch(`${import.meta.env.VITE_BASE_URL}/list/tnt-applications`,{
+      method: "POST",
+      headers: { "Content-type": "application/json" },
+      body: JSON.stringify({
+        uer_id: profile.id,
+        tnt_id: tournament.id
+      })
     }).then(res=>res.json())
     .then(adat=>
       {
       if(!adat.message){
         
         adat.map((x)=>(obj.push(x.team)))
-        setPendingApplications(adat);
-        
+        setApplicationsTeam(adat);
         
       }
 
     }).catch(err=>alert(err))
 
-    setPendingTeams(obj);
+    setApplicationsTeam(obj);
   }
 
 
@@ -126,7 +167,7 @@ function Tournament() {
     }
   };
 
-
+  
 
 
   return (
@@ -138,13 +179,56 @@ function Tournament() {
                       <div className="card-title">
                         <div className="pl-14">
                           <p className="text-3xl pb-2 text-white">{tournament.name}</p>
+                          <div className="mt-2">
                             {
-                              (application.length == 0)?(
-                                <>nincs</>
+                              (!isAuthenticated)?(
+
+                                
+                                <>
+                                
+                                </>
+
+
+                               
                               ):(
-                                <>asd</>
+                                
+                                (!canApply)?(
+                                  <>
+                                  
+                                  </>
+                                ):(
+                                  (!isApplication)?(
+                                    <>
+                                      <button onClick={()=>{setIsApplication(true); myTeamsFetch();}} className="btn bg-indigo-600 border-none text-white hover:bg-indigo-700">Jelentkezés a versenyre</button>
+                                    </>
+                                  ):(
+                                    <div className="flex flex-col gap-2">
+                                      <div className="flex flex-row gap-2">
+                                        <button className="btn btn-success" onClick={()=> {applicationSend(tournament.id, team, profile.id);}}>Jelentkezés beküldése</button>
+                                        <button onClick={()=>{setIsApplication(false); setTeam("");}} className="btn btn-error">Mégse</button>
+                                      </div>
+                                      <select id="myTeams" defaultValue="Csapataim" className="select mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm">
+                                      <option disabled={true}>Csapataim</option>
+                                        {
+                                          (myTeams.length==0)?(
+                                            <>
+                                              <option disabled={true}>Nincsen csapatod!</option>                                            
+                                            </>
+                                          ):(
+                                            myTeams.map((e)=>(
+                                              <>
+                                                <option onClick={()=> {setTeam(e.id)}} key={e.id}>{e.full_name}</option>
+                                              </>
+                                          ))
+                                          )
+                                        }
+                                      </select>
+                                    </div>
+                                  )
+                                )
                               )
                             }
+                            </div>
 
                           
                         </div>
@@ -255,7 +339,45 @@ function Tournament() {
                       </dl>
                     </div>
 
-                    
+                    {
+                      (!isAuthenticated)?(
+                        <></>
+                      ):(
+                        
+                        <>
+                        <div className="w-full mb-10 mx-auto rounded-lg shadow-lg md:mt-6 md:max-w-full sm:max-w-4xl xl:p-0 bg-gray-800 dark:border-gray-700 pt-10">
+                 <div className="flex flex-row horizontal justify-center mt-10 gap-5">
+                   <h2 className="text-center text-4xl font-bold tracking-tight text-indigo-600">
+                         Leadott jelentkezéseim
+                   </h2>
+                   <button onClick={()=>{applicationsFetch();}} className="btn border-none bg-indigo-600 hover:bg-indigo-800"><img className="h-5" src="https://www.svgrepo.com/show/533694/refresh-ccw.svg"/></button>
+                 </div>
+
+                 <div className="mx-auto mt-5 h-1 w-[60%] bg-gradient-to-r from-indigo-500 to-amber-500 rounded-full" />
+               <div className="p-8 md:p-10">
+                 
+                  <div className="flex flex-col">
+                   <div className="grid xl:grid-cols-2 md:grid-cols-1 sm:grid-cols-1 gap-12 justify-items-center">
+
+                     {
+                       applicationsTeam.map((application)=>(
+                         <ApplicationCard key={application.id} team={application.team} application={application} tournament={application.tournament} />))
+                     
+                     }
+
+                     
+                   </div>
+                  </div>
+                 
+                 
+               </div>
+             </div>
+                     
+                     </>
+
+
+                      )
+                    }
 
                     
                   </div>

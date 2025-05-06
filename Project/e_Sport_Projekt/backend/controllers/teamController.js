@@ -237,6 +237,43 @@ const teamSearchByID = async (req, res) => {
   }
 };
 
+
+  const myTeams = async (req, res) =>{
+
+    const { id } = req.params;
+
+    if(!id){
+      return res.status(400).json({message: "Hiányos adat!"});
+    }
+
+    try {
+
+      const teams = await prisma.teams.findMany({
+        where: {
+          creator_id: parseInt(id)
+        }
+      });
+
+      if(!teams){
+        return res.status(400).json({message: "Nincsenek csapataid!"});
+      }
+
+      return res.status(200).json(teams)
+
+
+      
+    } catch (error) {
+      return res.status(500).json({ message: "Hiba történt", error });
+    }
+
+
+  }
+
+
+
+
+
+
 module.exports = {
   teamList,
   teamUpdate,
@@ -244,5 +281,6 @@ module.exports = {
   teamDelete,
   teamSearchByName,
   teamGetPicPath,
-  teamSearchByID
+  teamSearchByID,
+  myTeams
 }

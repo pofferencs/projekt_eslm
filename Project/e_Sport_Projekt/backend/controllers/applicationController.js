@@ -216,7 +216,7 @@ const applicationDelete = async (req, res) => {
                     status: "pending"
                 },
                 include:{
-                    team: true
+                    team: true,
                 }
             });
 
@@ -240,10 +240,10 @@ const applicationDelete = async (req, res) => {
     
     const applicationSubmit = async (req, res) => {
 
-        const {tnt_id, tem_id} = req.body;
+        const {tnt_id, tem_id, uer_id} = req.body;
 
 
-        if(!tnt_id || !tem_id){
+        if(!tnt_id || !tem_id || !uer_id){
             return res.status(400).json({message: "Hiányos adatok!"});
         }
 
@@ -284,8 +284,18 @@ const applicationDelete = async (req, res) => {
                 return res.status(400).json({message: "Ezzel a csapattal már leadtál jelentkezést erre a versenyre!"});
             }
 
+            const user = await prisma.users.findFirst({
+                where: {
+                    id: parseInt(uer_id)
+                }
+            });
 
-            let date = new Date();
+            if(!user){
+                return res.status(400).json({message: "A megadott felhasználó nem található!"});
+            }
+
+
+            let date = new Date(Date.now());
 
 
             const application = await prisma.applications.create({
@@ -293,7 +303,8 @@ const applicationDelete = async (req, res) => {
                     dte: date,
                     status: "pending",
                     tem_id: parseInt(tem_id),
-                    tnt_id: parseInt(tnt_id)
+                    tnt_id: parseInt(tnt_id),
+                    uer_id: parseInt(user.id)
                 }
             });
 
@@ -389,7 +400,52 @@ const applicationDelete = async (req, res) => {
     }
 
 
+    const tntApplicationList = async (req, res)=>{
 
+        const {tnt_id, uer_id} = req.body;
+
+        if(!tnt_id || !uer_id){
+            return res.status(400).json({message: "Hiányos adatok!"});
+        }
+
+
+
+
+        try {
+
+
+            const applications = await prisma.applications.findMany({
+                where: {
+                    uer_id: parseInt(uer_id),
+                    team: {
+                        creator_id: parseInt(uer_id)
+                    },
+                    tnt_id: parseInt(tnt_id)
+                },
+                select:{
+                    dte: true,
+                    id: true,
+                    status: true,
+                    tem_id: true,
+                    tnt_id: true,
+                    uer_id: true,
+                    team: true,
+                    tournament: true
+                }
+            });
+
+            if(!applications){
+                return res.status(400).json({message: "Nem adtál le jelentkezést!"});
+            }
+
+            return res.status(200).json(applications);
+
+
+            
+        } catch (error) {
+            return res.status(500).json(error.message);
+        }
+    }
 
 
 
@@ -413,5 +469,6 @@ module.exports = {
     approvedApplicationsList,
     pendingApplicationsList,
     applicationSubmit,
-    applicationHandle
+    applicationHandle,
+    tntApplicationList
 }
