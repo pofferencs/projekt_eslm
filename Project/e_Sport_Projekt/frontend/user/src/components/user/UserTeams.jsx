@@ -38,20 +38,16 @@ function UserTeams() {
 
           setTeams(csapatokTagokkal);
         } else {
-          toast.error("No teams found.");
+          toast.error("Egy csapatban se vagy benne.");
           setTeams([]);
         }
       })
       .catch(err => {
         console.error("Error occurred:", err);
-        toast.error("Error while fetching teams.");
+        toast.error("Hiba az adatok betöltése közben.");
       })
       .finally(() => setIsLoading(false));
   }, [profile, isAuthenticated]);
-
-  const handleEditTeam = (team) => {
-    navigate(`/teamedit/${team.id}`, { state: { team } }); // Pass the team data to the edit page
-  };
 
   return (
     <div className="p-8 md:p-10" id="myteams">
@@ -62,7 +58,7 @@ function UserTeams() {
           {teams.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 justify-items-center mt-10">
               {teams.map((team) => (
-                <div key={team.id} onClick={() => handleEditTeam(team)}>
+                <div key={team.id}>
                   <TeamSchema team={team} />
                 </div>
               ))}
