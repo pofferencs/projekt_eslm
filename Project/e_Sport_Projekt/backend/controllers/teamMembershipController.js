@@ -82,7 +82,7 @@ const activeMembersList = async (req, res) => {
     try {
         const activeMembers = await prisma.team_Memberships.findMany({
             where: {
-                tem_id: Number(team_id),
+                tem_id: parseInt(team_id),
                 status: "active" // Filter for active members
             },
             include: {
@@ -162,8 +162,8 @@ const teamMembershipDelete = async (req, res) => {
         const existMembership = await prisma.team_Memberships.delete({
             where: {
                 uer_id_tem_id: {
-                    uer_id: Number(user_id),
-                    tem_id: Number(team_id),
+                    uer_id: parseInt(user_id),
+                    tem_id: parseInt(team_id),
                 }
             }
         })
@@ -184,23 +184,45 @@ const invite = async (req, res) => {
     const existMembership = await prisma.team_Memberships.findUnique({
         where: {
             uer_id_tem_id: {
-                uer_id: Number(user_id),
-                tem_id: Number(team_id),
+                uer_id: parseInt(user_id),
+                tem_id: parseInt(team_id),
             }
         }
     })
 
-    if (existMembership && existMembership.status == "pending") {
+
+    const userInviteability = await prisma.users.findFirst({
+        where: {
+            id: parseInt(user_id)
+        },
+        select: {
+            inviteable: true
+        }
+    })
+
+    const membershipCounter = await prisma.team_Memberships.count({
+        where: {
+            tem_id: parseInt(team_id)
+        }
+    })
+
+    if (parseInt(userInviteability.inviteable) === 0) {
+        return res.status(400).json({ message: "A játékos nem fogad meghívót." })
+    }
+    else if (membershipCounter == 7) {
+        return res.status(400).json({ message: "A csapat már megtelt! (max 7 fő)" })
+    } else if (existMembership && existMembership.status == "pending") {
         return res.status(400).json({ message: "A játékosnak már van elfogadásra váró meghívója a csapatba." })
     } else if (existMembership && existMembership.status == "active") {
         return res.status(400).json({ message: "A játékos már tagja ennek a csapatnak." })
-    } else {
+    }
+    else {
 
         try {
             await prisma.team_Memberships.create({
                 data: {
-                    uer_id: user_id,
-                    tem_id: team_id,
+                    uer_id: parseInt(user_id),
+                    tem_id: parseInt(team_id),
                     status: "pending"
                 }
             })
@@ -220,8 +242,8 @@ const inviteAcceptOrReject = async (req, res) => {
     const existInvite = await prisma.team_Memberships.findUnique({
         where: {
             uer_id_tem_id: {
-                uer_id: Number(user_id),
-                tem_id: Number(team_id),
+                uer_id: parseInt(user_id),
+                tem_id: parseInt(team_id),
             },
             status: "pending"
         }
@@ -230,8 +252,8 @@ const inviteAcceptOrReject = async (req, res) => {
     const existMembership = await prisma.team_Memberships.findUnique({
         where: {
             uer_id_tem_id: {
-                uer_id: Number(user_id),
-                tem_id: Number(team_id),
+                uer_id: parseInt(user_id),
+                tem_id: parseInt(team_id),
             },
             status: "active"
         }
@@ -246,7 +268,7 @@ const inviteAcceptOrReject = async (req, res) => {
     }
 
     else if (existMembership) {
-        return res.status(400).json({ message: "már tagja vagy ennak a csapatnak." })
+        return res.status(400).json({ message: "Már tagja vagy ennak a csapatnak." })
 
     } else {
 
@@ -256,8 +278,8 @@ const inviteAcceptOrReject = async (req, res) => {
                 await prisma.team_Memberships.delete({
                     where: {
                         uer_id_tem_id: {
-                            uer_id: Number(user_id),
-                            tem_id: Number(team_id),
+                            uer_id: parseInt(user_id),
+                            tem_id: parseInt(team_id),
                         },
                         status: "pending"
                     }
@@ -269,8 +291,8 @@ const inviteAcceptOrReject = async (req, res) => {
                 await prisma.team_Memberships.update({
                     where: {
                         uer_id_tem_id: {
-                            uer_id: Number(user_id),
-                            tem_id: Number(team_id),
+                            uer_id: parseInt(user_id),
+                            tem_id: parseInt(team_id),
                         }
                     },
                     data: {
@@ -293,33 +315,35 @@ const myInvites = async (req, res) => {
     try {
         const myInvites = await prisma.team_Memberships.findMany({
             where: {
-                uer_id: Number(user_id),
+                uer_id: parseInt(user_id),
                 status: "pending"
             }
         })
 
         const teamDataByInvites = await prisma.teams.findMany({
             where: {
-              id: {
-                in: myInvites.map((invite) => invite.tem_id)
-              }
-            }
-          });
-
-          const creatorByTeamInvite = await prisma.users.findMany({
-            where:{
                 id: {
-                    in: teamDataByInvites.map((creator=>creator.creator_id))
+                    in: myInvites.map((invite) => invite.tem_id)
+                }
+            }
+        });
+
+        const creatorByTeamInvite = await prisma.users.findMany({
+            where: {
+                id: {
+                    in: teamDataByInvites.map((creator => creator.creator_id))
                 }
             },
-            select:{
+            select: {
                 id: true,
-                usr_name : true
+                usr_name: true
             }
-          })        
+        })
 
-        if (myInvites != 0) {
-            return res.status(200).json({'invites':myInvites, "teams":teamDataByInvites, 'creator_name':creatorByTeamInvite});
+        console.log("myInvites:", myInvites); // Logoljuk a kapott eredményt
+
+        if (myInvites.length > 0) {
+            return res.status(200).json({ 'invites': myInvites, "teams": teamDataByInvites, 'creator_name': creatorByTeamInvite });
         } else {
             return res.status(400).json({ message: "Nincsenek meghívóid." });
         }

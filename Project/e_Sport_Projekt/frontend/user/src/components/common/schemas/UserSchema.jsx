@@ -1,12 +1,14 @@
 import { useContext, useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom";
 import UserContext from "../../../context/UserContext";
+import InviteModal from "../../modals/InviteModal";
 
 
 function UserSchema({ user }) {
     const navigate = useNavigate();
     const [userPicPath, setUserPicPath] = useState("https://images.unsplash.com/photo-1472099645785-5658abf4ff4e")
     const { isAuthenticated, profile } = useContext(UserContext);
+    const [modalOpen, setModalOpen] = useState(false);
 
     useEffect(() => {
         fetch(`${import.meta.env.VITE_BASE_URL}/user/userpic/${user.id}`)
@@ -43,9 +45,9 @@ function UserSchema({ user }) {
                     }
                 </div>
 
-                <div className="flex justify-evenly border-t border-white my-2 pt-2">
+                <div className="flex justify-evenly border-t border-white my-2 pt-2 break-words">
                     <p className="drop-shadow-lg text-yellow-400 font-semibold flex-none">Iskola:</p>
-                    <p className="drop-shadow-lg ml-2">{user.school}</p>
+                    <p className="drop-shadow-lg ml-2 break-words ">{user.school}</p>
                 </div>
 
                 <div className="flex justify-evenly">
@@ -65,8 +67,12 @@ function UserSchema({ user }) {
                                     {
                                         (isAuthenticated && user.inviteable === true && user.usr_name != profile.usr_name) ?
 
-                                            (<button className="btn btn-primary">Meghívás csapatba</button>)
-                                            :
+                                            (
+                                                <>
+                                                    <button onClick={() => setModalOpen(true)} className="btn btn-primary">Meghívás csapatba</button>
+                                                    <InviteModal isOpen={modalOpen} onClose={() => setModalOpen(false)} user={user} />
+                                                </>
+                                            ) :
                                             (<p></p>)
 
                                     }

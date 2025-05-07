@@ -22,7 +22,7 @@ router.post('/tournament', tournamentInsert);
 router.post('/upload', upload.single('image'), pictureInsert);
 
 //invite kezelések
-router.get('/myinvites', myInvites);
+router.post('/myinvites', myInvites);
 router.post('/invite',invite);
 router.post('/inviteacceptorreject',inviteAcceptOrReject)
 

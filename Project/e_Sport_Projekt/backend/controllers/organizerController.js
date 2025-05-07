@@ -785,17 +785,20 @@ const organizerReg = async (req, res) => {
         // console.log(`${neworganizer.usr_name} (ID: ${neworganizer.id}) tokenje: ${token}`);
 
         //kép hozzárendelés a fiókhoz
+
+        console.log(neworganizer)
+
         const newPicLink = await prisma.picture_Links.create({
             data: {
                 ogr_id: neworganizer.id,
-                pte_id: 6 //vagy ami ide jön pteId
+                pte_id: 6
             }
         })
 
         return res.status(200).json({ message: "A regisztráció sikeres!" });
 
     } catch (error) {
-        console.log(error);
+        console.log(error.message);
         return res.status(400).json({ message: "Hiba a regisztráció során!" });
     }
 }
@@ -828,6 +831,12 @@ const organizerLogin = async (req, res) => {
 
         if (!organizerL) {
             return res.status(400).json({ message: "Nincs ilyen felhasználó!" });
+        }
+        if (organizerL.status == "pending") {
+            return res.status(400).json({ message: "A fiókod nincs megerősítve!" })
+        }
+        if (organizerL.status == "banned") {
+            return res.status(400).json({ message: "A fiókod tiltásra került! :(" })
         }
         //!bcrypt.compare(paswrd, organizer.paswrd)
         if (!bcrypt.compareSync(paswrd, organizerL.paswrd)) {

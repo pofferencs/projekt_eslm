@@ -2,19 +2,47 @@ import { useContext, useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 import UserContext from "../../context/UserContext"
 import { toast } from "react-toastify";
+import DeleteModal from "../modals/DeleteModal";
+
 
 function TeamEdit() {
     const navigate = useNavigate()
-    const { isAuthenticated, isLoading, setIsLoading } = useContext(UserContext);
+    const { isAuthenticated, isLoading, setIsLoading, profile } = useContext(UserContext);
     const [teamData, setTeamData] = useState({})
     const [teamMembers, setTeamMembers] = useState([]);
     const [teamPicPath, setTeamPicPath] = useState("");
     const { id } = useParams();
     const [isFormTeam, setIsFormTeam] = useState(false);
-    const [isFormMember, setIsFormMember] = useState(false);
     const [disabled, setDisabled] = useState(true);
     const [tpFile, setTpFile] = useState({});
     const [selectedMemberId, setSelectedMemberId] = useState(null);
+    const [showModal, setShowModal] = useState(false);
+
+    const handleLeaveTeam = async () => {
+        try {
+            const res = await fetch(`${import.meta.env.VITE_BASE_URL}/delete/teammembership`, {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    user_id: profile.id,
+                    team_id: teamFormData.id,
+                }),
+            });
+
+            if (res.ok) {
+                toast.success("Sikeresen kiléptél a csapatból!");
+                setShowModal(false);
+                // TODO: Frissítés triggerelése (pl. újrafetchelés a szülőben)
+            } else {
+                toast.error("Nem sikerült kilépni a csapatból.");
+            }
+        } catch (err) {
+            console.error("Kilépési hiba:", err);
+            toast.error("Hiba történt a kilépés során.");
+        }
+    };
 
 
 
@@ -25,13 +53,7 @@ function TeamEdit() {
         creator_id: "",
     }
 
-    let memberShipFormObj = {
-        user_id: "",
-        team_id: teamData.id
-    }
-
     const [teamFormData, setTeamFormData] = useState(teamFormObj);
-    const [memberShipFormData, setMemberShipFormData] = useState(memberShipFormObj);
 
     const teamFormReset = () => {
         setTeamFormData({
@@ -88,9 +110,11 @@ function TeamEdit() {
             .catch(err => toast(err))
             .finally(() => setIsLoading(false))
 
-        console.log(teamData)
+
 
     }, [isAuthenticated, id])
+
+    const isCreator = profile?.id === teamFormData?.creator_id;
 
     const teamModify = (method) => {
         const sendingObj = {
@@ -198,7 +222,7 @@ function TeamEdit() {
             .catch(err => alert(err));
     }
 
-    const deleteTeam = (method)=>{
+    const deleteTeam = (method) => {
         fetch(`${import.meta.env.VITE_BASE_URL}/delete/team`, {
             method: method,
             headers: { "Content-type": "application/json" },
@@ -214,9 +238,9 @@ function TeamEdit() {
                 }
             })
             .catch(err => alert(err));
-            setTimeout(() => {
-                navigate("/myteams");
-              }, 1500);
+        setTimeout(() => {
+            navigate("/myteams");
+        }, 1500);
     }
     const onSubmitDelete = () => {
         deleteTeam("DELETE");
@@ -229,233 +253,261 @@ function TeamEdit() {
     }
 
     return (
-
-        (isLoading) ? (
-            <>
-                Töltés...
-            </>
+        isLoading ? (
+          <>Töltés...</>
         ) : (
-            <div>
-                {
-                    (!isFormTeam && !isFormMember) ? (
-                        <>
-                            <div className="m-10 rounded-md bg-gradient-to-br from-indigo-950 to-slate-500 sm:w-[600px] md:w-[800px] lg:w-[1000px] xl:w-[1200px] mx-auto text-primary-content">
-                                <div className="card-body">
-                                    <div className="flex justify-center pb-8 gap-10">
-                                        <img className="w-56 h-56" src={`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_BASE_PIC}${teamPicPath}`} alt={`${teamFormData.full_name} csapat profilképe`} title={`${teamData.full_name} profilképe`} />
-                                        <div className="card-title">
-                                            <div className="pl-14">
-                                                <p className="text-3xl pb-2 text-white">{teamFormData.full_name}</p>
-                                                <p className="text-xl pb-2 text-gray-400">{`[${teamFormData.short_name}]`}</p>
-                                                <div className="flex flex-col">
-                                                    <button
-                                                        className="btn mt-3 text-white w-52"
-                                                        onClick={() => {
-                                                            setIsFormTeam(true);
-                                                            setDisabled(false);
-                                                        }}
-                                                    >
-                                                        Adatok módosítása
-                                                    </button>
-                                                    
-                                                </div>
-                                                <button className="btn mt-3 bg-red-800 text-white" onClick={()=>onSubmitDelete()}>Csapat törlése</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div className="w-full mx-auto rounded-lg shadow-lg md:mt-6 md:max-w-full sm:max-w-4xl xl:p-0 bg-gray-800 dark:border-gray-700">
-                                    <div className="p-8 md:p-10">
-                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                            <div>
-                                                <label className="block text-sm font-medium text-white">Csapatnév</label>
-                                                <input
-                                                    id="usr_name"
-                                                    type="text"
-                                                    disabled={disabled}
-                                                    value={teamFormData.full_name}
-                                                    className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-gray-400 shadow-sm"
-                                                />
-                                            </div>
-
-                                            <div>
-                                                <label className="block text-sm font-medium text-white">Csapat tag</label>
-                                                <input
-                                                    id="short_name"
-                                                    type="text"
-                                                    disabled={disabled}
-                                                    value={teamFormData.short_name}
-                                                    className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-gray-400 shadow-sm"
-                                                />
-                                            </div>
-
-                                            <div className="members-list flex flex-col items-left">
-                                            <label className="block text-sm font-medium text-white">Csapat tagok</label>
-                                                {teamMembers.map((member) => (
-                                                    <div key={member.id} className="member-item">
-                                                        <input
-                                                            type="text"
-                                                            value={member.usr_name}
-                                                            disabled
-                                                            className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-gray-400 shadow-sm"
-                                                        />
-                                                    </div>
-                                                ))}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </>
-                    ) :
-                        (
-                            (isFormTeam && !isFormMember) ? (
-                                <div className="m-10 rounded-md bg-gradient-to-br from-indigo-950 to-slate-500 sm:w-[600px] md:w-[800px] lg:w-[1000px] xl:w-[1200px] mx-auto text-primary-content">
-                                    <div className="card-body">
-                                        <div className="flex justify-center pb-8 gap-10">
-                                            <img className="w-56 h-56" alt={`${teamFormData.full_name} csapat profilképe`} title={`${teamFormData.full_name} csapat profilképe`} src={`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_BASE_PIC}${teamPicPath}`} />
-                                            <div className="card-title">
-                                                <div className="pl-14">
-                                                    <p className="text-3xl pb-2 text-white">{teamFormData.full_name}</p>
-                                                    <p className="text-xl pb-2 text-gray-400">{`[${teamFormData.short_name}]`}</p>
-
-                                                    <form onSubmit={onSubmitTeam}>
-                                                        <div className="flex flex-wrap gap-2">
-                                                            <button className="btn mt-3 text-white" type="submit">Módosítás</button>
-                                                            <button className="btn mt-3 text-white" type="button" onClick={() => { deleteImage(teamData.team.id, "team") }} >Fénykép törlés</button>
-
-                                                            <button className="btn mt-3 text-white" type="button" onClick={() => { setIsFormTeam(false); setDisabled(true); teamFormReset() }}>Mégse</button>
-
-                                                        </div>
-
-                                                    </form>
-                                                    
-                                                    {/* Fénykép feltöltés */}
-                                                    <form encType="multipart/form-data">
-                                                        <div className="mt-3">
-                                                            <label className="block text-sm font-medium text-white" htmlFor="image">
-                                                                Fénykép cseréje
-                                                            </label>
-                                                            <input
-                                                                className="block w-full mb-5 text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 mt-1"
-                                                                id="image"
-                                                                name="image"
-                                                                type="file"
-                                                                onChange={(e) => {
-                                                                    const file = e.target.files[0];
-                                                                    if (file) {
-                                                                        if (file.size > 2 * 1024 * 1024) {
-                                                                            toast.error("A kiválasztott fájl túl nagy. Legfeljebb 2 MB lehet.");
-                                                                            return;
-                                                                        }
-
-                                                                        const reader = new FileReader();
-                                                                        reader.onload = (event) => {
-                                                                            const img = new Image();
-                                                                            img.onload = () => {
-                                                                                if (img.width > 512 || img.height > 512) {
-                                                                                    toast.error("A kép túl nagy felbontású. Maximum 512x512 engedélyezett.");
-                                                                                } else {
-                                                                                    setTpFile(file); // csak ha minden OK
-                                                                                }
-                                                                            };
-                                                                            img.src = event.target.result;
-                                                                        };
-                                                                        reader.readAsDataURL(file);
-                                                                    }
-                                                                }}
-                                                            />
-                                                            <button className="btn mt-3 text-white" type="button" onClick={() => { sendImage(tpFile, "team", teamFormData.id); }}>Feltöltés</button>
-                                                        </div>
-                                                    </form>
-
-
-
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div className="w-full mx-auto rounded-lg shadow-lg md:mt-6 md:max-w-full sm:max-w-4xl xl:p-0 bg-gray-800 dark:border-gray-700">
-                                            <div className="p-8 md:p-10">
-                                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6" >
-
-                                                    <div key={"full_name"}>
-                                                        <label className="block text-sm font-medium text-white">
-                                                            Csapatnév
-                                                        </label>
-                                                        <input id="full_name" type="text" maxLength={16} disabled={disabled} onChange={writeDataTeam} value={teamFormData.full_name} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm" />
-                                                    </div>
-
-                                                    <div key={"short_name"}>
-                                                        <label className="block text-sm font-medium text-white">
-                                                            Csapat rövid neve
-                                                        </label>
-                                                        <input id="short_name" type="text" maxLength={4} disabled={disabled} onChange={writeDataTeam} value={teamFormData.short_name} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm" />
-                                                    </div>
-
-                                                    <div className="mt-4">
-                                                        <label className="block text-sm font-medium text-white">Új csapatkapitány</label>
-                                                        <select
-                                                            value={teamFormData.creator_id}
-                                                            onChange={(e) => setTeamFormData({ ...teamFormData, creator_id: e.target.value })}
-                                                            className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-gray-400 shadow-sm"
-                                                        >
-                                                            <option value="">Válassz csapattagot...</option>
-                                                            {teamMembers .filter(member => member.id !== teamData.captain.id)
-                                                            .map((member) => (
-                                                                <option key={member.id} value={member.id}>
-                                                                    {member.usr_name}
-                                                                </option>
-                                                            ))}
-                                                        </select>
-                                                    </div>
-                                                    <div className="mt-4">
-                                                        <label className="block text-sm font-medium text-white">Kirúgni kívánt játékos</label>
-                                                        <select
-                                                            value={selectedMemberId}
-                                                            onChange={(e) => setSelectedMemberId(e.target.value)}
-                                                            className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-gray-400 shadow-sm"
-                                                        >
-                                                            <option value="">Válassz egy játékost...</option>
-                                                            {teamMembers
-                                                                .filter(member => member.id !== teamData.captain.id) // Csapatkapitány kizárása
-                                                                .map((member) => (
-                                                                    <option key={member.id} value={member.id}>
-                                                                        {member.usr_name}
-                                                                    </option>
-                                                                ))}
-                                                        </select>
-
-                                                        <button
-                                                            onClick={onSubmitKick}
-                                                            disabled={!selectedMemberId}
-                                                            className={`btn mt-3 ${!selectedMemberId ? 'hidden' : 'bg-red-500 text-white'}`}
-                                                        >
-                                                            Kirúgás
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            ) : (
-                                <p></p>
-
-
-
-                            )
-                        )
-
-                }
-            </div >
+          <div>
+            {!isFormTeam ? (
+              <div className="m-10 rounded-md bg-gradient-to-br from-indigo-950 to-slate-500 sm:w-[600px] md:w-[800px] lg:w-[1000px] xl:w-[1200px] mx-auto text-primary-content">
+                <div className="card-body">
+                  <div className="flex justify-center pb-8 gap-10">
+                    <img
+                      className="w-56 h-56"
+                      src={`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_BASE_PIC}${teamPicPath}`}
+                      alt={`${teamFormData.full_name} csapat profilképe`}
+                      title={`${teamFormData.full_name} profilképe`}
+                    />
+                    <div className="card-title">
+                      <div className="pl-14">
+                        <p className="text-3xl pb-2 text-white">{teamFormData.full_name}</p>
+                        <p className="text-xl pb-2 text-gray-400">{`[${teamFormData.short_name}]`}</p>
+                        <div className="flex flex-col">
+                          {isCreator ? (
+                            <>
+                              <button
+                                className="btn mt-3 text-white w-52"
+                                onClick={() => {
+                                  setIsFormTeam(true);
+                                  setDisabled(false);
+                                }}
+                              >
+                                Adatok módosítása
+                              </button>
+                              <button
+                                className="btn mt-3 bg-red-800 text-white"
+                                onClick={onSubmitDelete}
+                              >
+                                Csapat törlése
+                              </button>
+                            </>
+                          ) : (
+                            <button
+                              className="btn btn-sm btn-error"
+                              onClick={() => setShowModal(true)}
+                            >
+                              Kilépés
+                            </button>
+                          )}
+                          <DeleteModal
+                            show={showModal}
+                            onClose={() => setShowModal(false)}
+                            onConfirm={handleLeaveTeam}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+      
+                  <div className="p-8 md:p-10">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div>
+                        <label className="block text-sm font-medium text-white">Csapatnév</label>
+                        <input
+                          id="full_name"
+                          type="text"
+                          maxLength={16}
+                          disabled
+                          value={teamFormData.full_name}
+                          className="mt-1 block w-full px-3 py-2.5 border rounded-lg bg-gray-700 border-gray-600 text-white shadow-sm"
+                        />
+                      </div>
+      
+                      <div>
+                        <label className="block text-sm font-medium text-white">Csapat rövid neve</label>
+                        <input
+                          id="short_name"
+                          type="text"
+                          maxLength={4}
+                          disabled
+                          value={teamFormData.short_name}
+                          className="mt-1 block w-full px-3 py-2.5 border rounded-lg bg-gray-700 border-gray-600 text-white shadow-sm"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="m-10 rounded-md bg-gradient-to-br from-indigo-950 to-slate-500 sm:w-[600px] md:w-[800px] lg:w-[1000px] xl:w-[1200px] mx-auto text-primary-content">
+                <div className="card-body">
+                  <div className="flex justify-center pb-8 gap-10">
+                    <img
+                      className="w-56 h-56"
+                      src={`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_BASE_PIC}${teamPicPath}`}
+                      alt={`${teamFormData.full_name} csapat profilképe`}
+                      title={`${teamFormData.full_name} profilképe`}
+                    />
+                    <div className="card-title">
+                      <div className="pl-14">
+                        <p className="text-3xl pb-2 text-white">{teamFormData.full_name}</p>
+                        <p className="text-xl pb-2 text-gray-400">{`[${teamFormData.short_name}]`}</p>
+      
+                        <form onSubmit={onSubmitTeam}>
+                          <div className="flex flex-wrap gap-2">
+                            <button className="btn mt-3 text-white" type="submit">
+                              Módosítás
+                            </button>
+                            <button
+                              className="btn mt-3 text-white"
+                              type="button"
+                              onClick={() => deleteImage(teamData.team.id, "team")}
+                            >
+                              Fénykép törlés
+                            </button>
+                            <button
+                              className="btn mt-3 text-white"
+                              type="button"
+                              onClick={() => {
+                                setIsFormTeam(false);
+                                setDisabled(true);
+                                teamFormReset();
+                              }}
+                            >
+                              Mégse
+                            </button>
+                          </div>
+                        </form>
+      
+                        <form encType="multipart/form-data">
+                          <div className="mt-3">
+                            <label className="block text-sm font-medium text-white" htmlFor="image">
+                              Fénykép cseréje
+                            </label>
+                            <input
+                              id="image"
+                              name="image"
+                              type="file"
+                              onChange={(e) => {
+                                const file = e.target.files[0];
+                                if (file) {
+                                  if (file.size > 2 * 1024 * 1024) {
+                                    toast.error("A kiválasztott fájl túl nagy. Legfeljebb 2 MB lehet.");
+                                    return;
+                                  }
+      
+                                  const reader = new FileReader();
+                                  reader.onload = (event) => {
+                                    const img = new Image();
+                                    img.onload = () => {
+                                      if (img.width > 512 || img.height > 512) {
+                                        toast.error("A kép túl nagy felbontású. Maximum 512x512 engedélyezett.");
+                                      } else {
+                                        setTpFile(file);
+                                      }
+                                    };
+                                    img.src = event.target.result;
+                                  };
+                                  reader.readAsDataURL(file);
+                                }
+                              }}
+                              className="block w-full mb-5 text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 mt-1"
+                            />
+                            <button
+                              className="btn mt-3 text-white"
+                              type="button"
+                              onClick={() => sendImage(tpFile, "team", teamFormData.id)}
+                            >
+                              Feltöltés
+                            </button>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+      
+                  <div className="p-8 md:p-10">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div>
+                        <label className="block text-sm font-medium text-white">Csapatnév</label>
+                        <input
+                          id="full_name"
+                          type="text"
+                          maxLength={16}
+                          disabled={disabled}
+                          onChange={writeDataTeam}
+                          value={teamFormData.full_name}
+                          className="mt-1 block w-full px-3 py-2.5 border rounded-lg bg-gray-700 border-gray-600 text-white shadow-sm"
+                        />
+                      </div>
+      
+                      <div>
+                        <label className="block text-sm font-medium text-white">Csapat rövid neve</label>
+                        <input
+                          id="short_name"
+                          type="text"
+                          maxLength={4}
+                          disabled={disabled}
+                          onChange={writeDataTeam}
+                          value={teamFormData.short_name}
+                          className="mt-1 block w-full px-3 py-2.5 border rounded-lg bg-gray-700 border-gray-600 text-white shadow-sm"
+                        />
+                      </div>
+      
+                      <div className="mt-4">
+                        <label className="block text-sm font-medium text-white">Új csapatkapitány</label>
+                        <select
+                          value={teamFormData.creator_id}
+                          onChange={(e) =>
+                            setTeamFormData({ ...teamFormData, creator_id: e.target.value })
+                          }
+                          className="mt-1 block w-full px-3 py-2.5 border rounded-lg bg-gray-700 border-gray-600 text-gray-400 shadow-sm"
+                        >
+                          <option value="">Válassz csapattagot...</option>
+                          {teamMembers
+                            .filter((member) => member.id !== teamData.captain.id)
+                            .map((member) => (
+                              <option key={member.id} value={member.id}>
+                                {member.usr_name}
+                              </option>
+                            ))}
+                        </select>
+                      </div>
+      
+                      <div className="mt-4">
+                        <label className="block text-sm font-medium text-white">Kirúgni kívánt játékos</label>
+                        <select
+                          value={selectedMemberId}
+                          onChange={(e) => setSelectedMemberId(e.target.value)}
+                          className="mt-1 block w-full px-3 py-2.5 border rounded-lg bg-gray-700 border-gray-600 text-gray-400 shadow-sm"
+                        >
+                          <option value="">Válassz egy játékost...</option>
+                          {teamMembers
+                            .filter((member) => member.id !== teamData.captain.id)
+                            .map((member) => (
+                              <option key={member.id} value={member.id}>
+                                {member.usr_name}
+                              </option>
+                            ))}
+                        </select>
+      
+                        <button
+                          onClick={onSubmitKick}
+                          disabled={!selectedMemberId}
+                          className={`btn mt-3 ${!selectedMemberId ? "hidden" : "bg-red-500 text-white"}`}
+                        >
+                          Kirúgás
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
         )
-    )
-
-
-
-
+      );
+      
+      
 }
 
 export default TeamEdit

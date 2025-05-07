@@ -1,20 +1,26 @@
 import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
-import OrganizerContext from "../../../context/OrganizerContext";
+import UserContext from "../../context/UserContext";
 
-function ApplicationCard({team, application}) {
+function ApplicationCard({team, application, tournament}) {
+
 
 
     const [teamPicPath, setTeamPicPath] = useState("");
     const [teamMembers, setTeamMembers] = useState([]);
-    const {authStatus} = useContext(OrganizerContext);
+    const {authStatus} = useContext(UserContext);
+    const [apply, setApply] = useState(true);
 
     // Team pic fetch
     useEffect(() => {
         fetch(`${import.meta.env.VITE_BASE_URL}/list/teampic/${team.id}`)
             .then(res => res.json())
-            .then(pic => setTeamPicPath(pic))
+            .then(pic => {
+                setTeamPicPath(pic); 
+                let today = new Date(Date.now()).toISOString();
+                setApply(Boolean(((today > tournament.apn_start) && (today < tournament.apn_end))));
+            })
             .catch(error => console.log(error));
     }, [team?.id]);
 
@@ -34,24 +40,6 @@ function ApplicationCard({team, application}) {
             .catch(error => console.log(error));
     }, [team?.id, team?.creator_id]);
 
-    const approve = () =>{
-
-        fetch(`${import.meta.env.VITE_BASE_URL}/update/application/handle`,{
-            method: "PATCH",
-            headers: { "Content-type": "application/json" },
-            body: JSON.stringify({
-                tnt_id: application.tnt_id,
-                tem_id: application.tem_id,
-                new_status: "approved",
-                uer_id: application.uer_id
-            })
-        }).then(res=>res.json())
-        .then(adat=> {toast.success("A jelentkezést elfogadtad!"); })
-        .catch(err=>alert(err));
-
-    };
-
-
     const torles = () => {
 
         fetch(`${import.meta.env.VITE_BASE_URL}/delete/application`,{
@@ -61,10 +49,8 @@ function ApplicationCard({team, application}) {
                 id: application.id
             })
         }).then(res=>res.json())
-        .then(adat=> {toast.success("A jelentkezést elutasítottad!");  })
+        .then(adat=> {toast.success("A jelentkezést törölted!");  })
         .catch(err=>alert(err));
-
-        
 
     };
 
@@ -80,9 +66,16 @@ function ApplicationCard({team, application}) {
         }
       };
 
+      
+
+
+
+
+
 
 
   return (
+    
     <div className="card bg-neutral drop-shadow-lg text-stone-300 w-96 bg-gradient-to-br inline-block from-purple-900 to-orange-300 relative z-0">
             <div className="card-body items-left text-left">
                 <div className="flex justify-between">
@@ -100,6 +93,11 @@ function ApplicationCard({team, application}) {
                 <div className="flex justify-evenly border-t border-white my-2 pt-2">
                     <p className="drop-shadow-lg text-blue-200 font-extrabold">Rövid név:</p>
                     <p className="drop-shadow-lg">{`[ ${team.short_name} ]`}</p>
+                </div>
+
+                <div className="flex justify-evenly border-t border-white my-2 pt-2">
+                    <p className="drop-shadow-lg text-blue-200 font-extrabold">Jelentkezés állapota:</p>
+                    <p className="drop-shadow-lg">{(application.status=="pending")?(<p className="text-yellow-400 font-extrabold">Függőben lévő</p>):(<p className="text-success font-extrabold">Elfogadva</p>)}</p>
                 </div>
 
                 <div className="flex justify-evenly border-t border-white my-2 pt-2">
@@ -140,11 +138,12 @@ function ApplicationCard({team, application}) {
                             
                             
                             {
-                                (application.status == "pending")?
+                                (apply)?(
+
+                                    (application.status == "pending")?
                                 (
                                     <>
-                                    <button onClick={()=>approve()} className="btn btn-success">Elfogad</button>
-                                    <button onClick={()=>torles()} className="btn btn-error">Elutasít</button>
+                                    <button onClick={()=>torles()} className="btn btn-error">Törlés</button>
                                     </>
                             
                                 ):
@@ -152,6 +151,11 @@ function ApplicationCard({team, application}) {
                                     <>
                                         <button onClick={()=>torles()} className="btn btn-error">Törlés</button>
                                     </>
+                                )
+
+                                ):(
+
+                                    <></>
                                 )
 
                             }
@@ -164,6 +168,12 @@ function ApplicationCard({team, application}) {
             
 
         </div>
+
+
+
+
+
+
   )
 }
 

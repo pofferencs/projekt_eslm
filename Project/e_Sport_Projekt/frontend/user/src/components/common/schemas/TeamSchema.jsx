@@ -73,14 +73,15 @@ function TeamSchema({ team }) {
         <div className="card bg-neutral drop-shadow-lg text-stone-300 w-96 bg-gradient-to-br inline-block from-purple-900 to-orange-300 relative z-0">
             <div className="card-body items-left text-left">
                 <div className="flex justify-between">
-                    <h2 className="card-title drop-shadow-lg">{team.full_name}</h2>
+                    <h2 className="card-title drop-shadow-lg cursor-pointer" onClick={()=>navigate(`/teamedit/${team.id}`)}>{team.full_name}</h2>
                     <img
                         className="w-10 h-10 rounded-full drop-shadow-lg object-cover border-2 border-purple-900"
                         src={
                             import.meta.env.VITE_BASE_URL +
                             `${import.meta.env.VITE_BASE_PIC}${teamPicPath}`
                         }
-                        alt="Team Profile"
+                        alt={`Csapat profilkép`}
+                        title={`${team.full_name} csapat profilképe`}
                     />
                 </div>
 

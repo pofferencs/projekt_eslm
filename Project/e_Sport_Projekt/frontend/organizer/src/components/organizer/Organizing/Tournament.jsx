@@ -541,7 +541,7 @@ function Tournament() {
                           <img className="w-56 h-56" src={`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_BASE_PIC}${picPath}`} />
                           <div className="card-title">
                             <div className="pl-14">
-                              <p className="text-3xl pb-2 text-white">{event.name}</p>
+                              <p className="text-3xl pb-2 text-white">{tournament.name}</p>
                               
                               <form onSubmit={onSubmit}>
                                 <div className="flex flex-wrap gap-2">

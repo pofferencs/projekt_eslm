@@ -247,7 +247,7 @@ function NewTournament() {
                               <label className="block text-sm font-medium text-white">
                                 Esemény(*)
                               </label>
-                              <select value={event[0]} onChange={writeData} id="evt_id" defaultValue="Pick a color" className="select mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm">
+                              <select value={event[0]} onChange={writeData} id="evt_id" defaultValue="Versenyek" className="select mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm">
                                 <option disabled={true}>Esemény</option>
                                 {
                                   events.map((e)=>(
@@ -263,7 +263,7 @@ function NewTournament() {
                               <label className="block text-sm font-medium text-white">
                                 Játék(*)
                               </label>
-                              <select value={game[0]} onChange={writeData} id="gae_id" defaultValue="Pick a color" className="select mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm">
+                              <select value={game[0]} onChange={writeData} id="gae_id" defaultValue="Játékok" className="select mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm">
                                 <option disabled={true}>Játék</option>
                                 {
                                   games.map((g)=>(
