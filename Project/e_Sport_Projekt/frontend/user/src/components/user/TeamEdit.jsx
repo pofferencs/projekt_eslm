@@ -100,7 +100,7 @@ function TeamEdit() {
 
                     fetch(`${import.meta.env.VITE_BASE_URL}/list/team/${id}/members`)
                         .then(res => res.json())
-                        .then(data => setTeamMembers(data), console.log(teamMembers))
+                        .then(data => setTeamMembers(data)) //, console.log(teamMembers)
                         .catch(error => console.log(error));
 
                 } else {

@@ -63,7 +63,7 @@ function OrganizerProfile() {
               fetch(`${import.meta.env.VITE_BASE_URL}/organizer/organizerpic/${adat.id}`,
               )
                 .then(res => res.json())
-                .then(adat => { setPicPath(adat); setIsLoading(false); setFormData(profile); console.log(adat)})
+                .then(adat => { setPicPath(adat); setIsLoading(false); setFormData(profile)}) // ;console.log(adat)
                 .catch(err => { console.log(err) })
             )
 

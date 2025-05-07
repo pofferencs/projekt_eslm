@@ -22,7 +22,7 @@ function TeamSchema({ team }) {
                     setTeamMembers(members);
                 } else {
                     setTeamMembers([]); // vagy logolod az üzenetet
-                    console.warn("Hibás válasz:", members);
+                    // console.warn("Hibás válasz:", members);
                 }
             })
             .catch(error => console.log(error));

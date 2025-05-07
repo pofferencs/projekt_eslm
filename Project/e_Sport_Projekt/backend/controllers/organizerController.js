@@ -103,7 +103,7 @@ const passEmailSend = async (req, res) => {
 
 
         const decoded = jwt.verify(token.token, process.env.JWT_SECRET);
-        console.log(Boolean(decoded.email == organizer.email_address));
+        // console.log(Boolean(decoded.email == organizer.email_address));
 
         await transporter.sendMail(mailOptions);
         return res.status(200).json({ message: "Kiküldtük az e-mailt a megadott címre!" })
@@ -485,7 +485,7 @@ const organizerUpdate = async (req, res) => {
                 //     return res.status(400).json({message: "A jelszó nem megfelelő!"});
                 // }
                 
-                console.log(new Date(new Date(date).setMonth(date.getMonth() - 1)));
+                // console.log(new Date(new Date(date).setMonth(date.getMonth() - 1)));
                 if(date > new Date(new Date(organizer.email_last_mod_date).setMonth(organizer.email_last_mod_date.getMonth() + 1))){
                 
 

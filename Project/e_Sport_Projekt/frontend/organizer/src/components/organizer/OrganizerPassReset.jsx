@@ -38,7 +38,7 @@ function OrganizerPassReset() {
                 }),
             }).then((res) => res.json())
                   .then((token) => {
-                    console.log(token.verified)
+                    // console.log(token.verified)
                     if(token.verified==true) {
                         setTokenVerified(true);
                         setIsEmail(false);
@@ -66,7 +66,7 @@ function OrganizerPassReset() {
 
     const kuldesEmail = (formData, method) => {
         
-        console.log(formData)
+        // console.log(formData)
         fetch(`${import.meta.env.VITE_BASE_URL}/organizer/password-reset`,{
             method: method,
             headers: { "Content-type": "application/json" },

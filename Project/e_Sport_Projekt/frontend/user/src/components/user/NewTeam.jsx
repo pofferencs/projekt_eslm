@@ -44,7 +44,7 @@ function NewTeam() {
             });
 
             if (!response.ok) {
-                console.log(response)
+                // console.log(response)
                 throw new Error("Sikertelen csapatlétrehozás");
             }
 

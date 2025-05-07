@@ -340,7 +340,7 @@ const myInvites = async (req, res) => {
             }
         })
 
-        console.log("myInvites:", myInvites); // Logoljuk a kapott eredményt
+        // console.log("myInvites:", myInvites); // Logoljuk a kapott eredményt
 
         if (myInvites.length > 0) {
             return res.status(200).json({ 'invites': myInvites, "teams": teamDataByInvites, 'creator_name': creatorByTeamInvite });

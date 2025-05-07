@@ -53,7 +53,7 @@ function Game() {
   
   const kuldes = (name)=>{
 
-    console.log(name)
+    // console.log(name)
     setRefresh(true);
 
     fetch(`${import.meta.env.VITE_BASE_URL}/insert/game`, {

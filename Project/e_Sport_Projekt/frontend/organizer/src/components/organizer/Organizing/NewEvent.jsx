@@ -28,7 +28,7 @@ function NewEvent() {
 
 
   const dateFormat = (date) => {
-    console.log(date);
+    // console.log(date);
   
     if (date != undefined) {
       const localDate = new Date(date); // Konvertálás Date objektummá

@@ -24,7 +24,6 @@ function MyInvites() {
         })
             .then(res => res.json())
             .then(data => {
-                console.log("Fetched data:", data); // Ellenőrizzük, hogy a válaszban tényleg jön-e adat
                 if (data.invites && Array.isArray(data.invites)) {
                     setMyInvites(data);
                 } else {
