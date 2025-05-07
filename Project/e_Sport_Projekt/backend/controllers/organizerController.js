@@ -785,8 +785,7 @@ const organizerReg = async (req, res) => {
         // console.log(`${neworganizer.usr_name} (ID: ${neworganizer.id}) tokenje: ${token}`);
 
         //kép hozzárendelés a fiókhoz
-
-        console.log(neworganizer)
+        
 
         const newPicLink = await prisma.picture_Links.create({
             data: {
