@@ -24,7 +24,6 @@ function MyInvites() {
         })
             .then(res => res.json())
             .then(data => {
-                console.log("Fetched data:", data); // Ellenőrizzük, hogy a válaszban tényleg jön-e adat
                 if (data.invites && Array.isArray(data.invites)) {
                     setMyInvites(data);
                 } else {
@@ -32,7 +31,7 @@ function MyInvites() {
                 }
             })
             .catch(err => {
-                console.error("Fetch error:", err); // Hibaüzenet a fetch esetén
+                console.error("Fetch error:", err);
                 setMyInvites({ invites: [], teams: [], creator_name: [] });
             });
 

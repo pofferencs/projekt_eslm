@@ -65,7 +65,7 @@ function Main() {
           onReady={function Ya() { }}
           theme="dark"
           width={800}
-          height={450} />         
+          height={450} />
       </div>
 
 

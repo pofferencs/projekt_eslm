@@ -107,8 +107,6 @@ export const UserProvider = ({children})=>{
     window.scroll(0,0);
   }
 
-
-
   return<UserContext.Provider value={{
     refresh,
     update,

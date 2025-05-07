@@ -16,7 +16,7 @@ INSERT INTO `Pictures` (`id`, `img_path`) VALUES
 (1, '/user/user_0.png'),
 (2, '/team/team_0.png'),
 (3, '/event/event_0.png'),
-(4, '/tournament/default_tournament.png'), -- Korábban /tournament/organizer_0.png volt, ezt egy általánosabb elérési útra cseréltem
+(4, '/tournament/tournament_0.png'),
 (5, '/organizer/organizer_0.png'),
 (6, '/tournament/cs2.png'),
 (7, '/tournament/rl_1v1.png'),
@@ -29,8 +29,7 @@ INSERT INTO `Pictures` (`id`, `img_path`) VALUES
 (14, '/tournament/overwatch2.png'),
 (15, '/tournament/fifa25.png');
 
--- Organizers (5 organizers)
--- OM azonosítók: 723xxxxxxx formátumban, 11 karakter hosszan
+-- Organizers
 INSERT INTO `Organizers` (`id`, `full_name`, `usr_name`, `usna_last_mod_date`, `usna_mod_num_remain`, `paswrd`, `date_of_birth`, `school`, `email_address`, `email_last_mod_date`, `phone_num`, `om_identifier`, `status`) VALUES
 (1, 'Szervező Elemér', 'szervezo1', NOW(), 3, '$2a$10$tRn.12E7m4FSl22.NbeQp.rNMaqlSdwQjupC0Zkolk.oSD3AMUz.S', '1980-01-01', 'Szervező Iskola', 'szervezo1@example.com', NOW(), '111000111', '72300000001', 'active'),
 (2, 'Szervező Béla', 'szervezo2', NOW(), 3, '$2a$10$tRn.12E7m4FSl22.NbeQp.rNMaqlSdwQjupC0Zkolk.oSD3AMUz.S', '1982-02-02', 'Szervező Iskola', 'szervezo2@example.com', NOW(), '111000222', '72300000002', 'active'),
@@ -38,10 +37,10 @@ INSERT INTO `Organizers` (`id`, `full_name`, `usr_name`, `usna_last_mod_date`, `
 (4, 'Szervező Dénes', 'szervezo4', NOW(), 3, '$2a$10$tRn.12E7m4FSl22.NbeQp.rNMaqlSdwQjupC0Zkolk.oSD3AMUz.S', '1986-04-04', 'Szervező Iskola', 'szervezo4@example.com', NOW(), '111000444', '72300000004', 'active'),
 (5, 'Szervező Fanni', 'szervezo5', NOW(), 3, '$2a$10$tRn.12E7m4FSl22.NbeQp.rNMaqlSdwQjupC0Zkolk.oSD3AMUz.S', '1988-05-05', 'Szervező Iskola', 'szervezo5@example.com', NOW(), '111000555', '72300000005', 'active');
 
--- Users (55 users)
--- OM azonosítók: 723xxxxxxx formátumban, 11 karakter hosszan
+-- Users
 INSERT INTO `Users` (`id`, `inviteable`, `full_name`, `usr_name`, `usna_last_mod_date`, `usna_mod_num_remain`, `paswrd`, `date_of_birth`, `school`, `clss`, `email_address`, `email_last_mod_date`, `phone_num`, `om_identifier`, `status`, `discord_name`) VALUES
--- Csapatban lévő userek (IDs 1-42 aktív tagként lesznek hozzárendelve)
+
+-- Csapatban lévő userek
 (1, 1, 'Csapat Tag Egy', 'csapattag1', NOW(), 3, '$2a$10$tRn.12E7m4FSl22.NbeQp.rNMaqlSdwQjupC0Zkolk.oSD3AMUz.S', '2000-01-01', 'Iskola A', '10A', 'cs1@example.com', NOW(), '123456701', '72310000001', 'active', 'cs1#0001'),
 (2, 1, 'Csapat Tag Kettő', 'csapattag2', NOW(), 3, '$2a$10$tRn.12E7m4FSl22.NbeQp.rNMaqlSdwQjupC0Zkolk.oSD3AMUz.S', '2000-01-02', 'Iskola A', '10A', 'cs2@example.com', NOW(), '123456702', '72310000002', 'active', 'cs2#0002'),
 (3, 1, 'Csapat Tag Három', 'csapattag3', NOW(), 3, '$2a$10$tRn.12E7m4FSl22.NbeQp.rNMaqlSdwQjupC0Zkolk.oSD3AMUz.S', '2000-01-03', 'Iskola B', '10B', 'cs3@example.com', NOW(), '123456703', '72310000003', 'active', 'cs3#0003'),
@@ -85,69 +84,69 @@ INSERT INTO `Users` (`id`, `inviteable`, `full_name`, `usr_name`, `usna_last_mod
 (41, 1, 'Csapat Tag Negyvenegy', 'csapattag41', NOW(), 3, '$2a$10$tRn.12E7m4FSl22.NbeQp.rNMaqlSdwQjupC0Zkolk.oSD3AMUz.S', '2000-02-11', 'Iskola U', '11F', 'cs41@example.com', NOW(), '123456741', '72330000041', 'active', 'cs41#0041'), -- Előzőleg 7231 volt itt, javítva 7233-ra a mintához
 (42, 1, 'Csapat Tag Negyvenkettő', 'csapattag42', NOW(), 3, '$2a$10$tRn.12E7m4FSl22.NbeQp.rNMaqlSdwQjupC0Zkolk.oSD3AMUz.S', '2000-02-12', 'Iskola U', '11F', 'cs42@example.com', NOW(), '123456742', '72330000042', 'active', 'cs42#0042'), -- Előzőleg 7231 volt itt, javítva 7233-ra a mintához
 
--- 2 inaktív, nem csapatban
+-- inaktív, nem csapatban
 (43, 0, 'Inaktív User Egy', 'inactive1', NOW(), 3, '$2a$10$tRn.12E7m4FSl22.NbeQp.rNMaqlSdwQjupC0Zkolk.oSD3AMUz.S', '2001-03-01', 'Iskola V', '10G', 'inactive1@example.com', NOW(), '123456743', '72320000001', 'inactive', 'inactive1#0001'),
 (44, 0, 'Inaktív User Kettő', 'inactive2', NOW(), 3, '$2a$10$tRn.12E7m4FSl22.NbeQp.rNMaqlSdwQjupC0Zkolk.oSD3AMUz.S', '2001-03-02', 'Iskola V', '10G', 'inactive2@example.com', NOW(), '123456744', '72320000002', 'inactive', 'inactive2#0002'),
 
--- 2 aktív és meghívható
+-- aktív és meghívható
 (45, 1, 'Aktív Meghívható Egy', 'activeinvite1', NOW(), 3, '$2a$10$tRn.12E7m4FSl22.NbeQp.rNMaqlSdwQjupC0Zkolk.oSD3AMUz.S', '2002-04-01', 'Iskola W', '11G', 'activeinvite1@example.com', NOW(), '123456745', '72330000001', 'active', 'activeinvite1#0001'),
 (46, 1, 'Aktív Meghívható Kettő', 'activeinvite2', NOW(), 3, '$2a$10$tRn.12E7m4FSl22.NbeQp.rNMaqlSdwQjupC0Zkolk.oSD3AMUz.S', '2002-04-02', 'Iskola W', '11G', 'activeinvite2@example.com', NOW(), '123456746', '72330000002', 'active', 'activeinvite2#0002'),
 
--- 2 aktív és nem meghívható
+-- aktív és nem meghívható
 (47, 0, 'Aktív NemMeghívható Egy', 'activenoinvite1', NOW(), 3, '$2a$10$tRn.12E7m4FSl22.NbeQp.rNMaqlSdwQjupC0Zkolk.oSD3AMUz.S', '2003-05-01', 'Iskola X', '12G', 'activenoinvite1@example.com', NOW(), '123456747', '72340000001', 'active', 'activenoinvite1#0001'),
 (48, 0, 'Aktív NemMeghívható Kettő', 'activenoinvite2', NOW(), 3, '$2a$10$tRn.12E7m4FSl22.NbeQp.rNMaqlSdwQjupC0Zkolk.oSD3AMUz.S', '2003-05-02', 'Iskola X', '12G', 'activenoinvite2@example.com', NOW(), '123456748', '72340000002', 'active', 'activenoinvite2#0002'),
 
--- 2 bannolt
+-- bannolt
 (49, 0, 'Bannolt User Egy', 'banned1', NOW(), 3, '$2a$10$tRn.12E7m4FSl22.NbeQp.rNMaqlSdwQjupC0Zkolk.oSD3AMUz.S', '2004-06-01', 'Iskola Y', '9G', 'banned1@example.com', NOW(), '123456749', '72350000001', 'banned', 'banned1#0001'),
 (50, 0, 'Bannolt User Kettő', 'banned2', NOW(), 3, '$2a$10$tRn.12E7m4FSl22.NbeQp.rNMaqlSdwQjupC0Zkolk.oSD3AMUz.S', '2004-06-02', 'Iskola Y', '9G', 'banned2@example.com', NOW(), '123456750', '72350000002', 'banned', 'banned2#0002'),
 
--- 5 függőben lévő csapattagságra váró (ezeket a Team_Memberships táblában 'pending' státusszal kezeljük)
+-- függőben lévő csapattagságra váró (ezeket a Team_Memberships táblában 'pending' státusszal kezeljük)
 (51, 1, 'Függő User Egy', 'pending1', NOW(), 3, '$2a$10$tRn.12E7m4FSl22.NbeQp.rNMaqlSdwQjupC0Zkolk.oSD3AMUz.S', '2005-07-01', 'Iskola Z', '10H', 'pending1@example.com', NOW(), '123456751', '72360000001', 'active', 'pending1#0001'),
 (52, 1, 'Függő User Kettő', 'pending2', NOW(), 3, '$2a$10$tRn.12E7m4FSl22.NbeQp.rNMaqlSdwQjupC0Zkolk.oSD3AMUz.S', '2005-07-02', 'Iskola Z', '10H', 'pending2@example.com', NOW(), '123456752', '72360000002', 'active', 'pending2#0002'),
 (53, 1, 'Függő User Három', 'pending3', NOW(), 3, '$2a$10$tRn.12E7m4FSl22.NbeQp.rNMaqlSdwQjupC0Zkolk.oSD3AMUz.S', '2005-07-03', 'Iskola Z', '10H', 'pending3@example.com', NOW(), '123456753', '72360000003', 'active', 'pending3#0003'),
 (54, 1, 'Függő User Négy', 'pending4', NOW(), 3, '$2a$10$tRn.12E7m4FSl22.NbeQp.rNMaqlSdwQjupC0Zkolk.oSD3AMUz.S', '2005-07-04', 'Iskola AA', '11H', 'pending4@example.com', NOW(), '123456754', '72360000004', 'active', 'pending4#0004'),
 (55, 1, 'Függő User Öt', 'pending5', NOW(), 3, '$2a$10$tRn.12E7m4FSl22.NbeQp.rNMaqlSdwQjupC0Zkolk.oSD3AMUz.S', '2005-07-05', 'Iskola AA', '11H', 'pending5@example.com', NOW(), '123456755', '72360000005', 'active', 'pending5#0005');
 
--- Teams (16 teams)
-INSERT INTO `Teams` (`id`, `short_name`, `full_name`, `creator_id`) VALUES
-(1, 'T01', 'Team One Alpha', 1), (2, 'T02', 'Team Two Bravo', 2), (3, 'T03', 'Team Three Charlie', 3), (4, 'T04', 'Team Four Delta', 4),
-(5, 'T05', 'Team Five Echo', 5), (6, 'T06', 'Team Six Foxtrot', 6), (7, 'T07', 'Team Seven Golf', 7), (8, 'T08', 'Team Eight Hotel', 8),
-(9, 'T09', 'Team Nine India', 9), (10, 'T10', 'Team Ten Juliett', 10), (11, 'T11', 'Team Eleven Kilo', 11), (12, 'T12', 'Team Twelve Lima', 12),
-(13, 'T13', 'Team Thirteen Mike', 13), (14, 'T14', 'Team Fourteen November', 14), (15, 'T15', 'Team Fifteen Oscar', 15), (16, 'T16', 'Team Sixteen Papa', 16);
+-- Teams
+INSERT INTO `teams` (`id`, `short_name`, `full_name`, `creator_id`) VALUES
+(1, 'T01', 'Team One Alpha', 1),(2, 'T02', 'Team Two Bravo', 6),(3, 'T03', 'Team Three Charl', 11),
+(4, 'T04', 'Team Four Delta', 16),(5, 'T05', 'Team Five Echo', 21),(6, 'T06', 'Team Six Foxtrot', 22),
+(7, 'T07', 'Team Seven Golf', 23),(8, 'T08', 'Team Eight Hotel', 24),(9, 'T09', 'Team Nine India', 25),
+(10, 'T10', 'Team Ten Juliett', 27),(11, 'T11', 'Team Eleven Kilo', 29),(12, 'T12', 'Team Twelve Lima', 31),
+(13, 'T13', 'Team Thirteen Mi', 33),(14, 'T14', 'Team Fourteen No', 36),(15, 'T15', 'Team Fifteen Osc', 39), (16, 'T16', 'Team Sixteen Pap', 42)
 
 -- Team Memberships
--- 4 csapat * 5 tag (Csapatok 1-4): Userek 1-20
 INSERT INTO `Team_Memberships` (`status`, `uer_id`, `tem_id`) VALUES
 ('active', 1, 1), ('active', 2, 1), ('active', 3, 1), ('active', 4, 1), ('active', 5, 1),
 ('active', 6, 2), ('active', 7, 2), ('active', 8, 2), ('active', 9, 2), ('active', 10, 2),
 ('active', 11, 3), ('active', 12, 3), ('active', 13, 3), ('active', 14, 3), ('active', 15, 3),
 ('active', 16, 4), ('active', 17, 4), ('active', 18, 4), ('active', 19, 4), ('active', 20, 4);
--- 4 csapat * 1 tag (Csapatok 5-8): Userek 21-24
+
 INSERT INTO `Team_Memberships` (`status`, `uer_id`, `tem_id`) VALUES
 ('active', 21, 5), ('active', 22, 6), ('active', 23, 7), ('active', 24, 8);
--- 4 csapat * 2 tag (Csapatok 9-12): Userek 25-32
+
 INSERT INTO `Team_Memberships` (`status`, `uer_id`, `tem_id`) VALUES
 ('active', 25, 9), ('active', 26, 9), ('active', 27, 10), ('active', 28, 10),
 ('active', 29, 11), ('active', 30, 11), ('active', 31, 12), ('active', 32, 12);
--- 4 csapat * 3 tag (Csapatok 13-16): Userek 33-41 és 42, 45, 46
+
 INSERT INTO `Team_Memberships` (`status`, `uer_id`, `tem_id`) VALUES
 ('active', 33, 13), ('active', 34, 13), ('active', 35, 13),
 ('active', 36, 14), ('active', 37, 14), ('active', 38, 14),
 ('active', 39, 15), ('active', 40, 15), ('active', 41, 15),
-('active', 42, 16), ('active', 45, 16), ('active', 46, 16); -- Team 16: user 42 és a két 'active/inviteable' (45,46)
+('active', 42, 16), ('active', 45, 16), ('active', 46, 16); 
 
--- 5 függőben lévő tagság (Userek 51-55)
+-- függőben lévő tagság 
 INSERT INTO `Team_Memberships` (`status`, `uer_id`, `tem_id`) VALUES
 ('pending', 51, 1), ('pending', 52, 2), ('pending', 53, 5), ('pending', 54, 9), ('pending', 55, 13);
 
--- Events (1 eredeti + 3 új = 4 esemény)
+-- Events
 INSERT INTO `Events` (`id`, `name`, `start_date`, `end_date`, `place`, `details`, `ogr_id`) VALUES
 (1, 'Nagy E-sport Bajnokság 2025', '2025-07-15 10:00:00', '2025-07-20 22:00:00', 'Budapest Aréna', 'Az év legnagyobb e-sport eseménye, több játékkal.', 1),
 (2, 'Őszi Kupa 2023', '2023-10-15 09:00:00', '2023-10-20 20:00:00', 'Debrecen Főnix Csarnok', '2023-as őszi regionális verseny.', 2),
 (3, 'Tavaszi Fesztivál 2025', '2025-05-01 10:00:00', '2025-06-01 22:00:00', 'Szeged Sportcsarnok', 'Tavaszi e-sport ünnep.', 3),
 (4, 'Nyárindító Bajnokság 2025', '2025-08-01 10:00:00', '2025-09-01 22:00:00', 'Pécs Expo Center', 'Nyári szezonkezdő megmérettetés.', 4);
 
--- Games (4 eredeti + 6 új = 10 játék)
+-- Games
 INSERT INTO `Games` (`id`, `name`) VALUES
 (1, 'CS2'),
 (2, 'Rocket League 1v1'),
@@ -158,19 +157,19 @@ INSERT INTO `Games` (`id`, `name`) VALUES
 (7, 'Tekken 8'),
 (8, 'Dota 2'),
 (9, 'Overwatch 2'),
-(10, 'EA Sports FC 25'); -- FIFA helyett az új név
+(10, 'EA Sports FC 25');
 
--- Tournaments (4 eredeti + 6 új = 10 verseny)
--- `num_participant`: játékosok száma egy csapatban (pl. 5 fős csapatnál 5)
--- `team_num`: résztvevő csapatok száma (pl. 4, ha a bronzmeccses rendszer van)
--- `max_participant`: a versenyre jelentkezhető maximális csapatok száma (általában nagyobb, mint a team_num)
+-- Tournaments
+-- `num_participant`: játékosok száma egy csapatban 
+-- `team_num`: résztvevő csapatok száma
+-- `max_participant`: a versenyre jelentkezhető maximális csapatok száma
 INSERT INTO `Tournaments` (`id`, `name`, `num_participant`, `team_num`, `start_date`, `end_date`, `game_mode`, `max_participant`, `apn_start`, `apn_end`, `details`, `evt_id`, `gae_id`) VALUES
--- Eredeti 4 verseny (Event 1-hez)
+
 (1, '5v5 Bajnokság (CS2)', 5, 4, '2025-07-15 12:00:00', '2025-07-15 20:00:00', '5v5', 16, '2025-06-01 00:00:00', '2025-07-01 00:00:00', 'Csapatok 5 fővel.', 1, 1),
 (2, '1v1 Bajnokság (RL)', 1, 4, '2025-07-16 12:00:00', '2025-07-16 20:00:00', '1v1', 32, '2025-06-01 00:00:00', '2025-07-01 00:00:00', 'Egyéni küzdelmek.', 1, 2),
 (3, '2v2 Bajnokság (LoL)', 2, 4, '2025-07-17 12:00:00', '2025-07-17 20:00:00', '2v2', 16, '2025-06-01 00:00:00', '2025-07-01 00:00:00', 'Páros mérkőzések.', 1, 3),
 (4, '3v3 Bajnokság (RL)', 3, 4, '2025-07-18 12:00:00', '2025-07-18 20:00:00', '3v3', 16, '2025-06-01 00:00:00', '2025-07-01 00:00:00', 'Háromfős csapatok versenye.', 1, 4),
--- Új versenyek
+
 (5, 'Valorant Kupa 2023', 5, 4, '2023-10-15 10:00:00', '2023-10-17 18:00:00', '5v5', 16, '2023-10-05 00:00:00', '2023-10-13 23:59:59', 'Valorant verseny az Őszi Kupán.', 2, 5),
 (6, 'SF6 Tavaszi Kihívás', 1, 4, '2025-05-01 12:00:00', '2025-05-03 20:00:00', '1v1', 32, '2025-04-21 00:00:00', '2025-04-29 23:59:59', 'Street Fighter 6 egyéni verseny.', 3, 6),
 (7, 'Tekken Nyárindító Pofonparti', 1, 4, '2025-08-01 12:00:00', '2025-08-03 20:00:00', '1v1', 32, '2025-07-22 00:00:00', '2025-07-30 23:59:59', 'Tekken 8 egyéni bajnokság.', 4, 7),
@@ -178,96 +177,95 @@ INSERT INTO `Tournaments` (`id`, `name`, `num_participant`, `team_num`, `start_d
 (9, 'Overwatch Őszi Csetepaté', 5, 4, '2023-10-18 10:00:00', '2023-10-20 18:00:00', '5v5', 16, '2023-10-08 00:00:00', '2023-10-16 23:59:59', 'Overwatch 2 csapatverseny az Őszi Kupán.', 2, 9),
 (10, 'FC25 Tavaszi Foci Kupa', 1, 4, '2025-05-12 10:00:00', '2025-05-14 18:00:00', '1v1', 32, '2025-05-02 00:00:00', '2025-05-10 23:59:59', 'EA Sports FC 25 egyéni labdarúgó torna.', 3, 10);
 
--- Applications (minden versenyre 4 csapat)
--- Tournament 1 (5v5, CS2): Alkalmazás IDk 1-4. Csapatok: 1, 2, 3, 4. Tagok: 1-5, 6-10, 11-15, 16-20.
+-- Applications
+-- Tournament 1 (5v5, CS2)
 INSERT INTO `Applications` (`id`, `dte`, `status`, `tem_id`, `tnt_id`, `uer1_id`, `uer2_id`, `uer3_id`, `uer4_id`, `uer5_id`) VALUES
 (1, NOW(), 'approved', 1, 1, 1, 2, 3, 4, 5), (2, NOW(), 'approved', 2, 1, 6, 7, 8, 9, 10),
 (3, NOW(), 'approved', 3, 1, 11, 12, 13, 14, 15), (4, NOW(), 'approved', 4, 1, 16, 17, 18, 19, 20);
 
--- Tournament 2 (1v1, RL 1v1): Alkalmazás IDk 5-8. Csapatok (egyéni): 5, 6, 7, 8. Tagok: 21, 22, 23, 24.
+-- Tournament 2 (1v1, RL 1v1)
 INSERT INTO `Applications` (`id`, `dte`, `status`, `tem_id`, `tnt_id`, `uer1_id`) VALUES
 (5, NOW(), 'approved', 5, 2, 21), (6, NOW(), 'approved', 6, 2, 22),
 (7, NOW(), 'approved', 7, 2, 23), (8, NOW(), 'approved', 8, 2, 24);
 
--- Tournament 3 (2v2, LoL): Alkalmazás IDk 9-12. Csapatok: 9, 10, 11, 12. Tagok: (25,26), (27,28), (29,30), (31,32).
+-- Tournament 3 (2v2, LoL)
 INSERT INTO `Applications` (`id`, `dte`, `status`, `tem_id`, `tnt_id`, `uer1_id`, `uer2_id`) VALUES
 (9, NOW(), 'approved', 9, 3, 25, 26), (10, NOW(), 'approved', 10, 3, 27, 28),
 (11, NOW(), 'approved', 11, 3, 29, 30), (12, NOW(), 'approved', 12, 3, 31, 32);
 
--- Tournament 4 (3v3, RL 3v3): Alkalmazás IDk 13-16. Csapatok: 13, 14, 15, 16. Tagok: (33,34,35), (36,37,38), (39,40,41), (42,45,46).
+-- Tournament 4 (3v3, RL 3v3)
 INSERT INTO `Applications` (`id`, `dte`, `status`, `tem_id`, `tnt_id`, `uer1_id`, `uer2_id`, `uer3_id`) VALUES
 (13, NOW(), 'approved', 13, 4, 33, 34, 35), (14, NOW(), 'approved', 14, 4, 36, 37, 38),
 (15, NOW(), 'approved', 15, 4, 39, 40, 41), (16, NOW(), 'approved', 16, 4, 42, 45, 46);
 
--- Tournament 5 (Valorant 5v5): Alkalmazás IDk 17-20. Csapatok: 1,2,3,4 (újra felhasználva, de más versenyen)
+-- Tournament 5 (Valorant 5v5)
 INSERT INTO `Applications` (`id`, `dte`, `status`, `tem_id`, `tnt_id`, `uer1_id`, `uer2_id`, `uer3_id`, `uer4_id`, `uer5_id`) VALUES
 (17, '2023-10-10 10:00:00', 'approved', 1, 5, 1, 2, 3, 4, 5), (18, '2023-10-10 10:00:00', 'approved', 2, 5, 6, 7, 8, 9, 10),
 (19, '2023-10-10 10:00:00', 'approved', 3, 5, 11, 12, 13, 14, 15), (20, '2023-10-10 10:00:00', 'approved', 4, 5, 16, 17, 18, 19, 20);
 
--- Tournament 6 (SF6 1v1): Alkalmazás IDk 21-24. Csapatok (egyéni): 5,6,7,8
+-- Tournament 6 (SF6 1v1)
 INSERT INTO `Applications` (`id`, `dte`, `status`, `tem_id`, `tnt_id`, `uer1_id`) VALUES
 (21, '2025-04-25 10:00:00', 'approved', 5, 6, 21), (22, '2025-04-25 10:00:00', 'approved', 6, 6, 22),
 (23, '2025-04-25 10:00:00', 'approved', 7, 6, 23), (24, '2025-04-25 10:00:00', 'approved', 8, 6, 24);
 
--- Tournament 7 (Tekken 1v1): Alkalmazás IDk 25-28. Csapatok (egyéni): 5,6,7,8
+-- Tournament 7 (Tekken 1v1)
 INSERT INTO `Applications` (`id`, `dte`, `status`, `tem_id`, `tnt_id`, `uer1_id`) VALUES
 (25, '2025-07-28 10:00:00', 'approved', 5, 7, 21), (26, '2025-07-28 10:00:00', 'approved', 6, 7, 22),
 (27, '2025-07-28 10:00:00', 'approved', 7, 7, 23), (28, '2025-07-28 10:00:00', 'approved', 8, 7, 24);
 
--- Tournament 8 (Dota2 5v5): Alkalmazás IDk 29-32. Csapatok: 1,2,3,4
+-- Tournament 8 (Dota2 5v5)
 INSERT INTO `Applications` (`id`, `dte`, `status`, `tem_id`, `tnt_id`, `uer1_id`, `uer2_id`, `uer3_id`, `uer4_id`, `uer5_id`) VALUES
 (29, '2025-07-12 10:00:00', 'approved', 1, 8, 1, 2, 3, 4, 5), (30, '2025-07-12 10:00:00', 'approved', 2, 8, 6, 7, 8, 9, 10),
 (31, '2025-07-12 10:00:00', 'approved', 3, 8, 11, 12, 13, 14, 15), (32, '2025-07-12 10:00:00', 'approved', 4, 8, 16, 17, 18, 19, 20);
 
--- Tournament 9 (Overwatch2 5v5): Alkalmazás IDk 33-36. Csapatok: 1,2,3,4
+-- Tournament 9 (Overwatch2 5v5)
 INSERT INTO `Applications` (`id`, `dte`, `status`, `tem_id`, `tnt_id`, `uer1_id`, `uer2_id`, `uer3_id`, `uer4_id`, `uer5_id`) VALUES
 (33, '2023-10-12 10:00:00', 'approved', 1, 9, 1, 2, 3, 4, 5), (34, '2023-10-12 10:00:00', 'approved', 2, 9, 6, 7, 8, 9, 10),
 (35, '2023-10-12 10:00:00', 'approved', 3, 9, 11, 12, 13, 14, 15), (36, '2023-10-12 10:00:00', 'approved', 4, 9, 16, 17, 18, 19, 20);
 
--- Tournament 10 (FC25 1v1): Alkalmazás IDk 37-40. Csapatok (egyéni): 5,6,7,8
+-- Tournament 10 (FC25 1v1)
 INSERT INTO `Applications` (`id`, `dte`, `status`, `tem_id`, `tnt_id`, `uer1_id`) VALUES
 (37, '2025-05-05 10:00:00', 'approved', 5, 10, 21), (38, '2025-05-05 10:00:00', 'approved', 6, 10, 22),
 (39, '2025-05-05 10:00:00', 'approved', 7, 10, 23), (40, '2025-05-05 10:00:00', 'approved', 8, 10, 24);
 
--- Matches (minden versenyre 4 mérkőzés, összesen 40 mérkőzés)
--- A bronzmeccs és döntő apn1_id, apn2_id értékei placeholder-ek, ezeket a valóságban az elődöntők eredményei alapján kellene beállítani.
--- Tournament 1 (CS2, App:1-4)
+-- Matches
+-- Tournament 1 (CS2)
 INSERT INTO `Matches` (`id`, `status`, `place`, `dte`, `details`, `apn1_id`, `apn2_id`, `tnt_id`) VALUES
 (1, 'pending', 'Aréna 1', '2025-07-15 13:00:00', 'T1 Elődöntő 1', 1, 2, 1), (2, 'pending', 'Aréna 1', '2025-07-15 15:00:00', 'T1 Elődöntő 2', 3, 4, 1),
 (3, 'pending', 'Aréna 1', '2025-07-15 17:00:00', 'T1 Bronzmérkőzés', 1, 3, 1), (4, 'pending', 'Aréna 1', '2025-07-15 19:00:00', 'T1 Döntő', 2, 4, 1);
--- Tournament 2 (RL 1v1, App:5-8)
+-- Tournament 2 (RL 1v1)
 INSERT INTO `Matches` (`id`, `status`, `place`, `dte`, `details`, `apn1_id`, `apn2_id`, `tnt_id`) VALUES
 (5, 'pending', 'Aréna 2', '2025-07-16 13:00:00', 'T2 Elődöntő 1', 5, 6, 2), (6, 'pending', 'Aréna 2', '2025-07-16 15:00:00', 'T2 Elődöntő 2', 7, 8, 2),
 (7, 'pending', 'Aréna 2', '2025-07-16 17:00:00', 'T2 Bronzmérkőzés', 5, 7, 2), (8, 'pending', 'Aréna 2', '2025-07-16 19:00:00', 'T2 Döntő', 6, 8, 2);
--- Tournament 3 (LoL 2v2, App:9-12)
+-- Tournament 3 (LoL 2v2)
 INSERT INTO `Matches` (`id`, `status`, `place`, `dte`, `details`, `apn1_id`, `apn2_id`, `tnt_id`) VALUES
 (9, 'pending', 'Aréna 3', '2025-07-17 13:00:00', 'T3 Elődöntő 1', 9, 10, 3), (10, 'pending', 'Aréna 3', '2025-07-17 15:00:00', 'T3 Elődöntő 2', 11, 12, 3),
 (11, 'pending', 'Aréna 3', '2025-07-17 17:00:00', 'T3 Bronzmérkőzés', 9, 11, 3), (12, 'pending', 'Aréna 3', '2025-07-17 19:00:00', 'T3 Döntő', 10, 12, 3);
--- Tournament 4 (RL 3v3, App:13-16)
+-- Tournament 4 (RL 3v3)
 INSERT INTO `Matches` (`id`, `status`, `place`, `dte`, `details`, `apn1_id`, `apn2_id`, `tnt_id`) VALUES
 (13, 'pending', 'Aréna 4', '2025-07-18 13:00:00', 'T4 Elődöntő 1', 13, 14, 4), (14, 'pending', 'Aréna 4', '2025-07-18 15:00:00', 'T4 Elődöntő 2', 15, 16, 4),
 (15, 'pending', 'Aréna 4', '2025-07-18 17:00:00', 'T4 Bronzmérkőzés', 13, 15, 4), (16, 'pending', 'Aréna 4', '2025-07-18 19:00:00', 'T4 Döntő', 14, 16, 4);
--- Tournament 5 (Valorant, App:17-20)
+-- Tournament 5 (Valorant)
 INSERT INTO `Matches` (`id`, `status`, `place`, `dte`, `details`, `apn1_id`, `apn2_id`, `tnt_id`) VALUES
 (17, 'pending', 'Debrecen LAN1', '2023-10-15 11:00:00', 'T5 Elődöntő 1', 17, 18, 5), (18, 'pending', 'Debrecen LAN1', '2023-10-15 13:00:00', 'T5 Elődöntő 2', 19, 20, 5),
 (19, 'pending', 'Debrecen LAN1', '2023-10-15 15:00:00', 'T5 Bronzmérkőzés', 17, 19, 5), (20, 'pending', 'Debrecen LAN1', '2023-10-15 17:00:00', 'T5 Döntő', 18, 20, 5);
--- Tournament 6 (SF6, App:21-24)
+-- Tournament 6 (SF6)
 INSERT INTO `Matches` (`id`, `status`, `place`, `dte`, `details`, `apn1_id`, `apn2_id`, `tnt_id`) VALUES
 (21, 'pending', 'Szeged Ring1', '2025-05-01 13:00:00', 'T6 Elődöntő 1', 21, 22, 6), (22, 'pending', 'Szeged Ring1', '2025-05-01 15:00:00', 'T6 Elődöntő 2', 23, 24, 6),
 (23, 'pending', 'Szeged Ring1', '2025-05-01 17:00:00', 'T6 Bronzmérkőzés', 21, 23, 6), (24, 'pending', 'Szeged Ring1', '2025-05-01 19:00:00', 'T6 Döntő', 22, 24, 6);
--- Tournament 7 (Tekken, App:25-28)
+-- Tournament 7 (Tekken)
 INSERT INTO `Matches` (`id`, `status`, `place`, `dte`, `details`, `apn1_id`, `apn2_id`, `tnt_id`) VALUES
 (25, 'pending', 'Pécs Dojo1', '2025-08-01 13:00:00', 'T7 Elődöntő 1', 25, 26, 7), (26, 'pending', 'Pécs Dojo1', '2025-08-01 15:00:00', 'T7 Elődöntő 2', 27, 28, 7),
 (27, 'pending', 'Pécs Dojo1', '2025-08-01 17:00:00', 'T7 Bronzmérkőzés', 25, 27, 7), (28, 'pending', 'Pécs Dojo1', '2025-08-01 19:00:00', 'T7 Döntő', 26, 28, 7);
--- Tournament 8 (Dota2, App:29-32)
+-- Tournament 8 (Dota2)
 INSERT INTO `Matches` (`id`, `status`, `place`, `dte`, `details`, `apn1_id`, `apn2_id`, `tnt_id`) VALUES
 (29, 'pending', 'Aréna 1', '2025-07-19 11:00:00', 'T8 Elődöntő 1', 29, 30, 8), (30, 'pending', 'Aréna 1', '2025-07-19 13:00:00', 'T8 Elődöntő 2', 31, 32, 8),
 (31, 'pending', 'Aréna 1', '2025-07-19 15:00:00', 'T8 Bronzmérkőzés', 29, 31, 8), (32, 'pending', 'Aréna 1', '2025-07-19 17:00:00', 'T8 Döntő', 30, 32, 8);
--- Tournament 9 (Overwatch2, App:33-36)
+-- Tournament 9 (Overwatch2)
 INSERT INTO `Matches` (`id`, `status`, `place`, `dte`, `details`, `apn1_id`, `apn2_id`, `tnt_id`) VALUES
 (33, 'pending', 'Debrecen LAN2', '2023-10-18 11:00:00', 'T9 Elődöntő 1', 33, 34, 9), (34, 'pending', 'Debrecen LAN2', '2023-10-18 13:00:00', 'T9 Elődöntő 2', 35, 36, 9),
 (35, 'pending', 'Debrecen LAN2', '2023-10-18 15:00:00', 'T9 Bronzmérkőzés', 33, 35, 9), (36, 'pending', 'Debrecen LAN2', '2023-10-18 17:00:00', 'T9 Döntő', 34, 36, 9);
--- Tournament 10 (FC25, App:37-40)
+-- Tournament 10 (FC25)
 INSERT INTO `Matches` (`id`, `status`, `place`, `dte`, `details`, `apn1_id`, `apn2_id`, `tnt_id`) VALUES
 (37, 'pending', 'Szeged Pálya1', '2025-05-12 11:00:00', 'T10 Elődöntő 1', 37, 38, 10), (38, 'pending', 'Szeged Pálya1', '2025-05-12 13:00:00', 'T10 Elődöntő 2', 39, 40, 10),
 (39, 'pending', 'Szeged Pálya1', '2025-05-12 15:00:00', 'T10 Bronzmérkőzés', 37, 39, 10), (40, 'pending', 'Szeged Pálya1', '2025-05-12 17:00:00', 'T10 Döntő', 38, 40, 10);

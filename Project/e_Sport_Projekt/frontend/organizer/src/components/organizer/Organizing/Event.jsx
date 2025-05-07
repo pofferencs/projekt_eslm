@@ -79,7 +79,7 @@ function Event() {
     })
     .catch(err=> alert(err));
 
-    console.log(event)
+    // console.log(event)
 
   },[isloading])
 
@@ -209,7 +209,7 @@ const sendImage = async (file, type, id) => {
 
   const modify = (method, formData) => {
 
-    console.log(formData)
+    // console.log(formData)
 
     fetch(`${import.meta.env.VITE_BASE_URL}/update/event`, {
       method: method,
@@ -544,18 +544,7 @@ const sendImage = async (file, type, id) => {
                   </div>
             
             )
-            }
-            
-            
-                  
-
-            
-
-
-
-
-
-
+            }                               
                   </>
           ):(
             
@@ -648,20 +637,15 @@ const sendImage = async (file, type, id) => {
                           )
                         }
                       </div>
-                     </div>
-                    
+                     </div>                   
                     
                   </div>
                       </div> 
-
-
                     
                   </div>
                 </div>
                 
               </>
-
-
           )
           
         }

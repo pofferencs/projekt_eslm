@@ -130,7 +130,6 @@ function NewTournament() {
 
 
   const dateFormat = (date) => {
-    //console.log(date);
   
     if (date != undefined) {
       const localDate = new Date(date); 
@@ -198,7 +197,7 @@ function NewTournament() {
       [e.target.id]: e.target.value,
     }));
 
-    console.log(formData)
+    // console.log(formData)
   };
 
 
@@ -369,17 +368,11 @@ function NewTournament() {
                         </div>
                         
                       </div>
-                    </form>
-                      
+                    </form>                     
 
-
-                    </div>
-                    
+                    </div>                   
 
                   </div>
-
-
-
         )
       }
             
