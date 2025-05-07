@@ -10,20 +10,31 @@ function NewEvent() {
   const [isloading, setIsLoading] = useState(true);
   const [detailsNum, setDetailsNum] = useState(0);
   const navigate = useNavigate();
+  const [dateData, setDateData] = useState({
+    apn_start: "",
+    apn_end: ""
+    
+  })
 
 
-  let formObj = {
+  useEffect(()=>{
+
+    if(!isAuthenticated){
+      navigate('/');
+    }
+
+
+  }, [isAuthenticated])
+
+
+
+
+  const [formData, setFormData] = useState({
     name: "",
     place: "",
-    start_date: "",
-    end_date: "",
     details: "",
     ogr_id: profile.id
-
-  };
-
-
-  const [formData, setFormData] = useState(formObj);
+  });
 
 
 
@@ -52,10 +63,10 @@ function NewEvent() {
       headers: { "Content-type": "application/json" },
       body: JSON.stringify({
         details: formData.details,
-        end_date: formData.end_date,
+        end_date: dateData.end_date,
         name: formData.name,
         place: formData.place,
-        start_date: formData.start_date,
+        start_date: dateData.start_date,
         ogr_id: profile.id
       }),
     })
@@ -139,14 +150,24 @@ function NewEvent() {
                               <label className="block text-sm font-medium text-white">
                                 Kezdés(*)
                               </label>
-                              <input id="start_date" onChange={writeData} type="datetime-local" value={dateFormat(formData.start_date)} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm" />
+                              <input id="start_date" onChange={(time)=> {
+                                setDateData((prevState) => ({
+                                  ...prevState,
+                                  start_date: time.target.value,}));}
+                                }
+                               type="datetime-local" value={dateFormat(dateData.start_date)} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm" />
                             </div>
 
                             <div key={'end_date'}>
                               <label className="block text-sm font-medium text-white">
                                 Vége(*)
                               </label>
-                              <input id="end_date" onChange={writeData} type="datetime-local" value={dateFormat(formData.end_date)} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm" />
+                              <input id="end_date" onChange={(time)=> {
+                                setDateData((prevState) => ({
+                                  ...prevState,
+                                  end_date: time.target.value,}));}
+                                
+                                } type="datetime-local" value={dateFormat(dateData.end_date)} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm" />
                             </div>
                             
                             <div>
