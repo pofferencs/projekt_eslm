@@ -2,7 +2,7 @@ Verseny felvétele:
 https://localhost:8000/insert/tournament
 
 {
-    "name": "Kibaszott Nagy Valorant Showdown",
+    "name": "Nagy Valorant Showdown",
     "num_participant": 12,
     "start_date": "2025. 04. 08.",
     "end_date": "2025. 04. 08.",
@@ -10,7 +10,7 @@ https://localhost:8000/insert/tournament
     "max_participant": 12,
     "apn_start": "2025. 03. 25.",
     "apn_end": "2025. 04. 01.",
-    "details": "Valorant Showdown. 12 nolife csapat küzd meg egymással, kiknek csapattagjaik nolife emberek. Szopjatok le.",
+    "details": "Valorant Showdown. 12 csapat küzd meg egymással.",
     "evt_id": 17,
     "gae_id": 3
 }
@@ -23,7 +23,7 @@ https://localhost:8000/insert/event
     "start_date": "2025. 04. 08.",
     "end_date": "2025. 04. 11.",
     "place": "Suli",
-    "details": "Életteleneknek Gamer Esport esemény."
+    "details": "Gamer Esport esemény."
 }
 
 
