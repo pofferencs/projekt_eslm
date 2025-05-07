@@ -55,9 +55,9 @@ INSERT INTO `pictures` (`id`, `img_path`) VALUES
 
 INSERT INTO `team_memberships` (`status`, `uer_id`, `tem_id`) VALUES
 ('active', 1, 1),
-('inactive', 2, 2),
-('active', 3, 3),
-('inactive', 4, 4),
+('pending', 2, 2),
+('pending', 3, 3),
+('pending', 4, 4),
 ('active', 5, 5);
 
 INSERT INTO `matches` (`id`, `status`, `place`, `dte`, `details`, `winner`, `rslt`, `tem1_id`, `tem2_id`, `tnt_id`) VALUES
