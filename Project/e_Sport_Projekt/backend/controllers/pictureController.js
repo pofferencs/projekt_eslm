@@ -50,10 +50,10 @@ const pictureList = async (req, res) => {
 
 const defaultImageIds = {
     user: 1,
-    team: 3,
-    event: 4,
-    tournament: 5,
-    organizer: 6,
+    team: 2,
+    event: 3,
+    tournament: 4,
+    organizer: 5,
 };
 
 const fieldMap = {
