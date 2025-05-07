@@ -16,7 +16,7 @@ const gameUpdate = async (req, res) => {
     const { id, name_get, name_set } = req.body;
 
     if(!id || !name_get || !name_set){
-        return res.status(400).json({message: "Hiányos adatok!"});
+        return res.status(400).json({message: "Hiányos adat!"});
     }
 
     try {

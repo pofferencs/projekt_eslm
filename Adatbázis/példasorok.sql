@@ -33,11 +33,11 @@ INSERT INTO `events` (`id`, `name`, `start_date`, `end_date`, `place`, `details`
 (5, 'Global Finals', '2024-11-05 08:00:00', '2024-11-10 22:00:00', 'London Arena', 'The final event of the global esports season',5);
 
 INSERT INTO `games` (`id`, `name`) VALUES
-(1, 'League of Legends'),
-(2, 'Dota 2'),
-(3, 'Valorant'),
-(4, 'Fortnite'),
-(5, 'Counter-Strike');
+(1, 'Counter-Strike'),
+(2, 'League of Legends'),
+(3, 'Dota 2'),
+(4, 'Valorant'),
+(5, 'Fortnite');
 
 INSERT INTO `tournaments` (`id`, `name`, `num_participant`, `team_num`, `start_date`, `end_date`, `game_mode`, `max_participant`, `apn_start`, `apn_end`, `details`, `evt_id`, `gae_id`) VALUES
 (1, 'Summer Cup', 16, 4, '2024-06-01 10:00:00', '2024-06-05 20:00:00', 'Single Elimination', 64, '2024-05-01 00:00:00', '2024-05-30 23:59:59', 'Summer esports competition', 1, 1),

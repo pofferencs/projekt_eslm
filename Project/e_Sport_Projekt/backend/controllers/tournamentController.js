@@ -244,6 +244,10 @@ const tournamentInsert = async (req, res) => {
             return res.status(400).json({message: "Hiányos adatok!"});
         }
 
+        if(max_participant || num_participant || team_num){
+            return res.status(400).json({message: "Csak pozitív számot adhatsz meg!"});
+        }
+
         //Event és game kikeresése a többi adat vizsgálásához
         const event = await prisma.events.findFirst({
             where: {
