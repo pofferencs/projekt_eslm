@@ -223,14 +223,10 @@ function TeamEdit() {
         fetch(`${import.meta.env.VITE_BASE_URL}/delete/team`, {
             method: method,
             headers: { "Content-type": "application/json" },
-<<<<<<< Updated upstream
-            body: JSON.stringify({ id: teamFormData.id })
-=======
             body: JSON.stringify({ 
               id: teamFormData.id,
               picture_id: teamPicId,
               user_id: profile.id })
->>>>>>> Stashed changes
         })
             .then(async res => {
                 const data = await res.json();
