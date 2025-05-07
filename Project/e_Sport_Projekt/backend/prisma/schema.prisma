@@ -84,7 +84,7 @@ model Tournaments {
   id              Int             @unique @default(autoincrement())
   name            String          @db.VarChar(32)
   num_participant Int
-  team_num        Int?
+  team_num        Int
   start_date      DateTime
   end_date        DateTime
   game_mode       String          @db.VarChar(32)
@@ -168,14 +168,14 @@ model Picture_Links {
   tem_id     Int?
   tnt_id     Int?
   evt_id     Int?
-  pte_id     Int
   ogr_id     Int?
+  pte_id     Int
   user       Users?       @relation(fields: [uer_id], references: [id], onDelete: Restrict)
   team       Teams?       @relation(fields: [tem_id], references: [id], onDelete: Restrict)
   tournament Tournaments? @relation(fields: [tnt_id], references: [id], onDelete: Cascade)
   event      Events?      @relation(fields: [evt_id], references: [id], onDelete: Cascade)
-  picture    Pictures     @relation(fields: [pte_id], references: [id])
   organizers Organizers?  @relation(fields: [ogr_id], references: [id])
+  picture    Pictures     @relation(fields: [pte_id], references: [id])
 
   @@id([id, pte_id])
 }

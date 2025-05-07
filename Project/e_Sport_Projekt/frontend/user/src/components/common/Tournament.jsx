@@ -15,9 +15,11 @@ function Tournament() {
     const [picPath, setPicPath] = useState("");
     const [applicationsTeam, setApplicationsTeam] = useState([]);
     const [myTeams, setMyTeams] = useState([]);
+    const [teamMembers, setTeamMembers] = useState([]);
     const [team, setTeam] = useState("");
     const [canApply, setCanApply] = useState(true);
     const [isApplication, setIsApplication] = useState(false);
+    const [selectedMembers, setSelectedMembers] = useState([]);
     const navigate = useNavigate();
 
 
@@ -88,7 +90,7 @@ function Tournament() {
   },[isloading])
 
 
-  const myTeamsFetch = () => {
+  const myTeamsFetch= () => {
     
     fetch(`${import.meta.env.VITE_BASE_URL}/list/myteams/${profile.id}`,{
       method: "GET",
@@ -102,28 +104,82 @@ function Tournament() {
     .catch(err=>alert(err));
   }
 
-  const applicationSend = (tnt_id, tem_id, uer_id) => {
-
-    fetch(`${import.meta.env.VITE_BASE_URL}/insert/application/submit`,{
-      method: "POST",
+  const teamMembersFetch = (team) =>{
+    fetch(`${import.meta.env.VITE_BASE_URL}/list/team/${team}/members`,{
+      method: "GET",
       headers: { "Content-type": "application/json" },
-      body: JSON.stringify({
-        tnt_id: tnt_id,
-        tem_id: tem_id,
-        uer_id: uer_id
-      })
     })
-    .then(async (res) => {
-          const data = await res.json();
-          if(!res.ok){
-              
-              toast.error(data.message);
-          }else{
-              toast.success(data.message);
+    .then(res=>res.json())
+    .then(adat=>{
+      setTeamMembers(adat);
+
+    })
+    .catch(err=>alert(err));
+  }
+
+  const selectMember = (e) =>{
+
+
+
+      //document.getElementById(`option-${member}`).classList.replace('text-white', 'text-green-500');
+      //toast.error(`Magaddal együtt annyi tagot kell kiválassz, amennyi csapattagszám van meghatározva! (${tournament.team_num} fő)`);
+      //document.getElementById(`option-${member}`).classList.replace('text-green-500', 'text-white');
+
+      setSelectedMembers((prevMembers) => {
+        if (prevMembers.includes(e)) {
+
+          document.getElementById(`option-${e}`).classList.replace('text-green-500', 'text-white');
+
+          return prevMembers.filter(member => member !== e);
+
+        } else {
+
+          document.getElementById(`option-${e}`).classList.replace('text-white', 'text-green-500');
+
+          return [...prevMembers, e];
+        }
+      });
+    
+   
+  }
+
+
+  
+
+  const applicationSend = (tnt_id, tem_id, members) => {
+
+    if(members.length > tournament.team_num || members.length < tournament.team_num-1){
+      toast.error(`Magaddal együtt annyi tagot kell kiválassz, amennyi csapattagszám van meghatározva! (${tournament.team_num} fő)`);
+    }else{
+
+    
+
+      fetch(`${import.meta.env.VITE_BASE_URL}/insert/application/submit`,{
+        method: "POST",
+        headers: { "Content-type": "application/json" },
+        body: JSON.stringify({
+          tnt_id: tnt_id,
+          tem_id: tem_id,
+          uer1_id: profile.id,
+          uer2_id: members[0],
+          uer3_id: members[1],
+          uer4_id: members[2],
+          uer5_id: members[3],
+        })
+      })
+      .then(async (res) => {
+            const data = await res.json();
+            if(!res.ok){
+                
+                toast.error(data.message);
+            }else{
+                toast.success(data.message);
+            }
+            })
+            .catch((err) => alert(err));
           }
-          })
-          .catch((err) => alert(err));
-  };
+    };
+    
 
 
 
@@ -135,7 +191,7 @@ function Tournament() {
       method: "POST",
       headers: { "Content-type": "application/json" },
       body: JSON.stringify({
-        uer_id: profile.id,
+        uer1_id: profile.id,
         tnt_id: tournament.id
       })
     }).then(res=>res.json())
@@ -204,25 +260,49 @@ function Tournament() {
                                   ):(
                                     <div className="flex flex-col gap-2">
                                       <div className="flex flex-row gap-2">
-                                        <button className="btn btn-success" onClick={()=> {applicationSend(tournament.id, team, profile.id);}}>Jelentkezés beküldése</button>
-                                        <button onClick={()=>{setIsApplication(false); setTeam("");}} className="btn btn-error">Mégse</button>
+                                        <button className="btn btn-success" onClick={()=> {applicationSend(tournament.id, team, selectedMembers);}}>Jelentkezés beküldése</button>
+                                        <button onClick={()=>{setIsApplication(false); setTeam(""); setTeamMembers([]);}} className="btn btn-error">Mégse</button>
                                       </div>
                                       <select id="myTeams" defaultValue="Csapataim" className="select mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm">
                                       <option disabled={true}>Csapataim</option>
                                         {
                                           (myTeams.length==0)?(
                                             <>
-                                              <option disabled={true}>Nincsen csapatod!</option>                                            
+                                              <option disabled={true}>Nincsen csapatod!</option>
                                             </>
                                           ):(
                                             myTeams.map((e)=>(
                                               <>
-                                                <option onClick={()=> {setTeam(e.id)}} key={e.id}>{e.full_name}</option>
+                                                <option onClick={()=> {setTeam(e.id); teamMembersFetch(e.id)}} key={e.id}>{e.full_name}</option>
                                               </>
                                           ))
                                           )
                                         }
                                       </select>
+
+                                      <select id="teamMembers" defaultValue="Csapataim" className="select mt-1 block w-auto px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm">
+                                      <option disabled={true}>Csapattagok</option>
+                                        {
+                                          (teamMembers.length==0)?(
+                                            <>
+                                              <option disabled={true}></option>
+                                            </>
+                                          ):(
+                                            teamMembers.map((e)=>(
+                                              (e.id!=profile.id)?(
+                                                <>
+                                                <option id={`option-${e.id}`} className="text-white" key={e.id} onClick={()=> {selectMember(e.id);}}>{e.full_name} ({e.usr_name})</option>
+                                              </>
+                                              ):(
+                                                <></>
+                                              )
+                                          ))
+                                          )
+                                        }
+                                      </select>
+
+
+                                      
                                     </div>
                                   )
                                 )

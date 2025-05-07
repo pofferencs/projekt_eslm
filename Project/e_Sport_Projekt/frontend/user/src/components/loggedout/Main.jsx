@@ -8,6 +8,7 @@ import Makroker from "../../assets/sponsores/makroker.png";
 import Stones from "../../assets/sponsores/stones.jpg";
 import TopLaptop from "../../assets/sponsores/topLaptop.png";
 import CarloQuality from '../../assets/sponsores/carloQuality.png'
+import ReactTwitchEmbedVideo from "react-twitch-embed-video"
 
 function Main() {
   const [events, setEvents] = useState([]);
@@ -47,6 +48,27 @@ function Main() {
 
   return (
     <div className="flex flex-col min-h-screen">
+
+      <h2 className="mt-10 text-center text-4xl font-bold bg-gradient-to-tr from-indigo-500 to-amber-500 inline-block text-transparent bg-clip-text">
+        Twitch csatornáink
+      </h2>
+      <div className="mx-auto mt-2 h-1 w-[60%] bg-gradient-to-r from-indigo-500 to-amber-500 rounded-full" />
+
+      <div className="flex justify-center justify-items-center pt-5">
+        <ReactTwitchEmbedVideo allowfullscreen={{
+          boolean: false
+        }}
+          channel="yeahunter"
+          chat="undefined"
+          layout="video"
+          onPlay={function Ya() { }}
+          onReady={function Ya() { }}
+          theme="dark"
+          width={800}
+          height={450} />         
+      </div>
+
+
       <h2 className="mt-10 text-center text-4xl font-bold bg-gradient-to-tr from-indigo-500 to-amber-500 inline-block text-transparent bg-clip-text">
         Események
       </h2>
