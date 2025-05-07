@@ -94,8 +94,6 @@ const tournamentUpdate = async (req, res) => {
 
     const { id, name, num_participant, team_num, start_date, end_date, game_mode, max_participant, apn_start, apn_end, details, evt_id, gae_id } = req.body;
 
-    //Adatok megléte
-
     if(!id || !name || !num_participant || !start_date || !end_date || !game_mode || !max_participant || !apn_start || !apn_end || !evt_id || !gae_id){
         return res.status(400).json({message: "Hiányos adatok!"});
     };

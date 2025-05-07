@@ -18,7 +18,7 @@ function EventList() {
       .then((adat) => setResult(adat))
       .catch((err) => toast.error(err));
 
-    console.log(result);
+    // console.log(result);
   }, []);
 
   return (

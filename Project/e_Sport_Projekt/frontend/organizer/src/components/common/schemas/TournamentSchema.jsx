@@ -8,7 +8,7 @@ function TournamentSchema({ tournament, limit }) {
     const [countdownField, setCountdownField] = useState(null);
     const [timeLeft, setTimeLeft] = useState(null);
     const [showFullInfo, setShowFullInfo] = useState(false);
-    const [tournamentStatus, setTournamentStatus] = useState(""); // Tournament status state
+    const [tournamentStatus, setTournamentStatus] = useState("");
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -43,7 +43,6 @@ function TournamentSchema({ tournament, limit }) {
                 setTimeLeft(null);
             }
 
-            // Update tournament status based on dates
             if (now < new Date(tournament.apn_start).getTime()) {
                 setTournamentStatus("Jelentkezés előtt");
             } else if (now >= new Date(tournament.apn_start).getTime() && now <= new Date(tournament.apn_end).getTime()) {
@@ -174,7 +173,7 @@ function TournamentSchema({ tournament, limit }) {
 
                 <div className="flex justify-evenly">
                     <p className="drop-shadow-lg text-stone-300 font-extrabold flex-none">Státusz:</p>
-                    <p className="drop-shadow-lg ml-7">{tournamentStatus}</p> {/* Display status */}
+                    <p className="drop-shadow-lg ml-7">{tournamentStatus}</p>
                 </div>
 
 

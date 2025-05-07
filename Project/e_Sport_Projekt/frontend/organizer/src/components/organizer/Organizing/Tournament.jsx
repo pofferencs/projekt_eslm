@@ -254,7 +254,7 @@ function Tournament() {
   
     const modify = (method, formData) => {
   
-      console.log(formData)
+      // console.log(formData)
   
       fetch(`${import.meta.env.VITE_BASE_URL}/update/tournament`, {
         method: method,
@@ -509,26 +509,10 @@ function Tournament() {
                         
                       </div>
                      </div>
-                    
-                    
                   </div>
                 </div>
-
-
-                </div>
-
-
-                
-
-                
-
-                
-
-
+                </div>       
               </div>
-
-              
-            
             
             )
               :(
@@ -795,25 +779,15 @@ function Tournament() {
                         
                       </dl>
                     </div>
-
-                    
-
-                    
                   </div>
                 </div>
                 
               </>
-
-
           )
-          
         }
-        
         </>
       )
     }
-    
-    
     </>
   )
 }

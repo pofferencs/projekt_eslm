@@ -20,7 +20,6 @@ const teamSearchByName = async (req, res) => {
   }
 
   try {
-    // 1. Csapatok keresése név alapján
     const teams = await prisma.teams.findMany({
       where: {
         full_name: {
@@ -34,7 +33,6 @@ const teamSearchByName = async (req, res) => {
       return res.status(404).json({ message: "Nincs ilyen csapat!" });
     }
 
-    // 2. Kapitány adatok lekérése minden csapat creator_id alapján
     const result = await Promise.all(
       teams.map(async (team) => {
         const captain = await prisma.users.findUnique({
@@ -75,7 +73,6 @@ const teamUpdate = async (req, res) => {
       }
     });
 
-    // Ha találunk ilyet, de nem önmaga
     if (existingTeam && existingTeam.id !== id) {
       return res.status(400).json({ message: "Ez a csapatnév foglalt!" });
     }
@@ -132,7 +129,7 @@ const teamInsert = async (req, res) => {
       const newPicLink = await prisma.picture_Links.create({
         data: {
           tem_id: team.id,
-          pte_id: 3 //vagy ami ide jön pteId
+          pte_id: 3 
         }
       })
 
@@ -234,7 +231,6 @@ const teamSearchByID = async (req, res) => {
       return res.status(404).json({ message: "Nincs ilyen csapat!" });
     }
 
-    // 2. Kapitány adatok lekérése minden csapat creator_id alapján
     const captain = await prisma.users.findUnique({
       where: { id: team.creator_id },
       select: {

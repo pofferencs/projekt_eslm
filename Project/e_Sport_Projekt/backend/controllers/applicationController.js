@@ -55,7 +55,6 @@ const applicationInsert = async (req, res) => {
             return;
         };
 
-        // Csapatos jelentkezés
         const applicatedTeam = await prisma.applications.findFirst({
             where: {
                 uer1_id: uer1_id,
@@ -104,7 +103,6 @@ const applicationDelete = async (req, res) => {
 
     try {
 
-
         const applicationSearch = await prisma.applications.findFirst({
             where: {
                 id: parseInt(id),
@@ -114,9 +112,6 @@ const applicationDelete = async (req, res) => {
         if(!applicationSearch){
             return res.status(400).json({message: "Nem található ilyen jelentkezés!"});
         }
-
-
-
 
         const applications = await prisma.applications.delete({
             where: {
@@ -129,15 +124,11 @@ const applicationDelete = async (req, res) => {
         console.log(err);
         res.status(500).json({ message: "Hiba a törlés során!" });
     }
-
 }
-
-
 
     const approvedApplicationsList = async (req, res) => {
 
         const { tnt_id } = req.params;
-
 
         if(!tnt_id){
             return res.status(400).json({message: "Hiányos adat!"});
@@ -157,7 +148,6 @@ const applicationDelete = async (req, res) => {
                 return res.status(400).json({message: "Nincsen ilyen verseny!"});
             }
 
-
             const applications = await prisma.applications.findMany({
                 where: {
                     tnt_id: parseInt(tnt_id),
@@ -173,23 +163,16 @@ const applicationDelete = async (req, res) => {
                 }
             });
 
-
             if(applications.length==0){
                 return res.status(200).json({message: "Nincs elfogadott jelentkezés a versenyre!"});
             }
 
-
             return res.status(200).json(applications);
-
-
             
         } catch (error) {
             res.status(500).json(error.message);
         }
-
     }
-
-
 
     const pendingApplicationsList = async (req, res) => {
 
@@ -257,8 +240,6 @@ const applicationDelete = async (req, res) => {
             return res.status(400).json({message: "Hiányos adatok!"});
         }
 
-
-
         try {
 
             const team = await prisma.teams.findFirst({
@@ -270,7 +251,6 @@ const applicationDelete = async (req, res) => {
             if(!team){
                 return res.status(400).json({message: "A megadott csapat nem található!"});
             }
-
 
             const tournament = await prisma.tournaments.findFirst({
                 where: {
@@ -305,9 +285,7 @@ const applicationDelete = async (req, res) => {
                 return res.status(400).json({message: "A megadott felhasználó nem található!"});
             }
 
-
             let date = new Date(Date.now());
-
 
             const application = await prisma.applications.create({
                 data:{
@@ -324,17 +302,11 @@ const applicationDelete = async (req, res) => {
             });
 
             return res.status(200).json({message: "A jelentkezést sikeresen leadtad!"});
-
-
             
         } catch (error) {
             return res.status(500).json(error.message);
         }
-
     }
-
-
-
 
 
     const applicationHandle = async (req, res) => {
@@ -347,8 +319,6 @@ const applicationDelete = async (req, res) => {
         if(!id, !tnt_id || !tem_id || !new_status || !uer1_id){
             return res.status(400).json({message: "Hiányos adatok!"});
         }
-
-
 
         try {
 
@@ -368,9 +338,6 @@ const applicationDelete = async (req, res) => {
             if(applicationSearch.status == "approved"){
                 return res.status(400).json({message: "Ezt a jelentkezést már elfogadtad!"});
             }
-
-
-
 
             const team = await prisma.teams.findFirst({
                 where: {
@@ -442,8 +409,6 @@ const applicationDelete = async (req, res) => {
         }
 
 
-
-
         try {
 
 
@@ -484,20 +449,6 @@ const applicationDelete = async (req, res) => {
             return res.status(500).json(error.message);
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 module.exports = {
     applicationList,

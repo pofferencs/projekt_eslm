@@ -103,20 +103,15 @@ const passEmailSend = async (req, res) => {
 
 
         const decoded = jwt.verify(token.token, process.env.JWT_SECRET);
-        console.log(Boolean(decoded.email == organizer.email_address));
+        // console.log(Boolean(decoded.email == organizer.email_address));
 
         await transporter.sendMail(mailOptions);
         return res.status(200).json({ message: "Kiküldtük az e-mailt a megadott címre!" })
 
 
-
-
-
     } catch (error) {
         return res.status(500).json({ message: error.message });
     }
-
-
 };
 
 const passEmailVerify = async (req, res) => {
@@ -375,10 +370,7 @@ const organizerSearchById = async (req, res) => {
 
     } catch (error) {
         return res.status(500).json(error);
-    }
-
-
-    
+    }   
     
 }
 
@@ -414,7 +406,6 @@ const organizerProfileSearchByName = async (req, res) => {
 const organizerUpdate = async (req, res) => {
     const { id, full_name, new_usr_name, usr_name, paswrd, new_paswrd, school, new_email_address, phone_num, status } = req.body;
 
-
     try {
 
         let date = new Date();
@@ -438,8 +429,6 @@ const organizerUpdate = async (req, res) => {
                 email_address: new_email_address
             }
         });
-
-
 
     //Megadott adatok vizsgálata és update
 
@@ -480,12 +469,11 @@ const organizerUpdate = async (req, res) => {
 
                 let trim_email = new_email_address.replaceAll(" ", "");
 
-
                 // if(!bcrypt.compareSync(paswrd, organizer.paswrd)){
                 //     return res.status(400).json({message: "A jelszó nem megfelelő!"});
                 // }
                 
-                console.log(new Date(new Date(date).setMonth(date.getMonth() - 1)));
+                // console.log(new Date(new Date(date).setMonth(date.getMonth() - 1)));
                 if(date > new Date(new Date(organizer.email_last_mod_date).setMonth(organizer.email_last_mod_date.getMonth() + 1))){
                 
 
@@ -510,8 +498,7 @@ const organizerUpdate = async (req, res) => {
 
             }else{
                 return res.status(400).json({ message: "E-mail cím meváltoztatásra nincs lehetőséged!" });
-            }
-            
+            }           
             
         }
 
@@ -576,14 +563,7 @@ const organizerUpdate = async (req, res) => {
                 if(!bcrypt.compareSync(paswrd, organizer.paswrd)){
                     return res.status(400).json({message: "Nem megfelelő jelszó!"});
                 }
-
-
-            }
-
-            
-            
-
-            
+            }                                  
              
                 
             const specChars = /[*@_]/;
@@ -624,15 +604,8 @@ const organizerUpdate = async (req, res) => {
             
             }else{
                 return res.status(400.).json({ message: "Nem lehetséges a jelszó megváltoztatás!"})
-            }
-        
-        
-            
-
-
-
-
-
+            }     
+                  
     }
     catch (error) {
         console.log(error);
@@ -680,13 +653,11 @@ const organizerReg = async (req, res) => {
         })
 
         //OM-szám ellenőrzés
-
         const omIdCheck = await prisma.organizers.findFirst({
             where:{
                 om_identifier: om_identifier
             }
         });
-
         if (validalasFuggveny(res, [
             { condition: !/^[A-ZÁÉÍÓÖŐÚÜŰ][a-záéíóöőúüű]{1,}(?:[-][A-ZÁÉÍÓÖŐÚÜŰ][a-záéíóöőúüű]{1,})*(\s+[A-ZÁÉÍÓÖŐÚÜŰ][a-záéíóöőúüű]{1,}(?:[-][A-ZÁÉÍÓÖŐÚÜŰ][a-záéíóöőúüű]{1,})*)+$/.test(full_name), message: "Hibás névmegadás!" },
             { condition: full_name.length > 64, message: "Túl hosszú név (max 64 karakter)!" },

@@ -14,7 +14,6 @@ function UserLogin() {
     isShowPass(prev=> !prev);
   }
 
-  //Ezzel akadályozzuk meg, hogy a login felület ne jelenjen meg akkor, ha már be vagy jelentkezve, hahaha
   useEffect(() => {
     if (isAuthenticated) {
       navigate("/");
@@ -23,7 +22,7 @@ function UserLogin() {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    console.log({username_kerdojel: formDataUsername.usr_name == "", email_kerdojel: formDataEmail.email_address == ""})
+    // console.log({username_kerdojel: formDataUsername.usr_name == "", email_kerdojel: formDataEmail.email_address == ""})
 
     let userUres = formDataUsername.usr_name == "";
     let emailUres = formDataEmail.email_address == "";
@@ -61,32 +60,28 @@ function UserLogin() {
     // console.log(formDataEmail);
     // console.log(formDataUsername);
   
-    // Ha email vagy felhasználónevet gépelünk
     if (id === "email_or_username") {
       if (value.includes("@")) {
-        // Ha email, akkor állítsuk be az email_address mezőt és ürítsük a felhasználónév mezőt
         setFormDataEmail((prevState) => ({
           ...prevState,
           email_address: value,
         }));
         setFormDataUsername((prevState) => ({
           ...prevState,
-          usr_name: "", // Ürítjük a felhasználónevet, ha email-t írtunk
+          usr_name: "",
         }));
       } else {
-        // Ha felhasználónév, akkor állítsuk be a usr_name mezőt és ürítsük az email_address mezőt
         setFormDataUsername((prevState) => ({
           ...prevState,
           usr_name: value,
         }));
         setFormDataEmail((prevState) => ({
           ...prevState,
-          email_address: "", // Ürítjük az email mezőt, ha felhasználónevet írtunk
+          email_address: "",
         }));
       }
     }
   
-    // Ha jelszót gépelünk
     if (id === "password") {
       setFormDataEmail((prevState) => ({ ...prevState, paswrd: value }));
       setFormDataUsername((prevState) => ({ ...prevState, paswrd: value }));

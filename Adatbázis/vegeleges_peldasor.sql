@@ -108,11 +108,12 @@ INSERT INTO `Users` (`id`, `inviteable`, `full_name`, `usr_name`, `usna_last_mod
 (55, 1, 'Függő User Öt', 'pending5', NOW(), 3, '$2a$10$tRn.12E7m4FSl22.NbeQp.rNMaqlSdwQjupC0Zkolk.oSD3AMUz.S', '2005-07-05', 'Iskola AA', '11H', 'pending5@example.com', NOW(), '123456755', '72360000005', 'active', 'pending5#0005');
 
 -- Teams
-INSERT INTO `Teams` (`id`, `short_name`, `full_name`, `creator_id`) VALUES
-(1, 'T01', 'Team One Alpha', 1), (2, 'T02', 'Team Two Bravo', 2), (3, 'T03', 'Team Three Charlie', 3), (4, 'T04', 'Team Four Delta', 4),
-(5, 'T05', 'Team Five Echo', 5), (6, 'T06', 'Team Six Foxtrot', 6), (7, 'T07', 'Team Seven Golf', 7), (8, 'T08', 'Team Eight Hotel', 8),
-(9, 'T09', 'Team Nine India', 9), (10, 'T10', 'Team Ten Juliett', 10), (11, 'T11', 'Team Eleven Kilo', 11), (12, 'T12', 'Team Twelve Lima', 12),
-(13, 'T13', 'Team Thirteen Mike', 13), (14, 'T14', 'Team Fourteen November', 14), (15, 'T15', 'Team Fifteen Oscar', 15), (16, 'T16', 'Team Sixteen Papa', 16);
+INSERT INTO `teams` (`id`, `short_name`, `full_name`, `creator_id`) VALUES
+(1, 'T01', 'Team One Alpha', 1),(2, 'T02', 'Team Two Bravo', 6),(3, 'T03', 'Team Three Charl', 11),
+(4, 'T04', 'Team Four Delta', 16),(5, 'T05', 'Team Five Echo', 21),(6, 'T06', 'Team Six Foxtrot', 22),
+(7, 'T07', 'Team Seven Golf', 23),(8, 'T08', 'Team Eight Hotel', 24),(9, 'T09', 'Team Nine India', 25),
+(10, 'T10', 'Team Ten Juliett', 27),(11, 'T11', 'Team Eleven Kilo', 29),(12, 'T12', 'Team Twelve Lima', 31),
+(13, 'T13', 'Team Thirteen Mi', 33),(14, 'T14', 'Team Fourteen No', 36),(15, 'T15', 'Team Fifteen Osc', 39), (16, 'T16', 'Team Sixteen Pap', 42)
 
 -- Team Memberships
 INSERT INTO `Team_Memberships` (`status`, `uer_id`, `tem_id`) VALUES

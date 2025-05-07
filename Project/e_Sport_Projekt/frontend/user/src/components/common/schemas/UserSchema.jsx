@@ -20,7 +20,7 @@ function UserSchema({ user }) {
 
     //Ezzel teszteltem, hogy a backend végpontja által szolgáltatott elérési útja a képnek jó-e
     //.env fájlban: a 'VITE_BASE_PIC' változó tartalmazza az elérési út egy részét
-    console.log(import.meta.env.VITE_BASE_URL + `${import.meta.env.VITE_BASE_PIC}${userPicPath}`)
+    // console.log(import.meta.env.VITE_BASE_URL + `${import.meta.env.VITE_BASE_PIC}${userPicPath}`)
 
 
     return (

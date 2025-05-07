@@ -18,7 +18,6 @@ function TeamSchema({ team }) {
     const isProfilePage = location.pathname.startsWith("/profile");
     const teamSearchPage = location.pathname.startsWith("/team-search");
 
-    // Team pic fetch
     useEffect(() => {
         fetch(`${import.meta.env.VITE_BASE_URL}/list/teampic/${team.id}`)
             .then(res => res.json())
@@ -26,7 +25,6 @@ function TeamSchema({ team }) {
             .catch(error => console.log(error));
     }, [team?.id]);
 
-    // Team members fetch
     useEffect(() => {
         fetch(`${import.meta.env.VITE_BASE_URL}/list/team/${team.id}/members`)
             .then(res => res.json())
@@ -42,7 +40,6 @@ function TeamSchema({ team }) {
             .catch(error => console.log(error));
     }, [team?.id, team?.creator_id]);
 
-    // Leave team logic
     const handleLeaveTeam = async () => {
         try {
             const res = await fetch(`${import.meta.env.VITE_BASE_URL}/delete/teammembership`, {
@@ -59,7 +56,6 @@ function TeamSchema({ team }) {
             if (res.ok) {
                 toast.success("Sikeresen kiléptél a csapatból!");
                 setShowModal(false);
-                // TODO: Frissítés triggerelése (pl. újrafetchelés a szülőben)
             } else {
                 toast.error("Nem sikerült kilépni a csapatból.");
             }
@@ -137,7 +133,6 @@ function TeamSchema({ team }) {
                     </div>
                 )}
 
-                {/* Kilépés megerősítő modal */}
                 <DeleteModal
                     show={showModal}
                     onClose={() => setShowModal(false)}
