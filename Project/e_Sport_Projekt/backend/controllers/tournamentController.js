@@ -94,7 +94,9 @@ const tournamentUpdate = async (req, res) => {
 
     const { id, name, num_participant, team_num, start_date, end_date, game_mode, max_participant, apn_start, apn_end, details, evt_id, gae_id } = req.body;
 
-    if(!id || !name || !num_participant || !start_date || !end_date || !game_mode || !max_participant || !apn_start || !apn_end || !evt_id || !gae_id){
+  
+    if(!id || !name || !start_date || !end_date || !game_mode || !max_participant || !apn_start || !apn_end || !evt_id || !gae_id){
+
         return res.status(400).json({message: "Hiányos adatok!"});
     };
 
@@ -159,7 +161,7 @@ const tournamentUpdate = async (req, res) => {
     const aEndDate = new Date(apn_end);
 
     const aEndDateChk = new Date(apn_end);
-    aEndDateChk.setDate(tStartDate.getDate()-7);
+    aEndDateChk.setTime(tStartDate.getTime()-7 * 24 * 60 * 60 * 1000);
 
 
     const jIdopontCheck = [
@@ -187,12 +189,12 @@ const tournamentUpdate = async (req, res) => {
                 },
                 data: {
                     name: name,
-                    num_participant: num_participant,
-                    team_num: team_num,
+                    num_participant: parseInt(num_participant),
+                    team_num: parseInt(team_num),
                     start_date: tStartDate,
                     end_date: tEndDate,
                     game_mode: game_mode,
-                    max_participant: max_participant,
+                    max_participant: parseInt(max_participant),
                     apn_start: aStartDate,
                     apn_end: aEndDate,
                     details: details
@@ -238,11 +240,11 @@ const tournamentInsert = async (req, res) => {
     try {
 
         //Adatok megléte
-        if(!name || !num_participant || !start_date || !end_date || !game_mode || !max_participant || !apn_start || !apn_end || !evt_id || !gae_id){
+        if(!name || !start_date || !end_date || !game_mode || !max_participant || !apn_start || !apn_end || !evt_id || !gae_id){
             return res.status(400).json({message: "Hiányos adatok!"});
         }
 
-        if(max_participant || num_participant || team_num){
+        if(max_participant < 0 || num_participant < 0 || team_num < 0){
             return res.status(400).json({message: "Csak pozitív számot adhatsz meg!"});
         }
 
@@ -299,7 +301,7 @@ const tournamentInsert = async (req, res) => {
 
         const aEndDateChk = new Date(apn_end);
         //console.log(aEndDateChk);
-        aEndDateChk.setDate(tStartDate.getDate()-7);
+        aEndDateChk.setTime(tStartDate.getTime()-7 * 24 * 60 * 60 * 1000);
         //console.log(aEndDateChk);
 
         const jIdopontCheck = [
@@ -323,12 +325,12 @@ const tournamentInsert = async (req, res) => {
         const tournament = await prisma.tournaments.create({
             data:{
                 name: name,
-                num_participant: num_participant,
-                team_num: team_num,
+                num_participant: parseInt(num_participant),
+                team_num: parseInt(team_num),
                 start_date: tStartDate,
                 end_date: tEndDate,
                 game_mode: game_mode,
-                max_participant: max_participant,
+                max_participant: parseInt(max_participant),
                 apn_start: aStartDate,
                 apn_end: aEndDate,
                 details: details,
