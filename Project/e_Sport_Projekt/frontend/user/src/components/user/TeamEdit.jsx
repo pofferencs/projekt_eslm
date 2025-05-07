@@ -17,6 +17,8 @@ function TeamEdit() {
     const [tpFile, setTpFile] = useState({});
     const [selectedMemberId, setSelectedMemberId] = useState(null);
     const [showModal, setShowModal] = useState(false);
+    const [teamPicId, setTeamPicId] = useState(null);
+    const regex = /_(\d+)_/;
 
     const handleLeaveTeam = async () => {
         try {
@@ -91,7 +93,17 @@ function TeamEdit() {
                     });
                     fetch(`${import.meta.env.VITE_BASE_URL}/list/teampic/${id}`,)
                         .then(res => res.json())
-                        .then(pic => setTeamPicPath(pic))
+                        .then(pic => {
+                          setTeamPicPath(pic);
+                          const match = regex.exec(pic);
+                          if (match) {
+                              console.log("Kép ID regex alapján:", match[1]);
+                              setTeamPicId(match[1]);
+                          } else {
+                              console.log("Nem talált ID-t, alapértelmezett xy.");
+                              setTeamPicId(2);
+                          }
+                      })
                         .catch(error => { console.log(error) })
 
 
@@ -226,7 +238,7 @@ function TeamEdit() {
             body: JSON.stringify({ 
               id: teamFormData.id,
               picture_id: teamPicId,
-              user_id: profile.id })
+            user_id: profile.id })
         })
             .then(async res => {
                 const data = await res.json();
@@ -245,7 +257,6 @@ function TeamEdit() {
     const onSubmitDelete = () => {
         deleteTeam("DELETE");
     }
-
 
     const onSubmitKick = (e) => {
         e.preventDefault();

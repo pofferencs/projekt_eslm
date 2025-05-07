@@ -16,7 +16,7 @@ INSERT INTO `Pictures` (`id`, `img_path`) VALUES
 (1, '/user/user_0.png'),
 (2, '/team/team_0.png'),
 (3, '/event/event_0.png'),
-(4, '/tournament/default_tournament.png'),
+(4, '/tournament/tournament_0.png'),
 (5, '/organizer/organizer_0.png'),
 (6, '/tournament/cs2.png'),
 (7, '/tournament/rl_1v1.png'),

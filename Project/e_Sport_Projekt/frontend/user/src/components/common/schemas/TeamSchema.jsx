@@ -49,7 +49,7 @@ function TeamSchema({ team }) {
                 },
                 body: JSON.stringify({
                     user_id: profile.id,
-                    team_id: team.id,
+                    team_id: team.id
                 }),
             });
 
