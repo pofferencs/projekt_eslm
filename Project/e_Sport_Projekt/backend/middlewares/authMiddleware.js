@@ -60,18 +60,6 @@ const protectUser = async (req, res, next) =>{
     }
     if(!tokenU){
 
-            //Böngészős tesztelés:
-                //Vedd ki a kommenteket az alul lévő süti hozzáadásról, majd:
-                    //ThunderClient-ben loginolj be egy felhasználóval (usr_name és paswrd kell), a tokent másold a vágólapra, majd
-                        //     a) nyiss egy böngészőt, írd be a '.../auth' végpontot a keresőbe, majd a tárolóban illeszd be a 'token' nevű sütibe a tokent, refresh-elj, és megkapod a felhasználó adatait JSON formátumban, ami kell majd frontendhez
-                        //vagy b) a tokent illeszd be a 'token' értékeként (a macskakörmök közé), és refreshelj kétszer
-
-        // res.cookie('tokenU', "", {
-        //     secure: true,
-        //     httpOnly: true,
-        //     sameSite: 'none',
-        //     maxAge: 360000});
-
         return res.status(401).json({message: "Be kell jelentkezni!"});
     }
 }

@@ -11,7 +11,6 @@ function ApplicationCard({team, application}) {
     const {authStatus} = useContext(OrganizerContext);
 
 
-    // Team pic fetch
     useEffect(() => {
         fetch(`${import.meta.env.VITE_BASE_URL}/list/teampic/${team.id}`)
             .then(res => res.json())
@@ -19,7 +18,6 @@ function ApplicationCard({team, application}) {
             .catch(error => console.log(error));
     }, [team?.id]);
 
-    // Team members fetch
     useEffect(() => {
         fetch(`${import.meta.env.VITE_BASE_URL}/list/team/${team.id}/members`)
             .then(res => res.json())

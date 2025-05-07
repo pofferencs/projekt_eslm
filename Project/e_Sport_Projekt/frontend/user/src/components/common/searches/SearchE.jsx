@@ -59,7 +59,6 @@ function SearchE() {
         <form>
           <div className="grid grid-cols-6 gap-4">
 
-            {/* Kereső input */}
             <div className="col-start-1 col-end-7">
               <label
                 htmlFor="search"
@@ -77,7 +76,6 @@ function SearchE() {
               />
             </div>
 
-            {/* Státusz szűrő */}
             <div className="col-start-1 col-end-4">
               <label
                 htmlFor="status"
@@ -98,7 +96,6 @@ function SearchE() {
               </select>
             </div>
 
-            {/* Limit szűrő */}
             <div className="col-start-4 col-end-7">
               <label
                 htmlFor="limit"
@@ -124,7 +121,6 @@ function SearchE() {
               </select>
             </div>
 
-            {/* Alaphelyzet gomb */}
             <div className="col-start-1 col-end-7">
               <button
                 type="button"

@@ -34,7 +34,6 @@ function TeamEdit() {
             if (res.ok) {
                 toast.success("Sikeresen kiléptél a csapatból!");
                 setShowModal(false);
-                // TODO: Frissítés triggerelése (pl. újrafetchelés a szülőben)
             } else {
                 toast.error("Nem sikerült kilépni a csapatból.");
             }
@@ -43,8 +42,6 @@ function TeamEdit() {
             toast.error("Hiba történt a kilépés során.");
         }
     };
-
-
 
     let teamFormObj = {
         id: teamData.id,
@@ -100,7 +97,7 @@ function TeamEdit() {
 
                     fetch(`${import.meta.env.VITE_BASE_URL}/list/team/${id}/members`)
                         .then(res => res.json())
-                        .then(data => setTeamMembers(data), console.log(teamMembers))
+                        .then(data => setTeamMembers(data)) //, console.log(teamMembers)
                         .catch(error => console.log(error));
 
                 } else {

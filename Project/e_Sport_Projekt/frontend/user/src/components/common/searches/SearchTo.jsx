@@ -39,11 +39,10 @@ function SearchTo() {
       filtered = filtered.filter((t) => t.name?.toLowerCase().includes(lower));
     }
 
-    // Frissítjük a listát a limit értékének megfelelően
     if (limit > 0) {
-      setFilteredTournaments(filtered.slice(0, limit)); // ha a limit > 0, akkor a limitált számú elemet jelenítjük meg
+      setFilteredTournaments(filtered.slice(0, limit)); 
     } else {
-      setFilteredTournaments(filtered); // ha nincs limit (0 vagy Infinity), akkor az összes verseny jelenik meg
+      setFilteredTournaments(filtered);
     }
 }, [tournaments, statusFilter, limit, searchTerm]);
 
@@ -58,7 +57,6 @@ function SearchTo() {
         <form>
           <div className="grid grid-cols-6 gap-4">
 
-            {/* Kereső input */}
             <div className="col-start-1 col-end-7">
               <label htmlFor="search" className="block text-sm/6 font-medium text-indigo-600">
                 Keresés név alapján
@@ -73,7 +71,6 @@ function SearchTo() {
               />
             </div>
 
-            {/* Státusz szűrő */}
             <div className="col-start-1 col-end-4">
               <label htmlFor="status" className="block text-sm/6 font-medium text-indigo-600">
                 Jelentkezési státusz
@@ -91,7 +88,6 @@ function SearchTo() {
               </select>
             </div>
 
-            {/* Limit szűrő */}
             <div className="col-start-4 col-end-7">
               <label htmlFor="limit" className="block text-sm/6 font-medium text-indigo-600">
                 Megjelenítendő darabszám
@@ -115,7 +111,6 @@ function SearchTo() {
             </div>
 
 
-            {/* Alaphelyzet gomb */}
             <div className="col-start-1 col-end-7">
               <button
                 type="button"
