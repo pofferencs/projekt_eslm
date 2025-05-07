@@ -11,7 +11,6 @@ function TeamSearch() {
 
     let url = `${import.meta.env.VITE_BASE_URL}/list/team`;
 
-    // Ha van kereső input, akkor hozzáadjuk a keresési paramétert
     if (input) {
       url = `${import.meta.env.VITE_BASE_URL}/list/tenamesearch/${input}`
     }
@@ -28,11 +27,10 @@ function TeamSearch() {
         setResult(data); 
       })
 
-      .catch((err) => toast.error("Hiba történt a keresés során.")); // Hiba esetén
+      .catch((err) => toast.error("Hiba történt a keresés során."));
   }
 
 
-  // Keresés és csapatok listázása
   const onSubmit = (e) => {
     e.preventDefault();
     teamKereso(searchInput);
@@ -81,7 +79,6 @@ function TeamSearch() {
         </form>
       </div>
 
-      {/* Találatok megjelenítése */}
       <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 justify-items-center gap-5 mb-10 mt-20">
         {result.length > 0 ? (
           result.map((team) => <TeamSchema key={team.id} team={team} />)

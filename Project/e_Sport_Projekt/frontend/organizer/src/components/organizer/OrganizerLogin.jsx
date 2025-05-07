@@ -23,7 +23,7 @@ function OrganizerLogin() {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    console.log({username_kerdojel: formDataUsername.usr_name == "", email_kerdojel: formDataEmail.email_address == ""})
+    // console.log({username_kerdojel: formDataUsername.usr_name == "", email_kerdojel: formDataEmail.email_address == ""})
 
     let userUres = formDataUsername.usr_name == "";
     let emailUres = formDataEmail.email_address == "";
@@ -86,7 +86,6 @@ function OrganizerLogin() {
       }
     }
   
-    // Ha jelszót gépelünk
     if (id === "password") {
       setFormDataEmail((prevState) => ({ ...prevState, paswrd: value }));
       setFormDataUsername((prevState) => ({ ...prevState, paswrd: value }));

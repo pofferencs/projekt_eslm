@@ -44,11 +44,10 @@ function NewTeam() {
             });
 
             if (!response.ok) {
-                console.log(response)
+                // console.log(response)
                 throw new Error("Sikertelen csapatlétrehozás");
             }
 
-            // Opcionálisan visszajelzés
             // const data = await response.json();
             // console.log("Létrehozott csapat:", data);
 

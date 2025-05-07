@@ -20,7 +20,6 @@ const teamSearchByName = async (req, res) => {
   }
 
   try {
-    // 1. Csapatok keresése név alapján
     const teams = await prisma.teams.findMany({
       where: {
         full_name: {
@@ -34,7 +33,6 @@ const teamSearchByName = async (req, res) => {
       return res.status(404).json({ message: "Nincs ilyen csapat!" });
     }
 
-    // 2. Kapitány adatok lekérése minden csapat creator_id alapján
     const result = await Promise.all(
       teams.map(async (team) => {
         const captain = await prisma.users.findUnique({
@@ -75,7 +73,6 @@ const teamUpdate = async (req, res) => {
       }
     });
 
-    // Ha találunk ilyet, de nem önmaga
     if (existingTeam && existingTeam.id !== id) {
       return res.status(400).json({ message: "Ez a csapatnév foglalt!" });
     }
@@ -132,12 +129,12 @@ const teamInsert = async (req, res) => {
       const newPicLink = await prisma.picture_Links.create({
         data: {
           tem_id: team.id,
-          pte_id: 3 //vagy ami ide jön pteId
+          pte_id: 2
         }
       })
 
       const newMembership = await prisma.team_Memberships.create({
-        data:{
+        data: {
           tem_id: Number(team.id),
           uer_id: Number(creator_id),
           status: "active"
@@ -154,29 +151,54 @@ const teamInsert = async (req, res) => {
 }
 
 const teamDelete = async (req, res) => {
-  const { id } = req.body;
+  const { id, picture_id, user_id } = req.body;
 
   try {
 
-    const picture_link = await prisma.picture_Links.delete({
-      where:{
-        tem_id: id
+    const membershipCounter = await prisma.team_Memberships.count({
+      where: {
+        tem_id: parseInt(id)
       }
     })
 
-    const membership = await prisma.team_Memberships.delete({
-      where: {
-        tem_id: id
-      }
-    })
+    if (membershipCounter > 1) {
+      return res.status(400).json({ message: "A csapat nem törölhető, mert 1-nél több tag van még benne!" })
+    } else {
+      const pictureGetId = await prisma.picture_Links.findFirst({
+        where: {
+          tem_id: parseInt(id)
+        }
+      })
 
-    const team = await prisma.teams.delete({
-      where: {
-        id: id
-      }
-    });
-    return res.status(200).json({ message: "Sikeres törlés!" })
+      const picture_link = await prisma.picture_Links.delete({
+        where: {
+          id_pte_id: {
+            id: pictureGetId.id,
+            pte_id: parseInt(picture_id)
+          },
+          tem_id: parseInt(id)
+        }
+      })
 
+
+
+      const membership = await prisma.team_Memberships.delete({
+        where: {
+          uer_id_tem_id:{
+            uer_id: user_id,
+            tem_id: parseInt(id)
+          }
+        }
+      })
+
+
+      const team = await prisma.teams.delete({
+        where: {
+          id: id
+        }
+      });
+      return res.status(200).json({ message: "Sikeres törlés!" })
+    }
   } catch (error) {
     console.log(error);
     return res.status(500).json({ message: "Hiba a fetch során!" })
@@ -234,7 +256,6 @@ const teamSearchByID = async (req, res) => {
       return res.status(404).json({ message: "Nincs ilyen csapat!" });
     }
 
-    // 2. Kapitány adatok lekérése minden csapat creator_id alapján
     const captain = await prisma.users.findUnique({
       where: { id: team.creator_id },
       select: {
@@ -259,36 +280,36 @@ const teamSearchByID = async (req, res) => {
 };
 
 
-  const myTeams = async (req, res) =>{
+const myTeams = async (req, res) => {
 
-    const { id } = req.params;
+  const { id } = req.params;
 
-    if(!id){
-      return res.status(400).json({message: "Hiányos adat!"});
-    }
-
-    try {
-
-      const teams = await prisma.teams.findMany({
-        where: {
-          creator_id: parseInt(id)
-        }
-      });
-
-      if(!teams){
-        return res.status(400).json({message: "Nincsenek csapataid!"});
-      }
-
-      return res.status(200).json(teams)
-
-
-      
-    } catch (error) {
-      return res.status(500).json({ message: "Hiba történt", error });
-    }
-
-
+  if (!id) {
+    return res.status(400).json({ message: "Hiányos adat!" });
   }
+
+  try {
+
+    const teams = await prisma.teams.findMany({
+      where: {
+        creator_id: parseInt(id)
+      }
+    });
+
+    if (!teams) {
+      return res.status(400).json({ message: "Nincsenek csapataid!" });
+    }
+
+    return res.status(200).json(teams)
+
+
+
+  } catch (error) {
+    return res.status(500).json({ message: "Hiba történt", error });
+  }
+
+
+}
 
 
 

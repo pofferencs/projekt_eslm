@@ -76,9 +76,9 @@ function Event() {
               .catch(err=> alert(err));
         
 
-        if(event){
-            console.log({eventecske: event})
-        }  
+        // if(event){
+        //     console.log({eventecske: event})
+        // }  
     
         //console.log(event)
     

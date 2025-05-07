@@ -62,23 +62,31 @@ function SearchU() {
       },
     })
       .then((res) => {
-        if (!res.ok) throw new Error("Keresési hiba");
+        if (!res.ok) {
+          //console.log("hiba")
+        }
         return res.json();
       })
       .then((data) => {
-        // Kliensoldali szűrés meghívhatóság alapján
+        
+        if(data.message){
+          setResult([]);
+        }else{
+          // Kliensoldali szűrés meghívhatóság alapján
         const filteredData =
-          inviteFilter === "all"
-            ? data
-            : data.filter((user) =>
-                inviteFilter === "1"
-                  ? isUserInviteable(user)
-                  : !isUserInviteable(user)
-              );
+        inviteFilter === "all"
+          ? data
+          : data.filter((user) =>
+              inviteFilter === "1"
+                ? isUserInviteable(user)
+                : !isUserInviteable(user)
+            );
 
-        setResult(filteredData);
+      setResult(filteredData);
+          
+        }
       })
-      .catch(() =>
+      .catch((err) =>
         toast.error("Hiba történt a keresés során,\nvagy nincs ilyen találat")
       );
   };
@@ -92,7 +100,6 @@ function SearchU() {
       <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
         <form onSubmit={onSubmit}>
           <div className="grid grid-cols-6 gap-4">
-            {/* Név szerinti keresés */}
             <div className="col-span-4">
               <label htmlFor="username" className="block text-sm font-medium text-indigo-600">
                 Felhasználónév
@@ -115,7 +122,6 @@ function SearchU() {
               </button>
             </div>
 
-            {/* Osztály szám */}
             <div className="col-span-2">
               <label htmlFor="classNumber" className="block text-sm font-medium text-indigo-600">
                 Osztály (szám)
@@ -133,7 +139,6 @@ function SearchU() {
               </select>
             </div>
 
-            {/* Osztály betű */}
             <div className="col-span-2">
               <label htmlFor="classLetter" className="block text-sm font-medium text-indigo-600">
                 Osztály (betű)
@@ -151,7 +156,6 @@ function SearchU() {
               </select>
             </div>
 
-            {/* Státusz */}
             <div className="col-span-2">
               <label htmlFor="statusFilter" className="block text-sm font-medium text-indigo-600">
                 Státusz
@@ -169,7 +173,6 @@ function SearchU() {
               </select>
             </div>
 
-            {/* Meghívhatóság szűrő (radio buttons) */}
             <div className="col-span-6">
               <span className="block text-sm font-medium text-indigo-600 mb-1">Meghívhatóság</span>
               <div className="flex gap-4">
@@ -209,7 +212,6 @@ function SearchU() {
               </div>
             </div>
 
-            {/* Reset gomb */}
             <div className="col-span-6">
               <button
                 type="button"

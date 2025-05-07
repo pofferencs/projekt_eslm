@@ -31,7 +31,7 @@ function UserProfile() {
               fetch(`${import.meta.env.VITE_BASE_URL}/user/userpic/${adat.id}`,
               )
                 .then(res => res.json())
-                .then(adat => { setPicPath(adat); setIsLoading(false); setRefresh(false); console.log(adat)})
+                .then(adat => { setPicPath(adat); setIsLoading(false); setRefresh(false)}) //; console.log(adat)
                 .catch(err => { console.log(err) })
             )
 

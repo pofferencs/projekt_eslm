@@ -14,10 +14,6 @@ const storage = multer.diskStorage({
     }
 });
 
-
-
-
-
 const pictureUpdate = async (req, res) => {
     const { id, img_path } = req.body;
 
@@ -54,10 +50,10 @@ const pictureList = async (req, res) => {
 
 const defaultImageIds = {
     user: 1,
-    team: 3,
-    event: 4,
-    tournament: 5,
-    organizer: 6,
+    team: 2,
+    event: 3,
+    tournament: 4,
+    organizer: 5,
 };
 
 const fieldMap = {
@@ -80,7 +76,6 @@ const pictureInsert = async (req, res) => {
         const typeField = fieldMap[type];
         const parsedId = parseInt(id);
 
-        // === TÖRLÉS ===
         if (deleteImage) {
             const existingLink = await prisma.picture_Links.findFirst({
                 where: { [typeField]: parsedId }
@@ -118,7 +113,6 @@ const pictureInsert = async (req, res) => {
             return res.status(200).json({ message: "A kép visszaállítva az alapértelmezett képre." });
         }
 
-        // === FELTÖLTÉS ===
         if (!file) return res.status(400).json({ message: "Hiányzó kép." });
 
         const newFileName = `${type}_${id}_${randomInt(1000, 9999)}.png`;
@@ -209,7 +203,6 @@ const pictureDelete = async (req, res) => {
         if(type == "user"){
 
 
-            // Ha nincs beállított kép, akkor csak visszaállítjuk az alapértelmezettet
         const existingLink = await prisma.picture_Links.findFirst({
             where: { uer_id: id }
         });
@@ -224,13 +217,11 @@ const pictureDelete = async (req, res) => {
             }
 
             if (picture && picture.img_path !== "/user/user_0.png") {
-                // Töröljük a nem alapértelmezett képet
                 const oldFilePath = path.join(__dirname, `../assets/pictures${picture.img_path}`);
                 if (fs.existsSync(oldFilePath)) {
                     fs.unlinkSync(oldFilePath);
                 }
 
-                // Visszaállítjuk az alap képet
 
                 const defaultImgPath = "/user/user_0.png";
 
@@ -277,7 +268,6 @@ const pictureDelete = async (req, res) => {
         if(type == "organizer"){
 
 
-            // Ha nincs beállított kép, akkor csak visszaállítjuk az alapértelmezettet
         const existingLink = await prisma.picture_Links.findFirst({
             where: { ogr_id: id }
         });
@@ -292,13 +282,11 @@ const pictureDelete = async (req, res) => {
             }
 
             if (picture && picture.img_path !== "/organizer/organizer_0.png") {
-                // Töröljük a nem alapértelmezett képet
                 const oldFilePath = path.join(__dirname, `../assets/pictures${picture.img_path}`);
                 if (fs.existsSync(oldFilePath)) {
                     fs.unlinkSync(oldFilePath);
                 }
 
-                // Visszaállítjuk az alap képet
 
                 const defaultImgPath = "/organizer/organizer_0.png";
 
@@ -346,7 +334,6 @@ const pictureDelete = async (req, res) => {
         if(type == "event"){
 
 
-            // Ha nincs beállított kép, akkor csak visszaállítjuk az alapértelmezettet
         const existingLink = await prisma.picture_Links.findFirst({
             where: { evt_id: id }
         });
@@ -361,13 +348,11 @@ const pictureDelete = async (req, res) => {
             }
 
             if (picture && picture.img_path !== "/event/event_0.png") {
-                // Töröljük a nem alapértelmezett képet
                 const oldFilePath = path.join(__dirname, `../assets/pictures${picture.img_path}`);
                 if (fs.existsSync(oldFilePath)) {
                     fs.unlinkSync(oldFilePath);
                 }
 
-                // Visszaállítjuk az alap képet
 
                 const defaultImgPath = "/event/event_0.png";
 
@@ -414,8 +399,6 @@ const pictureDelete = async (req, res) => {
 
         if(type == "tournament"){
 
-
-            // Ha nincs beállított kép, akkor csak visszaállítjuk az alapértelmezettet
         const existingLink = await prisma.picture_Links.findFirst({
             where: { tnt_id: id }
         });
@@ -430,13 +413,11 @@ const pictureDelete = async (req, res) => {
             }
 
             if (picture && picture.img_path !== "/tournament/tournament_0.png") {
-                // Töröljük a nem alapértelmezett képet
                 const oldFilePath = path.join(__dirname, `../assets/pictures${picture.img_path}`);
                 if (fs.existsSync(oldFilePath)) {
                     fs.unlinkSync(oldFilePath);
                 }
 
-                // Visszaállítjuk az alap képet
 
                 const defaultImgPath = "/tournament/tournament_0.png";
 
@@ -483,8 +464,6 @@ const pictureDelete = async (req, res) => {
 
         if(type == "team"){
 
-
-            // Ha nincs beállított kép, akkor csak visszaállítjuk az alapértelmezettet
         const existingLink = await prisma.picture_Links.findFirst({
             where: { tem_id: id }
         });
@@ -499,13 +478,10 @@ const pictureDelete = async (req, res) => {
             }
 
             if (picture && picture.img_path !== "/team/team_0.png") {
-                // Töröljük a nem alapértelmezett képet
                 const oldFilePath = path.join(__dirname, `../assets/pictures${picture.img_path}`);
                 if (fs.existsSync(oldFilePath)) {
                     fs.unlinkSync(oldFilePath);
                 }
-
-                // Visszaállítjuk az alap képet
 
                 const defaultImgPath = "/team/team_0.png";
 
@@ -545,9 +521,6 @@ const pictureDelete = async (req, res) => {
         } else {
             return res.status(404).json({ message: "A csapathoz nem tartozik kép." });
         }
-
-
-
         }
 
 

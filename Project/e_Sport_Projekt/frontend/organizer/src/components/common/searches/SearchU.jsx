@@ -62,23 +62,31 @@ function SearchU() {
       },
     })
       .then((res) => {
-        if (!res.ok) throw new Error("Keresési hiba");
+        if (!res.ok) {
+          //console.log("hiba")
+        }
         return res.json();
       })
       .then((data) => {
-        // Kliensoldali szűrés meghívhatóság alapján
+        
+        if(data.message){
+          setResult([]);
+        }else{
+          // Kliensoldali szűrés meghívhatóság alapján
         const filteredData =
-          inviteFilter === "all"
-            ? data
-            : data.filter((user) =>
-                inviteFilter === "1"
-                  ? isUserInviteable(user)
-                  : !isUserInviteable(user)
-              );
+        inviteFilter === "all"
+          ? data
+          : data.filter((user) =>
+              inviteFilter === "1"
+                ? isUserInviteable(user)
+                : !isUserInviteable(user)
+            );
 
-        setResult(filteredData);
+      setResult(filteredData);
+          
+        }
       })
-      .catch(() =>
+      .catch((err) =>
         toast.error("Hiba történt a keresés során,\nvagy nincs ilyen találat")
       );
   };

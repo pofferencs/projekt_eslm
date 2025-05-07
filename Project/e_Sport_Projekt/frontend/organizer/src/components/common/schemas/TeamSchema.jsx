@@ -5,7 +5,7 @@ function TeamSchema({ team }) {
     const [teamPicPath, setTeamPicPath] = useState("");
     const [teamMembers, setTeamMembers] = useState([]);
 
-    // Fetch team picture
+
     useEffect(() => {
         fetch(`${import.meta.env.VITE_BASE_URL}/list/teampic/${team.id}`)
             .then(res => res.json())
@@ -13,7 +13,6 @@ function TeamSchema({ team }) {
             .catch(error => console.log(error));
     }, [team?.id]);
 
-    // Fetch active team members
     useEffect(() => {
         fetch(`${import.meta.env.VITE_BASE_URL}/list/team/${team.id}/members`)
             .then(res => res.json())
@@ -22,7 +21,7 @@ function TeamSchema({ team }) {
                     setTeamMembers(members);
                 } else {
                     setTeamMembers([]); // vagy logolod az üzenetet
-                    console.warn("Hibás válasz:", members);
+                    // console.warn("Hibás válasz:", members);
                 }
             })
             .catch(error => console.log(error));
