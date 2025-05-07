@@ -76,10 +76,7 @@ function Game() {
           gameFetch();
         }
 
-      }).catch(err => alert(err));
-
-
-    
+      }).catch(err => alert(err));    
 
   };
 
@@ -151,8 +148,7 @@ function Game() {
       </h2>
 
     
-      <div className="mt-10 flex flex-col gap-5 justify-center">
-      
+      <div className="mt-10 flex flex-col gap-5 justify-center">      
 
       {
         (isInput==true)?(

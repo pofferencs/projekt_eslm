@@ -31,7 +31,7 @@ function MyInvites() {
                 }
             })
             .catch(err => {
-                console.error("Fetch error:", err); // Hibaüzenet a fetch esetén
+                console.error("Fetch error:", err);
                 setMyInvites({ invites: [], teams: [], creator_name: [] });
             });
 

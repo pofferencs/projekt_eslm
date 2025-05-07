@@ -328,10 +328,6 @@ function UserProfile() {
       .catch(err => alert(err));
   };
 
-
-
-
-
   return (
 
     (isLoading != false) ?
@@ -570,11 +566,7 @@ function UserProfile() {
                         </div>
                       </div>
                     </div>
-
-
-                    </div>
-
-                    
+                    </div>                  
 
 
                   </div>
@@ -809,9 +801,6 @@ function UserProfile() {
                                   <input type="text" disabled value={formData.om_identifier} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-gray-400 shadow-sm" />
                                 </div>
 
-
-
-
                               </div>
 
                             </div>
@@ -845,7 +834,6 @@ function UserProfile() {
                           )}
                         </div>
                       </div>
-
 
                     </>
                   )

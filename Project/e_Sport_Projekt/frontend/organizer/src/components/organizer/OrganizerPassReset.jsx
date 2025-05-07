@@ -300,23 +300,14 @@ function OrganizerPassReset() {
                 >
                   Küldés
                 </button>
-                
             </form>
             </div>
-
         </div>
         </div>
                 )
 
             )
-                
-                
-            
         }
-          
-
-          
-        
       </section>
 
     )

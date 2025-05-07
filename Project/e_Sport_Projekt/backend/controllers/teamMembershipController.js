@@ -75,7 +75,6 @@ const teamMembershipInsert = async (req, res) => {
     }
 }
 
-// Route to fetch active team members
 const activeMembersList = async (req, res) => {
     const { team_id } = req.params;
 
@@ -83,10 +82,10 @@ const activeMembersList = async (req, res) => {
         const activeMembers = await prisma.team_Memberships.findMany({
             where: {
                 tem_id: parseInt(team_id),
-                status: "active" // Filter for active members
+                status: "active" 
             },
             include: {
-                user: true // Include user data in the response
+                user: true 
             }
         });
 
@@ -94,7 +93,6 @@ const activeMembersList = async (req, res) => {
             return res.status(404).json({ message: "Nincs aktív tag a csapatban!" });
         }
 
-        // Return the active members' data
         const membersData = activeMembers.map(member => ({
             id: member.user.id,
             full_name: member.user.full_name,
@@ -109,12 +107,10 @@ const activeMembersList = async (req, res) => {
     }
 };
 
-// Route to fetch all teams where a user is an active member
 const teamsForPlayer = async (req, res) => {
     const { user_name } = req.params;
 
     try {
-        // 1. Felhasználó ID lekérdezése user_name alapján
         const user = await prisma.users.findFirst({
             where: { usr_name: user_name }
         });
@@ -123,7 +119,6 @@ const teamsForPlayer = async (req, res) => {
             return res.status(404).json({ message: "Nincs ilyen nevű felhasználó." });
         }
 
-        // 2. Aktív csapat tagságok keresése user_id alapján
         const activeMemberships = await prisma.team_Memberships.findMany({
             where: {
                 uer_id: user.id,
@@ -138,7 +133,6 @@ const teamsForPlayer = async (req, res) => {
             return res.status(404).json({ message: "A felhasználó nem aktív tag egyetlen csapatban sem." });
         }
 
-        // 3. Csapatok kilistázása
         const teams = activeMemberships.map(membership => membership.team);
 
         return res.status(200).json(teams);

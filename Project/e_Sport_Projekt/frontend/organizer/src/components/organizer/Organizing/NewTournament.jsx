@@ -304,17 +304,11 @@ function NewTournament() {
                         </div>
                         
                       </div>
-                    </form>
-                      
+                    </form>                     
 
-
-                    </div>
-                    
+                    </div>                   
 
                   </div>
-
-
-
         )
       }
             

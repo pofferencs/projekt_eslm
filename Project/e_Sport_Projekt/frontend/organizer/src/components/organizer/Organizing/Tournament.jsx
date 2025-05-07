@@ -509,26 +509,10 @@ function Tournament() {
                         
                       </div>
                      </div>
-                    
-                    
                   </div>
                 </div>
-
-
-                </div>
-
-
-                
-
-                
-
-                
-
-
+                </div>       
               </div>
-
-              
-            
             
             )
               :(
@@ -795,25 +779,15 @@ function Tournament() {
                         
                       </dl>
                     </div>
-
-                    
-
-                    
                   </div>
                 </div>
                 
               </>
-
-
           )
-          
         }
-        
         </>
       )
     }
-    
-    
     </>
   )
 }

@@ -9,7 +9,6 @@ const { tournamentDelete } = require('../controllers/tournamentController');
 const { teamDelete } = require('../controllers/teamController');
 const { teamMembershipDelete } = require('../controllers/teamMembershipController');
 
-// teamMembership
 
 router.delete('/application',applicationDelete);
 router.delete('/event',eventDelete);

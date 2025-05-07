@@ -34,7 +34,6 @@ function TeamEdit() {
             if (res.ok) {
                 toast.success("Sikeresen kiléptél a csapatból!");
                 setShowModal(false);
-                // TODO: Frissítés triggerelése (pl. újrafetchelés a szülőben)
             } else {
                 toast.error("Nem sikerült kilépni a csapatból.");
             }
@@ -43,8 +42,6 @@ function TeamEdit() {
             toast.error("Hiba történt a kilépés során.");
         }
     };
-
-
 
     let teamFormObj = {
         id: teamData.id,

@@ -86,7 +86,6 @@ function OrganizerLogin() {
       }
     }
   
-    // Ha jelszót gépelünk
     if (id === "password") {
       setFormDataEmail((prevState) => ({ ...prevState, paswrd: value }));
       setFormDataUsername((prevState) => ({ ...prevState, paswrd: value }));

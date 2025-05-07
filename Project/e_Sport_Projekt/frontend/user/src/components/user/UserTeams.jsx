@@ -10,7 +10,6 @@ function UserTeams() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // If no profile, stop further execution
     if (!profile || !profile.usr_name) return;
 
     setIsLoading(true);
@@ -22,7 +21,6 @@ function UserTeams() {
       .then(res => res.json())
       .then(async (csapatok) => {
         if (Array.isArray(csapatok)) {
-          // Fetch team members for each team
           const csapatokTagokkal = await Promise.all(
             csapatok.map(async (team) => {
               try {

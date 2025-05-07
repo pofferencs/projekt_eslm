@@ -617,12 +617,6 @@ const userUpdate = async (req, res) => {
 
             }
 
-
-
-
-
-
-
             const specChars = /[*@_]/;
             const ekezetesRegex = /[áéíóöőúüűÁÉÍÓÖŐÚÜŰ]/;
             const validCharsRegex = /^[a-zA-Z0-9*@_]*$/;
@@ -825,8 +819,6 @@ const userReg = async (req, res) => {
 
         // console.log(`${newUser.usr_name} (ID: ${newUser.id}) tokenje: ${token}`);
 
-
-
         //kép hozzárendelés a fiókhoz
         const newPicLink = await prisma.picture_Links.create({
             data: {
@@ -907,8 +899,6 @@ const userLogin = async (req, res) => {
 }
 
 const userLogout = async (req, res) => {
-
-
 
     res.clearCookie('tokenU', {
         secure: true,

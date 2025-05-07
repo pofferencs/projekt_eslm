@@ -21,7 +21,6 @@ const matchUpdate = async (req, res) => {
     }
 
     try {
-        //Verseny aktív időszakához szükséges adatok
 
         const tournament = await prisma.tournaments.findFirst({
             where: {
@@ -47,8 +46,6 @@ const matchUpdate = async (req, res) => {
 
         const tStartDate = new Date(tournament.start_date);
         const tEndDate = new Date(tournament.end_date);
-
-        //Megadott dátum vizsgálata
         const matchDate = new Date(dte);
                
 

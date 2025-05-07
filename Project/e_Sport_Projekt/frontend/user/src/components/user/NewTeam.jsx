@@ -48,7 +48,6 @@ function NewTeam() {
                 throw new Error("Sikertelen csapatlétrehozás");
             }
 
-            // Opcionálisan visszajelzés
             // const data = await response.json();
             // console.log("Létrehozott csapat:", data);
 

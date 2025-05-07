@@ -544,18 +544,7 @@ const sendImage = async (file, type, id) => {
                   </div>
             
             )
-            }
-            
-            
-                  
-
-            
-
-
-
-
-
-
+            }                               
                   </>
           ):(
             
@@ -648,20 +637,15 @@ const sendImage = async (file, type, id) => {
                           )
                         }
                       </div>
-                     </div>
-                    
+                     </div>                   
                     
                   </div>
                       </div> 
-
-
                     
                   </div>
                 </div>
                 
               </>
-
-
           )
           
         }

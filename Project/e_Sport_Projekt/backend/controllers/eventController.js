@@ -163,21 +163,18 @@ const eventInsert = async (req, res) => {
         const startDate = new Date(start_date);
         const endDate = new Date(end_date);
 
-        // Validációk és üzenetek
+        
         const validations = [
             { condition: startDate < now, message: "Az esemény kezdetét nem lehet múltbeli időpontra rakni!" },
             { condition: startDate < minStartDate, message: "Az esemény kezdetét az adott naptól legalább 14. napra kell állítani!" },
             { condition: startDate > endDate, message: "Az esemény kezdete nem lehet később mint a vége!" }
-        ];
-
-        // Validációs ciklus
+        ];        
         for (let validation of validations) {
             if (validation.condition) {
                 return res.status(400).json({ message: validation.message });
             }
         }
 
-        // Megnézzük, hogy az esemény már létezik-e, ...
         const existingEvent = await prisma.events.findFirst({
             where: {
                 name: name,
@@ -187,12 +184,10 @@ const eventInsert = async (req, res) => {
             }
         });
 
-        // ... és ha létezik, akkor 400-as státuszt adunk
         if (existingEvent) {
             return res.status(400).json({ message: "Az adott esemény már létezik!" });
         }
 
-        // Ha minden validáció rendben van, insertálás
         const event = await prisma.events.create({
             data: {
                 name: name,
@@ -268,7 +263,6 @@ const eventDelete = async (req, res) => {
         console.log(err);
         res.status(500).json({ message: "Hiba a törlés során!" });
     }
-
 }
 
 const eventGetPicPath = async (req,res)=>{
@@ -296,8 +290,7 @@ const eventGetPicPath = async (req,res)=>{
             return res.status(400).json({ message: "Nincs ilyen kép!" });
         }
         
-        return res.status(200).json(picPath.img_path);
-        
+        return res.status(200).json(picPath.img_path);        
     }
 
     catch (error) {
