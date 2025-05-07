@@ -9,7 +9,7 @@ function TeamSearch() {
 
   const teamKereso = (input) => {
 
-    let url = `${import.meta.env.VITE_BASE_URL}/list/tenamesearch/${searchInput}`;
+    let url = `${import.meta.env.VITE_BASE_URL}/list/team`;
 
     // Ha van kereső input, akkor hozzáadjuk a keresési paramétert
     if (input) {
