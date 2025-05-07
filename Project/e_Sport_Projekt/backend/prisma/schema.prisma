@@ -84,7 +84,7 @@ model Tournaments {
   id              Int             @unique @default(autoincrement())
   name            String          @db.VarChar(32)
   num_participant Int
-  team_num        Int?
+  team_num        Int
   start_date      DateTime
   end_date        DateTime
   game_mode       String          @db.VarChar(32)

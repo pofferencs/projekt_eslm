@@ -31,7 +31,7 @@ function Tournament() {
   useEffect(()=>{
   
       window.scroll(0,0)
-      setDisabled(true);  
+      setDisabled(true);
       
 
         fetch(`${import.meta.env.VITE_BASE_URL}/list/tntsearchid/${id}`,{
@@ -44,7 +44,6 @@ function Tournament() {
           }
           setTournament(adat); setFormData(adat); setIsLoading(false);
           setDetailsNum(adat.details.length);
-          
           setPicPath(
             fetch(`${import.meta.env.VITE_BASE_URL}/list/tournamentpic/${id}`,{
               method: "GET",
@@ -386,9 +385,9 @@ function Tournament() {
 
                         <div>
                           <label className="block text-sm font-medium text-white">
-                            Résztvevők száma(*)
+                            Résztvevő csapatok száma(*)
                           </label>
-                          <input id="place" type="number" disabled={disabled} value={formData.num_participant} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-gray-400 shadow-sm" />
+                          <input id="num_participant" type="number" min={1} max={formData.max_participant} disabled={disabled} value={formData.num_participant} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-gray-400 shadow-sm" />
                         </div>
 
                         <div>
@@ -420,9 +419,9 @@ function Tournament() {
 
                         <div>
                           <label className="block text-sm font-medium text-white">
-                            Maximális résztvevők száma(*)
+                            Maximális csapatok száma(*)
                           </label>
-                          <input id="max_participant" type="number" disabled={disabled} value={formData.max_participant} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-gray-400 shadow-sm" />
+                          <input id="max_participant" type="number" min={1} disabled={disabled} value={formData.max_participant} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-gray-400 shadow-sm" />
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-white">
@@ -440,16 +439,16 @@ function Tournament() {
 
                         <div>
                           <label className="block text-sm font-medium text-white">
-                            Játékmód(*)
+                            Csapattagok száma(*)
                           </label>
-                          <input id="game_mode" type="text" disabled={disabled} value={formData.game_mode} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-gray-400 shadow-sm" />
+                          <input id="team_num" type="number" min={1} disabled={disabled} value={formData.team_num} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-gray-400 shadow-sm" />
                         </div>
 
                         <div>
                           <label className="block text-sm font-medium text-white">
-                            Csapatok száma
+                            Játékmód(*)
                           </label>
-                          <input id="team_num" type="number" disabled={disabled} value={formData.team_num} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-gray-400 shadow-sm" />
+                          <input id="game_mode" type="text" disabled={disabled} value={formData.game_mode} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-gray-400 shadow-sm" />
                         </div>
 
                       </div>
@@ -595,7 +594,7 @@ function Tournament() {
                           <label className="block text-sm font-medium text-white">
                             Résztvevők száma(*)
                           </label>
-                          <input id="num_participant" type="number" max={formData.max_participant} disabled={disabled} onChange={writeData} value={formData.num_participant} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm" />
+                          <input id="num_participant" min={1} type="number" max={formData.max_participant} disabled={disabled} onChange={writeData} value={formData.num_participant} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm" />
                         </div>
 
                         <div>
@@ -647,16 +646,16 @@ function Tournament() {
 
                         <div>
                           <label className="block text-sm font-medium text-white">
-                            Játékmód(*)
+                          Csapattagok száma(*)
                           </label>
-                          <input id="game_mode" type="text" disabled={disabled} onChange={writeData} value={formData.game_mode} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm" />
+                          <input id="team_num" type="number" min={1} disabled={disabled} onChange={writeData} value={formData.team_num} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm" />
                         </div>
 
                         <div>
                           <label className="block text-sm font-medium text-white">
-                            Csapatok száma
+                            Játékmód(*)
                           </label>
-                          <input id="team_num" type="number" min={1} disabled={disabled} onChange={writeData} value={formData.team_num} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm" />
+                          <input id="game_mode" type="text" disabled={disabled} onChange={writeData} value={formData.game_mode} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm" />
                         </div>
 
                       </div>
@@ -778,7 +777,7 @@ function Tournament() {
                         </div>
                         <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                           <dt className="text-sm text-white font-bold">
-                            Csapatok száma
+                            Csapattagok száma
                           </dt>
                           <dd className="mt-1 text-sm text-white sm:mt-0 sm:col-span-2">
                             <p>{tournament.team_num}</p>
