@@ -138,7 +138,8 @@ function TeamEdit() {
       id: teamFormData.id,
       full_name: teamFormData.full_name,
       short_name: teamFormData.short_name,
-      creator_id: teamFormData.creator_id
+      creator_id: teamFormData.creator_id,
+      profileId: profile.id
     };
 
     fetch(`${import.meta.env.VITE_BASE_URL}/update/team`, {

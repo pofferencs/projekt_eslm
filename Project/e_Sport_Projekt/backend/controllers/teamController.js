@@ -64,9 +64,10 @@ const teamSearchByName = async (req, res) => {
 
 
 const teamUpdate = async (req, res) => {
-  const { id, short_name, full_name, creator_id } = req.body;
+  const { id, short_name, full_name, creator_id, profileId } = req.body;
 
   try {
+
     const existingTeam = await prisma.teams.findFirst({
       where: {
         full_name: full_name
@@ -77,14 +78,36 @@ const teamUpdate = async (req, res) => {
       return res.status(400).json({ message: "Ez a csapatnév foglalt!" });
     }
 
+    const existApplications = await prisma.applications.findMany({
+      where: {
+        OR: [
+          { uer1_id: parseInt(creator_id) },
+          { uer2_id: parseInt(creator_id) },
+          { uer3_id: parseInt(creator_id) },
+          { uer4_id: parseInt(creator_id) },
+          { uer5_id: parseInt(creator_id) }
+        ],
+        AND: {
+          tem_id: parseInt(id),
+          status: "approved"
+        }
+      }
+    , })
+
+    if (existApplications.length > 0 && parseInt(creator_id) != parseInt(profileId)) {
+      return res.status(400).json({
+        message: "Nem válthatsz csapatkapitányt, ameddig van aktív jelentkezése a csapatnak, vagy versenyen vesz részt!"
+      });
+    }
+
     const team = await prisma.teams.update({
       where: {
-        id: Number(id)
+        id: parseInt(id)
       },
       data: {
         full_name: full_name,
         short_name: short_name,
-        creator_id: Number(creator_id)
+        creator_id: parseInt(creator_id)
       }
     });
 
