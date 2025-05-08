@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useEffect } from "react"
-import { useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import MatchTeam from "../../../../../user/src/components/common/MatchTeam";
 
 
@@ -10,6 +10,7 @@ function Match() {
     const {id} = useParams();
     const [match, setMatch] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+    const navigate = useNavigate();
 
     useEffect(()=>{
 
@@ -18,7 +19,16 @@ function Match() {
             method: "GET",
             headers: { "Content-type": "application/json" },
         }).then(res=> res.json())
-        .then(adat=> {setMatch(adat); setIsLoading(false);})
+        .then(adat=> {
+          
+          if(!adat.message){
+            setMatch(adat); setIsLoading(false);
+          }else{
+            navigate('/');
+          }
+          
+          
+        })
         .catch(err=> alert(err));
 
 
