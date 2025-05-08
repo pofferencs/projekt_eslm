@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useState } from "react"
+import { useNavigate } from "react-router-dom";
 
 
 function MatchSchema({match}) {
@@ -10,6 +11,7 @@ function MatchSchema({match}) {
     const [isLoading, setIsLoading] = useState(true);
     const [team1Pic, setTeam1Pics] = useState("");
     const [team2Pic, setTeam2Pics] = useState("");
+    const navigate = useNavigate();
 
     useEffect(()=>{
         setIsLoading(true);
@@ -101,7 +103,7 @@ const formatDateTime = (dateTime) => {
                     </div>
 
                     <div className="text-center">
-                        <button className="btn mt-5 bg-indigo-600 hover:bg-indigo-800 border-none text-white">További adatok</button>
+                        <button className="btn mt-5 bg-indigo-600 hover:bg-indigo-800 border-none text-white" onClick={()=> {navigate(`/match/${match.id}`)}}>További adatok</button>
                         
                     </div>
                 

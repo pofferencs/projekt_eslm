@@ -336,10 +336,140 @@ const matchInsert = async (req, res) => {
     };
 
 
+    
+    
+    const matchSearchById = async (req, res) => {
 
 
+        const { id } = req.params;
+
+        if(!id){
+            return res.status(400).json({message: "Hiányzó adat!"});
+        }
+        
 
 
+        try {
+
+            const match = await prisma.matches.findFirst({
+                where: {
+                    id: parseInt(id)
+                },
+                select: {
+                    id: true,
+                    apn1_id: true,
+                    apn2_id: true,
+                    tnt_id: true,
+                    rslt: true,
+                    dte: true,
+                    details: true,
+                    tournament: {
+                        select: {
+                            id: true,
+                            name: true,
+                            game_mode: true,
+                            evt_id: true,
+                            gae_id: true
+                        }
+                    },
+                    application1: {
+                        select: {
+                            team: true,
+                            user1: {
+                                select: {
+                                    id: true,
+                                    usr_name: true
+                                }
+                            },
+                            user2: {
+                                select: {
+                                    id: true,
+                                    usr_name: true
+                                }
+
+                            },
+                            user3: {
+                                select: {
+                                    id: true,
+                                    usr_name: true
+                                }
+
+                            },
+                            user4: {
+                                select: {
+                                    id: true,
+                                    usr_name: true
+                                }
+
+                            },
+                            user5: {
+                                select: {
+                                    id: true,
+                                    usr_name: true
+                                }
+
+                            },
+                        }
+                    },                    
+                    application2: {
+                        select: {
+                            team: true,
+                            user1: {
+                                select: {
+                                    id: true,
+                                    usr_name: true
+                                }
+                            },
+                            user2: {
+                                select: {
+                                    id: true,
+                                    usr_name: true
+                                }
+
+                            },
+                            user3: {
+                                select: {
+                                    id: true,
+                                    usr_name: true
+                                }
+
+                            },
+                            user4: {
+                                select: {
+                                    id: true,
+                                    usr_name: true
+                                }
+
+                            },
+                            user5: {
+                                select: {
+                                    id: true,
+                                    usr_name: true
+                                }
+
+                            },
+                        }
+                    }
+                    
+            
+                }
+            });
+
+
+            if(!match){
+                return res.status(400).json({message: "Nincs ilyen meccs!"});
+            }
+
+
+            return res.status(200).json({match});
+
+
+            
+        } catch (error) {
+            return res.status(500).json( error.message );
+        }
+
+    };
 
 
 
@@ -352,5 +482,6 @@ module.exports = {
     matchList,
     matchUpdate,
     matchInsert,
-    matchesOfTournament
+    matchesOfTournament,
+    matchSearchById
 }

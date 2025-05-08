@@ -391,7 +391,7 @@ const sendImage = async (file, type, id) => {
                     </div>
 
                      <div className="flex flex-col">
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-12 justify-items-center">
+                      <div className="grid grid-cols-1 md:grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 gap-12 justify-items-center">
                         {
                           (!tournaments.length == 0)?(
                             tournaments.map((t,i)=>(
@@ -546,7 +546,7 @@ const sendImage = async (file, type, id) => {
                     </div>
 
                      <div className="flex flex-col">
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-12 justify-items-center">
+                      <div className="grid grid-cols-1 md:grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 gap-12 justify-items-center">
                         {
                           (!tournaments.length == 0)?(
                             tournaments.map((t,i)=>(
@@ -652,7 +652,7 @@ const sendImage = async (file, type, id) => {
                   <div className="p-8 md:p-10">
 
                      <div className="flex flex-col">
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-12 justify-items-center">
+                      <div className="grid grid-cols-1 md:grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 gap-12 justify-items-center">
                         {
                           (!tournaments.length == 0)?(
                             tournaments.map((t,i)=>(

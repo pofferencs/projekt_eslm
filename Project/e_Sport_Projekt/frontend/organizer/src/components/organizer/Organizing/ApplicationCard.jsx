@@ -136,11 +136,19 @@ function ApplicationCard({team, application}) {
                                     </Link>
                                 </div>
 
-                                <div className="drop-shadow-lg text-purple-800 hover:text-blue-200 flex items-center gap-1">
-                                    <Link>
-                                        {application.user2.usr_name}
-                                    </Link>
+                                {
+                                    (application.user2 != null)?(
+
+                                        <div className="drop-shadow-lg text-purple-800 hover:text-blue-200 flex items-center gap-1">
+                                        <Link>
+                                            {application.user2.usr_name}
+                                        </Link>
                                 </div>
+
+                                    ):(
+                                        <></>
+                                    )
+                                }
                                 {
                                     (application.user3 != null)?(
 
