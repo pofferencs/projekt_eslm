@@ -14,6 +14,8 @@ function Match() {
 
     useEffect(()=>{
 
+      window.scroll(0,0)
+
 
         fetch(`${import.meta.env.VITE_BASE_URL}/list/matchbyid/${id}`,{
             method: "GET",
