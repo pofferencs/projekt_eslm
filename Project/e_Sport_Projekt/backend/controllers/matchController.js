@@ -363,6 +363,7 @@ const matchInsert = async (req, res) => {
                     rslt: true,
                     dte: true,
                     details: true,
+                    status: true,
                     tournament: {
                         select: {
                             id: true,

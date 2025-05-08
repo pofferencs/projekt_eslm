@@ -55,9 +55,33 @@ function Match() {
         <img className="w-56 h-56" src={`https://www.svgrepo.com/show/535410/game-controller.svg`} />
           <div className="card-title">
             <div className="pl-14">
-              <p className="text-3xl pb-2 text-white text-center">{match.match.tournament.name}</p>
+              <p className="text-3xl pb-2 text-white text-center font-bold">{match.match.tournament.name}</p>
               <p className="text-3xl pb-2 text-white text-center">{match.match.tournament.game_mode}</p>
               <p className="text-2xl pb-2 text-white text-center">{formatDateTime(match.match.dte)}</p>
+              <p className="text-3xl pb-2 text-white text-center font-bold">
+                
+              {
+              (match.match.status=="unstarted")?(
+                <p>{"Még nem kezdődött el"}</p>
+            ):(
+                (match.match.status=="ended")?(
+                    <p>{"Befejeződött"}</p>
+                ):(
+                    (match.match.status=="interrupted")?(
+                        <p>{"Félbeszakított"}</p>
+                    ):(
+                        (match.match.status=="started")?(
+                            <p>{"Elkezdődött"}</p>
+                        ):(
+                            <></>
+                          )
+                      )
+                  )
+              )
+            
+              
+              }
+                </p>
             </div>
           </div>
         </div>
