@@ -157,7 +157,8 @@ const teamDelete = async (req, res) => {
 
     const membershipCounter = await prisma.team_Memberships.count({
       where: {
-        tem_id: parseInt(id)
+        tem_id: parseInt(id),
+        status: "active"
       }
     })
 
@@ -180,16 +181,21 @@ const teamDelete = async (req, res) => {
         }
       })
 
-
-
-      const membership = await prisma.team_Memberships.delete({
+      const membership = await prisma.team_Memberships.deleteMany({
         where: {
-          uer_id_tem_id:{
-            uer_id: user_id,
-            tem_id: parseInt(id)
-          }
+          tem_id: parseInt(id)
         }
-      })
+      }
+      )
+
+      // const membership = await prisma.team_Memberships.delete({
+      //   where: {
+      //     uer_id_tem_id:{
+      //       uer_id: user_id,
+      //       tem_id: parseInt(id)
+      //     }
+      //   }
+      // })
 
 
       const team = await prisma.teams.delete({

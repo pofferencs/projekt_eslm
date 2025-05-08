@@ -137,6 +137,8 @@ function TeamSchema({ team }) {
                     show={showModal}
                     onClose={() => setShowModal(false)}
                     onConfirm={handleLeaveTeam}
+                    question={"Biztosan ki akarsz lépni a csapatból?"}
+                    yes={"Igen, kilépek"}
                 />
             </div>
         </div>

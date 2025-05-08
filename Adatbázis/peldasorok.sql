@@ -113,7 +113,7 @@ INSERT INTO `teams` (`id`, `short_name`, `full_name`, `creator_id`) VALUES
 (4, 'T04', 'Team Four Delta', 16),(5, 'T05', 'Team Five Echo', 21),(6, 'T06', 'Team Six Foxtrot', 22),
 (7, 'T07', 'Team Seven Golf', 23),(8, 'T08', 'Team Eight Hotel', 24),(9, 'T09', 'Team Nine India', 25),
 (10, 'T10', 'Team Ten Juliett', 27),(11, 'T11', 'Team Eleven Kilo', 29),(12, 'T12', 'Team Twelve Lima', 31),
-(13, 'T13', 'Team Thirteen Mi', 33),(14, 'T14', 'Team Fourteen No', 36),(15, 'T15', 'Team Fifteen Osc', 39), (16, 'T16', 'Team Sixteen Pap', 42)
+(13, 'T13', 'Team Thirteen Mi', 33),(14, 'T14', 'Team Fourteen No', 36),(15, 'T15', 'Team Fifteen Osc', 39), (16, 'T16', 'Team Sixteen Pap', 42);
 
 -- Team Memberships
 INSERT INTO `Team_Memberships` (`status`, `uer_id`, `tem_id`) VALUES
@@ -133,7 +133,7 @@ INSERT INTO `Team_Memberships` (`status`, `uer_id`, `tem_id`) VALUES
 ('active', 33, 13), ('active', 34, 13), ('active', 35, 13),
 ('active', 36, 14), ('active', 37, 14), ('active', 38, 14),
 ('active', 39, 15), ('active', 40, 15), ('active', 41, 15),
-('active', 42, 16), ('active', 45, 16), ('active', 46, 16); 
+('active', 42, 16), ('active', 45, 16), ('active', 46, 16);
 
 -- függőben lévő tagság 
 INSERT INTO `Team_Memberships` (`status`, `uer_id`, `tem_id`) VALUES
