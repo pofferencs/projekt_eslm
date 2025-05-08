@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom"
 import OrganizerContext from "../../../context/OrganizerContext";
 import { toast } from "react-toastify";
 import ApplicationCard from "./ApplicationCard";
+import MatchSchema from "../../common/schemas/MatchSchema";
 
 function Tournament() {
 
@@ -29,6 +30,7 @@ function Tournament() {
   const [maxDate, setMaxDate] = useState("");
   const [apnMinDate, setApnMinDate] = useState("");
   const [apnMaxDate, setApnMaxDate] = useState("");
+  const [matches, setMatches] = useState([]);
   const [dateData, setDateData] = useState({
     start_date: "",
     end_date: ""
@@ -102,9 +104,26 @@ function Tournament() {
         .catch(err=> alert(err));  
 
         
-        
+        matchesFetch();
 
     },[isloading])
+
+
+    const matchesFetch = () => {
+
+      fetch(`${import.meta.env.VITE_BASE_URL}/list/matches/${id}`, {
+        method: "GET",
+        headers: { "Content-type": "application/json" },
+      })
+        .then(res => res.json())
+        .then(adat => {
+          setMatches(adat.matches);
+  
+        })
+        .catch(err => alert(err));
+  
+  
+    };
 
 
     const pendingFetch = () => {
@@ -575,11 +594,46 @@ function Tournament() {
                         
                       </div>
                      </div>
+
+
+                     
                     
                     
                   </div>
                 </div>
 
+
+                <div className="w-full mb-10 mx-auto rounded-lg shadow-lg md:mt-6 md:max-w-full sm:max-w-4xl xl:p-0 bg-gray-800 dark:border-gray-700 pt-10">
+                  <div className="flex flex-row horizontal justify-center mt-10 gap-5">
+                    <h2 className="text-center text-4xl font-bold tracking-tight text-indigo-600">
+                      Meccsek
+                    </h2>
+                    <button onClick={() => { matchesFetch(); console.log(matches)}} className="btn border-none bg-indigo-600 hover:bg-indigo-800"><img className="h-5" src="https://www.svgrepo.com/show/533694/refresh-ccw.svg" /></button>
+                  </div>
+
+                  <div className="mx-auto mt-5 h-1 w-[60%] bg-gradient-to-r from-indigo-500 to-amber-500 rounded-full" />
+                  <div className="p-8 md:p-10">
+
+                  <div className="flex flex-row justify-center">
+                      <button onClick={()=>{navigate('/new-match')}} className="btn mt-3 mb-10 text-white w-52">Új meccs felvétele</button>
+                    </div>
+
+                    <div className="flex flex-col">
+                      <div className="grid xl:grid-cols-1 md:grid-cols-1 sm:grid-cols-1 gap-12 justify-items-center">
+
+                        {
+                          matches.map((match) => (
+                            <MatchSchema key={match.id} match={match} />
+                          ))
+                        }
+                        
+                      </div>
+                    </div>
+
+
+                    
+                  </div>
+                </div>
 
                 </div>
 
@@ -752,9 +806,11 @@ function Tournament() {
                           <textarea maxLength={512} id="details" type="text" onInput={handleInput} disabled={disabled} onChange={writeData} value={formData.details} className="mt-1 block w-full hyphens-auto px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm" />
                         </div>
                     </div>
-                  </div>
+                  </div>                  
 
                     </div>
+
+                    
                   </div>
             
             )
@@ -881,11 +937,41 @@ function Tournament() {
                       </dl>
                     </div>
 
+                    <div className="w-full mb-10 mx-auto rounded-lg shadow-lg md:mt-6 md:max-w-full sm:max-w-4xl xl:p-0 bg-gray-800 dark:border-gray-700 pt-10">
+                  <div className="flex flex-row horizontal justify-center mt-10 gap-5">
+                    <h2 className="text-center text-4xl font-bold tracking-tight text-indigo-600">
+                      Meccsek
+                    </h2>
+                    <button onClick={() => { matchesFetch(); console.log(matches)}} className="btn border-none bg-indigo-600 hover:bg-indigo-800"><img className="h-5" src="https://www.svgrepo.com/show/533694/refresh-ccw.svg" /></button>
+                  </div>
+
+                  <div className="mx-auto mt-5 h-1 w-[60%] bg-gradient-to-r from-indigo-500 to-amber-500 rounded-full" />
+                  <div className="p-8 md:p-10">
+
+                    <div className="flex flex-col">
+                      <div className="grid xl:grid-cols-1 md:grid-cols-1 sm:grid-cols-1 gap-12 justify-items-center">
+
+                        {
+                          matches.map((match) => (
+                            <MatchSchema key={match.id} match={match} />
+                          ))
+                        }
+                        
+                      </div>
+                    </div>
+
+
+                    
+                  </div>
+                </div>
+
                     
 
                     
                   </div>
                 </div>
+
+                
                 
               </>
 
@@ -897,6 +983,7 @@ function Tournament() {
         </>
       )
     }
+
     
     
     </>

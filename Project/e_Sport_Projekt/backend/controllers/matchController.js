@@ -220,6 +220,7 @@ const matchInsert = async (req, res) => {
                     tnt_id: tournament.id
                 },
                 select: {
+                    id: true,
                     apn1_id: true,
                     apn2_id: true,
                     tnt_id: true,
@@ -237,6 +238,7 @@ const matchInsert = async (req, res) => {
                     },
                     application1: {
                         select: {
+                            team: true,
                             user1: {
                                 select: {
                                     id: true,
@@ -275,6 +277,7 @@ const matchInsert = async (req, res) => {
                     },                    
                     application2: {
                         select: {
+                            team: true,
                             user1: {
                                 select: {
                                     id: true,
