@@ -37,14 +37,30 @@ function Match() {
 
     const formatDateTime = (dateTime) => {
         if (dateTime) {
-            const [date, time] = dateTime.split('T'); // Szétválasztjuk a dátumot és az időt
-            const [ev, honap, nap] = date.split('-'); // A dátumot év, hónap, nap részekre bontjuk
-            const [ora, perc] = time.split(':'); // Az időt óra és perc részekre bontjuk
+            const [date, time] = dateTime.split('T'); 
+            const [ev, honap, nap] = date.split('-');
+            const [ora, perc] = time.split(':');
     
-            return `${ev}. ${honap}. ${nap}. ${ora}:${perc}`; // Formázott visszatérési érték
+            return `${ev}. ${honap}. ${nap}. ${ora}:${perc}`;
         } else {
             return '';
         }
+    };
+
+    const dateFormat = (date) => {
+    
+      if (date != undefined) {
+        const localDate = new Date(date);
+        const ev = localDate.getFullYear();
+        const honap = String(localDate.getMonth() + 1).padStart(2, '0');
+        const nap = String(localDate.getDate()).padStart(2, '0');
+        const ora = String(localDate.getHours()).padStart(2, '0');
+        const perc = String(localDate.getMinutes()).padStart(2, '0');
+    
+        return `${ev}-${honap}-${nap}T${ora}:${perc}`;
+      } else {
+        return ``;
+      }
     };
 
 
@@ -67,7 +83,7 @@ function Match() {
             <div className="pl-14">
               <p className="text-3xl pb-2 text-white text-center font-bold">{match.match.tournament.name}</p>
               <p className="text-3xl pb-2 text-white text-center">{match.match.tournament.game_mode}</p>
-              <p className="text-2xl pb-2 text-white text-center">{formatDateTime(match.match.dte)}</p>
+              <p className="text-2xl pb-2 text-white text-center">{formatDateTime(dateFormat(match.match.dte))}</p>
               <p className="text-3xl pb-2 text-white text-center font-bold">
                 
               {

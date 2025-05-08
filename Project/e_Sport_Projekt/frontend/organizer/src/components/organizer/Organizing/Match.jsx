@@ -52,10 +52,7 @@ function Match() {
           }); setDateData({
             dte: adat.match.dte
           });
-          setStatus(adat.match.status);
-          setWinner(adat.match.winner);
-          setApn1(adat.match.apn1_id);
-          setApn2(adat.match.apn2_id);
+
           setIsOgr(adat.match.tournament.event.ogr_id); setRefresh(false); setIsLoading(false);
         }
 
@@ -71,15 +68,6 @@ function Match() {
 
 
   }, [isloading])
-
-
-
-  console.log(match)
-  console.log(match)
-
-
-
-
 
 
 
@@ -131,19 +119,16 @@ function Match() {
 
     setStatus("");
     setWinner("");
-    setApn1("");
-    setApn2("");
   };
 
 
 
   const dateFormat = (date) => {
-    console.log(date);
-  
+    
     if (date != undefined) {
-      const localDate = new Date(date); // Konvertálás Date objektummá
+      const localDate = new Date(date);
       const ev = localDate.getFullYear();
-      const honap = String(localDate.getMonth() + 1).padStart(2, '0'); // Hónap 0-alapú
+      const honap = String(localDate.getMonth() + 1).padStart(2, '0');
       const nap = String(localDate.getDate()).padStart(2, '0');
       const ora = String(localDate.getHours()).padStart(2, '0');
       const perc = String(localDate.getMinutes()).padStart(2, '0');
@@ -154,13 +139,25 @@ function Match() {
     }
   };
 
+  const formatDateTime = (dateTime) => {
+    if (dateTime) {
+      const [date, time] = dateTime.split('T');
+      const [ev, honap, nap] = date.split('-');
+      const [ora, perc] = time.split(':');
+  
+      return `${ev}. ${honap}. ${nap}. ${ora}:${perc}`; 
+    } else {
+      return '';
+    }
+  };
 
   const modify = (method) => {
 
-    if((apn1!="" || apn2!="") && (apn1 == apn2)){
-      return toast.error("Ugyanazt a csapatot nem adhatod meg!");
-    }
-
+      if(winner!=""){
+        if(winner != match.match.application1.team.full_name && winner != match.match.application2.team.full_name){
+          return toast.error("Csak a fenti két csapat közül az egyik lehet a győztes!");
+        }
+      }
     
 
     fetch(`${import.meta.env.VITE_BASE_URL}/update/match`, {
@@ -252,21 +249,6 @@ function Match() {
     setDetailsNum(textarea.value.length)
 
   };
-
-
-  const formatDateTime = (dateTime) => {
-        if (dateTime) {
-            const [date, time] = dateTime.split('T'); // Szétválasztjuk a dátumot és az időt
-            const [ev, honap, nap] = date.split('-'); // A dátumot év, hónap, nap részekre bontjuk
-            const [ora, perc] = time.split(':'); // Az időt óra és perc részekre bontjuk
-    
-            return `${ev}. ${honap}. ${nap}. ${ora}:${perc}`; // Formázott visszatérési érték
-        } else {
-            return '';
-        }
-    };
-
-
     
 
 
@@ -297,7 +279,7 @@ function Match() {
                           <div className="pl-14">
                             <p className="text-3xl pb-2 text-white text-center font-bold">{match.match.tournament.name}</p>
                             <p className="text-3xl pb-2 text-white text-center">{match.match.tournament.game_mode}</p>
-                            <p className="text-2xl pb-2 text-white text-center">{formatDateTime(match.match.dte)}</p>
+                            <p className="text-2xl pb-2 text-white text-center">{formatDateTime(dateFormat(match.match.dte))}</p>
                             <p className="text-3xl pb-2 text-white text-center font-bold">
                               
                             {
@@ -340,34 +322,16 @@ function Match() {
 
           <div key={'apn1_id'}>
               <label className="block text-sm font-medium text-white">
-                Csapat 1(*)
+                Csapat 1
               </label>
-              <select id="apn1_id" disabled defaultValue="Csapat 1" className="select mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-gray-400 shadow-sm">
-              <option disabled={true}>Csapat 1</option>
-                {
-                    teams.map((e)=>(
-                    <>
-                        <option onClick={()=> {setApn1(e.id)}} key={e.id}>{e.team.full_name}</option>
-                    </>
-                ))
-                }
-                </select>
+              <input id="apn1" disabled type="text" value={match.match.application1.team.full_name} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-gray-400 shadow-sm" />
             </div>
 
             <div key={'apn2_id'}>
               <label className="block text-sm font-medium text-white">
-                Csapat 2(*)
+                Csapat 2
               </label>
-              <select id="apn2_id" disabled defaultValue="Csapat 2" className="select mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-gray-400 shadow-sm">
-              <option disabled={true}>Csapat 2</option>
-                {
-                    teams.map((e)=>(
-                    <>
-                        <option onClick={()=> {setApn2(e.id)}} key={e.id}>{e.team.full_name}</option>
-                    </>
-                ))
-                }
-                </select>
+              <input id="apn2" disabled type="text" value={match.match.application2.team.full_name} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-gray-400 shadow-sm" />
             </div>
           
             <div key={'status'}>
@@ -410,11 +374,15 @@ function Match() {
               <select id="winner" disabled defaultValue="Győztes" className="select mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-gray-400 shadow-sm">
               <option disabled={true}>Győztes</option>
                 {
-                    teams.map((e)=>(
-                    <>
-                        <option onClick={()=> {setWinner(e.full_name)}} key={e.id}>{e.team.full_name}</option>
-                    </>
-                ))
+                    (teams.length!=0)?(
+                      teams.map((e)=>(
+                        <>
+                            <option onClick={()=> {setWinner(e.team.full_name)}} key={e.id}>{e.team.full_name}</option>
+                        </>
+                    ))
+                    ):(
+                      <></>
+                    )
                 }
                 </select>
             </div>
@@ -458,7 +426,7 @@ function Match() {
             <div className="pl-14">
               <p className="text-3xl pb-2 text-white text-center font-bold">{match.match.tournament.name}</p>
               <p className="text-3xl pb-2 text-white text-center">{match.match.tournament.game_mode}</p>
-              <p className="text-2xl pb-2 text-white text-center">{formatDateTime(match.match.dte)}</p>
+              <p className="text-2xl pb-2 text-white text-center">{formatDateTime(dateFormat(match.match.dte))}</p>
               <p className="text-3xl pb-2 text-white text-center font-bold">
                 
               {
@@ -502,34 +470,16 @@ function Match() {
 
           <div key={'apn1_id'}>
               <label className="block text-sm font-medium text-white">
-                Csapat 1(*)
+                Csapat 1
               </label>
-              <select id="apn1_id" defaultValue="Csapat 1" className="select mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm">
-                <option disabled={true}>Csapat 1</option>
-                {
-                    teams.map((e)=>(
-                    <>
-                        <option onClick={()=> {setApn1(e.id)}} key={e.id}>{e.team.full_name}</option>
-                    </>
-                ))
-                }
-                </select>
+              <input id="apn1" disabled type="text" value={match.match.application1.team.full_name} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-gray-400 shadow-sm" />
             </div>
 
             <div key={'apn2_id'}>
               <label className="block text-sm font-medium text-white">
-                Csapat 2(*)
+                Csapat 2
               </label>
-              <select id="apn2_id" defaultValue="Csapat 2" className="select mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm">
-                <option disabled={true}>Csapat 2</option>
-                {
-                    teams.map((e)=>(
-                    <>
-                        <option onClick={()=> {setApn2(e.id)}} key={e.id}>{e.team.full_name}</option>
-                    </>
-                ))
-                }
-                </select>
+              <input id="apn2" disabled type="text" value={match.match.application2.team.full_name} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-gray-400 shadow-sm" />
             </div>
           
             <div key={'status'}>
@@ -572,11 +522,15 @@ function Match() {
               <select id="winner" defaultValue="Győztes" className="select mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm">
               <option disabled={true}>Győztes</option>
                 {
+                   (teams.length!=0)?(
                     teams.map((e)=>(
-                    <>
-                        <option onClick={()=> {setWinner(e.full_name)}} key={e.id}>{e.team.full_name}</option>
-                    </>
-                ))
+                      <>
+                          <option onClick={()=> {setWinner(e.team.full_name)}} key={e.id}>{e.team.full_name}</option>
+                      </>
+                  ))
+                  ):(
+                    <></>
+                  )
                 }
                 </select>
             </div>
@@ -623,7 +577,7 @@ function Match() {
             <div className="pl-14">
               <p className="text-3xl pb-2 text-white text-center font-bold">{match.match.tournament.name}</p>
               <p className="text-3xl pb-2 text-white text-center">{match.match.tournament.game_mode}</p>
-              <p className="text-2xl pb-2 text-white text-center">{formatDateTime(match.match.dte)}</p>
+              <p className="text-2xl pb-2 text-white text-center">{formatDateTime(dateFormat(match.match.dte))}</p>
               <p className="text-3xl pb-2 text-white text-center font-bold">
                 
               {
