@@ -358,6 +358,7 @@ const matchInsert = async (req, res) => {
                 select: {
                     id: true,
                     apn1_id: true,
+                    place: true,
                     apn2_id: true,
                     tnt_id: true,
                     rslt: true,
@@ -370,11 +371,17 @@ const matchInsert = async (req, res) => {
                             name: true,
                             game_mode: true,
                             evt_id: true,
-                            gae_id: true
+                            gae_id: true,
+                            event: {
+                                select: {
+                                    ogr_id: true
+                                }
+                            }
                         }
                     },
                     application1: {
                         select: {
+                            id: true,
                             team: true,
                             user1: {
                                 select: {
@@ -414,6 +421,7 @@ const matchInsert = async (req, res) => {
                     },                    
                     application2: {
                         select: {
+                            id: true,
                             team: true,
                             user1: {
                                 select: {
@@ -473,6 +481,53 @@ const matchInsert = async (req, res) => {
     };
 
 
+    const matchDelete = async (req, res) => {
+
+        const { id, apn1_id, apn2_id, tnt_id } = req.body;
+
+        if(!id){
+            return res.status(400).json({message: "Hiányzó adat!"});
+        }
+
+        try {
+
+            const match = await prisma.matches.findFirst({
+                where: {
+                    id: parseInt(id)
+                }
+            });
+
+            if(!match){
+                return res.status(400).json({message: "Nincs ilyen meccs!"});
+            }
+
+
+            const deletedMatch = await prisma.matches.delete({
+                where: {
+                    id_apn1_id_apn2_id_tnt_id:{
+                        id: parseInt(id),
+                        apn1_id: parseInt(apn1_id),
+                        apn2_id: parseInt(apn2_id),
+                        tnt_id: parseInt(tnt_id)
+                    }
+                }
+            });
+
+
+            return res.status(200).json({message: "Meccs sikeresen törölve!"});
+
+
+
+
+            
+        } catch (error) {
+            return res.status(500).json( error.message );
+        }
+
+
+    };
+
+
 
 
 
@@ -484,5 +539,6 @@ module.exports = {
     matchUpdate,
     matchInsert,
     matchesOfTournament,
-    matchSearchById
+    matchSearchById,
+    matchDelete
 }

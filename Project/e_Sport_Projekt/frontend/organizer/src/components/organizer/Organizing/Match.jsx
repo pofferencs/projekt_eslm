@@ -1,43 +1,260 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useEffect } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 import MatchTeam from "../../../../../user/src/components/common/MatchTeam";
+import OrganizerContext from "../../../context/OrganizerContext";
+import { toast } from "react-toastify";
 
 
 function Match() {
 
 
-    const {id} = useParams();
-    const [match, setMatch] = useState([]);
-    const [isLoading, setIsLoading] = useState(true);
-    const navigate = useNavigate();
+    const { id } = useParams();
+  const {isAuthenticated, authStatus, profile} = useContext(OrganizerContext);
+  const [isloading, setIsLoading] = useState(true);
+  const [refresh, setRefresh] = useState(true);
+  const [detailsNum, setDetailsNum] = useState(0);
+  const navigate = useNavigate();
+  const [disabled, setDisabled] = useState(true);
+  const [teams, setTeams] = useState([]);
+  const [match, setMatch] = useState([]);
+  const [dateData, setDateData] = useState({
+    dte: ""
+  })
+  const [apn1, setApn1] = useState("");
+  const [apn2, setApn2] = useState("");
+  const [status, setStatus] = useState("");
+  const [isForm, setIsForm] = useState(false);
+  const [isOgr, setIsOgr] = useState(0);
+  const [winner, setWinner] = useState("");
 
-    useEffect(()=>{
+    
+  useEffect(()=>{
 
-      window.scroll(0,0)
+
+    window.scroll(0,0)
+    setDisabled(true);
+   
+    fetch(`${import.meta.env.VITE_BASE_URL}/list/matchbyid/${id}`,{
+      method: "GET",
+      headers: { "Content-type": "application/json" },
+    }).then(res=> res.json())
+    .then(adat=> {
+
+        if(!adat.message){
+          setMatch(adat); 
+          setFormData({
+            status: adat.match.status,
+            place: adat.match.place,
+            details: adat.match.details,
+            rslt: adat.match.rslt
+
+          }); setDateData({
+            dte: adat.match.dte
+          });
+          setStatus(adat.match.status);
+          setWinner(adat.match.winner);
+          setApn1(adat.match.apn1_id);
+          setApn2(adat.match.apn2_id);
+          setIsOgr(adat.match.tournament.event.ogr_id); setRefresh(false); setIsLoading(false);
+        }
+
+        
+        
+  })
+  .catch(err=> alert(err));
+  
+
+    teamsFetch();
+    
 
 
-        fetch(`${import.meta.env.VITE_BASE_URL}/list/matchbyid/${id}`,{
-            method: "GET",
-            headers: { "Content-type": "application/json" },
-        }).then(res=> res.json())
-        .then(adat=> {
+
+  }, [isloading])
+
+
+
+  console.log(match)
+  console.log(match)
+
+
+
+
+
+
+
+  const teamsFetch = () => {
+    
+    fetch(`${import.meta.env.VITE_BASE_URL}/list/applicationsbytnt/`, {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify({
           
-          if(!adat.message){
-            setMatch(adat); setIsLoading(false);
-          }else{
-            navigate('/');
-          }
+          tnt_id: id
           
+      })
+    })
+    .then(res=>res.json())
+    .then(adat=> {setTeams(adat); setRefresh(false)})
+    .catch(err=>alert(err));
+    
+
+
+  };
+
+  const [formData, setFormData] = useState({
+    place: "",
+    dte: "",
+    details: "",
+    winner: "",
+    rslt: "",
+    
+  });
+
+
+
+  const formReset = () => {
+    
+    setFormData({
+      
+    place: match.match.place,
+    details: match.match.details,
+    rslt: match.match.rslt
+
+    });
+
+    setDateData({
+    dte: formatDateTime(match.match.dte)
+    });
+
+    setStatus("");
+    setWinner("");
+    setApn1("");
+    setApn2("");
+  };
+
+
+
+  const dateFormat = (date) => {
+    console.log(date);
+  
+    if (date != undefined) {
+      const localDate = new Date(date); // Konvertálás Date objektummá
+      const ev = localDate.getFullYear();
+      const honap = String(localDate.getMonth() + 1).padStart(2, '0'); // Hónap 0-alapú
+      const nap = String(localDate.getDate()).padStart(2, '0');
+      const ora = String(localDate.getHours()).padStart(2, '0');
+      const perc = String(localDate.getMinutes()).padStart(2, '0');
+  
+      return `${ev}-${honap}-${nap}T${ora}:${perc}`;
+    } else {
+      return ``;
+    }
+  };
+
+
+  const modify = (method) => {
+
+    if((apn1!="" || apn2!="") && (apn1 == apn2)){
+      return toast.error("Ugyanazt a csapatot nem adhatod meg!");
+    }
+
+    
+
+    fetch(`${import.meta.env.VITE_BASE_URL}/update/match`, {
+      method: method,
+      headers: { "Content-type": "application/json" },
+      body: JSON.stringify({
+
+        id: parseInt(match.match.id), 
+        apn1_id: parseInt(match.match.apn1_id), 
+        apn2_id: parseInt(match.match.apn2_id), 
+        tnt_id: parseInt(match.match.tnt_id), 
+        status: match.match.status, 
+        uj_status: status, 
+        place: formData.place, 
+        dte: dateData.dte, 
+        details: formData.details, 
+        winner: winner, 
+        rslt: formData.rslt
+      }),
+    })
+      .then(async (res) => {
+        const data = await res.json();
+        if (!res.ok) {
+
+          toast.error(data.message);
+        } else {
+          toast.success(data.message);
+          authStatus();
+          navigate('/');
           
-        })
-        .catch(err=> alert(err));
+
+        }
+
+      }).catch(err => alert(err));
+
+  };
 
 
-    },[isLoading])
+  const torles = (method) => {
+  
+    fetch(`${import.meta.env.VITE_BASE_URL}/delete/match`, {
+      method: method,
+      headers: { "Content-type": "application/json" },
+      body: JSON.stringify(
+        {
+          id: parseInt(match.match.id),
+          apn1_id: parseInt(match.match.apn1_id),
+          apn2_id: parseInt(match.match.apn2_id),
+          tnt_id: parseInt(match.match.tnt_id)
 
 
-    const formatDateTime = (dateTime) => {
+        }),
+    })
+      .then(async (res) => {
+        const data = await res.json();
+        if (!res.ok) {
+
+          toast.error(data.message);
+        } else {
+          toast.success(data.message);
+          authStatus();
+          navigate('/');
+          
+
+        }
+
+      }).catch(err => alert(err));
+
+  };
+
+
+  const onSubmit = (e) => {
+    e.preventDefault();
+    modify('PATCH');
+  };
+
+  const writeData = (e) => {
+    setFormData((prevState) => ({
+      ...prevState,
+      [e.target.id]: e.target.value,
+    }));
+  };
+
+
+  const handleInput = () => {
+    const textarea = document.getElementById('details');
+    textarea.style.height = "auto";
+    textarea.style.height = `${textarea.scrollHeight}px`;
+    setDetailsNum(textarea.value.length)
+
+  };
+
+
+  const formatDateTime = (dateTime) => {
         if (dateTime) {
             const [date, time] = dateTime.split('T'); // Szétválasztjuk a dátumot és az időt
             const [ev, honap, nap] = date.split('-'); // A dátumot év, hónap, nap részekre bontjuk
@@ -50,15 +267,352 @@ function Match() {
     };
 
 
+    
+
+
   return (
     
-  <>
-  
+    <>
+
     {
-        (isLoading)? (
-            <p></p>
-        ):(
+      (isloading)?(
+        <p></p>
+      ):(
+
+        <>
+        {
+          (isOgr == profile.id)?(
+
             <>
+            {
+              (!isForm)?
+              (
+                <>
+
+              <div className="m-10 rounded-md bg-gradient-to-br from-indigo-950 to-slate-500 sm:w-[600px] md:w-[800px] lg:w-[1000px] xl:w-[1200px] mx-auto text-primary-content">
+                  <div className="card-body">
+                  <div className="flex justify-center pb-8 gap-10">
+                      <img className="w-56 h-56" src={`https://www.svgrepo.com/show/535410/game-controller.svg`} />
+                        <div className="card-title">
+                          <div className="pl-14">
+                            <p className="text-3xl pb-2 text-white text-center font-bold">{match.match.tournament.name}</p>
+                            <p className="text-3xl pb-2 text-white text-center">{match.match.tournament.game_mode}</p>
+                            <p className="text-2xl pb-2 text-white text-center">{formatDateTime(match.match.dte)}</p>
+                            <p className="text-3xl pb-2 text-white text-center font-bold">
+                              
+                            {
+                            (match.match.status=="unstarted")?(
+                              <p>{"Még nem kezdődött el"}</p>
+                          ):(
+                              (match.match.status=="ended")?(
+                                  <p>{"Befejeződött"}</p>
+                              ):(
+                                  (match.match.status=="interrupted")?(
+                                      <p>{"Félbeszakított"}</p>
+                                  ):(
+                                      (match.match.status=="started")?(
+                                          <p>{"Elkezdődött"}</p>
+                                      ):(
+                                          <></>
+                                        )
+                                    )
+                                )
+                            )
+                          
+                            
+                            }
+                              </p>
+
+                              <div className="flex flex-col">
+                                  <button className="btn mt-3 text-white" onClick={() => {setIsForm(true); setDisabled(false);}}>Adatok módosítása</button>
+                                  <button className="btn mt-3 bg-red-600 hover:bg-red-700 text-white" onClick={() => {torles("DELETE")}}>Törlés</button>
+                              </div>
+                          </div>
+                        </div>
+                      </div>
+
+
+    <form>
+      <div className="w-full mx-auto rounded-lg shadow-lg md:mt-6 md:max-w-full sm:max-w-4xl xl:p-0 bg-gray-800 dark:border-gray-700">
+        <div className="p-8 md:p-10">
+        
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+          <div key={'apn1_id'}>
+              <label className="block text-sm font-medium text-white">
+                Csapat 1(*)
+              </label>
+              <select id="apn1_id" disabled defaultValue="Csapat 1" className="select mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-gray-400 shadow-sm">
+              <option disabled={true}>Csapat 1</option>
+                {
+                    teams.map((e)=>(
+                    <>
+                        <option onClick={()=> {setApn1(e.id)}} key={e.id}>{e.team.full_name}</option>
+                    </>
+                ))
+                }
+                </select>
+            </div>
+
+            <div key={'apn2_id'}>
+              <label className="block text-sm font-medium text-white">
+                Csapat 2(*)
+              </label>
+              <select id="apn2_id" disabled defaultValue="Csapat 2" className="select mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-gray-400 shadow-sm">
+              <option disabled={true}>Csapat 2</option>
+                {
+                    teams.map((e)=>(
+                    <>
+                        <option onClick={()=> {setApn2(e.id)}} key={e.id}>{e.team.full_name}</option>
+                    </>
+                ))
+                }
+                </select>
+            </div>
+          
+            <div key={'status'}>
+              <label className="block text-sm font-medium text-white">
+                Státusz(*)
+              </label>
+              <select id="status" disabled defaultValue={"Státusz"} className="select mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-gray-400 shadow-sm">
+                <option disabled={true}>Státusz</option>
+                <option onClick={()=>{setStatus("ended")}}>Befejeződött</option>
+                <option onClick={()=>{setStatus("started")}}>Elkezdődött</option>
+                <option onClick={()=>{setStatus("interrupted")}}>Félbeszakított</option>
+                <option onClick={()=>{setStatus("unstarted")}}>Még nem kezdődött el</option>
+                
+                </select>
+            </div>
+
+            <div key={'place'}>
+              <label className="block text-sm font-medium text-white">
+                Hely(*)
+              </label>
+              <input id="place" disabled onChange={writeData} type="text" value={formData.place} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-gray-400 shadow-sm" />
+            </div>
+
+            <div key={'dte'}>
+              <label className="block text-sm font-medium text-white">
+                Időpont(*)
+              </label>
+              <input id="dte" onChange={(time)=> {
+                setDateData((prevState) => ({
+                  ...prevState,
+                  dte: time.target.value,}));}
+                }
+               type="datetime-local" disabled value={dateFormat(dateData.dte)} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-gray-400 shadow-sm" />
+            </div>
+            
+            <div >
+              <label className="block text-sm font-medium text-white">
+                Győztes(*)
+              </label>
+              <select id="winner" disabled defaultValue="Győztes" className="select mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-gray-400 shadow-sm">
+              <option disabled={true}>Győztes</option>
+                {
+                    teams.map((e)=>(
+                    <>
+                        <option onClick={()=> {setWinner(e.full_name)}} key={e.id}>{e.team.full_name}</option>
+                    </>
+                ))
+                }
+                </select>
+            </div>
+
+          </div>
+          <div key={'details'} className="mt-6">
+              <label className="block text-sm font-medium text-white">
+                {`Leírás (${detailsNum}/512)`}
+              </label>
+              <textarea disabled maxLength={512} onInput={handleInput} id="details" type="text" onChange={writeData} value={formData.details} className="mt-1 block w-full h-auto hyphens-auto px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-gray-400 shadow-sm" />
+            </div>
+        </div>
+        
+      </div>
+    </form>
+      
+
+
+    </div>
+    
+
+  </div>
+                
+
+
+
+
+                </>
+            )
+              :(
+              
+              
+                <>
+
+
+<div className="m-10 rounded-md bg-gradient-to-br from-indigo-950 to-slate-500 sm:w-[600px] md:w-[800px] lg:w-[1000px] xl:w-[1200px] mx-auto text-primary-content">
+    <div className="card-body">
+    <div className="flex justify-center pb-8 gap-10">
+        <img className="w-56 h-56" src={`https://www.svgrepo.com/show/535410/game-controller.svg`} />
+          <div className="card-title">
+            <div className="pl-14">
+              <p className="text-3xl pb-2 text-white text-center font-bold">{match.match.tournament.name}</p>
+              <p className="text-3xl pb-2 text-white text-center">{match.match.tournament.game_mode}</p>
+              <p className="text-2xl pb-2 text-white text-center">{formatDateTime(match.match.dte)}</p>
+              <p className="text-3xl pb-2 text-white text-center font-bold">
+                
+              {
+              (match.match.status=="unstarted")?(
+                <p>{"Még nem kezdődött el"}</p>
+            ):(
+                (match.match.status=="ended")?(
+                    <p>{"Befejeződött"}</p>
+                ):(
+                    (match.match.status=="interrupted")?(
+                        <p>{"Félbeszakított"}</p>
+                    ):(
+                        (match.match.status=="started")?(
+                            <p>{"Elkezdődött"}</p>
+                        ):(
+                            <></>
+                          )
+                      )
+                  )
+              )
+            
+              
+              }
+                </p>
+
+                <div className="flex flex-col">
+                                  <button className="btn mt-3 text-white" type="submit" onClick={()=> modify('PATCH')}>Módosítás</button>
+                                  <button className="btn mt-3 text-white" type="button" onClick={() => { setIsForm(false); setDisabled(true); formReset() }}>Mégse</button>
+
+                </div>
+            </div>
+          </div>
+        </div>
+
+
+    <form onSubmit={onSubmit}>
+      <div className="w-full mx-auto rounded-lg shadow-lg md:mt-6 md:max-w-full sm:max-w-4xl xl:p-0 bg-gray-800 dark:border-gray-700">
+        <div className="p-8 md:p-10">
+        
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+          <div key={'apn1_id'}>
+              <label className="block text-sm font-medium text-white">
+                Csapat 1(*)
+              </label>
+              <select id="apn1_id" defaultValue="Csapat 1" className="select mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm">
+                <option disabled={true}>Csapat 1</option>
+                {
+                    teams.map((e)=>(
+                    <>
+                        <option onClick={()=> {setApn1(e.id)}} key={e.id}>{e.team.full_name}</option>
+                    </>
+                ))
+                }
+                </select>
+            </div>
+
+            <div key={'apn2_id'}>
+              <label className="block text-sm font-medium text-white">
+                Csapat 2(*)
+              </label>
+              <select id="apn2_id" defaultValue="Csapat 2" className="select mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm">
+                <option disabled={true}>Csapat 2</option>
+                {
+                    teams.map((e)=>(
+                    <>
+                        <option onClick={()=> {setApn2(e.id)}} key={e.id}>{e.team.full_name}</option>
+                    </>
+                ))
+                }
+                </select>
+            </div>
+          
+            <div key={'status'}>
+              <label className="block text-sm font-medium text-white">
+                Státusz(*)
+              </label>
+              <select id="status" defaultValue="Státusz" className="select mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm">
+                <option disabled={true}>Státusz</option>
+                <option onClick={()=>{setStatus("ended")}}>Befejeződött</option>
+                <option onClick={()=>{setStatus("started")}}>Elkezdődött</option>
+                <option onClick={()=>{setStatus("interrupted")}}>Félbeszakított</option>
+                <option onClick={()=>{setStatus("unstarted")}}>Még nem kezdődött el</option>
+                
+                </select>
+            </div>
+
+            <div key={'place'}>
+              <label className="block text-sm font-medium text-white">
+                Hely(*)
+              </label>
+              <input id="place" onChange={writeData} type="text" value={formData.place} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm" />
+            </div>
+
+            <div key={'dte'}>
+              <label className="block text-sm font-medium text-white">
+                Időpont(*)
+              </label>
+              <input id="dte" onChange={(time)=> {
+                setDateData((prevState) => ({
+                  ...prevState,
+                  dte: time.target.value,}));}
+                }
+               type="datetime-local" value={dateFormat(dateData.dte)} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm" />
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium text-white">
+                Győztes(*)
+              </label>
+              <select id="winner" defaultValue="Győztes" className="select mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm">
+              <option disabled={true}>Győztes</option>
+                {
+                    teams.map((e)=>(
+                    <>
+                        <option onClick={()=> {setWinner(e.full_name)}} key={e.id}>{e.team.full_name}</option>
+                    </>
+                ))
+                }
+                </select>
+            </div>
+
+          </div>
+          <div key={'details'} className="mt-6">
+              <label className="block text-sm font-medium text-white">
+                {`Leírás (${detailsNum}/512)`}
+              </label>
+              <textarea maxLength={512} onInput={handleInput} id="details" type="text" onChange={writeData} value={formData.details} className="mt-1 block w-full h-auto hyphens-auto px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm" />
+            </div>
+        </div>
+       
+        
+      </div>
+    </form>
+      
+
+
+    </div>
+    
+
+  </div>
+                
+                
+                </>
+            
+            )
+            }
+
+                  </>
+          ):(
+            
+            <>
+
+
 
 <>
     <div className="m-10 rounded-md bg-gradient-to-br from-indigo-950 to-slate-500 sm:w-[600px] md:w-[800px] lg:w-[1000px] xl:w-[1200px] mx-auto text-primary-content">
@@ -101,6 +655,15 @@ function Match() {
 
         <div className="border-t border-gray-200 px-4 py-5 sm:p-0">
           <dl className="sm:divide-y sm:divide-gray-200">
+
+          <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt className="text-sm text-white font-bold">
+                  Hely
+                </dt>
+                <dd className="mt-1 text-sm text-white sm:mt-0 sm:col-span-2">
+                  <p className="break-words overflow-hidden max-w-full" >{match.match.place}</p>
+                </dd>
+            </div>
            
             <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                 <dt className="text-sm text-white font-bold">
@@ -171,24 +734,27 @@ function Match() {
     
     
   </>
-
-
-
-
-
-
-
-
+            
+            
+            
+            
+            
+            
+            
             </>
-        )
+
+
+          )
+          
+        }
+        
+        </>
+      )
     }
-  
-  
-  
-  
-  
-  
-  </>
+
+    
+    
+    </>
 
   )
 }
