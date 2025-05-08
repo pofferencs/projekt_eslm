@@ -54,19 +54,20 @@ function Main() {
       </h2>
       <div className="mx-auto mt-2 h-1 w-[60%] bg-gradient-to-r from-indigo-500 to-amber-500 rounded-full" />
 
-      <div className="flex justify-center justify-items-center pt-5">
-        <ReactTwitchEmbedVideo allowfullscreen={{
-          boolean: false
-        }}
+      <div className="w-full max-w-[800px] aspect-video mx-auto pt-5">
+        <ReactTwitchEmbedVideo
+          allowfullscreen={false}
           channel="yeahunter"
           chat="undefined"
           layout="video"
-          onPlay={function Ya() { }}
-          onReady={function Ya() { }}
+          onPlay={() => { }}
+          onReady={() => { }}
           theme="dark"
-          width={800}
-          height={450} />
+          width="100%"      // ezek nem kötelezőek, lehet el is hagyhatók
+          height="100%"
+        />
       </div>
+
 
 
       <h2 className="mt-10 text-center text-4xl font-bold bg-gradient-to-tr from-indigo-500 to-amber-500 inline-block text-transparent bg-clip-text">

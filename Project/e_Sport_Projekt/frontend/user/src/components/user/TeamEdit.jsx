@@ -316,7 +316,7 @@ function TeamEdit() {
                           >
                             Adatok módosítása
                           </button>
-                          <button
+                          {/* <button
                             className="btn mt-3 bg-red-800 text-white"
                             onClick={()=>setShowModalTeamDelete(true)}
                           >
@@ -328,7 +328,7 @@ function TeamEdit() {
                             onConfirm={onSubmitDelete}
                             question={"Biztosan ki akarod törölni a csapatot?"}
                             yes={"Igen, törlöm"}
-                          />
+                          /> */}
                         </>
                       ) : (
                         <button
