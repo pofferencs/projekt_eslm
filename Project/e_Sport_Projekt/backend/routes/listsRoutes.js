@@ -5,7 +5,7 @@ const { applicationList, approvedApplicationsList, pendingApplicationsList, tntA
 const { userList, userSearchByName } = require('../controllers/userController');
 const { eventList, eventSearchByName, eventGetPicPath, eventSearchById, eventSearchByOrganizer } = require('../controllers/eventController');
 const { gameList } = require('../controllers/gameController');
-const { matchList } = require('../controllers/matchController');
+const { matchList, matchesOfTournament } = require('../controllers/matchController');
 const { pictureList } = require('../controllers/pictureController');
 const { picture_linkList } = require('../controllers/pictureLinkController');
 const { teamList, teamSearchByName, teamGetPicPath, teamSearchByID, myTeams } = require('../controllers/teamController');
@@ -24,6 +24,7 @@ router.get('/event/:id', eventSearchById);
 router.post('/eventsearchbyorganizer', eventSearchByOrganizer);
 router.get('/game', gameList);
 router.get('/match', matchList);
+router.get('/matches/:tnt_id', matchesOfTournament);
 router.get('/picture', pictureList);
 router.get('/picturelink', picture_linkList);
 router.get('/team', teamList);

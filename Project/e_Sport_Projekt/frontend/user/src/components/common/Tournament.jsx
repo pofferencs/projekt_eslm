@@ -49,7 +49,7 @@ function Tournament() {
             headers: { "Content-type": "application/json" },
           }).then(res => res.json())
             .then(adat => {
-              setPicPath(adat); setIsLoading(false);
+              setPicPath(adat); applicationsFetch(); setIsLoading(false);
 
               setEvent(
                 fetch(`${import.meta.env.VITE_BASE_URL}/list/event/${tournament.evt_id}`, {
@@ -66,7 +66,7 @@ function Tournament() {
                         .then(adat => {
                           setGame(
                             adat.find((x) => x.id == tournament.gae_id)
-                          ); applicationsFetch();
+                          ); 
                           let today = new Date(Date.now()).toISOString();
                           setCanApply(Boolean(((today > tournament.apn_start) && (today < tournament.apn_end))));
                           setIsLoading(false);
