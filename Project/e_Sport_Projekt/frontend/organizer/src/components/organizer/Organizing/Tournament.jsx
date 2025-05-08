@@ -615,7 +615,7 @@ function Tournament() {
                   <div className="p-8 md:p-10">
 
                   <div className="flex flex-row justify-center">
-                      <button onClick={()=>{navigate('/new-match')}} className="btn mt-3 mb-10 text-white w-52">Új meccs felvétele</button>
+                      <button onClick={()=>{navigate(`/new-match/${id}`)}} className="btn mt-3 mb-10 text-white w-52">Új meccs felvétele</button>
                     </div>
 
                     <div className="flex flex-col">

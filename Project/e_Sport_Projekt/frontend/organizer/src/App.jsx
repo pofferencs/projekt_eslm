@@ -62,7 +62,7 @@ function App() {
             <Route path="/tournament/:id" element={<Tournament />} />
             <Route path="/game" element={<Game />} />
             <Route path="/match/:id" element={<Match/>} />
-            <Route path="/new-match" element={<NewMatch/>} />
+            <Route path="/new-match/:id" element={<NewMatch/>} />
             
           </Routes>
         </div>

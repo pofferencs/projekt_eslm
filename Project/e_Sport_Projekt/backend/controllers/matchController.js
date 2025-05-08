@@ -52,7 +52,7 @@ const matchUpdate = async (req, res) => {
         if (validalasFuggveny(res, [
             { condition: matchDate > tEndDate, message: `Az időpontot nem lehet megadni későbbre mint a verseny vége! (${tournament.apn_end})` },
             { condition: matchDate < tStartDate, message: `Az időpontot nem lehet megadni hamarabbra mint a verseny kezdete! (${tournament.apn_start})` },
-            { condition: !apn1 || !apn2, message: "Jelentkezés nem található! (apn1)" }
+            { condition: !apn1 || !apn2, message: "Jelentkezés nem található! (apn1 v. apn2)" }
 
         ])) {
             return;

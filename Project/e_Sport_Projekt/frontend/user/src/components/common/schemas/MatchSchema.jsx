@@ -109,10 +109,10 @@ const formatDateTime = (dateTime) => {
 
                 <div className="text-center">
                     <div className="font-bold">
-                        {match.application1.team.full_name}
+                        {match.application2.team.full_name}
                     </div>
                     <div className="text-center font-bold">
-                        [{match.application1.team.short_name}]
+                        [{match.application2.team.short_name}]
                     </div>
                     
                 </div>

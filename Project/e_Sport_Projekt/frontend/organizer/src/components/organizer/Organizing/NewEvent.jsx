@@ -19,6 +19,8 @@ function NewEvent() {
 
   useEffect(()=>{
 
+    window.scroll(0,0)
+
     if(!isAuthenticated){
       navigate('/');
     }
