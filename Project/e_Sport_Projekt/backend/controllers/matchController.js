@@ -188,6 +188,78 @@ const matchInsert = async (req, res) => {
     }
 }
 
+
+
+    const matchesOfTournament = async (req, res) => {
+
+
+        const { tnt_id } = req.params;
+
+        if(!tnt_id){
+            return res.status(400).json({message: "Hiányzó adat!"});
+        }
+        
+
+
+        try {
+
+
+            const tournament = await prisma.tournaments.findFirst({
+                where: {
+                    id: tnt_id
+                }
+            });
+
+            if(!tournament){
+                return res.status(400).json({message: "Nincs ilyen verseny!"});
+            }
+
+
+            const matches = await prisma.matches.findMany({
+                where: {
+                    tnt_id: tournament.id
+                },
+                select: {
+                    apn1_id: true,
+                    apn2_id: true,
+                    tnt_id: true,
+                    tournament: true,
+                    application1: true,
+                    application2: true,
+                    
+            
+                }
+            });
+
+
+            if(matches.length == 0 || !matches){
+                return res.status(400).json({message: "Nincs még meccs!"});
+            }
+
+
+            return res.status(200).json({})
+
+
+            
+        } catch (error) {
+            return res.status(500).json({ message: "Hiba a fetch során!" });
+        }
+
+    };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 module.exports = {
     matchList,
     matchUpdate,
