@@ -155,11 +155,41 @@ const applicationDelete = async (req, res) => {
                 },
                 include:{
                     team: true,
-                    user1: true,
-                    user2: true,
-                    user3: true,
-                    user4: true,
-                    user5: true
+                    user1: {
+                        select:{
+                            id: true,
+                            full_name: true,
+                            usr_name: true
+                        }
+                    },
+                    user2: {
+                        select:{
+                            id: true,
+                            full_name: true,
+                            usr_name: true
+                        }
+                    },
+                    user3: {
+                        select:{
+                            id: true,
+                            full_name: true,
+                            usr_name: true
+                        }
+                    },
+                    user4: {
+                        select:{
+                            id: true,
+                            full_name: true,
+                            usr_name: true
+                        }
+                    },
+                    user5: {
+                        select:{
+                            id: true,
+                            full_name: true,
+                            usr_name: true
+                        }
+                    },
                 }
             });
 
@@ -205,11 +235,41 @@ const applicationDelete = async (req, res) => {
                 },
                 include:{
                     team: true,
-                    user1: true,
-                    user2: true,
-                    user3: true,
-                    user4: true,
-                    user5: true
+                    user1: {
+                        select:{
+                            id: true,
+                            full_name: true,
+                            usr_name: true
+                        }
+                    },
+                    user2: {
+                        select:{
+                            id: true,
+                            full_name: true,
+                            usr_name: true
+                        }
+                    },
+                    user3: {
+                        select:{
+                            id: true,
+                            full_name: true,
+                            usr_name: true
+                        }
+                    },
+                    user4: {
+                        select:{
+                            id: true,
+                            full_name: true,
+                            usr_name: true
+                        }
+                    },
+                    user5: {
+                        select:{
+                            id: true,
+                            full_name: true,
+                            usr_name: true
+                        }
+                    },
                 }
             });
 
@@ -428,11 +488,41 @@ const applicationDelete = async (req, res) => {
                     tnt_id: true,
                     team: true,
                     tournament: true,
-                    user1: true,
-                    user2: true,
-                    user3: true,
-                    user4: true,
-                    user5: true
+                    user1: {
+                        select:{
+                            id: true,
+                            full_name: true,
+                            usr_name: true
+                        }
+                    },
+                    user2: {
+                        select:{
+                            id: true,
+                            full_name: true,
+                            usr_name: true
+                        }
+                    },
+                    user3: {
+                        select:{
+                            id: true,
+                            full_name: true,
+                            usr_name: true
+                        }
+                    },
+                    user4: {
+                        select:{
+                            id: true,
+                            full_name: true,
+                            usr_name: true
+                        }
+                    },
+                    user5: {
+                        select:{
+                            id: true,
+                            full_name: true,
+                            usr_name: true
+                        }
+                    },
 
                 }
             });
