@@ -231,44 +231,53 @@ INSERT INTO `Applications` (`id`, `dte`, `status`, `tem_id`, `tnt_id`, `uer1_id`
 -- Matches
 -- Tournament 1 (CS2)
 INSERT INTO `Matches` (`id`, `status`, `place`, `dte`, `details`, `apn1_id`, `apn2_id`, `tnt_id`) VALUES
-(1, 'pending', 'Aréna 1', '2025-07-15 13:00:00', 'T1 Elődöntő 1', 1, 2, 1), (2, 'pending', 'Aréna 1', '2025-07-15 15:00:00', 'T1 Elődöntő 2', 3, 4, 1),
-(3, 'pending', 'Aréna 1', '2025-07-15 17:00:00', 'T1 Bronzmérkőzés', 1, 3, 1), (4, 'pending', 'Aréna 1', '2025-07-15 19:00:00', 'T1 Döntő', 2, 4, 1);
+(1, 'unstarted', 'Aréna 1', '2025-07-15 13:00:00', 'T1 Elődöntő 1', 1, 2, 1), (2, 'unstarted', 'Aréna 1', '2025-07-15 15:00:00', 'T1 Elődöntő 2', 3, 4, 1),
+(3, 'unstarted', 'Aréna 1', '2025-07-15 17:00:00', 'T1 Bronzmérkőzés', 1, 3, 1), (4, 'unstarted', 'Aréna 1', '2025-07-15 19:00:00', 'T1 Döntő', 2, 4, 1);
+
 -- Tournament 2 (RL 1v1)
 INSERT INTO `Matches` (`id`, `status`, `place`, `dte`, `details`, `apn1_id`, `apn2_id`, `tnt_id`) VALUES
-(5, 'pending', 'Aréna 2', '2025-07-16 13:00:00', 'T2 Elődöntő 1', 5, 6, 2), (6, 'pending', 'Aréna 2', '2025-07-16 15:00:00', 'T2 Elődöntő 2', 7, 8, 2),
-(7, 'pending', 'Aréna 2', '2025-07-16 17:00:00', 'T2 Bronzmérkőzés', 5, 7, 2), (8, 'pending', 'Aréna 2', '2025-07-16 19:00:00', 'T2 Döntő', 6, 8, 2);
+(5, 'unstarted', 'Aréna 2', '2025-07-16 13:00:00', 'T2 Elődöntő 1', 5, 6, 2), (6, 'unstarted', 'Aréna 2', '2025-07-16 15:00:00', 'T2 Elődöntő 2', 7, 8, 2),
+(7, 'unstarted', 'Aréna 2', '2025-07-16 17:00:00', 'T2 Bronzmérkőzés', 5, 7, 2), (8, 'unstarted', 'Aréna 2', '2025-07-16 19:00:00', 'T2 Döntő', 6, 8, 2);
+
 -- Tournament 3 (LoL 2v2)
 INSERT INTO `Matches` (`id`, `status`, `place`, `dte`, `details`, `apn1_id`, `apn2_id`, `tnt_id`) VALUES
-(9, 'pending', 'Aréna 3', '2025-07-17 13:00:00', 'T3 Elődöntő 1', 9, 10, 3), (10, 'pending', 'Aréna 3', '2025-07-17 15:00:00', 'T3 Elődöntő 2', 11, 12, 3),
-(11, 'pending', 'Aréna 3', '2025-07-17 17:00:00', 'T3 Bronzmérkőzés', 9, 11, 3), (12, 'pending', 'Aréna 3', '2025-07-17 19:00:00', 'T3 Döntő', 10, 12, 3);
+(9, 'unstarted', 'Aréna 3', '2025-07-17 13:00:00', 'T3 Elődöntő 1', 9, 10, 3), (10, 'unstarted', 'Aréna 3', '2025-07-17 15:00:00', 'T3 Elődöntő 2', 11, 12, 3),
+(11, 'unstarted', 'Aréna 3', '2025-07-17 17:00:00', 'T3 Bronzmérkőzés', 9, 11, 3), (12, 'unstarted', 'Aréna 3', '2025-07-17 19:00:00', 'T3 Döntő', 10, 12, 3);
+
 -- Tournament 4 (RL 3v3)
 INSERT INTO `Matches` (`id`, `status`, `place`, `dte`, `details`, `apn1_id`, `apn2_id`, `tnt_id`) VALUES
-(13, 'pending', 'Aréna 4', '2025-07-18 13:00:00', 'T4 Elődöntő 1', 13, 14, 4), (14, 'pending', 'Aréna 4', '2025-07-18 15:00:00', 'T4 Elődöntő 2', 15, 16, 4),
-(15, 'pending', 'Aréna 4', '2025-07-18 17:00:00', 'T4 Bronzmérkőzés', 13, 15, 4), (16, 'pending', 'Aréna 4', '2025-07-18 19:00:00', 'T4 Döntő', 14, 16, 4);
+(13, 'unstarted', 'Aréna 4', '2025-07-18 13:00:00', 'T4 Elődöntő 1', 13, 14, 4), (14, 'unstarted', 'Aréna 4', '2025-07-18 15:00:00', 'T4 Elődöntő 2', 15, 16, 4),
+(15, 'unstarted', 'Aréna 4', '2025-07-18 17:00:00', 'T4 Bronzmérkőzés', 13, 15, 4), (16, 'unstarted', 'Aréna 4', '2025-07-18 19:00:00', 'T4 Döntő', 14, 16, 4);
+
 -- Tournament 5 (Valorant)
 INSERT INTO `Matches` (`id`, `status`, `place`, `dte`, `details`, `apn1_id`, `apn2_id`, `tnt_id`) VALUES
-(17, 'pending', 'Debrecen LAN1', '2023-10-15 11:00:00', 'T5 Elődöntő 1', 17, 18, 5), (18, 'pending', 'Debrecen LAN1', '2023-10-15 13:00:00', 'T5 Elődöntő 2', 19, 20, 5),
-(19, 'pending', 'Debrecen LAN1', '2023-10-15 15:00:00', 'T5 Bronzmérkőzés', 17, 19, 5), (20, 'pending', 'Debrecen LAN1', '2023-10-15 17:00:00', 'T5 Döntő', 18, 20, 5);
+(17, 'ended', 'Debrecen LAN1', '2023-10-15 11:00:00', 'T5 Elődöntő 1', 17, 18, 5), (18, 'ended', 'Debrecen LAN1', '2023-10-15 13:00:00', 'T5 Elődöntő 2', 19, 20, 5),
+(19, 'ended', 'Debrecen LAN1', '2023-10-15 15:00:00', 'T5 Bronzmérkőzés', 17, 19, 5), (20, 'ended', 'Debrecen LAN1', '2023-10-15 17:00:00', 'T5 Döntő', 18, 20, 5);
+
 -- Tournament 6 (SF6)
 INSERT INTO `Matches` (`id`, `status`, `place`, `dte`, `details`, `apn1_id`, `apn2_id`, `tnt_id`) VALUES
-(21, 'pending', 'Szeged Ring1', '2025-05-01 13:00:00', 'T6 Elődöntő 1', 21, 22, 6), (22, 'pending', 'Szeged Ring1', '2025-05-01 15:00:00', 'T6 Elődöntő 2', 23, 24, 6),
-(23, 'pending', 'Szeged Ring1', '2025-05-01 17:00:00', 'T6 Bronzmérkőzés', 21, 23, 6), (24, 'pending', 'Szeged Ring1', '2025-05-01 19:00:00', 'T6 Döntő', 22, 24, 6);
+(21, 'ended', 'Szeged Ring1', '2025-05-01 13:00:00', 'T6 Elődöntő 1', 21, 22, 6), (22, 'ended', 'Szeged Ring1', '2025-05-01 15:00:00', 'T6 Elődöntő 2', 23, 24, 6),
+(23, 'ended', 'Szeged Ring1', '2025-05-01 17:00:00', 'T6 Bronzmérkőzés', 21, 23, 6), (24, 'ended', 'Szeged Ring1', '2025-05-01 19:00:00', 'T6 Döntő', 22, 24, 6);
+
 -- Tournament 7 (Tekken)
 INSERT INTO `Matches` (`id`, `status`, `place`, `dte`, `details`, `apn1_id`, `apn2_id`, `tnt_id`) VALUES
-(25, 'pending', 'Pécs Dojo1', '2025-08-01 13:00:00', 'T7 Elődöntő 1', 25, 26, 7), (26, 'pending', 'Pécs Dojo1', '2025-08-01 15:00:00', 'T7 Elődöntő 2', 27, 28, 7),
-(27, 'pending', 'Pécs Dojo1', '2025-08-01 17:00:00', 'T7 Bronzmérkőzés', 25, 27, 7), (28, 'pending', 'Pécs Dojo1', '2025-08-01 19:00:00', 'T7 Döntő', 26, 28, 7);
+(25, 'unstarted', 'Pécs Dojo1', '2025-08-01 13:00:00', 'T7 Elődöntő 1', 25, 26, 7), (26, 'unstarted', 'Pécs Dojo1', '2025-08-01 15:00:00', 'T7 Elődöntő 2', 27, 28, 7),
+(27, 'unstarted', 'Pécs Dojo1', '2025-08-01 17:00:00', 'T7 Bronzmérkőzés', 25, 27, 7), (28, 'unstarted', 'Pécs Dojo1', '2025-08-01 19:00:00', 'T7 Döntő', 26, 28, 7);
+
 -- Tournament 8 (Dota2)
 INSERT INTO `Matches` (`id`, `status`, `place`, `dte`, `details`, `apn1_id`, `apn2_id`, `tnt_id`) VALUES
-(29, 'pending', 'Aréna 1', '2025-07-19 11:00:00', 'T8 Elődöntő 1', 29, 30, 8), (30, 'pending', 'Aréna 1', '2025-07-19 13:00:00', 'T8 Elődöntő 2', 31, 32, 8),
-(31, 'pending', 'Aréna 1', '2025-07-19 15:00:00', 'T8 Bronzmérkőzés', 29, 31, 8), (32, 'pending', 'Aréna 1', '2025-07-19 17:00:00', 'T8 Döntő', 30, 32, 8);
+(29, 'unstarted', 'Aréna 1', '2025-07-19 11:00:00', 'T8 Elődöntő 1', 29, 30, 8), (30, 'unstarted', 'Aréna 1', '2025-07-19 13:00:00', 'T8 Elődöntő 2', 31, 32, 8),
+(31, 'unstarted', 'Aréna 1', '2025-07-19 15:00:00', 'T8 Bronzmérkőzés', 29, 31, 8), (32, 'unstarted', 'Aréna 1', '2025-07-19 17:00:00', 'T8 Döntő', 30, 32, 8);
+
 -- Tournament 9 (Overwatch2)
 INSERT INTO `Matches` (`id`, `status`, `place`, `dte`, `details`, `apn1_id`, `apn2_id`, `tnt_id`) VALUES
-(33, 'pending', 'Debrecen LAN2', '2023-10-18 11:00:00', 'T9 Elődöntő 1', 33, 34, 9), (34, 'pending', 'Debrecen LAN2', '2023-10-18 13:00:00', 'T9 Elődöntő 2', 35, 36, 9),
-(35, 'pending', 'Debrecen LAN2', '2023-10-18 15:00:00', 'T9 Bronzmérkőzés', 33, 35, 9), (36, 'pending', 'Debrecen LAN2', '2023-10-18 17:00:00', 'T9 Döntő', 34, 36, 9);
+(33, 'ended', 'Debrecen LAN2', '2023-10-18 11:00:00', 'T9 Elődöntő 1', 33, 34, 9), (34, 'ended', 'Debrecen LAN2', '2023-10-18 13:00:00', 'T9 Elődöntő 2', 35, 36, 9),
+(35, 'ended', 'Debrecen LAN2', '2023-10-18 15:00:00', 'T9 Bronzmérkőzés', 33, 35, 9), (36, 'ended', 'Debrecen LAN2', '2023-10-18 17:00:00', 'T9 Döntő', 34, 36, 9);
+
 -- Tournament 10 (FC25)
 INSERT INTO `Matches` (`id`, `status`, `place`, `dte`, `details`, `apn1_id`, `apn2_id`, `tnt_id`) VALUES
-(37, 'pending', 'Szeged Pálya1', '2025-05-12 11:00:00', 'T10 Elődöntő 1', 37, 38, 10), (38, 'pending', 'Szeged Pálya1', '2025-05-12 13:00:00', 'T10 Elődöntő 2', 39, 40, 10),
-(39, 'pending', 'Szeged Pálya1', '2025-05-12 15:00:00', 'T10 Bronzmérkőzés', 37, 39, 10), (40, 'pending', 'Szeged Pálya1', '2025-05-12 17:00:00', 'T10 Döntő', 38, 40, 10);
+(37, 'unstarted', 'Szeged Pálya1', '2025-05-12 11:00:00', 'T10 Elődöntő 1', 37, 38, 10), (38, 'unstarted', 'Szeged Pálya1', '2025-05-12 13:00:00', 'T10 Elődöntő 2', 39, 40, 10),
+(39, 'unstarted', 'Szeged Pálya1', '2025-05-12 15:00:00', 'T10 Bronzmérkőzés', 37, 39, 10), (40, 'unstarted', 'Szeged Pálya1', '2025-05-12 17:00:00', 'T10 Döntő', 38, 40, 10);
 
 -- Picture Links
 -- Felhasználói képek: minden user kapja az 1-es ID-jű képet ('/user/user_0.png')

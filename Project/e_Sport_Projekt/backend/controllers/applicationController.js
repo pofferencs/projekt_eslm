@@ -450,6 +450,45 @@ const applicationDelete = async (req, res) => {
         }
     }
 
+
+
+    const tournamentApplications = async (req, res)=>{
+
+        const {tnt_id} = req.body;
+
+        if(!tnt_id){
+            return res.status(400).json({message: "Hiányos adatok!"});
+        }
+
+
+        try {
+
+
+            const applications = await prisma.applications.findMany({
+                where: {
+                    tnt_id: parseInt(tnt_id)
+                },
+                select:{
+                    id: true,
+                    team: true,
+
+                }
+            });
+
+            if(!applications || applications.length == 0){
+                return res.status(400).json({message: "Nem adtál le jelentkezést, vagy nincs ilyen verseny!"});
+            }
+
+            return res.status(200).json(applications);
+
+
+            
+        } catch (error) {
+            return res.status(500).json(error.message);
+        }
+    }
+
+
 module.exports = {
     applicationList,
     applicationUpdate,
@@ -459,5 +498,6 @@ module.exports = {
     pendingApplicationsList,
     applicationSubmit,
     applicationHandle,
-    tntApplicationList
+    tntApplicationList,
+    tournamentApplications
 }
