@@ -1,4 +1,4 @@
-# Iskolai Esport Szervezési Felület Asztali-Mobil- és Web platformra
+# Iskolai Esport Szervezési Felület Mobil- és Web platformra
 
 Szervezési Felület.
 

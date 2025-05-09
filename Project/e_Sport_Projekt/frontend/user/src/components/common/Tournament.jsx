@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom"
 import UserContext from "../../context/UserContext";
 import { toast } from "react-toastify";
 import ApplicationCard from "../user/ApplicationCard";
+import MatchSchema from "./schemas/MatchSchema";
 
 function Tournament() {
 
@@ -20,6 +21,7 @@ function Tournament() {
   const [canApply, setCanApply] = useState(true);
   const [isApplication, setIsApplication] = useState(false);
   const [selectedMembers, setSelectedMembers] = useState([]);
+  const [matches, setMatches] = useState([]);
   const navigate = useNavigate();
 
 
@@ -49,7 +51,7 @@ function Tournament() {
             headers: { "Content-type": "application/json" },
           }).then(res => res.json())
             .then(adat => {
-              setPicPath(adat); setIsLoading(false);
+              setPicPath(adat); applicationsFetch(); setIsLoading(false);
 
               setEvent(
                 fetch(`${import.meta.env.VITE_BASE_URL}/list/event/${tournament.evt_id}`, {
@@ -66,7 +68,7 @@ function Tournament() {
                         .then(adat => {
                           setGame(
                             adat.find((x) => x.id == tournament.gae_id)
-                          ); applicationsFetch();
+                          ); 
                           let today = new Date(Date.now()).toISOString();
                           setCanApply(Boolean(((today > tournament.apn_start) && (today < tournament.apn_end))));
                           setIsLoading(false);
@@ -88,9 +90,29 @@ function Tournament() {
       })
       .catch(err => alert(err));
 
+      matchesFetch();
+
     //console.log(event)
 
   }, [isloading])
+
+
+
+  const matchesFetch = () => {
+
+    fetch(`${import.meta.env.VITE_BASE_URL}/list/matches/${id}`, {
+      method: "GET",
+      headers: { "Content-type": "application/json" },
+    })
+      .then(res => res.json())
+      .then(adat => {
+        setMatches(adat.matches);
+
+      })
+      .catch(err => alert(err));
+
+
+  };
 
 
   const myTeamsFetch = () => {
@@ -434,11 +456,45 @@ function Tournament() {
                         }
                       </div>
                     </div>
+
+
+
                   </div>
                 </div>
               </>
             )
           }
+
+
+              <div className="w-full mb-10 mx-auto rounded-lg shadow-lg md:mt-6 md:max-w-full sm:max-w-4xl xl:p-0 bg-gray-800 dark:border-gray-700 pt-10">
+                  <div className="flex flex-row horizontal justify-center mt-10 gap-5">
+                    <h2 className="text-center text-4xl font-bold tracking-tight text-indigo-600">
+                      Meccsek
+                    </h2>
+                    <button onClick={() => { matchesFetch(); console.log(matches)}} className="btn border-none bg-indigo-600 hover:bg-indigo-800"><img className="h-5" src="https://www.svgrepo.com/show/533694/refresh-ccw.svg" /></button>
+                  </div>
+
+                  <div className="mx-auto mt-5 h-1 w-[60%] bg-gradient-to-r from-indigo-500 to-amber-500 rounded-full" />
+                  <div className="p-8 md:p-10">
+
+                    <div className="flex flex-col">
+                      <div className="grid xl:grid-cols-1 md:grid-cols-1 sm:grid-cols-1 gap-12 justify-items-center">
+
+                        {
+                          matches.map((match) => (
+                            <MatchSchema key={match.id} match={match} />
+                          ))
+                        }
+                        
+                      </div>
+                    </div>
+
+
+                    
+                  </div>
+                </div>
+
+
         </div>
       </div>
     </>

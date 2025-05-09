@@ -27,6 +27,8 @@ import NewTournament from "./components/organizer/Organizing/NewTournament";
 import Event from "./components/organizer/Organizing/Event";
 import Tournament from "./components/organizer/Organizing/Tournament";
 import Game from "./components/organizer/Organizing/Game";
+import Match from "./components/organizer/Organizing/Match";
+import NewMatch from "./components/organizer/Organizing/NewMatch";
 
 function App() {
   const isAuthenticated = useContext(OrganizerContext);
@@ -59,6 +61,8 @@ function App() {
             <Route path="/event/:id" element={<Event />} />
             <Route path="/tournament/:id" element={<Tournament />} />
             <Route path="/game" element={<Game />} />
+            <Route path="/match/:id" element={<Match/>} />
+            <Route path="/new-match/:id" element={<NewMatch/>} />
             
           </Routes>
         </div>
