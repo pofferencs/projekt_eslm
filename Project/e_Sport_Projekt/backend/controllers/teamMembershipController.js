@@ -82,10 +82,10 @@ const activeMembersList = async (req, res) => {
         const activeMembers = await prisma.team_Memberships.findMany({
             where: {
                 tem_id: parseInt(team_id),
-                status: "active" 
+                status: "active"
             },
             include: {
-                user: true 
+                user: true
             }
         });
 
@@ -146,24 +146,66 @@ const teamsForPlayer = async (req, res) => {
 };
 
 const teamMembershipDelete = async (req, res) => {
-    const { user_id, team_id } = req.body;
+    const { user_id, user_name, team_id, team_name, profileId } = req.body;
 
     if (!user_id || !team_id) {
         return res.status(400).json({ message: "Nincs ilyen játékos, ilyen csapatban!" })
     }
 
+    const existMembership = await prisma.team_Memberships.findUnique({
+        where: {
+            uer_id_tem_id: {
+                uer_id: parseInt(user_id),
+                tem_id: parseInt(team_id),
+            },
+            status: "active"
+        }
+    })
+
+    if(existMembership >! 0){
+        return res.status(400).json({message: "Nincs ilyen csapattagság!"})
+    }
+
+    const existApplications = await prisma.applications.findMany({
+        where: {
+            OR: [
+                { uer1_id: parseInt(user_id) },
+                { uer2_id: parseInt(user_id) },
+                { uer3_id: parseInt(user_id) },
+                { uer4_id: parseInt(user_id) },
+                { uer5_id: parseInt(user_id) }
+            ],
+            AND:{
+                tem_id: parseInt(team_id),
+                status: "approved"
+            }
+        }
+    })
+      
+      if (existApplications) {
+        return res.status(400).json({
+          message: "Nem léphet(sz) ki a csapatból, ameddig van aktív jelentkezése annak, vagy versenyen vesz részt!"
+        });
+      }      
+
     try {
-        const existMembership = await prisma.team_Memberships.delete({
+
+        const memberShipDElete = await prisma.team_Memberships.delete({
             where: {
                 uer_id_tem_id: {
                     uer_id: parseInt(user_id),
                     tem_id: parseInt(team_id),
-                }
+                },
+                status: "active"
             }
         })
 
-        return res.status(200).json({ message: "Sikeres kilépés a cspatból!" })
-
+        if (parseInt(user_id) === parseInt(profileId) && parseInt(profileId) !== -1) { // -1 a profileId, ha kickelünk másik játékost a csapatból
+            return res.status(200).json({ message: `Sikeresen kiléptél a "${team_name}" nevű csapatból!` })
+        }
+        else if (parseInt(user_id) !== parseInt(profileId) && parseInt(profileId) === -1) {
+            return res.status(200).json({ message: `Kickelted "${user_name}" nevű játékost a "${team_name}" nevű csapatból!` })
+        }
     } catch (error) {
         console.log(error);
         return res.status(500).json({ message: "Hiba a fetch során!" })

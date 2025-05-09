@@ -133,7 +133,7 @@ INSERT INTO `Team_Memberships` (`status`, `uer_id`, `tem_id`) VALUES
 ('active', 33, 13), ('active', 34, 13), ('active', 35, 13),
 ('active', 36, 14), ('active', 37, 14), ('active', 38, 14),
 ('active', 39, 15), ('active', 40, 15), ('active', 41, 15),
-('active', 42, 16), ('active', 45, 16), ('active', 46, 16); 
+('active', 42, 16), ('active', 45, 16), ('active', 46, 16);
 
 -- függőben lévő tagság 
 INSERT INTO `Team_Memberships` (`status`, `uer_id`, `tem_id`) VALUES
