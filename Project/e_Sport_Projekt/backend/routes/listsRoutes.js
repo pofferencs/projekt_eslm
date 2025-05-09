@@ -1,11 +1,11 @@
 const express = require('express');
 const router = express.Router();
 
-const { applicationList, approvedApplicationsList, pendingApplicationsList, tntApplicationList } = require('../controllers/applicationController');
+const { applicationList, approvedApplicationsList, pendingApplicationsList, tntApplicationList, tournamentApplications } = require('../controllers/applicationController');
 const { userList, userSearchByName } = require('../controllers/userController');
 const { eventList, eventSearchByName, eventGetPicPath, eventSearchById, eventSearchByOrganizer } = require('../controllers/eventController');
 const { gameList } = require('../controllers/gameController');
-const { matchList } = require('../controllers/matchController');
+const { matchList, matchesOfTournament, matchSearchById } = require('../controllers/matchController');
 const { pictureList } = require('../controllers/pictureController');
 const { picture_linkList } = require('../controllers/pictureLinkController');
 const { teamList, teamSearchByName, teamGetPicPath, teamSearchByID, myTeams } = require('../controllers/teamController');
@@ -19,11 +19,14 @@ router.get('/pending/:tnt_id', pendingApplicationsList);
 router.get('/approved/:tnt_id', approvedApplicationsList);
 router.get('/application', applicationList);
 router.post('/tnt-applications', tntApplicationList);
+router.post('/applicationsbytnt', tournamentApplications);
 router.get('/event', eventList); /*Esemény*/
 router.get('/event/:id', eventSearchById);
 router.post('/eventsearchbyorganizer', eventSearchByOrganizer);
 router.get('/game', gameList);
 router.get('/match', matchList);
+router.get('/matchbyid/:id', matchSearchById);
+router.get('/matches/:tnt_id', matchesOfTournament);
 router.get('/picture', pictureList);
 router.get('/picturelink', picture_linkList);
 router.get('/team', teamList);
