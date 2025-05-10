@@ -6,6 +6,7 @@ const { validalasFuggveny, hianyzoAdatFuggveny } = require('../functions/conditi
 const nodemailer = require('nodemailer');
 require('dotenv').config();
 const cron = require('node-cron');
+const validator = require('validator');
 
 let verifyTokens = [];
 
@@ -40,6 +41,10 @@ const passEmailSend = async (req, res) => {
 
     if (!email) {
         return res.status(500).json({ message: "Add meg az e-mail címet!" });
+    }
+
+    if(!validator.isEmail(email)){
+            return res.status(400).json({message: "A megadott e-mail cím nem e-mail cím!"});
     }
 
     //Létezik-e a felhasználó?
@@ -158,6 +163,10 @@ const verifyEmailSend = async (req, res) => {
     if (!email) {
         return res.status(500).json({ message: "Add meg az e-mail címet!" });
     }
+
+    if(!validator.isEmail(email)){
+        return res.status(400).json({message: "A megadott e-mail cím nem e-mail cím!"});
+}
 
     //Létezik-e a felhasználó?
 
@@ -409,6 +418,10 @@ const organizerUpdate = async (req, res) => {
     try {
 
         let date = new Date();
+
+        if(!validator.isEmail(new_email_address)){
+            return res.status(400).json({message: "A megadott e-mail cím nem e-mail cím!"});
+        }
 
         
 
@@ -673,6 +686,10 @@ const organizerReg = async (req, res) => {
         };
 
         let trim_usr_name  = usr_name.replaceAll(" ", "");
+
+        if(!validator.isEmail(email_address)){
+            return res.status(400).json({message: "A megadott e-mail cím nem e-mail cím!"});
+        }
 
         //3. E-mail cím ellenőrzése
         const emailCheck = await prisma.organizers.findFirst({
