@@ -57,7 +57,7 @@ function Main() {
       <div className="w-full max-w-[800px] aspect-video mx-auto pt-5">
         <ReactTwitchEmbedVideo
           allowfullscreen={false}
-          channel="yeahunter"
+          channel="trefortesport"
           chat="undefined"
           layout="video"
           onPlay={() => { }}
