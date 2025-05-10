@@ -238,7 +238,8 @@ const invite = async (req, res) => {
 
     const membershipCounter = await prisma.team_Memberships.count({
         where: {
-            tem_id: parseInt(team_id)
+            tem_id: parseInt(team_id),
+            status:"active"
         }
     })
 
