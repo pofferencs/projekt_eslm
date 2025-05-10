@@ -6,6 +6,7 @@ const { validalasFuggveny, hianyzoAdatFuggveny } = require('../functions/conditi
 const nodemailer = require('nodemailer');
 require('dotenv').config();
 const cron = require('node-cron');
+const validator = require('validator');
 
 
 let verifyTokens = [];
@@ -43,6 +44,10 @@ const passEmailSend = async (req, res) => {
         return res.status(500).json({ message: "Add meg az e-mail címet!" });
     }
 
+    if(!validator.isEmail(email)){
+        return res.status(400).json({message: "A megadott e-mail cím nem e-mail cím!"});
+    }
+
     //Létezik-e a felhasználó?
 
     const user = await prisma.users.findFirst({
@@ -53,6 +58,10 @@ const passEmailSend = async (req, res) => {
 
     if (!user) {
         return res.status(500).json({ message: "Ilyen felhasználó nem regisztrált!" });
+    }
+
+    if(!validator.isEmail(user.email_address)){
+        return res.status(400).json({message: "A megadott e-mail cím nem e-mail cím!"});
     }
     
 
@@ -165,6 +174,10 @@ const verifyEmailSend = async (req, res) => {
         return res.status(500).json({ message: "Add meg az e-mail címet!" });
     }
 
+    if(!validator.isEmail(email)){
+        return res.status(400).json({message: "A megadott e-mail cím nem e-mail cím!"});
+    }
+
     //Létezik-e a felhasználó?
 
     const user = await prisma.users.findFirst({
@@ -176,6 +189,8 @@ const verifyEmailSend = async (req, res) => {
     if (!user) {
         return res.status(500).json({ message: "Ilyen felhasználó nem regisztrált!" });
     }
+
+    
 
 
     const token = jwt.sign({ email: user.email_address }, process.env.JWT_SECRET, { expiresIn: "15m" });
@@ -426,6 +441,10 @@ const userUpdate = async (req, res) => {
 
         // console.log(req.body);
 
+        if(!validator.isEmail(new_email_address)){
+            return res.status(400).json({message: "A megadott e-mail cím nem e-mail cím!"});
+        }
+
 
 
         const user = await prisma.users.findFirst({
@@ -445,6 +464,8 @@ const userUpdate = async (req, res) => {
                 email_address: new_email_address
             }
         });
+
+        
 
 
 
@@ -726,6 +747,10 @@ const userReg = async (req, res) => {
         };
 
         let trim_usr_name = usr_name.replaceAll(" ", "");
+
+        if(!validator.isEmail(email_address)){
+            return res.status(400).json({message: "A megadott e-mail cím nem e-mail cím!"});
+        }
 
         //3. E-mail cím ellenőrzése
         const emailCheck = await prisma.users.findFirst({
