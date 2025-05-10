@@ -29,24 +29,35 @@ function InviteModal({ isOpen, onClose, user }) {
 
     if (!isOpen) return null;
 
+
     const inviteDone = async (method) => {
-        fetch(`${import.meta.env.VITE_BASE_URL}/insert/invite`, {
+        const res = await fetch(`${import.meta.env.VITE_BASE_URL}/insert/invite`, {
             method: method,
             headers: { "Content-type": "application/json" },
             body: JSON.stringify({
                 user_id: user.id,
                 team_id: selectedTeamID
             })
-        })
-    }
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+            toast.error(data.message || "Ismeretlen hiba");
+        }else{
+            toast.success(data.message || "Sikeres meghívó")
+        }
+
+        return data;
+    };
 
     const inviteSubmit = () => {
         inviteDone("POST")
-            .then((data) => {
-                if (data.message) {
-                    toast.success(data.message);  
+            .then((res) => {
+                if (res.ok) {
+                    toast.success(res.message);
                 }
-                onClose(); 
+                onClose();
             })
             .catch((err) => {
                 console.log(err);

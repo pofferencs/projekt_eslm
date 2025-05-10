@@ -22,6 +22,10 @@ function InviteSchema({ team, creator }) {
         const data = await res.json();
         if (!res.ok) {
             throw new Error(data.message || "Ismeretlen hiba");
+        }else{
+            toast.success(data.message)
+            console.log(data.message)
+            console.log(res.message)
         }
         return data;
     }
@@ -30,12 +34,12 @@ function InviteSchema({ team, creator }) {
         inviteDecideFetch("POST", decision)
             .then((data) => {
                 if (data.message) {
-                    toast.success(data.message);
+                    // toast.success(data.message);
                 }
             })
             .catch((err) => {
                 console.log(err);
-                toast.error("Hiba történt a meghíváskor");
+                // toast.error("Hiba történt a meghíváskor");
             });
     }
 
