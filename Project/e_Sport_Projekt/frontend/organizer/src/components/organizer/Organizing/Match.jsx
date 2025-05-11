@@ -263,7 +263,7 @@ function Match() {
 
         <>
         {
-          (isOgr == profile.id)?(
+          ((isOgr == profile.id) && isAuthenticated)?(
 
             <>
             {

@@ -279,6 +279,22 @@ function OrganizerProfile() {
                             <p>{profileAdat.school}</p>
                           </dd>
                         </div>
+                        <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                          <dt className="text-sm text-white font-bold">
+                            E-mail
+                          </dt>
+                          <dd className="mt-1 text-sm text-white sm:mt-0 sm:col-span-2">
+                            <p>{profileAdat.email_address}</p>
+                          </dd>
+                        </div>
+                        <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                          <dt className="text-sm text-white font-bold">
+                            Telefonszám
+                          </dt>
+                          <dd className="mt-1 text-sm text-white sm:mt-0 sm:col-span-2">
+                            <p>{profileAdat.phone_num}</p>
+                          </dd>
+                        </div>
                       </dl>
                     </div>
                   </div>
