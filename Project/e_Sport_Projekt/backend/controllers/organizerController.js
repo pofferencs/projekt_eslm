@@ -367,6 +367,7 @@ const organizerSearchById = async (req, res) => {
             select: {
                 id: true,
                 full_name: true,
+                usr_name: true
 
             }
         })
