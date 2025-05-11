@@ -336,7 +336,7 @@ function Match() {
           
             <div key={'status'}>
               <label className="block text-sm font-medium text-white">
-                Státusz(*)
+                Státusz
               </label>
               <select id="status" disabled defaultValue={"Státusz"} className="select mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-gray-400 shadow-sm">
                 <option disabled={true}>Státusz</option>
@@ -350,14 +350,14 @@ function Match() {
 
             <div key={'place'}>
               <label className="block text-sm font-medium text-white">
-                Hely(*)
+                Hely
               </label>
               <input id="place" disabled onChange={writeData} type="text" value={formData.place} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-gray-400 shadow-sm" />
             </div>
 
             <div key={'dte'}>
               <label className="block text-sm font-medium text-white">
-                Időpont(*)
+                Időpont
               </label>
               <input id="dte" onChange={(time)=> {
                 setDateData((prevState) => ({
@@ -369,7 +369,7 @@ function Match() {
             
             <div >
               <label className="block text-sm font-medium text-white">
-                Győztes(*)
+                Győztes
               </label>
               <select id="winner" disabled defaultValue="Győztes" className="select mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-gray-400 shadow-sm">
               <option disabled={true}>Győztes</option>
@@ -385,6 +385,13 @@ function Match() {
                     )
                 }
                 </select>
+            </div>
+
+            <div key={'rslt'}>
+              <label className="block text-sm font-medium text-white">
+                Eredmény
+              </label>
+              <input id="rslt" disabled onChange={writeData} type="text" value={formData.rslt} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-gray-400 shadow-sm" />
             </div>
 
           </div>
@@ -484,7 +491,7 @@ function Match() {
           
             <div key={'status'}>
               <label className="block text-sm font-medium text-white">
-                Státusz(*)
+                Státusz
               </label>
               <select id="status" defaultValue="Státusz" className="select mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm">
                 <option disabled={true}>Státusz</option>
@@ -498,14 +505,14 @@ function Match() {
 
             <div key={'place'}>
               <label className="block text-sm font-medium text-white">
-                Hely(*)
+                Hely
               </label>
               <input id="place" onChange={writeData} type="text" value={formData.place} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm" />
             </div>
 
             <div key={'dte'}>
               <label className="block text-sm font-medium text-white">
-                Időpont(*)
+                Időpont
               </label>
               <input id="dte" onChange={(time)=> {
                 setDateData((prevState) => ({
@@ -517,7 +524,7 @@ function Match() {
             
             <div>
               <label className="block text-sm font-medium text-white">
-                Győztes(*)
+                Győztes
               </label>
               <select id="winner" defaultValue="Győztes" className="select mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm">
               <option disabled={true}>Győztes</option>
@@ -533,6 +540,13 @@ function Match() {
                   )
                 }
                 </select>
+            </div>
+
+            <div key={'rslt'}>
+              <label className="block text-sm font-medium text-white">
+                Eredmény
+              </label>
+              <input id="rslt" onChange={writeData} type="text" value={formData.rslt} className="mt-1 block w-full px-3 py-2.5 border rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 border-gray-600 text-white shadow-sm" />
             </div>
 
           </div>
