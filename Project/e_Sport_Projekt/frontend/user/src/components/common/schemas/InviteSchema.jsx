@@ -9,7 +9,7 @@ function InviteSchema({ team, creator }) {
 
     const inviteDecideFetch = async (method, decision) => {
 
-        const res = fetch(`${import.meta.env.VITE_BASE_URL}/insert/inviteacceptorreject`, {
+        const res = await fetch(`${import.meta.env.VITE_BASE_URL}/insert/inviteacceptorreject`, {
             method: method,
             headers: { "Content-type": "application/json" },
             body: JSON.stringify({
@@ -22,7 +22,7 @@ function InviteSchema({ team, creator }) {
         const data = await res.json();
         if (!res.ok) {
             throw new Error(data.message || "Ismeretlen hiba");
-        }else{
+        } else {
             toast.success(data.message)
             console.log(data.message)
             console.log(res.message)
@@ -32,16 +32,12 @@ function InviteSchema({ team, creator }) {
 
     const onSubmit = (decision) => {
         inviteDecideFetch("POST", decision)
-            .then((data) => {
-                if (data.message) {
-                    // toast.success(data.message);
-                }
-            })
+            .then(res => res.json())
             .catch((err) => {
                 console.log(err);
-                // toast.error("Hiba történt a meghíváskor");
             });
-    }
+    };
+
 
     return (
         <div className="card bg-neutral drop-shadow-lg text-stone-300 w-96 bg-gradient-to-br inline-block from-purple-900 to-orange-300 relative z-0">
