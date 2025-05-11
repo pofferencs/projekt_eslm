@@ -229,7 +229,7 @@ function TournamentSchema({ tournament, limit }) {
                             </button>
                             <button
                                 className="btn btn-sm btn-outline btn-success"
-                                onClick={() => navigate(`/tournament/apply/${tournament.id}`)}
+                                onClick={() => navigate(`/tournament/${tournament.id}`)}
                             >
                                 Jelentkezés a versenyre
                             </button>
