@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react"
-import { useNavigate, useParams } from "react-router-dom"
+import { Link, useNavigate, useParams } from "react-router-dom"
 import OrganizerContext from "../../../context/OrganizerContext";
 import { toast } from "react-toastify";
 import TournamentSchema from "../../common/schemas/TournamentSchema";
@@ -627,8 +627,8 @@ const sendImage = async (file, type, id) => {
                           <dt className="text-sm text-white font-bold">
                             Szervező
                           </dt>
-                          <dd className="mt-1 text-sm text-white sm:mt-0 sm:col-span-2">
-                            <p>{organizer.full_name}</p>
+                          <dd className="mt-1 text-sm text-indigo-500 hover:text-indigo-600 sm:mt-0 sm:col-span-2">
+                          <Link to={`/organizer/profile/${organizer.usr_name}`}><p>{organizer.full_name}</p></Link>
                           </dd>
                         </div>
                         <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">

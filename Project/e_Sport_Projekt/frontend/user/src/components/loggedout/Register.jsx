@@ -161,7 +161,7 @@ function Register() {
                 />)}
               </div>
             ))}
-            <div className="md:col-span-2 flex items-start">
+            {/* <div className="md:col-span-2 flex items-start">
               <input
                 id="terms"
                 type="checkbox"
@@ -181,7 +181,7 @@ function Register() {
                   Felhasználási feltételeket
                 </a> !
               </label>
-            </div>
+            </div> */}
             <button
               type="submit"
               className="btn md:col-span-2 w-full text-white bg-indigo-600 hover:bg-indigo-700 focus:ring-4 focus:ring-indigo-400 font-medium rounded-lg text-sm px-5 py-2.5 shadow-md"

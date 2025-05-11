@@ -27,6 +27,7 @@ import TeamEdit from "./components/user/TeamEdit";
 import NewTeam from "./components/user/NewTeam";
 import MyInvites from "./components/common/Invite/MyInvites";
 import Match from "./components/common/Match";
+import OrganizerProfile from "./components/common/OrganizerProfile";
 
 
 function App() {
@@ -58,6 +59,7 @@ function App() {
             <Route path="/event/:id" element={<Event />} />
             <Route path="/tournament/:id" element={<Tournament />} />
             <Route path="/match/:id" element={<Match />} />
+            <Route path="/organizer/profile/:name" element={<OrganizerProfile/> }/>
             
           </Routes>
         </div>
