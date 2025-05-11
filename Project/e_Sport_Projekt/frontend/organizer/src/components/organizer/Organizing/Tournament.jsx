@@ -53,14 +53,14 @@ function Tournament() {
           if(adat.message){
             navigate('/');
           }
-          setTournament(adat); setFormData(adat); setIsLoading(false);
+          setTournament(adat); setFormData(adat);;
           setDetailsNum(adat.details.length);
           setPicPath(
             fetch(`${import.meta.env.VITE_BASE_URL}/list/tournamentpic/${id}`,{
               method: "GET",
               headers: { "Content-type": "application/json" },
             }).then(res=>res.json())
-            .then(adat=> {setPicPath(adat); setIsLoading(false);
+            .then(adat=> {setPicPath(adat);
 
               setEvent(
                 fetch(`${import.meta.env.VITE_BASE_URL}/list/event/${tournament.evt_id}`,{
@@ -73,7 +73,6 @@ function Tournament() {
                 setMaxDate(dateFormat(adat.end_date));
                 setApnMinDate(apnMinTimeSet(adat.start_date));
                 setApnMaxDate(apnMaxTimeSet(adat.end_date))
-                setIsLoading(false);
 
                 setGame(
                   fetch(`${import.meta.env.VITE_BASE_URL}/list/game`,{
@@ -88,7 +87,7 @@ function Tournament() {
                      
                         pendingFetch();
                         approvedFetch();
-                        authStatus()
+                        //authStatus()
                         formReset()
                         setIsLoading(false);
                       
@@ -429,7 +428,7 @@ function Tournament() {
 
         <>
         {
-          (event.ogr_id == profile.id)?(
+          ((event.ogr_id == profile.id) && isAuthenticated)?(
 
             <>
             {
