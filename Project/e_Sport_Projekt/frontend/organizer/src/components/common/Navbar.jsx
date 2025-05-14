@@ -33,7 +33,7 @@ function Navbar() {
 
   return (
     <div>
-      <nav className="bg-zinc-800">
+      <nav className="bg-zinc-800 overflow-y-visible">
         <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
           <div className="relative flex h-16 items-center justify-between">
             {/* Mobil menü gomb */}
@@ -76,7 +76,7 @@ function Navbar() {
                   }
                   
 
-                <div className='dropdown'>
+                <div className='dropdown [z-999]'>
                   <div tabIndex={0} role='button' className='rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white'>Keresők...</div>
                   <ul tabIndex={0} className='dropdown-content menu bg-slate-500 rounded-box z-1 w-52 p-2 shadow-sm'>
                   <li><Link to="/player-search" className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Játékos kereső</Link></li>
@@ -87,7 +87,6 @@ function Navbar() {
 
                   </div>
 
-                  <Link to="/contact" className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Névjegy</Link>
                 </div>
               </div>
             </div>
@@ -105,7 +104,7 @@ function Navbar() {
                       )
                     }
                   </div>
-                <ul tabIndex={0} className="dropdown-content bg-slate-500 rounded-box z-1 w-52 p-2 shadow-sm">
+                <ul tabIndex={0} className="dropdown-content bg-slate-500 [z-999] rounded-box z-1 w-52 p-2 shadow-sm">
                 <p className='flex justify-center text-white font-bold pb-2'>{profile.usr_name}</p>
                   <li>
                     <Link to={`/organizer/profile/${profile.usr_name}`} onClick={()=>{window.scroll(0,0)}} className="block px-4 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white rounded-lg">Profiladatok</Link>
@@ -137,7 +136,6 @@ function Navbar() {
               <Link to="/team-search" className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Csapat kereső</Link>
               <Link to="/tournament-search" className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Verseny kereső</Link>
               <Link to="/event-search" className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Esemény kereső</Link>
-              <Link to="/contact" className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Névjegy</Link>
             </div>
           </div>
         )}
