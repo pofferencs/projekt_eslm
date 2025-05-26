@@ -44,8 +44,8 @@ const passEmailSend = async (req, res) => {
         return res.status(500).json({ message: "Add meg az e-mail címet!" });
     }
 
-    if(!validator.isEmail(email)){
-        return res.status(400).json({message: "A megadott e-mail cím nem e-mail cím!"});
+    if (!validator.isEmail(email)) {
+        return res.status(400).json({ message: "A megadott e-mail cím nem e-mail cím!" });
     }
 
     //Létezik-e a felhasználó?
@@ -60,10 +60,10 @@ const passEmailSend = async (req, res) => {
         return res.status(500).json({ message: "Ilyen felhasználó nem regisztrált!" });
     }
 
-    if(!validator.isEmail(user.email_address)){
-        return res.status(400).json({message: "A megadott e-mail cím nem e-mail cím!"});
+    if (!validator.isEmail(user.email_address)) {
+        return res.status(400).json({ message: "A megadott e-mail cím nem e-mail cím!" });
     }
-    
+
 
     if (verifyTokens.find(x => x.email == user.email_address)) {
         const token = jwt.sign({ email: user.email_address }, process.env.JWT_SECRET, { expiresIn: "15m" });
@@ -174,8 +174,8 @@ const verifyEmailSend = async (req, res) => {
         return res.status(500).json({ message: "Add meg az e-mail címet!" });
     }
 
-    if(!validator.isEmail(email)){
-        return res.status(400).json({message: "A megadott e-mail cím nem e-mail cím!"});
+    if (!validator.isEmail(email)) {
+        return res.status(400).json({ message: "A megadott e-mail cím nem e-mail cím!" });
     }
 
     //Létezik-e a felhasználó?
@@ -190,7 +190,7 @@ const verifyEmailSend = async (req, res) => {
         return res.status(500).json({ message: "Ilyen felhasználó nem regisztrált!" });
     }
 
-    
+
 
 
     const token = jwt.sign({ email: user.email_address }, process.env.JWT_SECRET, { expiresIn: "15m" });
@@ -278,7 +278,10 @@ const emailVerifiedMod = async (req, res) => {
         } else if (error.name === 'JsonWebTokenError') {
             return res.status(400).json({ verified: false, message: 'Érvénytelen token!' });
         } else {
-            return res.status(500).json('Hiba a token ellenőrzésekor:', error.message);
+            return res.status(500).json({
+                verified: false,
+                message: `Hiba a token ellenőrzésekor: ${error.message}`
+            });
         }
     }
 
@@ -337,69 +340,69 @@ const userList = async (req, res) => {
 const userSearchByName = async (req, res) => {
     const { usr_name } = req.params;
     const { status, classNum, classLetter } = req.query;
-  
+
     if (!usr_name) return res.status(400).json({ message: "Hiányos név!" });
-  
+
     const filters = {
-      usr_name: {
-        contains: usr_name,
-      },
+        usr_name: {
+            contains: usr_name,
+        },
     };
-  
+
     // Osztály szűrés
     if (classNum && classLetter) {
-      // Ha mindkettő van, összefűzzük
-      filters.clss = `${classNum}${classLetter.toUpperCase()}`;
+        // Ha mindkettő van, összefűzzük
+        filters.clss = `${classNum}${classLetter.toUpperCase()}`;
     } else if (classNum) {
-      // Ha csak a szám van, akkor csak a számot keressük
-      filters.clss = {
-        startsWith: classNum,
-      };
+        // Ha csak a szám van, akkor csak a számot keressük
+        filters.clss = {
+            startsWith: classNum,
+        };
     } else if (classLetter) {
-      // Ha csak a betű van, akkor csak a betűt keressük
-      filters.clss = {
-        endsWith: classLetter.toUpperCase(),
-      };
+        // Ha csak a betű van, akkor csak a betűt keressük
+        filters.clss = {
+            endsWith: classLetter.toUpperCase(),
+        };
     }
-  
+
     // Státusz szűrés
     if (status && status !== "all") {
-      filters.status = status;
+        filters.status = status;
     }
-  
+
     try {
-      const users = await prisma.users.findMany({
-        where: filters,
-        select: {
-          id: true,
-          inviteable: true,
-          discord_name: true,
-          full_name: true,
-          usr_name: true,
-          date_of_birth: true,
-          school: true,
-          clss: true,
-          status: true,
-          email_address: true,
-          phone_num: true,
-        },
-      });
-  
-      if (!users || users.length === 0) {
-        return res.status(404).json({ message: "Nincs ilyen felhasználó!" });
-      }
-  
-      return res.status(200).json(users);
+        const users = await prisma.users.findMany({
+            where: filters,
+            select: {
+                id: true,
+                inviteable: true,
+                discord_name: true,
+                full_name: true,
+                usr_name: true,
+                date_of_birth: true,
+                school: true,
+                clss: true,
+                status: true,
+                email_address: true,
+                phone_num: true,
+            },
+        });
+
+        if (!users || users.length === 0) {
+            return res.status(404).json({ message: "Nincs ilyen felhasználó!" });
+        }
+
+        return res.status(200).json(users);
     } catch (error) {
-      console.error("Prisma error:", error);
-      return res.status(500).json({ message: "Szerverhiba!", error });
+        console.error("Prisma error:", error);
+        return res.status(500).json({ message: "Szerverhiba!", error });
     }
-  };
-  
-  
-  
-  
-  
+};
+
+
+
+
+
 
 const userProfileSearchByName = async (req, res) => {
     const { usr_name } = req.params;
@@ -441,8 +444,8 @@ const userUpdate = async (req, res) => {
 
         // console.log(req.body);
 
-        if(!validator.isEmail(new_email_address)){
-            return res.status(400).json({message: "A megadott e-mail cím nem e-mail cím!"});
+        if (!validator.isEmail(new_email_address)) {
+            return res.status(400).json({ message: "A megadott e-mail cím nem e-mail cím!" });
         }
 
 
@@ -465,7 +468,7 @@ const userUpdate = async (req, res) => {
             }
         });
 
-        
+
 
 
 
@@ -740,7 +743,7 @@ const userReg = async (req, res) => {
             { condition: omIdCheck, message: "Ezzel az OM-számmal regisztráltak már!" },
             { condition: teamNameCheck, message: "A felhasználónév, amit megadtál, megegyezik egy csapat teljes nevével. Adj meg újat!" },
             { condition: usr_name.length < 3 || usr_name.length > 17, message: "Minimum 3, maximum 16 karakterből állhat a felhasználóneved!" }
-            
+
 
         ])) {
             return;
@@ -748,8 +751,8 @@ const userReg = async (req, res) => {
 
         let trim_usr_name = usr_name.replaceAll(" ", "");
 
-        if(!validator.isEmail(email_address)){
-            return res.status(400).json({message: "A megadott e-mail cím nem e-mail cím!"});
+        if (!validator.isEmail(email_address)) {
+            return res.status(400).json({ message: "A megadott e-mail cím nem e-mail cím!" });
         }
 
         //3. E-mail cím ellenőrzése
