@@ -420,7 +420,9 @@ const organizerUpdate = async (req, res) => {
 
         let date = new Date();
 
-        
+        if(new_email_address && !validator.isEmail(new_email_address)){
+            return res.status(400).json({message: "A megadott e-mail cím nem e-mail cím!"});
+        }
 
         
 
@@ -477,10 +479,6 @@ const organizerUpdate = async (req, res) => {
             {
                 return;
             };
-
-            if(!validator.isEmail(new_email_address)){
-                return res.status(400).json({message: "A megadott e-mail cím nem e-mail cím!"});
-            }
 
 
                 let trim_email = new_email_address.replaceAll(" ", "");
