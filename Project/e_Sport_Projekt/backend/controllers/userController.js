@@ -444,9 +444,7 @@ const userUpdate = async (req, res) => {
 
         // console.log(req.body);
 
-        if (!validator.isEmail(new_email_address)) {
-            return res.status(400).json({ message: "A megadott e-mail cím nem e-mail cím!" });
-        }
+        
 
 
 
@@ -530,6 +528,10 @@ const userUpdate = async (req, res) => {
             ])) {
                 return;
             };
+
+            if (!validator.isEmail(new_email_address)) {
+                return res.status(400).json({ message: "A megadott e-mail cím nem e-mail cím!" });
+            }
 
 
             let trim_email = new_email_address.replaceAll(" ", "");
