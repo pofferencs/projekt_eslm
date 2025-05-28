@@ -182,7 +182,7 @@ const teamMembershipDelete = async (req, res) => {
         }
     })
       
-      if (existApplications) {
+      if (existApplications.length > 0) {
         return res.status(400).json({
           message: "Nem léphet(sz) ki a csapatból, ameddig van aktív jelentkezése annak, vagy versenyen vesz részt!"
         });
