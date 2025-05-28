@@ -49,7 +49,7 @@ function TeamEdit() {
       });
 
       if (!res.ok) {
-        toast.error(res.message || "Nem sikerült kilépni a csapatból.looool");
+        toast.error(res.message || "Nem sikerült kilépni a csapatból!");
         setShowModalLeave(false);
       } else {        
         toast.success(res.message || "Sikeresen kiléptél a csapatból!");
