@@ -902,7 +902,7 @@ const userLogin = async (req, res) => {
 
         //!bcrypt.compare(paswrd, user.paswrd)
         if (!bcrypt.compareSync(paswrd, userL.paswrd)) {
-            return res.status(400).json({ message: "A jelszó nem megfelelő!" });
+            return res.status(400).json({ message: "A jelszó vagy felhasználónév/email nem megfelelő!" });
         }
 
 
