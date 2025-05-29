@@ -48,11 +48,13 @@ function TeamEdit() {
         }),
       });
 
+      const data = await res.json();
+
       if (!res.ok) {
-        toast.error(res.message || "Nem sikerült kilépni a csapatból!");
+        toast.error(data.message || "Nem sikerült kilépni a csapatból!");
         setShowModalLeave(false);
-      } else {        
-        toast.success(res.message || "Sikeresen kiléptél a csapatból!");
+      } else {
+        toast.success(data.message || "Sikeresen kiléptél a csapatból!");
         setShowModalLeave(false);
       }
     } catch (err) {
@@ -240,7 +242,7 @@ function TeamEdit() {
         const data = await res.json();
 
         if (!res.ok) {
-          toast.error(data.message || "Hiba történt");          
+          toast.error(data.message || "Hiba történt");
           setShowModalKick(false)
         } else {
           setShowModalKick(false)
@@ -519,7 +521,7 @@ function TeamEdit() {
                     <label className="block text-sm font-medium text-white">Kirúgni kívánt játékos</label>
                     <select
                       value={selectedMemberId}
-                      onChange={(e) => {const value = e.target.value; setSelectedMemberId(value); const name = e.target.selectedOptions[0].getAttribute("data-usr_name"); setSelectedMember_user_name(name)}}
+                      onChange={(e) => { const value = e.target.value; setSelectedMemberId(value); const name = e.target.selectedOptions[0].getAttribute("data-usr_name"); setSelectedMember_user_name(name) }}
                       className="mt-1 block w-full px-3 py-2.5 border rounded-lg bg-gray-700 border-gray-600 text-gray-400 shadow-sm"
                     >
                       <option value="">Válassz egy játékost...</option>
@@ -533,19 +535,19 @@ function TeamEdit() {
                     </select>
 
                     <button
-                      onClick={()=>setShowModalKick(true)}
+                      onClick={() => setShowModalKick(true)}
                       disabled={!selectedMemberId}
                       className={`btn mt-3 ${!selectedMemberId ? "hidden" : "bg-red-500 text-white"}`}
                     >
                       Kirúgás
                     </button>
                     <DeleteModal
-                        show={showModalKick}
-                        onClose={() => setShowModalKick(false)}
-                        onConfirm={onSubmitKick}
-                        question={`Biztosan ki akarod rúgni "${selectedMember_user_name}"-t a csapatotból?`}
-                        yes={"Igen, repülhet"}
-                      />
+                      show={showModalKick}
+                      onClose={() => setShowModalKick(false)}
+                      onConfirm={onSubmitKick}
+                      question={`Biztosan ki akarod rúgni "${selectedMember_user_name}"-t a csapatotból?`}
+                      yes={"Igen, repülhet"}
+                    />
                   </div>
                 </div>
               </div>

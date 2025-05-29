@@ -49,7 +49,10 @@ function TeamSchema({ team }) {
                 },
                 body: JSON.stringify({
                     user_id: profile.id,
-                    team_id: team.id
+                    user_name: profile.full_name,
+                    team_id: team.id,
+                    team_name: team.full_name,
+                    profileId: profile.id
                 }),
             });
 
@@ -58,7 +61,8 @@ function TeamSchema({ team }) {
             if (!res.ok) {
                 toast.error(adat.message || "Hiba a kilépéskor");
             } else {
-                toast.success(adat.message || "Kiléptél a csapatból");
+                toast.success(adat.message || "Sikeresen kiléptél a csapatból");
+                navigate(`/myteams}`);
             }
         } catch (err) {
             console.error("Kilépési hiba:", err);
